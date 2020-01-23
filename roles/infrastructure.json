@@ -1,0 +1,26 @@
+{
+	"name": "infrastructure",
+	"description": "VM infrastructure: Nginx, PHP, MySQL, Composer, Elasticsearch, Mailhog, Webmin, Samba",
+	"chef_type": "role",
+	"json_class": "Chef::Role",
+	"default_attributes": {},
+	"override_attributes": {},
+	"run_list": [
+		"recipe[php::install]",
+		"recipe[php::configure]",
+		"recipe[nginx::install]",
+		"recipe[nginx::configure]",
+		"recipe[mysql::install]",
+		"recipe[mysql::configure]",
+		"recipe[composer::install]",
+		"recipe[composer::configure]",
+		"recipe[elasticsearch::install]",
+		"recipe[elasticsearch::configure]",
+		"recipe[mailhog::install]",
+		"recipe[mailhog::configure]",
+		"recipe[webmin::install]",
+		"recipe[webmin::configure]",
+		"recipe[samba::install]",
+		"recipe[samba::configure]"
+	]
+}

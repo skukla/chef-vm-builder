@@ -1,0 +1,22 @@
+upstream fastcgi_backend {
+     server 127.0.0.1:9000;
+}
+
+map $http_host $MAGE_RUN_CODE {
+    luma.com base;
+    b2b.luma.com luma_b2b;
+    custom-demo.com custom_b2c;
+    b2b.custom-demo.com custom_b2b;
+}
+
+map $MAGE_RUN_CODE $MAGE_RUN_TYPE {
+    base website;
+    luma_b2b website;
+    custom_b2c website;
+    custom_b2b website;
+}
+
+include /etc/nginx/sites-enabled/luma.com;
+include /etc/nginx/sites-enabled/b2b.luma.com;
+include /etc/nginx/sites-enabled/custom-demo.com;
+include /etc/nginx/sites-enabled/b2b.custom-demo.com;

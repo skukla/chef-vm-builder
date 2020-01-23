@@ -1,0 +1,13 @@
+{
+	"name": "application",
+	"description": "Magento baseline",
+	"chef_type": "role",
+	"json_class": "Chef::Role",
+	"default_attributes": {},
+	"override_attributes": {},
+	"run_list": [
+		"recipe[magento::download]",
+		"recipe[magento::install]",
+		"recipe[magento::configure]"
+	]
+}
