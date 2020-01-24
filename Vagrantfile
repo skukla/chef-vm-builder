@@ -2,19 +2,24 @@
 require 'json'
 settings = JSON.parse(File.read(File.dirname(File.expand_path(__FILE__)) + '/config.json'))
 
-# Plugin check (VMWare Fusion and Virtualbox will want different Vagrant plugins)
-plugins = settings['vagrant']['plugins']['all']
-if settings['vm']['provider'] == 'virtualbox'
-  plugins.push(*settings['vagrant']['plugins']['virtualbox'])
-end
-plugins.each do |plugin|
-  unless Vagrant.has_plugin?("#{plugin}")
-    system("vagrant plugin install #{plugin}", :chdir=>"/tmp") || exit!
-  end
-end
-
 # Start VM Setup
 Vagrant.configure("2") do |config|
+
+  # Plugin check (VMWare Fusion and Virtualbox will want different Vagrant plugins)
+  plugins = settings['vagrant']['plugins']['all']
+  if settings['vm']['provider'] == 'virtualbox'
+    plugins.push(*settings['vagrant']['plugins']['virtualbox'])
+  else
+    plugins.push(*settings['vagrant']['plugins']['vmware_desktop'])
+  end
+  config.trigger.before :up do |trigger|
+    trigger.info = "Checking for required plugins..."
+    plugins.each do |plugin|
+      unless Vagrant.has_plugin?("#{plugin}")
+        system("vagrant plugin install #{plugin}", :chdir=>"/tmp") || exit!
+      end
+    end
+  end
 
   # SSH Key and VM Box
   config.ssh.insert_key = true
@@ -51,7 +56,7 @@ Vagrant.configure("2") do |config|
     chef.nodes_path = "#{settings['provisioner']['nodes_path']}"
     chef.environments_path = "#{settings['provisioner']['environments_path']}"
     chef.roles_path = "#{settings['provisioner']['roles_path']}"
-    chef.cookbooks_path = "#{settings['provisioner']['cookbooks_path']}"
+    chef.cookbooks_path = "#{settings['provisioner']['cookbooks_path']}"  
 
     # Roles
     chef.add_role "base"

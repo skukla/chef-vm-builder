@@ -23,6 +23,7 @@
 	"vagrant": {
 		"plugins": {
 			"all": ["vagrant-hostsupdater"],
+			"vmware_desktop": ["vagrant-vmware-desktop"],
 			"virtualbox": ["vagrant-vbguest"]
 		}
 	}

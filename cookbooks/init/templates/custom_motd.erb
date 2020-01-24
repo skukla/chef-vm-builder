@@ -2,13 +2,13 @@
 
 # Variables
 export TERM=xterm-256color
-IP=$(hostname -I)
-HOSTNAME=$(hostname)
+IP=<%= @ip %>
+HOSTNAME=<%= @hostname %>
 BOLD=$(tput bold)
 REG=$(tput sgr0)
 CYAN=$(tput setaf 6)
-WEBMIN_USER=vagrant
-WEBMIN_PASS=vagrant
+WEBMIN_USER=<%= @webmin_user %>
+WEBMIN_PASS=<%= @webmin_password %>
 WEBMIN_PORT=$(netstat -tulpn | grep "LISTEN" | grep "perl" | awk '{print $4}' | sed -e 's/.*://')
 MAILHOG_PORT=$(netstat -tulpn | grep "LISTEN" | grep "mailhog" | awk '{print $4;exit;}' | sed -e 's/.*://')
 
@@ -28,10 +28,19 @@ figlet BOOM.
 printf "\n${BOLD}Welcome to the Kukla VM!${REG}\n\n"
 
 # Hosts Entry, Mailhog, and Webmin
-rulem "[ ${CYAN}Hosts Entry and Webmin${REG} ]"
+rulem "[ ${CYAN}Hosts Entry, Mailhog, and Webmin${REG} ]"
 printf '\n%23s : %s %s %s %s %s\n' "${BOLD}Host Entry" "${REG}${IP}" "${HOSTNAME}" "b2b.${HOSTNAME}" "custom-demo.com" "b2b.custom-demo.com"
-printf '%23s : %s  \n' "${BOLD}Mailhog Inbox" "${REG}http://${HOSTNAME}:${MAILHOG_PORT}"
-printf '%23s : %s  \n\t\t %7s : %s\n\t %15s : %s\n' "${BOLD}Webmin Console" "${REG}http://${HOSTNAME}:${WEBMIN_PORT}" "User" "${WEBMIN_USER}" "Password" "${WEBMIN_PASS}"
+
+if [ $MAILHOG_PORT != "" ]; then
+    printf '%23s : %s  \n' "${BOLD}Mailhog Inbox" "${REG}http://${HOSTNAME}:${MAILHOG_PORT}"
+else
+    printf '%23s : %s  \n' "${BOLD}Mailhog Inbox" "${REG}Not installed"
+fi
+if [ $WEBMIN_PORT != "" ]; then
+    printf '%23s : %s  \n\t\t %7s : %s\n\t %15s : %s\n' "${BOLD}Webmin Console" "${REG}http://${HOSTNAME}:${WEBMIN_PORT}" "User" "${WEBMIN_USER}" "Password" "${WEBMIN_PASS}"
+else
+    printf '%23s : %s  \n' "${BOLD}Webmin Console" "${REG}Not installed"
+fi
 printf "\n"
 
 # Useful Commands
