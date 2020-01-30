@@ -8,6 +8,7 @@
 	"run_list": [
 		"recipe[php::install]",
 		"recipe[php::configure]",
+		"recipe[nginx::install_ssl]",
 		"recipe[nginx::install]",
 		"recipe[nginx::configure]",
 		"recipe[mysql::install]",

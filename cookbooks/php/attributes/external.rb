@@ -6,6 +6,7 @@
 
 # Bring in init attributes
 include_attribute 'init::default'
+
 default[:infrastructure][:php][:fpm_options] = {
     owner: node[:vm][:user],
     user: node[:vm][:user],
