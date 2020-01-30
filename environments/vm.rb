@@ -39,7 +39,8 @@ default_attributes(
     },
     infrastructure: {
         php: {
-            version: '7.3'
+            version: '7.3',
+            port: 9000
         },
         webserver: {
             port: 80
