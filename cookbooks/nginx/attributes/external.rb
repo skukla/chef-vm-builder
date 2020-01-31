@@ -7,6 +7,7 @@
 # Bring in init attributes
 include_attribute 'init::default'
 include_attribute 'php::default'
+include_attribute 'magento::default'
 
 default[:infrastructure][:webserver][:vm] = {
     user: node[:vm][:user],
@@ -19,3 +20,5 @@ default[:infrastructure][:webserver][:fpm_options] = {
         backend: '127.0.0.1',
         port: node[:infrastructure][:php][:port]
 }
+# Brings in a hash of vertical data from the Magento cookbook's attributes
+default[:infrastructure][:webserver][:application][:verticals] = node[:application][:verticals]
