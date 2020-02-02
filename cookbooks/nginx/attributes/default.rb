@@ -12,7 +12,7 @@ default[:infrastructure][:webserver][:ssl_options] = {
     country: 'US',
     state: 'California',
     locality: 'Los Angeles',
-    organization: 'Luma'
+    organization: 'Luma',
 }
 default[:infrastructure][:webserver][:webroot] = '/var/www/magento'
 default[:infrastructure][:webserver][:client_max_body_size] = '100M'

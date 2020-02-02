@@ -12,8 +12,8 @@ ssl_files = node[:infrastructure][:webserver][:ssl_files]
 
 # Generate the ssl key from the conf file
 execute 'Generate ssl key' do
-    command "openssl req -new -newkey rsa:4096 -days 365 -nodes -x509 \
-    -subj \"/C=#{ssl_options[:country]}/ST=#{ssl_options[:state]}/L=#{ssl_options[:locality]}/O=#{ssl_options[:organization]}   /CN=#{node[:fqdn]}\" \
+    command "sudo openssl req -new -newkey rsa:4096 -days 365 -nodes -x509 \
+    -subj \"/C=#{ssl_options[:country]}/ST=#{ssl_options[:state]}/L=#{ssl_options[:locality]}/O=#{ssl_options[:organization]}   /CN=#{ssl_options[:common_name]}\" \
     -keyout /home/#{user}/#{ssl_files[:key_file]}  -out /home/#{user}/#{ssl_files[:certificate_file]}"
     not_if { ::File.exists?("/etc/ssl/certs/#{ssl_files[:certificate_file]}") }
 end

@@ -1,12 +1,12 @@
 server {
-     listen 80;
-     listen 443 ssl http2;
-     listen [::]:443 ssl http2;
-     server_name luma.com;
-     client_max_body_size 100M;
-     set $MAGE_ROOT /var/www/magento;
-     ssl_certificate /etc/ssl/certs/luma.crt;
-     ssl_certificate_key /etc/ssl/private/luma.key;
+     listen <%= @http_port %>;
+     listen <%= @ssl_port %> ssl http2;
+     listen [::]:<%= @ssl_port %> ssl http2;
+     server_name <%= @server_name %>;
+     client_max_body_size <%= @client_max_body_size %>;
+     set $MAGE_ROOT <%= @webroot %>;
+     ssl_certificate_key /etc/ssl/private/<%= @key_file %>;
+     ssl_certificate /etc/ssl/certs/<%= @certificate_file %>;
      ssl_protocols TLSv1.2 TLSv1.1 TLSv1;
-     include /etc/nginx/sites-available/conf/00-nginx-magento.conf;
+     #include /etc/nginx/sites-available/conf/00-nginx-magento.conf;
 }

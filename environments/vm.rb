@@ -43,7 +43,8 @@ default_attributes(
             port: 9000
         },
         webserver: {
-            port: 80
+            http_port: 80,
+            ssl_port: 443
         },
         database: {
             user: 'magento',
