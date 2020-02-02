@@ -10,7 +10,7 @@ version = node[:infrastructure][:php][:version]
 repository = node[:infrastructure][:php][:repository]
 
 # Add PHP repository
-apt_repository "PHP" do
+apt_repository "php-#{version}" do
     uri "ppa:#{repository}"
     components ['main']
     distribution "bionic"

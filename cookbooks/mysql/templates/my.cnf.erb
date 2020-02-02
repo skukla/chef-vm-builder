@@ -21,8 +21,8 @@
 !includedir /etc/mysql/mysql.conf.d/
 
 [mysqld]
-socket                          = /var/run/mysqld/mysqld.sock
-innodb_buffer_pool_size         = 1G
-max_allowed_packet              = 512M
-tmp_table_size                  = 64M
-max_heap_table_size             = 64M
+socket                          = <%= @socket %>
+innodb_buffer_pool_size         = <%= @innodb_buffer_pool_size %>
+max_allowed_packet              = <%= @max_allowed_packet %>
+tmp_table_size                  = <%= @tmp_table_size %>
+max_heap_table_size             = <%= @max_heap_table_size %>
