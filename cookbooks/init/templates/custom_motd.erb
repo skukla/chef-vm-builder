@@ -10,7 +10,14 @@ CYAN=$(tput setaf 6)
 WEBMIN_USER=<%= @webmin_user %>
 WEBMIN_PASS=<%= @webmin_password %>
 WEBMIN_PORT=$(netstat -tulpn | grep "LISTEN" | grep "perl" | awk '{print $4}' | sed -e 's/.*://')
-MAILHOG_PORT=$(netstat -tulpn | grep "LISTEN" | grep "mailhog" | awk '{print $4;exit;}' | sed -e 's/.*://')
+MAILHOG_PORT=$(netstat -tulpn | grep "LISTEN" | grep "mailhog" | sort -n | awk '{print $4;exit;}' | sed -e 's/.*://')
+
+# We should refactor this
+if [ $MAILHOG_PORT == 1025 ]; then
+    MAILHOG_PORT=$(netstat -tulpn | grep "LISTEN" | grep "mailhog" | sort -r | awk '{print $4;exit;}' | sed -e 's/.*://')
+else
+    MAILHOG_PORT=$(netstat -tulpn | grep "LISTEN" | grep "mailhog" | sort -n | awk '{print $4;exit;}' | sed -e 's/.*://')
+fi
 
 # Print a horizontal rule
 rule () {

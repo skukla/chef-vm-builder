@@ -3,8 +3,8 @@ Description=MailHog service
 
 [Service]
 ExecStart=/usr/local/bin/mailhog \
-  -api-bind-addr 0.0.0.0:8025 \
-  -ui-bind-addr 0.0.0.0:8025 \
+  -api-bind-addr 0.0.0.0:<%= @port %> \
+  -ui-bind-addr 0.0.0.0:<%= @port %> \
   -smtp-bind-addr 0.0.0.0:1025
 
 [Install]
