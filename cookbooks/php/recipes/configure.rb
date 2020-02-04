@@ -14,8 +14,8 @@ fpm_options = node[:infrastructure][:php][:fpm_options]
 supported_versions.each do |suppported_version|
     ['cli', 'fpm'].each do |type|
         template "#{type}" do
-            path "/etc/php/#{suppported_version}/#{type}/php.ini"
             source 'php.ini.erb'
+            path "/etc/php/#{suppported_version}/#{type}/php.ini"
             owner 'root'
             group 'root'
             mode '644'
@@ -28,8 +28,8 @@ supported_versions.each do |suppported_version|
         end
         if type == 'fpm'
             template "#{type}" do
-                path "/etc/php/#{suppported_version}/#{type}/pool.d/www.conf"
                 source 'www.conf.erb'
+                path "/etc/php/#{suppported_version}/#{type}/pool.d/www.conf"
                 owner 'root'
                 group 'root'
                 mode '644'

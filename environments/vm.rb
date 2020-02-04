@@ -53,8 +53,10 @@ default_attributes(
         },
         elasticsearch: {
 			use: true,
-			version: '6.8.5',
-            port: 9200
+            version: '6.x',
+            memory: '1g',
+            port: 9200,
+            plugins: ['analysis-phonetic', 'analysis-icu']
         },
 		mailhog: {
 			use: true,

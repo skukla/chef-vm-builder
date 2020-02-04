@@ -31,8 +31,8 @@ end
 
 # Configure nginx
 template 'Nginx configuration' do
-    path '/etc/nginx/nginx.conf'
     source 'nginx.conf.erb'
+    path '/etc/nginx/nginx.conf'
     owner 'root'
     group 'root'
     mode '644'
@@ -76,8 +76,8 @@ selected_vertical_data.each do |selected_vertical|
     end
     # Create the virtual hosts
     template "#{selected_vertical[:url]}" do
-        path "/etc/nginx/sites-available/#{selected_vertical[:url]}"
         source "#{selected_vertical[:url]}.erb"
+        path "/etc/nginx/sites-available/#{selected_vertical[:url]}"
         mode '644'
         owner 'root'
         group 'root'
@@ -111,8 +111,8 @@ end
 
 # Configure multisite
 template 'Configure multisite' do
-    path '/etc/nginx/sites-available/conf/01-multisite.conf'
     source '01-multisite.conf.erb'
+    path '/etc/nginx/sites-available/conf/01-multisite.conf'
     owner 'root'
     group 'root'
     mode '644'

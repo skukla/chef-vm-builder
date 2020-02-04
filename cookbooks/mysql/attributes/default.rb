@@ -11,6 +11,3 @@ default[:infrastructure][:database][:conf_options] = {
     tmp_table_size: '64M',
     max_heap_table_size: '64M'
 }
-default[:infrastructure][:database][:user] = 'magento'
-default[:infrastructure][:database][:password] = 'password'
-default[:infrastructure][:database][:name] = 'magento'

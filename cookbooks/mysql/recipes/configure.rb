@@ -13,8 +13,8 @@ max_heap_table_size = node[:infrastructure][:database][:conf_options][:max_heap_
 
 # Configure MariaDB
 template 'Configure MariaDB' do
-    path '/etc/mysql/my.cnf'
     source 'my.cnf.erb'
+    path '/etc/mysql/my.cnf'
     owner 'root'
     group 'root'
     mode '644'

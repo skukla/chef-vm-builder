@@ -3,7 +3,6 @@
 # Attribute:: default
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-default[:infrastructure][:php][:repository] ='ondrej/php'
 default[:infrastructure][:php][:supported_versions] = [
     '7.2',
     '7.3',

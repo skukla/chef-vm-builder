@@ -11,10 +11,11 @@ repository = node[:infrastructure][:php][:repository]
 
 # Add PHP repository
 apt_repository "php-#{version}" do
-    uri "ppa:#{repository}"
+    uri 'ppa:ondrej/php'
     components ['main']
     distribution "bionic"
     action :add
+    retries 3
     not_if { ::File.exist?("/etc/apt/sources.list.d/php-#{version}.list") }
 end
 

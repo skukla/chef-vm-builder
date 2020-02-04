@@ -16,6 +16,7 @@
 		"recipe[mysql::configure]",
 		"recipe[composer::install]",
 		"recipe[composer::configure]",
+		"recipe[elasticsearch::install_java]",
 		"recipe[elasticsearch::install]",
 		"recipe[elasticsearch::configure]",
 		"recipe[mailhog::install]",

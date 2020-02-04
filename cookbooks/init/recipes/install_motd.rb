@@ -14,9 +14,9 @@ end
 # hostname comes from ohai
 # webmin attributes are default cookbook attributes
 template 'Custom MoTD' do
-    path '/etc/update-motd.d/01-custom'
     source 'custom_motd.erb'
-    mode 755
+    path '/etc/update-motd.d/01-custom'
+    mode '755'
     owner 'root'
     group 'root'
     variables ({
