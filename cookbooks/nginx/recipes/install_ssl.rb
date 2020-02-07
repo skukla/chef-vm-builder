@@ -5,27 +5,32 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 
 # Attributes
-user = node[:infrastructure][:webserver][:vm][:user]
-group = node[:infrastructure][:webserver][:vm][:group]
-ssl_options = node[:infrastructure][:webserver][:ssl_options]
-ssl_files = node[:infrastructure][:webserver][:ssl_files]
+user = node[:vm][:user]
+group = node[:vm][:group]
+common_name = node[:fqdn]
+country = node[:infrastructure][:webserver][:ssl_options][:country]
+state = node[:infrastructure][:webserver][:ssl_options][:state]
+locality = node[:infrastructure][:webserver][:ssl_options][:locality]
+organization = node[:infrastructure][:webserver][:ssl_options][:organization]
+key_file = node[:infrastructure][:webserver][:ssl_files][:key_file]
+certificate_file = node[:infrastructure][:webserver][:ssl_files][:certificate_file]
 
 # Generate the ssl key from the conf file
 execute 'Generate ssl key' do
     command "sudo openssl req -new -newkey rsa:4096 -days 365 -nodes -x509 \
-    -subj \"/C=#{ssl_options[:country]}/ST=#{ssl_options[:state]}/L=#{ssl_options[:locality]}/O=#{ssl_options[:organization]}   /CN=#{ssl_options[:common_name]}\" \
-    -keyout /home/#{user}/#{ssl_files[:key_file]}  -out /home/#{user}/#{ssl_files[:certificate_file]}"
-    not_if { ::File.exists?("/etc/ssl/certs/#{ssl_files[:certificate_file]}") }
+    -subj \"/C=#{country}/ST=#{state}/L=#{locality}/O=#{organization}   /CN=#{common_name}\" \
+    -keyout /home/#{user}/#{key_file}  -out /home/#{user}/#{certificate_file}"
+    not_if { ::File.exists?("/etc/ssl/certs/#{certificate_file}") }
 end
 
 # Copy the certificate to the ssl certs directory, then delete the original
 execute 'Copy SSL certificate to the certs directory' do
-    command "sudo cp /home/#{user}/#{ssl_files[:certificate_file]} /etc/ssl/certs/#{ssl_files[:certificate_file]} && sudo rm -rf /home/#{user}/#{ssl_files[:certificate_file]}"
-    only_if { ::File.exists?("/home/#{user}/#{ssl_files[:certificate_file]}") }
+    command "sudo cp /home/#{user}/#{certificate_file} /etc/ssl/certs/#{certificate_file} && sudo rm -rf /home/#{user}/#{certificate_file}"
+    only_if { ::File.exists?("/home/#{user}/#{certificate_file}") }
 end
 
 # Copy the SSL key to the private directory, then delete the original
 execute 'Copy SSL key to the private directory' do
-    command "sudo cp /home/#{user}/#{ssl_files[:key_file]} /etc/ssl/private/#{ssl_files[:default_key_f]} && sudo rm -rf /home/#{user}/#{ssl_files[:key_file]}"
-    only_if { ::File.exists?("/home/#{user}/#{ssl_files[:key_file]}") }
+    command "sudo cp /home/#{user}/#{key_file} /etc/ssl/private/#{key_file} && sudo rm -rf /home/#{user}/#{key_file}"
+    only_if { ::File.exists?("/home/#{user}/#{key_file}") }
 end

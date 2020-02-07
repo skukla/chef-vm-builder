@@ -19,11 +19,11 @@ template 'Configure MariaDB' do
     group 'root'
     mode '644'
     variables({
-        socket: socket,
-        innodb_buffer_pool_size: innodb_buffer_pool_size,
-        max_allowed_packet: max_allowed_packet,
-        tmp_table_size: tmp_table_size,
-        max_heap_table_size: max_heap_table_size
+        socket: "#{socket}",
+        innodb_buffer_pool_size: "#{innodb_buffer_pool_size}",
+        max_allowed_packet: "#{max_allowed_packet}",
+        tmp_table_size: "#{tmp_table_size}",
+        max_heap_table_size: "#{max_heap_table_size}"
     })
 end
 

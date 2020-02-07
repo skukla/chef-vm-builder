@@ -48,6 +48,8 @@ Vagrant.configure("2") do |config|
       # VMWare-specific format
       machine.vmx["memsize"] = settings['remote_machine']['ram']
       machine.vmx["numvcpus"] = settings['remote_machine']['cpus']
+      machine.vmx["ethernet0.pcislotnumber"] = settings['remote_machine']['eth0_pcislotnumber']
+      machine.vmx["ethernet1.pcislotnumber"] = settings['remote_machine']['eth1_pcislotnumber']
     end
   end
 

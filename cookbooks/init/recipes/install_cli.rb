@@ -16,9 +16,9 @@ directory 'VM cli path check' do
 end
 
 # Create the VM cli directory
-directory 'Create VM cli path   ' do
-    owner "#{user}"
-    group "#{group}"
+directory 'Create VM cli path' do
+    owner user
+    group group
     path "/home/#{user}/cli"
     action :create
 end

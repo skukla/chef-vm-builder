@@ -4,6 +4,12 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 
+# Attributes
+ip = node[:vm][:ip]
+hostname = node[:fqdn]
+user = node[:vm][:user]
+group = node[:vm][:group]
+
 # Remove permissions on all present MotD files
 execute 'Remove MotDs' do
     command "chmod -x /etc/update-motd.d/*"
@@ -20,9 +26,9 @@ template 'Custom MoTD' do
     owner 'root'
     group 'root'
     variables ({
-        ip: "#{node[:vm][:ip]}",
-        hostname: "#{node[:fqdn]}",
-        webmin_user: "#{node[:vm][:user]}",
-        webmin_password: "#{node[:vm][:group]}"
+        ip: "#{ip}",
+        hostname: "#{hostname}",
+        webmin_user: "#{user}",
+        webmin_password: "#{group}"
     })
 end

@@ -5,20 +5,20 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 
 # Attributes
-fpm_backend = node[:infrastructure][:php][:fpm_options][:backend]
-fpm_port = node[:infrastructure][:php][:fpm_options][:port]
-webroot = node[:infrastructure][:webserver][:webroot]
-client_max_body_size = node[:infrastructure][:webserver][:client_max_body_size]
-http_port = node[:infrastructure][:webserver][:http_port]
-ssl_port = node[:infrastructure][:webserver][:ssl_port]
-key_file = node[:infrastructure][:webserver][:ssl_files][:key_file]
-certificate_file = node[:infrastructure][:webserver][:ssl_files][:certificate_file]
-user = node[:infrastructure][:webserver][:vm][:user]
-group = node[:infrastructure][:webserver][:vm][:group]
+user = node[:infrastructure][:webserver][:user]
+group = node[:infrastructure][:webserver][:group]
 custom_demo_verticals = node[:custom_demo][:verticals]
 custom_demo_channels = node[:custom_demo][:channels]
 customm_demo_geos = node[:custom_demo][:geos]
-application_verticals = node[:infrastructure][:webserver][:application][:verticals]
+application_verticals = node[:application][:verticals]
+certificate_file = node[:infrastructure][:webserver][:ssl_files][:certificate_file]
+key_file = node[:infrastructure][:webserver][:ssl_files][:key_file]
+fpm_backend = node[:infrastructure][:webserver][:fpm_backend]
+fpm_port = node[:infrastructure][:php][:fpm_port]
+webroot = node[:infrastructure][:webserver][:conf_options][:webroot]
+client_max_body_size = node[:infrastructure][:webserver][:conf_options][:client_max_body_size]
+http_port = node[:infrastructure][:webserver][:conf_options][:http_port]
+ssl_port = node[:infrastructure][:webserver][:conf_options][:ssl_port]
 
 # Create the web root
 directory 'Webroot directory' do
@@ -82,13 +82,13 @@ selected_vertical_data.each do |selected_vertical|
         owner 'root'
         group 'root'
         variables({
-            http_port: http_port,
-            ssl_port: ssl_port,
+            http_port: "#{http_port}",
+            ssl_port: "#{ssl_port}",
             server_name: "#{selected_vertical[:url]}",
-            client_max_body_size: client_max_body_size,
-            webroot: webroot,
-            key_file: key_file,
-            certificate_file: certificate_file
+            client_max_body_size: "#{client_max_body_size}",
+            webroot: "#{webroot}",
+            key_file: "#{key_file}",
+            certificate_file: "#{certificate_file}"
         })
     end
     # Enable the selected sites
@@ -117,9 +117,9 @@ template 'Configure multisite' do
     group 'root'
     mode '644'
     variables({ 
-        fpm_backend: fpm_backend,
-        fpm_port: fpm_port,
-        vhost_data: selected_vertical_data 
+        fpm_backend: "#{fpm_backend}",
+        fpm_port: "#{fpm_port}",
+        vhost_data: selected_vertical_data
     })
     only_if { ::File.directory?('/etc/nginx/sites-available/conf') }
 end

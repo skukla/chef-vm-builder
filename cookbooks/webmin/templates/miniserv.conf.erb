@@ -1,11 +1,11 @@
-port=20000
+port=<%= @port %>
 addtype_cgi=internal/cgi
 realm=Webmin Server
 logfile=/var/webmin/miniserv.log
 errorlog=/var/webmin/miniserv.error
 pidfile=/var/webmin/miniserv.pid
 logtime=168
-ssl=0
+ssl=<%= @use_ssl %>
 no_ssl2=1
 no_ssl3=1
 no_tls1=1

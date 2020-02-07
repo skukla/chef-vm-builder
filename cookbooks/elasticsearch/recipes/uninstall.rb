@@ -6,8 +6,14 @@
 
 # Attributes
 version = node[:infrastructure][:elasticsearch][:version]
+plugins = node[:infrastructure][:elasticsearch][:plugins]
 
-# Always remove Elasticsearch
+# Stop elasticsearch in case it's running
+service 'elasticsearch' do
+    action [:stop]
+end
+
+# Remove Elasticsearch
 execute 'Purge Elasticsearch package and configuration' do
     command "sudo dpkg --purge --force-all elasticsearch"
 end

@@ -5,10 +5,16 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 
 # Attributes
+fpm_port = node[:infrastructure][:php][:fpm_port]
+user = node[:infrastructure][:php][:user]
+group = node[:infrastructure][:php][:group]
 supported_versions = node[:infrastructure][:php][:supported_versions]
 version = node[:infrastructure][:php][:version]
-ini_options = node[:infrastructure][:php][:ini_options]
-fpm_options = node[:infrastructure][:php][:fpm_options]
+timezone = node[:infrastructure][:php][:ini_options][:timezone]
+memory_limit = node[:infrastructure][:php][:ini_options][:memory_limit]
+max_execution_time = node[:infrastructure][:php][:ini_options][:max_execution_time]
+zlib_output_compression = node[:infrastructure][:php][:ini_options][:zlib_output_compression]
+fpm_backend = node[:infrastructure][:php][:fpm_options][:backend]
 
 # Configure php.ini and php-fpm
 supported_versions.each do |suppported_version|
@@ -20,10 +26,10 @@ supported_versions.each do |suppported_version|
             group 'root'
             mode '644'
             variables({
-                timezone: ini_options[:timezone],
-                memory_limit: ini_options[:memory_limit],
-                max_execution_time: ini_options[:max_execution_time],
-                zlib_output_compression: ini_options[:zlib_output_compression]
+                timezone: "#{timezone}",
+                memory_limit: "#{memory_limit}",
+                max_execution_time: "#{max_execution_time}",
+                zlib_output_compression: "#{zlib_output_compression}"
             })
         end
         if type == 'fpm'
@@ -34,11 +40,11 @@ supported_versions.each do |suppported_version|
                 group 'root'
                 mode '644'
                 variables({
-                    owner: fpm_options[:owner],
-                    user: fpm_options[:user],
-                    group: fpm_options[:group],
-                    backend: fpm_options[:backend],
-                    port: fpm_options[:port]
+                    owner: "#{user}",
+                    user: "#{user}",
+                    group: "#{group}",
+                    backend: "#{fpm_backend}",
+                    port: "#{fpm_port}"
                 })
             end
         end

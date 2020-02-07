@@ -14,5 +14,7 @@ default[:infrastructure][:webserver][:ssl_options] = {
     locality: 'Los Angeles',
     organization: 'Luma',
 }
-default[:infrastructure][:webserver][:webroot] = '/var/www/magento'
-default[:infrastructure][:webserver][:client_max_body_size] = '100M'
+default[:infrastructure][:webserver][:conf_options] = {
+    webroot: '/var/www/magento',
+    client_max_body_size: '100M'
+}

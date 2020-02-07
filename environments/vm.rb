@@ -38,9 +38,12 @@ default_attributes(
         ip: '192.168.57.11'
     },
     infrastructure: {
+        os: {
+            update: false
+        },
         php: {
             version: '7.3',
-            port: 9000
+            fpm_port: 9000
         },
         webserver: {
             http_port: 80,
@@ -53,7 +56,7 @@ default_attributes(
         },
         elasticsearch: {
 			use: true,
-            version: '6.x',
+            version: '7.x',
             memory: '1g',
             port: 9200,
             plugins: ['analysis-phonetic', 'analysis-icu']

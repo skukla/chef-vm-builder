@@ -4,9 +4,7 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 default[:infrastructure][:php][:supported_versions] = [
-    '7.2',
-    '7.3',
-    '7.4'
+    '7.3'
 ]
 default[:infrastructure][:php][:extension_list] = [
     "php%{version}",
@@ -29,4 +27,8 @@ default[:infrastructure][:php][:ini_options] = {
     max_execution_time: 1800,
     zlib_output_compression: 'On'
 }
+default[:infrastructure][:php][:fpm_options][:backend] = '127.0.0.1'
+
+
+
 

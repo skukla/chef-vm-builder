@@ -15,7 +15,6 @@ cluster_name = node[:infrastructure][:elasticsearch][:conf_options][:cluster_nam
 node_name = node[:infrastructure][:elasticsearch][:conf_options][:node_name]
 log_file_path = node[:infrastructure][:elasticsearch][:conf_options][:log_file_path]
 port = node[:infrastructure][:elasticsearch][:port]
-plugins = node[:infrastructure][:elasticsearch][:plugins]
 
 if use_elasticsearch    
     # Configure Java Options
@@ -25,7 +24,7 @@ if use_elasticsearch
         user "#{user}"
         group "#{group}"
         mode '644'
-        variables({ memory: memory })
+        variables({ memory: "#{memory}" })
     end
 
     # Configure Elasticsearch
@@ -36,10 +35,10 @@ if use_elasticsearch
         group "#{group}"
         mode '644'
         variables({ 
-            cluster_name: cluster_name,
-            node_name: node_name,
-            log_file_path: log_file_path,
-            port: port
+            cluster_name: "#{cluster_name}",
+            node_name: "#{node_name}",
+            log_file_path: "#{log_file_path}",
+            port: "#{port}"
         })
     end
 
@@ -75,21 +74,5 @@ if use_elasticsearch
     service 'elasticsearch' do
         action [:start, :enable]
         only_if { ::File.directory?('/etc/elasticsearch') }
-    end
-
-    # Uninstall/(Re-)Install Elasticsearch plugins
-    unless plugins.empty?
-        plugins.each do |plugin|
-            execute "Remove #{plugin} elasticsearch plugin" do
-                command "cd /usr/share/elasticsearch && bin/elasticsearch-plugin remove #{plugin}"
-                only_if { ::File.directory?("/usr/share/elasticsearch/plugins/#{plugin}") }
-            end
-            
-            execute "Install #{plugin} elasticsearch plugin" do
-                command "cd /usr/share/elasticsearch && bin/elasticsearch-plugin install #{plugin}"
-                notifies :restart, "service[elasticsearch]", :delayed
-                only_if { ::File.directory?('/etc/elasticsearch') }
-            end
-        end
     end
 end

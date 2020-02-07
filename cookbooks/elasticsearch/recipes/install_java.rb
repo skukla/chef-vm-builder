@@ -13,14 +13,4 @@ if use_elasticsearch
         action :install
         not_if "which java"
     end
-else
-    service 'elasticsearch' do
-        action [:stop]
-        only_if "jps | grep Elasticsearch"
-    end
-    
-    execute "Uninstall Java" do
-        command "sudo apt-get purge --auto-remove openjdk* -y"
-        only_if "which java"
-    end
 end

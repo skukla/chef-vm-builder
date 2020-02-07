@@ -1,3 +1,4 @@
+
 #
 # Cookbook:: elasticsearch
 # Recipe:: install
@@ -9,6 +10,7 @@ use_elasticsearch = node[:infrastructure][:elasticsearch][:use]
 user = node[:infrastructure][:elasticsearch][:user]
 group = node[:infrastructure][:elasticsearch][:group]
 version = node[:infrastructure][:elasticsearch][:version]
+plugins = node[:infrastructure][:elasticsearch][:plugins]
 
 # Check to see if we want to use Elasticsearch and then install
 if use_elasticsearch
@@ -24,4 +26,15 @@ if use_elasticsearch
         ignore_failure true
         not_if { ::File.directory?('/etc/elasticsearch') }
     end
-end
+
+    # Install Elasticsearch plugins
+    unless plugins.empty?
+        plugins.each do |plugin|
+            execute "Install #{plugin} elasticsearch plugin" do
+                command "cd /usr/share/elasticsearch && bin/elasticsearch-plugin install #{plugin}"
+                notifies :restart, "service[elasticsearch]", :delayed
+                only_if { ::File.directory?('/etc/elasticsearch') }
+            end
+        end
+    end
+end 

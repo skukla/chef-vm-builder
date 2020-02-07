@@ -7,7 +7,6 @@
 # Attributes
 supported_versions = node[:infrastructure][:php][:supported_versions]
 version = node[:infrastructure][:php][:version]
-repository = node[:infrastructure][:php][:repository]
 
 # Add PHP repository
 apt_repository "php-#{version}" do
