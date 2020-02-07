@@ -1,6 +1,6 @@
 # Pull in configuration
 require 'json'
-settings = JSON.parse(File.read(File.dirname(File.expand_path(__FILE__)) + '/config.json'))
+settings = JSON.parse(File.read(File.dirname(File.expand_path(__FILE__)) + '/vm_settings.json'))
 
 # Start VM Setup
 Vagrant.configure("2") do |config|
@@ -59,6 +59,9 @@ Vagrant.configure("2") do |config|
     chef.environments_path = "#{settings['provisioner']['environments_path']}"
     chef.roles_path = "#{settings['provisioner']['roles_path']}"
     chef.cookbooks_path = "#{settings['provisioner']['cookbooks_path']}"  
+
+    # Environment
+    chef.environment = 'vm'
 
     # Roles
     chef.add_role "base"
