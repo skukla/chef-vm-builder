@@ -11,11 +11,7 @@ group = node[:infrastructure][:webmin][:group]
 use_ssl = node[:infrastructure][:webmin][:use_ssl]
 
 # Convert use_ssl from boolean to number
-if use_ssl == true
-    use_ssl = 1
-else
-    use_ssl = 0
-end
+use_ssl == true ? use_ssl = 1 : use_ssl = 0
 
 # Configure webmin
 template 'Webmin configuration' do

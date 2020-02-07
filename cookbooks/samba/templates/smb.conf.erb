@@ -258,44 +258,16 @@
 # Please note that you also need to set appropriate Unix permissions
 # to the drivers directory for these users to have write rights in it
 ;   write list = root, @lpadmin
-[Image Drop]
-	writable = yes
-	force group = vagrant
-	comment = Image import directory on the VM
-	path = /var/www/magento/pub/media/import
-	force user = vagrant
-	browsable = yes
-	guest ok = yes
-[App-Design]
-    comment = App/Design directory for themes on the VM
-    path = /var/www/magento/app/design
-    read only = no
-    browsable = yes
-    guest ok = yes
-[Application Modules]
-	guest ok = yes
-	path = /var/www/magento/vendor
-	browsable = yes
-	writable = yes
-	comment = Vendor directory on the VM
-[Multisite Configuration]
-	force user = root
-	writable = yes
-	path = /etc/nginx/sites-available
-	guest ok = yes
-	comment = Multisite configurations on the VM
-	browsable = yes
-	force group = root
-
-[Web Root]
-	public = yes
-	path = /var/www/magento
-	force group = vagrant
-	force user = vagrant
-	comment = Magento codebase (composer.json)
-	writeable = yes
-
-[Composer Credentials]
-	path = /home/vagrant/.composer
-	writeable = yes
-	public = yes
+<% @shares.each do |share| %>
+[<%= share[:title]%>]
+   comment = <%= share[:comment] %>
+   path = /var/www/magento/pub/media/import
+   writable = <%= share[:writable] %>
+   browsable = <%= share[:browsable] %>
+   read only = <%= share[:read_only] %>
+   guest ok = <%= share[:guest_ok] %>
+   public = <%= share[:public] %>
+   force user = <%= share[:force_user] %>
+   force group = <%= share[:force_group] %>
+   guest ok = yes
+<% end %>

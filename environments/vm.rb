@@ -56,7 +56,7 @@ default_attributes(
         },
         elasticsearch: {
 			use: true,
-            version: '7.x',
+            version: '6.x',
             memory: '1g',
             port: 9200,
             plugins: ['analysis-phonetic', 'analysis-icu']
@@ -73,11 +73,11 @@ default_attributes(
             use: true,
             shares: {
                 composer_credentials: true,
-                image_drop: true,
                 web_root: true,
-                app_modules: true,
+                image_drop: true,
+                application_modules: true,
                 multisite_configuration: true,
-                app_design: true
+                application_design: true
             }
         }
     }

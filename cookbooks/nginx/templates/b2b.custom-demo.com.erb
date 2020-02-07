@@ -4,7 +4,7 @@ server {
      listen [::]:<%= @ssl_port %> ssl http2;
      server_name <%= @server_name %>;
      client_max_body_size <%= @client_max_body_size %>;
-     set $MAGE_ROOT <%= @webroot %>;
+     set $MAGE_ROOT <%= @web_root %>;
      ssl_certificate_key /etc/ssl/private/<%= @key_file %>;
      ssl_certificate /etc/ssl/certs/<%= @certificate_file %>;
      ssl_protocols TLSv1.2 TLSv1.1 TLSv1;

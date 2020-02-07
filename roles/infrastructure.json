@@ -26,6 +26,9 @@
 		"recipe[mailhog::uninstall_golang]",
 		"recipe[mailhog::install_golang]",
 		"recipe[mailhog::install]",
-		"recipe[mailhog::configure]"
+		"recipe[mailhog::configure]",
+		"recipe[samba::uninstall]",
+		"recipe[samba::install]",
+		"recipe[samba::configure]"
 	]
 }

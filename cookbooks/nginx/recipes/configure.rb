@@ -15,18 +15,18 @@ certificate_file = node[:infrastructure][:webserver][:ssl_files][:certificate_fi
 key_file = node[:infrastructure][:webserver][:ssl_files][:key_file]
 fpm_backend = node[:infrastructure][:webserver][:fpm_backend]
 fpm_port = node[:infrastructure][:php][:fpm_port]
-webroot = node[:infrastructure][:webserver][:conf_options][:webroot]
+web_root = node[:infrastructure][:webserver][:conf_options][:web_root]
 client_max_body_size = node[:infrastructure][:webserver][:conf_options][:client_max_body_size]
 http_port = node[:infrastructure][:webserver][:conf_options][:http_port]
 ssl_port = node[:infrastructure][:webserver][:conf_options][:ssl_port]
 
 # Create the web root
-directory 'Webroot directory' do
-    path "#{webroot}"
+directory 'Web root directory' do
+    path "#{web_root}"
     owner "#{user}"
     group "#{group}"
     mode '755'
-    not_if { ::File.directory?("#{webroot}") }
+    not_if { ::File.directory?("#{web_root}") }
 end
 
 # Configure nginx
@@ -86,7 +86,7 @@ selected_vertical_data.each do |selected_vertical|
             ssl_port: "#{ssl_port}",
             server_name: "#{selected_vertical[:url]}",
             client_max_body_size: "#{client_max_body_size}",
-            webroot: "#{webroot}",
+            web_root: "#{web_root}",
             key_file: "#{key_file}",
             certificate_file: "#{certificate_file}"
         })
