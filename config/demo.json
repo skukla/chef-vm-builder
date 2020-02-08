@@ -6,7 +6,10 @@
 			"fsi": false,
 			"custom": true
 		},
-		"channels": { "b2b": true, "b2c": true },
+		"channels": {
+			"b2b": true,
+			"b2c": true
+		},
 		"geos": ["us_en"]
 	},
 	"application": {
@@ -14,8 +17,7 @@
 			"composer": {
 				"username": "b17aa908c13768cef2a5a3a043bb3c54",
 				"password": "93f1f71fd779eb46af01fd7587e5fdba"
-			},
-			"github": { "oauth_token": "" }
+			}
 		},
 		"settings": {
 			"family": "Commerce",
