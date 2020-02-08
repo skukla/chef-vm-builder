@@ -22,8 +22,6 @@ default[:infrastructure][:php][:extension_list] = [
     "php%{version}-fpm"
 ]
 default[:infrastructure][:php][:ini_options] = {
-    timezone: 'America/Los_Angeles',
-    memory_limit: '2G',
     max_execution_time: 1800,
     zlib_output_compression: 'On'
 }

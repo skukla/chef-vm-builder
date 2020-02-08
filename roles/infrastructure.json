@@ -10,6 +10,7 @@
 		"recipe[php::configure]",
 		"recipe[php::uninstall_apache]",
 		"recipe[composer::install]",
+		"recipe[composer::configure]",
 		"recipe[nginx::install]",
 		"recipe[nginx::configure]",
 		"recipe[mysql::install]",

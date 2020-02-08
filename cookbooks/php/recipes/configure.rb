@@ -10,8 +10,9 @@ user = node[:infrastructure][:php][:user]
 group = node[:infrastructure][:php][:group]
 supported_versions = node[:infrastructure][:php][:supported_versions]
 version = node[:infrastructure][:php][:version]
-timezone = node[:infrastructure][:php][:ini_options][:timezone]
-memory_limit = node[:infrastructure][:php][:ini_options][:memory_limit]
+timezone = node[:infrastructure][:php][:timezone]
+memory_limit = node[:infrastructure][:php][:memory_limit]
+upload_max_filesize = node[:infrastructure][:php][:upload_max_filesize]
 max_execution_time = node[:infrastructure][:php][:ini_options][:max_execution_time]
 zlib_output_compression = node[:infrastructure][:php][:ini_options][:zlib_output_compression]
 fpm_backend = node[:infrastructure][:php][:fpm_options][:backend]
@@ -28,6 +29,7 @@ supported_versions.each do |suppported_version|
             variables({
                 timezone: "#{timezone}",
                 memory_limit: "#{memory_limit}",
+                upload_max_filesize: "#{upload_max_filesize}",
                 max_execution_time: "#{max_execution_time}",
                 zlib_output_compression: "#{zlib_output_compression}"
             })

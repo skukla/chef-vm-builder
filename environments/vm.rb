@@ -30,8 +30,8 @@ default_attributes(
             family: 'Commerce',
             version: '*',
             download: true,
-            sample_data: false,
-            install: true
+            install: true,
+            sample_data: true
         }
     },
     vm: {
@@ -43,7 +43,10 @@ default_attributes(
         },
         php: {
             version: '7.3',
-            fpm_port: 9000
+            fpm_port: 9000,
+            memory_limit: '2G',
+            upload_max_filesize: '2M',
+            timezone: 'America/Los_Angeles'
         },
         webserver: {
             http_port: 80,
