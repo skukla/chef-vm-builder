@@ -1,0 +1,78 @@
+{
+	"custom_demo": {
+		"verticals": {
+			"fashion": true,
+			"automotive": false,
+			"fsi": false,
+			"custom": true
+		},
+		"channels": { "b2b": true, "b2c": true },
+		"geos": ["us_en"]
+	},
+	"application": {
+		"authentication": {
+			"composer": {
+				"username": "b17aa908c13768cef2a5a3a043bb3c54",
+				"password": "93f1f71fd779eb46af01fd7587e5fdba"
+			},
+			"github": { "oauth_token": "" }
+		},
+		"settings": {
+			"family": "Commerce",
+			"version": "*",
+			"download": true,
+			"install": true,
+			"sample_data": true
+		}
+	},
+	"vm": {
+		"ip": "192.168.57.11"
+	},
+	"infrastructure": {
+		"os": {
+			"update": false
+		},
+		"php": {
+			"version": "7.3",
+			"fpm_port": 9000,
+			"memory_limit": "2G",
+			"upload_max_filesize": "2M",
+			"timezone": "America/Los_Angeles"
+		},
+		"webserver": {
+			"http_port": 80,
+			"ssl_port": 443
+		},
+		"database": {
+			"user": "magento",
+			"password": "password",
+			"name": "magento"
+		},
+		"elasticsearch": {
+			"use": true,
+			"version": "6.x",
+			"memory": "1g",
+			"port": 9200,
+			"plugins": ["analysis-phonetic", "analysis-icu"]
+		},
+		"mailhog": {
+			"use": true,
+			"port": 10000
+		},
+		"webmin": {
+			"use": true,
+			"port": 20000
+		},
+		"samba": {
+			"use": true,
+			"shares": {
+				"composer_credentials": true,
+				"web_root": true,
+				"image_drop": true,
+				"application_modules": true,
+				"multisite_configuration": true,
+				"application_design": true
+			}
+		}
+	}
+}

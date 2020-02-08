@@ -1,6 +1,31 @@
-# Pull in configuration
+#
+# Vagrantfile
+#
+# This file:
+#   1. Reads VM settings from config/vm.json for use in VM setup
+#   2. Reads Demo Settings from config/demo.json for use as Chef attributes
+#   3. Converts demo.json to a ruby hash and writes out /environments/vb.rb for Chef
+#   4. Checks for particular Vagrant plugins based on provider
+#   5. Configures VM settings based on provider
+#   6. Runs the Chef provisioner
+#
+# Copyright 2020, Steve Kukla, All Rights Reserved.
 require 'json'
-settings = JSON.parse(File.read(File.dirname(File.expand_path(__FILE__)) + '/vm_settings.json'))
+
+# Pull in VM configuration json file
+vm_settings_file = File.dirname(File.expand_path(__FILE__)) + '/config/vm.json'
+settings = JSON.parse(File.read(vm_settings_file))
+
+# Write out Chef environment file from Demo Settings configuration json file
+demo_settings_file = File.dirname(File.expand_path(__FILE__)) + '/config/demo.json'
+environment_file = File.dirname(File.expand_path(__FILE__)) + '/environments/vm.rb'
+demo_settings = JSON.parse(File.read(demo_settings_file))
+environment_file_content = [
+  'name "vm"',
+  'description "Configuration file for the Kukla Demo VM"',
+  "default_attributes(#{demo_settings})"
+]  
+IO.write(environment_file, environment_file_content.join("\n"))
 
 # Start VM Setup
 Vagrant.configure("2") do |config|
