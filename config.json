@@ -27,9 +27,6 @@
 			"sample_data": true
 		}
 	},
-	"vm": {
-		"ip": "192.168.57.11"
-	},
 	"infrastructure": {
 		"os": {
 			"update": false
@@ -75,6 +72,36 @@
 				"multisite_configuration": true,
 				"application_design": true
 			}
+		}
+	},
+	"vm": {
+		"provider": "vmware_fusion",
+		"ip": "192.168.57.11",
+		"url": "luma-demo.com",
+		"name": "Luma VM",
+		"box": "bento/ubuntu-18.04"
+	},
+	"remote_machine": {
+		"name": "Kukla-Machine",
+		"cpus": 2,
+		"ram": 4096,
+		"vram": 16,
+		"remote_display": "off",
+		"eth0_pcislotnumber": 32,
+		"eth1_pcislotnumber": 33
+	},
+	"provisioner": {
+		"type": "chef_zero",
+		"nodes_path": "nodes",
+		"environments_path": "environments",
+		"roles_path": "roles",
+		"cookbooks_path": "cookbooks"
+	},
+	"vagrant": {
+		"plugins": {
+			"all": ["vagrant-hostsupdater"],
+			"vmware_desktop": ["vagrant-vmware-desktop"],
+			"virtualbox": ["vagrant-vbguest"]
 		}
 	}
 }
