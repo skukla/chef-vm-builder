@@ -24,7 +24,7 @@ Vagrant.configure("2") do |config|
   # SSH Key and VM Box
   config.ssh.insert_key = true
   config.vm.box = settings['vm']['box']
-
+  
   # Set the hostname and configure networking
   config.vm.define settings['remote_machine']['name'] do |machine|
     machine.vm.network "private_network", ip: settings['vm']['ip']
@@ -33,8 +33,8 @@ Vagrant.configure("2") do |config|
 
   # Configure VM machine based on provider
   config.vm.provider "#{settings['vm']['provider']}" do |machine|
-    machine.gui = false
     if settings['vm']['provider'] == 'virtualbox'
+      machine.gui = false
       config.vbguest.auto_update = false
       machine.customize [
         "modifyvm", :id,
@@ -46,6 +46,8 @@ Vagrant.configure("2") do |config|
       ]
     else
       # VMWare-specific format
+      # machine.gui = true here shows VM in VMWare Fusion's VM Library
+      machine.gui = true
       machine.vmx["memsize"] = settings['remote_machine']['ram']
       machine.vmx["numvcpus"] = settings['remote_machine']['cpus']
       machine.vmx["ethernet0.pcislotnumber"] = settings['remote_machine']['eth0_pcislotnumber']

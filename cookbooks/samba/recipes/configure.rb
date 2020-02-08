@@ -43,3 +43,8 @@ template 'Configure Samba' do
         shares: selected_shares
     })
 end
+
+# Define, enable, and start the Samba service
+service 'smbd' do
+    action [:enable, :start]
+end
