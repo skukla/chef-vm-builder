@@ -3,12 +3,11 @@
 #
 # This file:
 #   1. Reads VM settings from config/vm.json for use in VM setup
-#   2. Updates the demo settings configuration file with the IP from the VM settings file
-#   3. Reads demo settings from config/demo.json for use as Chef attributes
-#   4. Converts demo settings to a ruby hash and writes out /environments/vb.rb for Chef
-#   5. Checks for particular Vagrant plugins based on provider
-#   6. Configures VM settings based on provider
-#   7. Runs the Chef provisioner
+#   2. Reads demo settings from config/demo.json for use as Chef attributes
+#   3. Converts demo settings to a ruby hash and writes out /environments/vb.rb for Chef
+#   4. Checks for particular Vagrant plugins based on provider
+#   5. Configures VM settings based on provider
+#   6. Runs the Chef provisioner
 #
 # Copyright 2020, Steve Kukla, All Rights Reserved.
 require 'json'
