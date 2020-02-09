@@ -5,9 +5,5 @@
 	"json_class": "Chef::Role",
 	"default_attributes": {},
 	"override_attributes": {},
-	"run_list": [
-		"recipe[init::install_packages]",
-		"recipe[init::install_motd]",
-		"recipe[init::install_cli]"
-	]
+	"run_list": ["recipe[init::default]"]
 }
