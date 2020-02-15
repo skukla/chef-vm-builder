@@ -1,16 +1,89 @@
 {
 	"custom_demo": {
-		"verticals": {
-			"fashion": true,
-			"automotive": false,
-			"fsi": false,
-			"custom": true
+		"fashion": {
+			"b2c": {
+				"use": true,
+				"url": "luma.com",
+				"scope": "website",
+				"code": "base",
+				"geos": {
+					"us_en": true,
+					"de_de": false,
+					"pt_br": false,
+					"jp_jp": false,
+					"in_hn": false
+				}
+			},
+			"b2b": {
+				"use": true,
+				"url": "b2b.luma.com",
+				"scope": "website",
+				"code": "luma_b2b",
+				"geos": {
+					"us_en": true,
+					"de_de": false,
+					"pt_br": false,
+					"jp_jp": false,
+					"in_hn": false
+				}
+			}
 		},
-		"channels": {
-			"b2b": true,
-			"b2c": true
+		"automotive": {
+			"b2c": {
+				"use": false,
+				"url": "luma-auto.com",
+				"scope": "website",
+				"code": "luma_auto",
+				"geos": {
+					"us_en": true,
+					"de_de": false,
+					"pt_br": false,
+					"jp_jp": false,
+					"in_hn": false
+				}
+			},
+			"b2b": {
+				"use": false,
+				"url": "b2b.luma-auto.com",
+				"scope": "website",
+				"code": "luma_auto_b2b",
+				"geos": {
+					"us_en": true,
+					"de_de": false,
+					"pt_br": false,
+					"jp_jp": false,
+					"in_hn": false
+				}
+			}
 		},
-		"geos": ["us_en"]
+		"customm": {
+			"b2c": {
+				"use": true,
+				"url": "custom-demo.com",
+				"scope": "website",
+				"code": "custom_b2c",
+				"geos": {
+					"us_en": true,
+					"de_de": false,
+					"pt_br": false,
+					"jp_jp": false,
+					"in_hn": false
+				}
+			},
+			"b2b": {
+				"use": true,
+				"url": "b2b.custom-demo.com",
+				"scope": "website",
+				"code": "custom_b2b",
+				"geos": {
+					"us_en": true,
+					"de_de": false,
+					"pt_br": false,
+					"jp_jp": false,
+					"in_hn": false
+				}
+			}
+		}
 	},
 	"application": {
 		"authentication": {

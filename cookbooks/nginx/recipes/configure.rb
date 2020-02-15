@@ -7,10 +7,11 @@
 # Attributes
 user = node[:infrastructure][:webserver][:user]
 group = node[:infrastructure][:webserver][:group]
-custom_demo_verticals = node[:custom_demo][:verticals]
-custom_demo_channels = node[:custom_demo][:channels]
-customm_demo_geos = node[:custom_demo][:geos]
-application_verticals = node[:application][:verticals]
+# custom_demo_verticals = node[:custom_demo][:verticals]
+# custom_demo_channels = node[:custom_demo][:channels]
+# customm_demo_geos = node[:custom_demo][:geos]
+# application_verticals = node[:application][:verticals]
+custom_demo_data = node[:custom_demo]
 certificate_file = node[:infrastructure][:webserver][:ssl_files][:certificate_file]
 key_file = node[:infrastructure][:webserver][:ssl_files][:key_file]
 fpm_backend = node[:infrastructure][:webserver][:fpm_backend]
@@ -42,20 +43,20 @@ end
 
 # Extract the data for the virtual host files
 selected_vertical_data = Array.new
-custom_demo_verticals.each do |vertical_name, vertical_choice|
-    next unless vertical_choice
-    custom_demo_channels.each do |channel_name, channel_choice|
-        next unless channel_choice
-        vertical_data = application_verticals[vertical_name]
-        customm_demo_geos.each do |geo|
-            selected_vertical_collection = Hash.new
-            channel_value = vertical_data[geo][channel_name]
-            selected_vertical_collection[:geo] = geo
-            selected_vertical_collection[:scope] = channel_value[:scope]
-            selected_vertical_collection[:url] = channel_value[:url]
-            selected_vertical_collection[:code] = channel_value[:code]
-            selected_vertical_data << selected_vertical_collection
+custom_demo_data.each do |vertical_key, vertical_value|
+    vertical_value.each do |channel_key, channel_value|
+        next unless vertical_value[channel_key][:use]
+        selected_vertical_geos = Array.new
+        selected_vertical_collection = Hash.new
+        selected_vertical_collection[:url] = vertical_value[channel_key][:url]
+        selected_vertical_collection[:scope] = vertical_value[channel_key][:scope]
+        selected_vertical_collection[:code] = vertical_value[channel_key][:code]
+        vertical_value[channel_key][:geos].each do |selected_geo_key, selected_geo_value|
+            next unless selected_geo_value
+            selected_vertical_geos << selected_geo_key
         end
+        selected_vertical_collection[:geos] = selected_vertical_geos
+        selected_vertical_data << selected_vertical_collection
     end
 end
 
