@@ -7,10 +7,6 @@
 # Attributes
 user = node[:infrastructure][:webserver][:user]
 group = node[:infrastructure][:webserver][:group]
-# custom_demo_verticals = node[:custom_demo][:verticals]
-# custom_demo_channels = node[:custom_demo][:channels]
-# customm_demo_geos = node[:custom_demo][:geos]
-# application_verticals = node[:application][:verticals]
 custom_demo_data = node[:custom_demo]
 certificate_file = node[:infrastructure][:webserver][:ssl_files][:certificate_file]
 key_file = node[:infrastructure][:webserver][:ssl_files][:key_file]
