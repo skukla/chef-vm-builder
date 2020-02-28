@@ -14,8 +14,8 @@ fpm_backend = node[:infrastructure][:webserver][:fpm_backend]
 fpm_port = node[:infrastructure][:php][:fpm_port]
 web_root = node[:infrastructure][:webserver][:conf_options][:web_root]
 client_max_body_size = node[:infrastructure][:webserver][:conf_options][:client_max_body_size]
-http_port = node[:infrastructure][:webserver][:conf_options][:http_port]
-ssl_port = node[:infrastructure][:webserver][:conf_options][:ssl_port]
+http_port = node[:infrastructure][:webserver][:http_port]
+ssl_port = node[:infrastructure][:webserver][:ssl_port]
 
 # Create the web root
 directory 'Web root directory' do

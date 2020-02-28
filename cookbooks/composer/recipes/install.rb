@@ -11,12 +11,23 @@ install_dir = node[:infrastructure][:composer][:install_dir]
 filename = node[:infrastructure][:composer][:filename]
 
 # Download composer and run install script
-execute 'Download Composer' do
-  command "curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=#{install_dir} --filename=#{filename}"
-  not_if { ::File.exist?("#{install_dir}/#{filename}") }
+execute 'Download and install Composer' do
+  command "curl -sS https://getcomposer.org/installer | php && mv #{filename}.phar /#{install_dir}/#{filename} && chmod +x /#{install_dir}/#{filename}"
+  action :run
+  not_if { File.exist?("/#{install_dir}/#{filename}") }
 end
 
-# Set ownership on the composer directory
-directory "/home/#{user}/.composer" do
-  owner "#{user}"
+# Make sure composer is up to date
+execute 'Composer Update' do
+  command "/#{install_dir}/#{filename} self-update"
+  action :run
+end
+
+# Make composer accessible globally
+link "/home/#{user}/#{filename}" do
+  to "/usr/local/bin/composer"
+end
+
+link "/home/#{user}/#{filename}.phar" do
+  to "/#{install_dir}/#{filename}"
 end

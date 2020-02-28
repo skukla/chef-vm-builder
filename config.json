@@ -89,15 +89,35 @@
 		"authentication": {
 			"composer": {
 				"username": "b17aa908c13768cef2a5a3a043bb3c54",
-				"password": "93f1f71fd779eb46af01fd7587e5fdba"
+				"password": "93f1f71fd779eb46af01fd7587e5fdba",
+				"github_token": "61da980e6f6af0219ba583dc327d3bc5b96ed601"
 			}
 		},
-		"settings": {
-			"family": "Commerce",
-			"version": "*",
-			"download": true,
-			"install": true,
-			"sample_data": true
+		"installation": {
+			"options": {
+				"family": "Commerce",
+				"version": "*",
+				"b2b_version": "^1.1",
+				"mode": "production",
+				"download": true,
+				"install": true,
+				"sample_data": true
+			},
+			"settings": {
+				"backend_frontname": "admin",
+				"language": "en_US",
+				"currency": "USD",
+				"admin_firstname": "Admin",
+				"admin_lastname": "Admin",
+				"admin_email": "admin@luma.com",
+				"admin_user": "admin",
+				"admin_password": "admin4tls",
+				"use_rewrites": true,
+				"use_secure_frontend": true,
+				"use_secure_admin": false,
+				"cleanup_database": true,
+				"session_save": "db"
+			}
 		}
 	},
 	"infrastructure": {
@@ -116,6 +136,7 @@
 			"ssl_port": 443
 		},
 		"database": {
+			"host": "localhost",
 			"user": "magento",
 			"password": "password",
 			"name": "magento"
@@ -150,7 +171,7 @@
 	"vm": {
 		"provider": "vmware_fusion",
 		"ip": "192.168.57.11",
-		"url": "luma-demo.com",
+		"url": "luma.com",
 		"name": "Luma VM",
 		"box": "bento/ubuntu-18.04"
 	},
@@ -166,6 +187,7 @@
 	"provisioner": {
 		"type": "chef_zero",
 		"nodes_path": "nodes",
+		"data_bags_path": "data_bags",
 		"environments_path": "environments",
 		"roles_path": "roles",
 		"cookbooks_path": "cookbooks"

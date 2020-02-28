@@ -6,7 +6,6 @@
 
 # Attributes
 
-
 # Recipes
 include_recipe 'php::install'
 include_recipe 'php::configure'

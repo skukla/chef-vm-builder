@@ -5,7 +5,7 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 
 # Attributes
-update_os = node[:infrastructure][:os][:update]
+update_os = node[:infrastructure][:os][:update_os]
 
 # Recipes
 include_recipe 'init::update_os' if update_os

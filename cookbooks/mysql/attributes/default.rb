@@ -11,3 +11,4 @@ default[:infrastructure][:database][:conf_options] = {
     tmp_table_size: '64M',
     max_heap_table_size: '64M'
 }
+default[:infrastructure][:database][:root_user][:password] = 'password'

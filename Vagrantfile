@@ -8,6 +8,7 @@
 #   4. Checks for particular Vagrant plugins based on provider
 #   5. Configures VM settings based on provider
 #   6. Runs the Chef provisioner
+#   7. Saves the settings so they're persisted inside the VM on the next run
 #
 # Copyright 2020, Steve Kukla, All Rights Reserved.
 require 'json'
@@ -17,10 +18,12 @@ system ("clear")
 
 # Configuration file list
 config_file = File.dirname(File.expand_path(__FILE__)) + '/config.json'
+infra_settings_file = File.dirname(File.expand_path(__FILE__)) + "/data_bags/init/  settings.json"
 environment_file = File.dirname(File.expand_path(__FILE__)) + '/environments/vm.rb'
 
 # Read the configuration json file
-settings = JSON.parse(File.read(config_file))
+config_file_content = File.read(config_file)
+settings = JSON.parse(config_file_content)
 
 # Start VM Setup
 Vagrant.configure("2") do |config|
@@ -96,6 +99,7 @@ Vagrant.configure("2") do |config|
   # Run Chef check provisioner
   config.vm.provision "#{settings['provisioner']['type']}" do |chef|
     chef.nodes_path = "#{settings['provisioner']['nodes_path']}"
+    chef.data_bags_path = "#{settings['provisioner']['data_bags_path']}"
     chef.environments_path = "#{settings['provisioner']['environments_path']}"
     chef.roles_path = "#{settings['provisioner']['roles_path']}"
     chef.cookbooks_path = "#{settings['provisioner']['cookbooks_path']}"  
@@ -110,5 +114,15 @@ Vagrant.configure("2") do |config|
 
     # Accept Chef License
     chef.arguments = '--chef-license accept'
+  end
+  
+  # Save the configured infrastructure settings into a reference file
+  config.trigger.after [:up, :reload, :provision] do |trigger|
+    trigger.name = "Saving infrastructure settings..."
+    trigger.ruby do
+      File.open(infra_settings_file, "w+") do |file|
+        file.puts(config_file_content)
+      end
+    end
   end
 end

@@ -5,9 +5,5 @@
 	"json_class": "Chef::Role",
 	"default_attributes": {},
 	"override_attributes": {},
-	"run_list": [
-		"recipe[magento::download]",
-		"recipe[magento::install]",
-		"recipe[magento::configure]"
-	]
+	"run_list": ["recipe[magento::default]"]
 }
