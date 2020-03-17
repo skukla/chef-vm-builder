@@ -15,5 +15,5 @@ map $MAGE_RUN_CODE $MAGE_RUN_TYPE {
 }
 
 <% @vhost_data.each do |site| %>
-include /etc/nginx/sites-enabled/<%= site[:url] %>;
+include /etc/nginx/sites-enabled/<%= site[:vertical] %>_<%= site[:channel] %>;
 <% end %>

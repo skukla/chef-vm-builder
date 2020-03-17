@@ -1,19 +1,28 @@
 #
 # Cookbook:: magento
-# Recipe:: configure
+# Recipe:: configure-app
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 
 # Attributes
 user = node[:application][:user]
 group = node[:application][:group]
-web_root = node[:application][:webserver][:web_root]
+web_root = node[:infrastructure][:webserver][:conf_options][:web_root]
 use_elasticsearch = node[:infrastructure][:elasticsearch][:use]
 deploy_mode = node[:application][:installation][:options][:mode]
 
-# TODO: Configure Magento to work with nginx
-
-# TODO: Uncomment include of Magento nginx configurations from all virtual hosts
+# Start Consumers
+general_consumers = [
+    'product_action_attribute.update',
+    'product_action_attribute.website.update',
+    'codegeneratorProcessor',
+    'exportProcessor',
+    'inventoryQtyCounter'
+]
+consumers_string = general_consumers.join(' ')
+execute "Start General Consumers" do
+    command "cd #{web_root} && bin/magento queue:consumers:start #{consumers_string} &"
+end
 
 # Set application deployment mode
 unless deploy_mode.empty?
@@ -22,7 +31,7 @@ unless deploy_mode.empty?
     end
 end
 
-# Update files/folders ownership
+# Update files/folders ownership and restart PHP
 execute "Set permissions" do
     command "cd #{web_root} && sudo chown -R #{group}:#{user} var/cache/ var/page_cache/ && sudo chmod -R 777 var/ pub/ app/etc/ generated/"
 end

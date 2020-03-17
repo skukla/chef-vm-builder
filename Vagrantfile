@@ -18,7 +18,7 @@ system ("clear")
 
 # Configuration file list
 config_file = File.dirname(File.expand_path(__FILE__)) + '/config.json'
-infra_settings_file = File.dirname(File.expand_path(__FILE__)) + "/data_bags/init/  settings.json"
+infra_settings_file = File.dirname(File.expand_path(__FILE__)) + "/data_bags/init/settings.json"
 environment_file = File.dirname(File.expand_path(__FILE__)) + '/environments/vm.rb'
 
 # Read the configuration json file

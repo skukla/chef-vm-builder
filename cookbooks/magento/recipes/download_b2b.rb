@@ -1,6 +1,6 @@
 #
 # Cookbook:: magento
-# Recipe:: download
+# Recipe:: download_b2b
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 

@@ -27,16 +27,19 @@ elsif download_flag
     include_recipe 'magento::create_project'
 end
 if download_flag && b2b_flag
-    include_recipe 'magento::b2b'
+    include_recipe 'magento::download_b2b'
+elsif b2b_flag
+    include_recipe 'magento::configure_b2b'
 end
 if download_flag
     include_recipe 'magento::download'
 end
-if download_flag && sample_data_flag
+if sample_data_flag
     include_recipe 'magento::sample_data'
 end
 if install_flag
     include_recipe 'magento::database'
     include_recipe 'magento::install'
 end
-include_recipe 'magento::configure'
+include_recipe 'magento::configure_nginx'
+include_recipe 'magento::configure_app'

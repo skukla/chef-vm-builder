@@ -8,5 +8,5 @@ server {
      ssl_certificate_key /etc/ssl/private/<%= @key_file %>;
      ssl_certificate /etc/ssl/certs/<%= @certificate_file %>;
      ssl_protocols TLSv1.2 TLSv1.1 TLSv1;
-     #include /etc/nginx/sites-available/conf/00-nginx-magento.conf;
+     include /etc/nginx/sites-available/conf/00-nginx-magento.conf;
 }
