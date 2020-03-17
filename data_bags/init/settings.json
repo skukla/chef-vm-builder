@@ -28,34 +28,6 @@
 				}
 			}
 		},
-		"automotive": {
-			"b2c": {
-				"use": false,
-				"url": "luma-auto.com",
-				"scope": "website",
-				"code": "luma_auto",
-				"geos": {
-					"us_en": true,
-					"de_de": false,
-					"pt_br": false,
-					"jp_jp": false,
-					"in_hn": false
-				}
-			},
-			"b2b": {
-				"use": false,
-				"url": "b2b.luma-auto.com",
-				"scope": "website",
-				"code": "luma_auto_b2b",
-				"geos": {
-					"us_en": true,
-					"de_de": false,
-					"pt_br": false,
-					"jp_jp": false,
-					"in_hn": false
-				}
-			}
-		},
 		"custom": {
 			"b2c": {
 				"use": true,
@@ -90,7 +62,7 @@
 			"composer": {
 				"username": "b17aa908c13768cef2a5a3a043bb3c54",
 				"password": "93f1f71fd779eb46af01fd7587e5fdba",
-				"github_token": "61da980e6f6af0219ba583dc327d3bc5b96ed601"
+				"github_token": "b7daccca8662cd3350b31ec6949bc421da7a04d0"
 			}
 		},
 		"installation": {
@@ -101,7 +73,8 @@
 				"mode": "production",
 				"download": true,
 				"install": true,
-				"sample_data": true
+				"sample_data": true,
+				"apply_patches": true
 			},
 			"settings": {
 				"backend_frontname": "admin",

@@ -10,6 +10,7 @@ custom_demo_data = node[:custom_demo]
 download_flag = node[:application][:installation][:options][:download]
 sample_data_flag = node[:application][:installation][:options][:sample_data]
 install_flag = node[:application][:installation][:options][:install]
+apply_patches_flag = node[:application][:installation][:options][:apply_patches]
 # Check for B2B flag
 b2b_values = Array.new
 custom_demo_data.each do |vertical_key, vertical_value|
@@ -28,8 +29,9 @@ elsif download_flag
 end
 if download_flag && b2b_flag
     include_recipe 'magento::download_b2b'
-elsif b2b_flag
-    include_recipe 'magento::configure_b2b'
+end
+if apply_patches_flag
+    include_recipe 'magento::apply_patches'
 end
 if download_flag
     include_recipe 'magento::download'
@@ -40,6 +42,9 @@ end
 if install_flag
     include_recipe 'magento::database'
     include_recipe 'magento::install'
+end
+if b2b_flag
+    include_recipe 'magento::configure_b2b'
 end
 include_recipe 'magento::configure_nginx'
 include_recipe 'magento::configure_app'

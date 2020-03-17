@@ -15,14 +15,6 @@ directory 'VM cli path check' do
     action :delete
 end
 
-# Create the VM cli directory
-directory 'Create VM cli path' do
-    owner user
-    group group
-    path "/home/#{user}/cli"
-    action :create
-end
-
 # Clone the VM cli from Steve's public git repo
 git 'VM cli repository' do
     repository 'https://github.com/skukla/vm-dotfiles.git'

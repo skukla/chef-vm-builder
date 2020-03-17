@@ -73,7 +73,8 @@
 				"mode": "production",
 				"download": true,
 				"install": true,
-				"sample_data": true
+				"sample_data": true,
+				"apply_patches": true
 			},
 			"settings": {
 				"backend_frontname": "admin",
