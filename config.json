@@ -28,34 +28,6 @@
 				}
 			}
 		},
-		"automotive": {
-			"b2c": {
-				"use": false,
-				"url": "luma-auto.com",
-				"scope": "website",
-				"code": "luma_auto",
-				"geos": {
-					"us_en": true,
-					"de_de": false,
-					"pt_br": false,
-					"jp_jp": false,
-					"in_hn": false
-				}
-			},
-			"b2b": {
-				"use": false,
-				"url": "b2b.luma-auto.com",
-				"scope": "website",
-				"code": "luma_auto_b2b",
-				"geos": {
-					"us_en": true,
-					"de_de": false,
-					"pt_br": false,
-					"jp_jp": false,
-					"in_hn": false
-				}
-			}
-		},
 		"custom": {
 			"b2c": {
 				"use": true,
