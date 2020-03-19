@@ -57,6 +57,38 @@
 			}
 		}
 	},
+	"custom_modules": {
+		"module-sctools": {
+			"provider": "magentoese",
+			"version": "dev-master",
+			"repository_url": "git@github.com:PMET-public/module-sctools.git"
+		},
+		"module-themecustomizer": {
+			"provider": "magentoese",
+			"version": "dev-master",
+			"repository_url": "git@github.com:PMET-public/module-themecustomizer.git"
+		},
+		"module-autofill": {
+			"provider": "magentoese",
+			"version": "dev-master",
+			"repository_url": "git@github.com:PMET-public/module-autofill.git"
+		},
+		"module-magento-framework-data-collection": {
+			"provider": "skukla",
+			"version": "dev-master",
+			"repository_url": "https://github.com/skukla/module-magento-framework-data-collection.git"
+		},
+		"theme-frontend-custom": {
+			"provider": "skukla",
+			"version": "dev-master",
+			"repository_url": "git@github.com:skukla/theme-frontend-custom.git"
+		},
+		"module-attribute-import": {
+			"provider": "zt",
+			"version": "dev-master",
+			"repository_url": "git@github.com:skukla/zt-attribute-import-final.git"
+		}
+	},
 	"application": {
 		"authentication": {
 			"composer": {
@@ -71,7 +103,11 @@
 				"version": "*",
 				"b2b_version": "^1.1",
 				"mode": "production",
-				"download": true,
+				"download": {
+					"base_code": true,
+					"b2b_code": true,
+					"custom_modules": true
+				},
 				"install": true,
 				"sample_data": true,
 				"apply_patches": true

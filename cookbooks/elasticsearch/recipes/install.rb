@@ -32,7 +32,7 @@ if use_elasticsearch
         plugins.each do |plugin|
             execute "Install #{plugin} elasticsearch plugin" do
                 command "cd /usr/share/elasticsearch && bin/elasticsearch-plugin install #{plugin}"
-                notifies :restart, "service[elasticsearch]", :delayed
+                notifies :restart, "service[elasticsearch]", :immediately
                 only_if { ::File.directory?('/etc/elasticsearch') }
             end
         end

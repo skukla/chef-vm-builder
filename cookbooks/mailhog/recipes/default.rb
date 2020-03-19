@@ -5,11 +5,13 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 
 # Attributes
-
+use_mailhog = node[:infrastructure][:mailhog][:use]
 
 # Recipes
-include_recipe 'mailhog::uninstall'
-include_recipe 'mailhog::uninstall_golang'
-include_recipe 'mailhog::install_golang'
-include_recipe 'mailhog::install'
-include_recipe 'mailhog::configure'
+if use_mailhog
+    include_recipe 'mailhog::uninstall'
+    include_recipe 'mailhog::uninstall_golang'
+    include_recipe 'mailhog::install_golang'
+    include_recipe 'mailhog::install'
+    include_recipe 'mailhog::configure'
+end

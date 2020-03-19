@@ -6,6 +6,8 @@
 
 # Attributes
 web_root = node[:application][:webserver][:web_root]
+user = node[:application][:user]
+group = node[:application][:group]
 db_host = node[:infrastructure][:database][:host]
 db_name = node[:infrastructure][:database][:name]
 db_user = node[:infrastructure][:database][:user]

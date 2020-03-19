@@ -8,7 +8,6 @@
 port = node[:infrastructure][:mailhog][:port]
 php_versions = node[:infrastructure][:mailhog][:php][:supported_versions]
 
-
 # Configure the mailhog service
 template 'Mailhog service' do
     source 'mailhog.service.erb'
