@@ -1,7 +1,12 @@
 #
 # Cookbook:: magento
-# Recipe:: apply-patches
+# Recipe:: apply_patches
 #
+# 1. Scan folder to get file name
+# 2. Read each file to find out affected Magento module?
+# 3. Write out patches.json file from filenames
+# 4. Add patches file to composer.json
+# 
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 
 # Attributes
@@ -11,35 +16,61 @@ web_root = node[:infrastructure][:webserver][:conf_options][:web_root]
 composer_install_dir = node[:application][:composer][:install_dir]
 composer_file = node[:application][:composer][:filename]
 
-# Include the cweagans composer patches module
-execute "Download CWeagans Composer Patches Module" do
-    command "cd #{web_root} && su #{user} -c '/#{composer_install_dir}/#{composer_file} require --no-update cweagans/composer-patches'"
-    not_if { ::File.directory?("#{web_root}/vendor/cweagans") }
+# Pull out the patches subdirectory
+execute "Pull out patches from repository" do
+    command "cd /var/www/patches && git filter-branch --subdirectory-filter m2-hotfixes"
 end
 
-# Clone the patches via github
-git 'Magento patches' do
-    repository 'https://github.com/skukla/m2-patches.git'
-    revision 'master'
-    destination "#{web_root}/m2-patches"
-    action :sync
-    user "#{user}"
-    group "#{group}"
+# Move patches into web root
+execute "Move patches into web root" do
+    command "mv /var/www/patches #{web_root}/m2-hotfixes"
+    only_if { ::File.directory?("/var/www/patches") }
 end
 
-# Create m2-hotfixes folder
-directory 'Hotfix directory' do
-    path "#{web_root}/m2-hotfixes"
-    owner "#{user}"
-    group "#{group}"
-    mode '755'
-    action :create
-    not_if { ::File.directory?("#{web_root}/m2-hotfixes") }
+# Create the patch file
+ruby_block 'Build patch file' do
+    block do
+        require 'json'
+        files = Dir["#{web_root}/m2-hotfixes/*.patch"].sort!
+        file_hash = {}
+        module_hash = {}
+        patches_file = "#{web_root}/m2-hotfixes/patches.json"
+        
+        files.each_with_index do |file, key|
+            value = File.open(file, &:readline).split('/')[3]
+            if value.match(/module-/) || value.match(/theme-/)
+                result = "magento/#{value}"
+            else
+                result = "magento2-base"
+            end
+            file_hash[key] = file
+            module_hash[key] = result
+        end
+        
+        indexed_by_val = module_hash
+            .group_by { |k,v| v }
+            .transform_values { |vals| vals.map(&:first) }
+        
+        result = indexed_by_val.transform_values do |indexes|
+            indexes.map do |idx|
+                { "Patch #{idx}" => file_hash[idx] }
+            end
+        end
+        
+        result = {
+        "patches" => result.transform_values { |arr| arr.reduce(&:merge) }
+        }
+        
+        File.open(patches_file, "w+") do |file|
+            file.puts(result.to_json)
+        end
+    end
+    only_if { ::File.directory?("#{web_root}/m2-hotfixes") }
 end
 
-# Copy patches to m2-hotfixes folder
-execute "Copy patches to m2-hotfixes folder" do
-    command "cd #{web_root} && cp m2-patches/patches.json m2-hotfixes/ && cp m2-patches/kukla-patches/* m2-hotfixes/"
+# Update patch permissions
+execute "Update patch permissions" do
+    command "sudo chown #{user}:#{group} -R #{web_root}/m2-hotfixes"
     only_if { ::File.directory?("#{web_root}/m2-hotfixes") }
 end
 

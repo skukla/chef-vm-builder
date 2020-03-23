@@ -13,7 +13,6 @@ composer_file = node[:application][:composer][:filename]
 magento_family = node[:application][:installation][:options][:family]
 magento_family = 'enterprise' if magento_family == 'Commerce'
 magento_version = node[:application][:installation][:options][:version]
-version_string = "=#{magento_version}" if magento_version != "*"
 github_token = node[:application][:authentication][:composer][:github_token]
 composer_username = node[:application][:authentication][:composer][:username]
 composer_password = node[:application][:authentication][:composer][:password]
@@ -34,7 +33,7 @@ template "Add composer credentials" do
 end
 
 # Create project string
-create_project_string = "create-project --no-install --repository-url=https://repo.magento.com/ magento/project-#{magento_family.downcase}-edition#{version_string} ."
+create_project_string = "create-project --no-install --repository-url=https://repo.magento.com/ magento/project-#{magento_family.downcase}-edition=#{magento_version} ."
 
 # Create base composer.json for base code
 execute "Create Magento composer.json " do

@@ -21,5 +21,5 @@ end
 
 # Clean cache
 execute "Clean cache" do
-    command "cd #{web_root} && su #{user} -c './bin/magento cache:clean && rm -rf var/cache/* var/page_cache/*'"
+    command "cd #{web_root} && su #{user} -c './bin/magento cache:flush && sudo rm -rf var/cache/* var/page_cache/*'"
 end

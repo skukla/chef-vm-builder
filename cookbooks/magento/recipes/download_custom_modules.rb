@@ -14,11 +14,11 @@ custom_module_data = node[:custom_modules]
 # Configure the repositories
 modules_array = Array.new
 custom_module_data.each do |custom_module_key, custom_module_value|
-    execute "Add custom repositories" do
+    execute "Add custom repositories : #{custom_module_key}" do
         command "cd #{web_root} && su #{user} -c '/#{composer_install_dir}/#{composer_file} config repositories.#{custom_module_key} git #{custom_module_value[:repository_url]}'"
     end
     # Build the require statement (Collect into an array, then join into a string)
-    modules_array << "#{custom_module_value[:provider]}/#{custom_module_key}:#{custom_module_value[:version]}"
+    modules_array << "#{custom_module_value[:vendor]}/#{custom_module_key}:#{custom_module_value[:version]}"
 end
 
 # Require the modules

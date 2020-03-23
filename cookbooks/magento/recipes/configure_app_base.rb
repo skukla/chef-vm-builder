@@ -52,6 +52,10 @@ if use_elasticsearch
     end
 end
 
+execute "Clean cache" do
+    command "cd #{web_root} && su #{user} -c './bin/magento cache:clean config full_page'"
+end
+
 # Set indexers on schedule
 execute "Configure indexer modes" do
     command "cd #{web_root} && su #{user} -c './bin/magento indexer:set-mode schedule'"

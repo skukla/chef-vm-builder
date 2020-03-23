@@ -31,7 +31,7 @@
 		"custom": {
 			"b2c": {
 				"use": true,
-				"url": "custom-demo.com",
+				"url": "outlet.deltafaucet.com",
 				"scope": "website",
 				"code": "custom_b2c",
 				"geos": {
@@ -59,34 +59,29 @@
 	},
 	"custom_modules": {
 		"module-sctools": {
-			"provider": "magentoese",
+			"vendor": "magentoese",
 			"version": "dev-master",
 			"repository_url": "git@github.com:PMET-public/module-sctools.git"
 		},
 		"module-themecustomizer": {
-			"provider": "magentoese",
+			"vendor": "magentoese",
 			"version": "dev-master",
 			"repository_url": "git@github.com:PMET-public/module-themecustomizer.git"
 		},
 		"module-autofill": {
-			"provider": "magentoese",
+			"vendor": "magentoese",
 			"version": "dev-master",
 			"repository_url": "git@github.com:PMET-public/module-autofill.git"
 		},
 		"module-magento-framework-data-collection": {
-			"provider": "skukla",
+			"vendor": "skukla",
 			"version": "dev-master",
 			"repository_url": "https://github.com/skukla/module-magento-framework-data-collection.git"
 		},
 		"theme-frontend-custom": {
-			"provider": "skukla",
+			"vendor": "skukla",
 			"version": "dev-master",
 			"repository_url": "git@github.com:skukla/theme-frontend-custom.git"
-		},
-		"module-attribute-import": {
-			"provider": "zt",
-			"version": "dev-master",
-			"repository_url": "git@github.com:skukla/zt-attribute-import-final.git"
 		}
 	},
 	"application": {
@@ -100,7 +95,7 @@
 		"installation": {
 			"options": {
 				"family": "Commerce",
-				"version": "*",
+				"version": "2.3.4",
 				"b2b_version": "^1.1",
 				"mode": "production",
 				"download": {
@@ -151,22 +146,22 @@
 			"name": "magento"
 		},
 		"elasticsearch": {
-			"use": true,
+			"use": false,
 			"version": "6.x",
 			"memory": "1g",
 			"port": 9200,
 			"plugins": ["analysis-phonetic", "analysis-icu"]
 		},
 		"mailhog": {
-			"use": true,
+			"use": false,
 			"port": 10000
 		},
 		"webmin": {
-			"use": true,
+			"use": false,
 			"port": 20000
 		},
 		"samba": {
-			"use": true,
+			"use": false,
 			"shares": {
 				"composer_credentials": true,
 				"web_root": true,
@@ -184,6 +179,14 @@
 		"name": "Luma VM",
 		"box": "bento/ubuntu-18.04"
 	},
+	"provisioner": {
+		"type": "chef_zero",
+		"nodes_path": "nodes",
+		"data_bags_path": "data_bags",
+		"environments_path": "environments",
+		"roles_path": "roles",
+		"cookbooks_path": "cookbooks"
+	},
 	"remote_machine": {
 		"name": "Kukla-Machine",
 		"cpus": 2,
@@ -192,14 +195,6 @@
 		"remote_display": "off",
 		"eth0_pcislotnumber": 32,
 		"eth1_pcislotnumber": 33
-	},
-	"provisioner": {
-		"type": "chef_zero",
-		"nodes_path": "nodes",
-		"data_bags_path": "data_bags",
-		"environments_path": "environments",
-		"roles_path": "roles",
-		"cookbooks_path": "cookbooks"
 	},
 	"vagrant": {
 		"plugins": {
