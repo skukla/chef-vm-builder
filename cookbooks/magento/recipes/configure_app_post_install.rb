@@ -15,14 +15,36 @@ custom_module_configuration = node[:application][:installation][:custom_modules]
 apply_config_flag = node[:application][:installation][:options][:configuration][:apply]
 apply_deploy_mode_flag = node[:application][:installation][:options][:deploy_mode][:apply]
 
-# Configure third-party modules according to settings
-if apply_config_flag
-    custom_module_configuration.each do |setting|
-        execute "Configuring custom module setting : #{setting[:path]}" do
-            command "cd #{web_root} && su #{user} -c './bin/magento config:set #{setting[:path]} \"#{setting[:value]}\"'"
+    # Calculate any configuration overrides
+    configuraton_overrides = {
+        elasticsuite: {
+            path: "catalog/search/engine",
+            value: "elasticsuite"
+        }
+    }
+    overrides_array = []
+    configuraton_overrides.each do |override_key, value|
+        custom_module_data.keys.each do |custom_module_key|
+            if override_key.to_s == custom_module_key.to_s
+                overrides_array << override_key
+            end
         end
     end
-end
+
+    # Configure third-party modules according to settings
+    if apply_config_flag
+        custom_module_configuration.each do |setting|
+            execute "Configuring custom module setting : #{setting[:path]}" do
+                command "cd #{web_root} && su #{user} -c './bin/magento config:set #{setting[:path]} \"#{setting[:value]}\"'"
+            end
+        end
+        # Process overrides
+        overrides_array.each do |value|
+            execute "Configuring overrides for  : #{configuraton_overrides[value][:path]}" do
+                command "cd #{web_root} && su #{user} -c './bin/magento config:set #{configuraton_overrides[value][:path]} \"#{configuraton_overrides[value][:value]}\"'"
+            end
+        end
+    end
 
 # Update files/folders ownership
 execute "Set permissions" do

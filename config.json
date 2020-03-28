@@ -157,7 +157,7 @@
 				"admin_password": "admin4tls",
 				"use_rewrites": true,
 				"use_secure_frontend": true,
-				"use_secure_admin": false,
+				"use_secure_admin": true,
 				"cleanup_database": true,
 				"session_save": "db"
 			}

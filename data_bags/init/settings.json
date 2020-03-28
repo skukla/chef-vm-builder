@@ -128,18 +128,18 @@
 				"version": "2.3.4",
 				"b2b_version": "^1.1",
 				"download": {
-					"base_code": true,
-					"b2b_code": true,
-					"custom_modules": true
+					"base_code": false,
+					"b2b_code": false,
+					"custom_modules": false
 				},
-				"install": true,
-				"sample_data": true,
+				"install": false,
+				"sample_data": false,
 				"deploy_mode": {
-					"apply": true,
+					"apply": false,
 					"mode": "production"
 				},
 				"patches": {
-					"apply": true,
+					"apply": false,
 					"repository_url": "https://github.com/PMET-public/magento-cloud.git"
 				},
 				"configuration": {
