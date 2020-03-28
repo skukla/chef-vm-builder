@@ -70,7 +70,7 @@ end
 
 # Update patch permissions
 execute "Update patch permissions" do
-    command "sudo chown #{user}:#{group} -R #{web_root}/m2-hotfixes"
+    command "su #{user} -c 'sudo chown #{user}:#{group} -R #{web_root}/m2-hotfixes'"
     only_if { ::File.directory?("#{web_root}/m2-hotfixes") }
 end
 

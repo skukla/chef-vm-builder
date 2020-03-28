@@ -51,5 +51,5 @@ install_string = install_string + " #{secure_url_string}" if use_secure_frontend
 install_string = install_string + " #{cleanup_database_string} #{session_save_string}"
 
 execute "Install Magento" do
-    command "cd #{web_root} && ./bin/magento setup:install #{install_string}"
+    command "cd #{web_root} && su #{user} -c './bin/magento setup:install #{install_string}'"
 end

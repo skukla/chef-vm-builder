@@ -11,7 +11,7 @@ download_base_code_flag = node[:application][:installation][:options][:download]
 download_custom_modules_flag = node[:application][:installation][:options][:download][:custom_modules]
 sample_data_flag = node[:application][:installation][:options][:sample_data]
 install_flag = node[:application][:installation][:options][:install]
-apply_patches_flag = node[:application][:installation][:options][:apply_patches]
+apply_patches_flag = node[:application][:installation][:options][:patches][:apply]
 # Check for B2B flag
 download_b2b_flag = node[:application][:installation][:options][:download][:b2b_code]
 b2b_values = Array.new
@@ -49,8 +49,10 @@ end
 if download_base_code_flag
     include_recipe 'magento::composer_install'
 # Otherwise, if we just want custom modules to be added, do composer update
+# Then, shift into developer mode and process setup:upgrade
 elsif download_custom_modules_flag && !download_base_code_flag
     include_recipe 'magento::composer_update'
+    include_recipe 'magento::add_modules'
 end
 # Add sample data after initial code download
 if sample_data_flag

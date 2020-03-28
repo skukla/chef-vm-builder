@@ -25,10 +25,3 @@ directory "Re-create the web root" do
     mode '755'
     not_if { ::File.directory?("#{web_root}") }
 end
-
-ruby_block "Delete the Magento database" do
-    block do
-        %x[mysql -uroot -e "DROP DATABASE IF EXISTS #{db_name};"]
-    end
-    action :create
-end

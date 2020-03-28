@@ -1,6 +1,6 @@
 #
 # Cookbook:: magento
-# Recipe:: composer_install
+# Recipe:: composer_update
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 
@@ -12,7 +12,7 @@ composer_file = node[:application][:composer][:filename]
 
 # Run composer install to download the code in composer.json
 execute "Download Magento application code" do
-    command "cd #{web_root} && su #{user} -c '/#{composer_install_dir}/#{composer_file} install'"
+    command "cd #{web_root} && su #{user} -c '/#{composer_install_dir}/#{composer_file} update'"
 end
 
 

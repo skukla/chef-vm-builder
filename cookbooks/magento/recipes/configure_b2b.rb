@@ -5,6 +5,7 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 
 # Attributes
+user = node[:application][:user]
 web_root = node[:application][:webserver][:web_root]
 
 # Start B2B consumers
@@ -16,5 +17,5 @@ b2b_consumers = [
 ]
 consumers_string = b2b_consumers.join(' ')
 execute "Start B2B Consumers" do
-    command "cd #{web_root} && bin/magento queue:consumers:start #{consumers_string} &"
+    command "cd #{web_root} && su #{user} -c './bin/magento queue:consumers:start #{consumers_string} &'"
 end

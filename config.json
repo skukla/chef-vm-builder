@@ -31,7 +31,7 @@
 		"custom": {
 			"b2c": {
 				"use": true,
-				"url": "outlet.deltafaucet.com",
+				"url": "custom-demo.com",
 				"scope": "website",
 				"code": "custom_b2c",
 				"geos": {
@@ -82,6 +82,36 @@
 			"vendor": "skukla",
 			"version": "dev-master",
 			"repository_url": "git@github.com:skukla/theme-frontend-custom.git"
+		},
+		"module-core": {
+			"vendor": "magezon",
+			"version": "dev-master",
+			"repository_url": "git@github.com:skukla/module-form-core.git"
+		},
+		"module-builder": {
+			"vendor": "magezon",
+			"version": "dev-master",
+			"repository_url": "git@github.com:skukla/module-form-builder.git"
+		},
+		"module-uibuilder": {
+			"vendor": "magezon",
+			"version": "dev-master",
+			"repository_url": "git@github.com:skukla/module-form-uibuilder.git"
+		},
+		"module-blueformbuilder-core": {
+			"vendor": "magezon",
+			"version": "dev-master",
+			"repository_url": "git@github.com:skukla/module-formbuilder.git"
+		},
+		"elasticsuite": {
+			"vendor": "smile",
+			"version": "dev-master",
+			"repository_url": "https://github.com/Smile-SA/elasticsuite.git"
+		},
+		"module-suez-b2b": {
+			"vendor": "adobesv",
+			"version": "dev-master",
+			"repository_url": "git@github.com:skukla/module-suez-b2b.git"
 		}
 	},
 	"application": {
@@ -97,7 +127,6 @@
 				"family": "Commerce",
 				"version": "2.3.4",
 				"b2b_version": "^1.1",
-				"mode": "production",
 				"download": {
 					"base_code": true,
 					"b2b_code": true,
@@ -105,7 +134,17 @@
 				},
 				"install": true,
 				"sample_data": true,
-				"apply_patches": true
+				"deploy_mode": {
+					"apply": true,
+					"mode": "production"
+				},
+				"patches": {
+					"apply": true,
+					"repository_url": "https://github.com/PMET-public/magento-cloud.git"
+				},
+				"configuration": {
+					"apply": true
+				}
 			},
 			"settings": {
 				"backend_frontname": "admin",

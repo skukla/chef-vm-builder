@@ -31,7 +31,7 @@
 		"custom": {
 			"b2c": {
 				"use": true,
-				"url": "outlet.deltafaucet.com",
+				"url": "custom-demo.com",
 				"scope": "website",
 				"code": "custom_b2c",
 				"geos": {
@@ -82,6 +82,36 @@
 			"vendor": "skukla",
 			"version": "dev-master",
 			"repository_url": "git@github.com:skukla/theme-frontend-custom.git"
+		},
+		"module-core": {
+			"vendor": "magezon",
+			"version": "dev-master",
+			"repository_url": "git@github.com:skukla/module-form-core.git"
+		},
+		"module-builder": {
+			"vendor": "magezon",
+			"version": "dev-master",
+			"repository_url": "git@github.com:skukla/module-form-builder.git"
+		},
+		"module-uibuilder": {
+			"vendor": "magezon",
+			"version": "dev-master",
+			"repository_url": "git@github.com:skukla/module-form-uibuilder.git"
+		},
+		"module-blueformbuilder-core": {
+			"vendor": "magezon",
+			"version": "dev-master",
+			"repository_url": "git@github.com:skukla/module-formbuilder.git"
+		},
+		"elasticsuite": {
+			"vendor": "smile",
+			"version": "dev-master",
+			"repository_url": "https://github.com/Smile-SA/elasticsuite.git"
+		},
+		"module-suez-b2b": {
+			"vendor": "adobesv",
+			"version": "dev-master",
+			"repository_url": "git@github.com:skukla/module-suez-b2b.git"
 		}
 	},
 	"application": {
@@ -99,13 +129,19 @@
 				"b2b_version": "^1.1",
 				"mode": "production",
 				"download": {
-					"base_code": true,
-					"b2b_code": true,
-					"custom_modules": true
+					"base_code": false,
+					"b2b_code": false,
+					"custom_modules": false
 				},
-				"install": true,
-				"sample_data": true,
-				"apply_patches": true
+				"install": false,
+				"sample_data": false,
+				"patches": {
+					"apply": false,
+					"repository_url": "https://github.com/PMET-public/magento-cloud.git"
+				},
+				"configuration": {
+					"apply": true
+				}
 			},
 			"settings": {
 				"backend_frontname": "admin",
@@ -161,7 +197,7 @@
 			"port": 20000
 		},
 		"samba": {
-			"use": false,
+			"use": true,
 			"shares": {
 				"composer_credentials": true,
 				"web_root": true,

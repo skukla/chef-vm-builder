@@ -14,6 +14,7 @@ web_root = node[:infrastructure][:webserver][:conf_options][:web_root]
 composer_install_dir = node[:application][:composer][:install_dir]
 composer_file = node[:application][:composer][:filename]
 magento_version = node[:application][:installation][:options][:version]
+patches_repository = node[:application][:installation][:options][:patches][:repository_url]
 
 # Include the cweagans composer patches module
 execute "Download cweagans composer patches module" do
@@ -35,7 +36,7 @@ end
 
 # Clone the patches repository via github
 git 'Magento patches' do
-    repository 'https://github.com/PMET-public/magento-cloud.git'
+    repository "#{patches_repository}"
     revision "pmet-#{magento_version}-ref"
     destination "/var/www/patches"
     action :sync

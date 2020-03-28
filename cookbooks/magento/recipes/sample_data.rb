@@ -27,4 +27,5 @@ end
 # Include sample data
 execute "Install sample data" do
     command "cd #{web_root} && su #{user} -c './bin/magento sampledata:deploy'"
+    notifies :run, 'execute[Set permissions]', :immediately
 end
