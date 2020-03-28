@@ -8,6 +8,7 @@
 user = node[:application][:user]
 group = node[:application][:group]
 web_root = node[:infrastructure][:webserver][:conf_options][:web_root]
+custom_module_data = node[:custom_modules]
 deploy_mode = node[:application][:installation][:options][:deploy_mode][:mode]
 base_configuration = node[:application][:installation][:conf_options]
 custom_module_configuration = node[:application][:installation][:custom_modules][:conf_options]

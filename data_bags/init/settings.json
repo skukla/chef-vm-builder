@@ -119,7 +119,7 @@
 			"composer": {
 				"username": "b17aa908c13768cef2a5a3a043bb3c54",
 				"password": "93f1f71fd779eb46af01fd7587e5fdba",
-				"github_token": "b7daccca8662cd3350b31ec6949bc421da7a04d0"
+				"github_token": "dfefae1076e0e32c82546ff321e6e7b9bdba803b"
 			}
 		},
 		"installation": {
@@ -127,16 +127,19 @@
 				"family": "Commerce",
 				"version": "2.3.4",
 				"b2b_version": "^1.1",
-				"mode": "production",
 				"download": {
-					"base_code": false,
-					"b2b_code": false,
-					"custom_modules": false
+					"base_code": true,
+					"b2b_code": true,
+					"custom_modules": true
 				},
-				"install": false,
-				"sample_data": false,
+				"install": true,
+				"sample_data": true,
+				"deploy_mode": {
+					"apply": true,
+					"mode": "production"
+				},
 				"patches": {
-					"apply": false,
+					"apply": true,
 					"repository_url": "https://github.com/PMET-public/magento-cloud.git"
 				},
 				"configuration": {
@@ -182,18 +185,18 @@
 			"name": "magento"
 		},
 		"elasticsearch": {
-			"use": false,
+			"use": true,
 			"version": "6.x",
 			"memory": "1g",
 			"port": 9200,
 			"plugins": ["analysis-phonetic", "analysis-icu"]
 		},
 		"mailhog": {
-			"use": false,
+			"use": true,
 			"port": 10000
 		},
 		"webmin": {
-			"use": false,
+			"use": true,
 			"port": 20000
 		},
 		"samba": {
