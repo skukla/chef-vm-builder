@@ -1,4 +1,4 @@
 .DS_Store
 .vagrant/
 nodes/
-environments/vm.rb
+environments/
