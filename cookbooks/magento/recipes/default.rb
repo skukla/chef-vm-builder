@@ -20,7 +20,7 @@ custom_demo_data.each do |vertical_key, vertical_value|
         b2b_values << vertical_value[channel_key][:use]
     end
 end
-b2b_flag = true if b2b_values.include? true && download_b2b_flag
+b2b_flag = true if b2b_values.include? true
 
 # Recipes
 # If download base is configured, and web root exists but is not empty
@@ -33,7 +33,7 @@ elsif download_base_code_flag
     include_recipe 'magento::create_project'
 end
 # If B2B is comnfigured and code should be dowloaded, add it to composer.json
-if b2b_flag
+if b2b_flag &&  download_b2b_flag
     include_recipe 'magento::download_b2b'
 end
 # If custom modules are configured, add them to composer.json
@@ -69,4 +69,5 @@ if install_flag
     end
 end
 # Do these things after base install and additional extension installs
+include_recipe 'magento::configure_settings'
 include_recipe 'magento::configure_app_post_install'

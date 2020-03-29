@@ -8,10 +8,6 @@
 user = node[:application][:user]
 group = node[:application][:group]
 web_root = node[:infrastructure][:webserver][:conf_options][:web_root]
-use_elasticsearch = node[:infrastructure][:elasticsearch][:use]
-base_configuration = node[:application][:installation][:conf_options]
-custom_module_configuration = node[:application][:installation][:custom_modules][:conf_options]
-apply_config_flag = node[:application][:installation][:options][:configuration][:apply]
 
 # Update files/folders ownership
 execute "Set permissions" do
@@ -35,23 +31,6 @@ general_consumers = [
 consumers_string = general_consumers.join(' ')
 execute "Start General Consumers" do
     command "cd #{web_root} && su #{user} -c './bin/magento queue:consumers:start #{consumers_string} &'"
-end
-
-# Configure base application according to settings
-if apply_config_flag
-    base_configuration.each do |setting|
-        if setting[:path].include? "elasticsearch"
-            if use_elasticsearch
-                execute "Configuring base setting : #{setting[:path]}" do
-                    command "cd #{web_root} && su #{user} -c './bin/magento config:set #{setting[:path]} \"#{setting[:value]}\"'"
-                end
-            end
-        else
-            execute "Configuring base setting : #{setting[:path]}" do
-                command "cd #{web_root} && su #{user} -c './bin/magento config:set #{setting[:path]} \"#{setting[:value]}\"'"
-            end
-        end
-    end
 end
 
 execute "Clean cache" do

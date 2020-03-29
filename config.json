@@ -2,7 +2,7 @@
 	"custom_demo": {
 		"fashion": {
 			"b2c": {
-				"use": true,
+				"use": false,
 				"url": "luma.com",
 				"scope": "website",
 				"code": "base",
@@ -15,7 +15,7 @@
 				}
 			},
 			"b2b": {
-				"use": true,
+				"use": false,
 				"url": "b2b.luma.com",
 				"scope": "website",
 				"code": "luma_b2b",
@@ -30,7 +30,7 @@
 		},
 		"custom": {
 			"b2c": {
-				"use": true,
+				"use": false,
 				"url": "custom-demo.com",
 				"scope": "website",
 				"code": "custom_b2c",
@@ -44,9 +44,9 @@
 			},
 			"b2b": {
 				"use": true,
-				"url": "b2b.custom-demo.com",
+				"url": "suezwater.com",
 				"scope": "website",
-				"code": "custom_b2b",
+				"code": "base",
 				"geos": {
 					"us_en": true,
 					"de_de": false,
@@ -133,7 +133,7 @@
 					"custom_modules": true
 				},
 				"install": true,
-				"sample_data": true,
+				"sample_data": false,
 				"deploy_mode": {
 					"apply": true,
 					"mode": "production"
@@ -143,7 +143,10 @@
 					"repository_url": "https://github.com/PMET-public/magento-cloud.git"
 				},
 				"configuration": {
-					"apply": true
+					"base": true,
+					"b2b": true,
+					"custom_modules": true,
+					"overrides": true
 				}
 			},
 			"settings": {
@@ -152,7 +155,7 @@
 				"currency": "USD",
 				"admin_firstname": "Admin",
 				"admin_lastname": "Admin",
-				"admin_email": "admin@luma.com",
+				"admin_email": "admin@suez.com",
 				"admin_user": "admin",
 				"admin_password": "admin4tls",
 				"use_rewrites": true,
@@ -214,8 +217,8 @@
 	"vm": {
 		"provider": "vmware_fusion",
 		"ip": "192.168.57.11",
-		"url": "luma.com",
-		"name": "Luma VM",
+		"url": "suezwater.com",
+		"name": "Suez Demo VM",
 		"box": "bento/ubuntu-18.04"
 	},
 	"provisioner": {

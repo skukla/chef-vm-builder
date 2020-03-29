@@ -2,7 +2,7 @@
 	"custom_demo": {
 		"fashion": {
 			"b2c": {
-				"use": true,
+				"use": false,
 				"url": "luma.com",
 				"scope": "website",
 				"code": "base",
@@ -15,7 +15,7 @@
 				}
 			},
 			"b2b": {
-				"use": true,
+				"use": false,
 				"url": "b2b.luma.com",
 				"scope": "website",
 				"code": "luma_b2b",
@@ -30,7 +30,7 @@
 		},
 		"custom": {
 			"b2c": {
-				"use": true,
+				"use": false,
 				"url": "custom-demo.com",
 				"scope": "website",
 				"code": "custom_b2c",
@@ -44,9 +44,9 @@
 			},
 			"b2b": {
 				"use": true,
-				"url": "b2b.custom-demo.com",
+				"url": "suezwater.com",
 				"scope": "website",
-				"code": "custom_b2b",
+				"code": "base",
 				"geos": {
 					"us_en": true,
 					"de_de": false,
@@ -119,7 +119,7 @@
 			"composer": {
 				"username": "b17aa908c13768cef2a5a3a043bb3c54",
 				"password": "93f1f71fd779eb46af01fd7587e5fdba",
-				"github_token": "dfefae1076e0e32c82546ff321e6e7b9bdba803b"
+				"github_token": "391e909d929bb9f99717ee5cfe590abd777f254b"
 			}
 		},
 		"installation": {
@@ -143,7 +143,10 @@
 					"repository_url": "https://github.com/PMET-public/magento-cloud.git"
 				},
 				"configuration": {
-					"apply": true
+					"base": true,
+					"b2b": true,
+					"custom_modules": true,
+					"overrides": true
 				}
 			},
 			"settings": {
@@ -152,12 +155,12 @@
 				"currency": "USD",
 				"admin_firstname": "Admin",
 				"admin_lastname": "Admin",
-				"admin_email": "admin@luma.com",
+				"admin_email": "admin@suez.com",
 				"admin_user": "admin",
 				"admin_password": "admin4tls",
 				"use_rewrites": true,
 				"use_secure_frontend": true,
-				"use_secure_admin": false,
+				"use_secure_admin": true,
 				"cleanup_database": true,
 				"session_save": "db"
 			}
@@ -185,18 +188,18 @@
 			"name": "magento"
 		},
 		"elasticsearch": {
-			"use": true,
+			"use": false,
 			"version": "6.x",
 			"memory": "1g",
 			"port": 9200,
 			"plugins": ["analysis-phonetic", "analysis-icu"]
 		},
 		"mailhog": {
-			"use": true,
+			"use": false,
 			"port": 10000
 		},
 		"webmin": {
-			"use": true,
+			"use": false,
 			"port": 20000
 		},
 		"samba": {
@@ -214,8 +217,8 @@
 	"vm": {
 		"provider": "vmware_fusion",
 		"ip": "192.168.57.11",
-		"url": "luma.com",
-		"name": "Luma VM",
+		"url": "suezwater.com",
+		"name": "Suez Demo VM",
 		"box": "bento/ubuntu-18.04"
 	},
 	"provisioner": {

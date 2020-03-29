@@ -246,6 +246,12 @@ default[:application][:installation][:conf_options] =
     value: 1
 },
 {
+    path: "paypal/general/merchant_country",
+    value: "US",
+    scope: "website",
+    scope_code: "base"
+},
+{
     path: "payment/braintree_paypal/active",
     value: 1
 },
@@ -288,7 +294,56 @@ default[:application][:installation][:conf_options] =
 {
     path: "admin/captcha/enable",
     value: 0
+},
+{
+    path: "btob/website_configuration/company_active",
+    value: 1,
+    scope: "website",
+    scope_code: "base"
+},
+{
+    path: "btob/website_configuration/sharedcatalog_active",
+    value: 0,
+    scope: "website",
+    scope_code: "base"
+},
+{
+    path: "btob/website_configuration/negotiablequote_active",
+    value: 1,
+    scope: "website",
+    scope_code: "base"
+},
+{
+    path: "btob/website_configuration/quickorder_active",
+    value: 1,
+    scope: "website",
+    scope_code: "base"
+},
+{
+    path: "btob/website_configuration/requisition_list_active",
+    value: 1,
+    scope: "website",
+    scope_code: "base"
+},
+{
+    path: "btob/default_b2b_payment_methods/applicable_payment_methods",
+    value: 1,
+    scope: "website",
+    scope_code: "base"
+},
+{
+    path: "btob/default_b2b_payment_methods/available_payment_methods",
+    value: "companycredit",
+    scope: "website",
+    scope_code: "base"
+},
+{
+    path: "payment/companycredit/active",
+    value: 1,
+    scope: "website",
+    scope_code: "base"
 }
+
 
 default[:application][:installation][:custom_modules][:conf_options] = {
     path: "magentoese_autofill/general/enable_autofill",
@@ -319,6 +374,182 @@ default[:application][:installation][:custom_modules][:conf_options] = {
     value: "Kukla"
 },
 {
-    path: "magentoese_autofill/persona_1/company_value",
+    path: "magentoese_autofill/persona_1/address_value",
+    value: "777 S. Citrus Ave"
+},
+{
+    path: "magentoese_autofill/persona_1/country_value",
+    value: "US"
+},
+{
+    path: "magentoese_autofill/persona_1/state_value",
+    value: 12
+},
+{
+    path: "magentoese_autofill/persona_1/city_value",
+    value: "Los Angeles"
+},
+{
+    path: "magentoese_autofill/persona_1/zip_value",
+    value: 90016
+},
+{
+    path: "magentoese_autofill/persona_1/telephone_value",
+    value: "818-445-3948"
+},
+{
+    path: "magentoese_autofill/persona_2/enable",
+    value: 1
+},
+{
+    path: "magentoese_autofill/persona_2/label",
+    value: "Michelle Ortiz (Purchasing Agent)"
+},
+{
+    path: "magentoese_autofill/persona_2/email_value",
+    value: "michelle@k2.com"
+},
+{
+    path: "magentoese_autofill/persona_2/password_value",   
+    value: "Password1"
+},
+{
+    path: "magentoese_autofill/persona_2/firstname_value",
+    value: "Michelle"
+},
+{
+    path: "magentoese_autofill/persona_2/lastname_value",
+    value: "Ortiz"
+},
+{
+    path: "magentoese_autofill/persona_2/company_value",
+    value: "K2, Inc."
+},
+{
+    path: "magentoese_autofill/persona_2/address_value",
+    value: "1 K2 West Drive"
+},
+{
+    path: "magentoese_autofill/persona_2/country_value",
+    value: "US"
+},
+{
+    path: "magentoese_autofill/persona_2/state_value",
+    value: 12
+},
+{
+    path: "magentoese_autofill/persona_2/city_value",
+    value: "Commerce"
+},
+{
+    path: "magentoese_autofill/persona_2/zip_value",
+    value: 90023
+},
+{
+    path: "magentoese_autofill/persona_2/telephone_value",
+    value: "213-339-4938"
+},
+{
+    path: "magentoese_autofill/persona_3/enable",
+    value: 1
+},
+{
+    path: "magentoese_autofill/persona_3/label",
+    value: "Casey Kendall (Technical End User)"
+},
+{
+    path: "magentoese_autofill/persona_3/email_value",
+    value: "casey@k2.com"
+},
+{
+    path: "magentoese_autofill/persona_3/password_value",   
+    value: "Password1"
+},
+{
+    path: "magentoese_autofill/persona_3/firstname_value",
+    value: "Casey"
+},
+{
+    path: "magentoese_autofill/persona_3/lastname_value",
+    value: "Kendall"
+},
+{
+    path: "magentoese_autofill/persona_3/company_value",
+    value: "K2, Inc."
+},
+{
+    path: "magentoese_autofill/persona_3/address_value",
+    value: "1 K2 West Drive"
+},
+{
+    path: "magentoese_autofill/persona_3/country_value",
+    value: "US"
+},
+{
+    path: "magentoese_autofill/persona_3/state_value",
+    value: 12
+},
+{
+    path: "magentoese_autofill/persona_3/city_value",
+    value: "Commerce"
+},
+{
+    path: "magentoese_autofill/persona_3/zip_value",
+    value: 90023
+},
+{
+    path: "magentoese_autofill/persona_3/telephone_value",
+    value: "213-304-4939"
+},
+{
+    path: "magentoese_autofill/persona_4/enable",
+    value: 1
+},
+{
+    path: "magentoese_autofill/persona_4/label",
+    value: "Phil Baker (Technical Salesperson)"
+},
+{
+    path: "magentoese_autofill/persona_4/email_value",
+    value: "phil@suezwater.com"
+},
+{
+    path: "magentoese_autofill/persona_4/password_value",   
+    value: "Password1"
+},
+{
+    path: "magentoese_autofill/persona_4/firstname_value",
+    value: "Phil"
+},
+{
+    path: "magentoese_autofill/persona_4/lastname_value",
+    value: "Baker"
+},
+{
+    path: "magentoese_autofill/persona_4/company_value",
     value: "Suez North America"
+},
+{
+    path: "magentoese_autofill/persona_4/address_value",
+    value: "461 From Road"
+},
+{
+    path: "magentoese_autofill/persona_4/country_value",
+    value: "US"
+},
+{
+    path: "magentoese_autofill/persona_4/state_value",
+    value: 41
+},
+{
+    path: "magentoese_autofill/persona_4/city_value",
+    value: "Paramus"
+},
+{
+    path: "magentoese_autofill/persona_4/zip_value",
+    value: 07653
+},
+{
+    path: "magentoese_autofill/persona_4/telephone_value",
+    value: "201-394-2931"
 }
