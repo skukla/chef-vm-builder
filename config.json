@@ -2,7 +2,7 @@
 	"custom_demo": {
 		"fashion": {
 			"b2c": {
-				"use": false,
+				"use": true,
 				"url": "luma.com",
 				"scope": "website",
 				"code": "base",
@@ -15,7 +15,7 @@
 				}
 			},
 			"b2b": {
-				"use": false,
+				"use": true,
 				"url": "b2b.luma.com",
 				"scope": "website",
 				"code": "luma_b2b",
@@ -43,10 +43,10 @@
 				}
 			},
 			"b2b": {
-				"use": true,
-				"url": "suezwater.com",
+				"use": false,
+				"url": "b2b.custom-demo.com",
 				"scope": "website",
-				"code": "base",
+				"code": "custom_b2b",
 				"geos": {
 					"us_en": true,
 					"de_de": false,
@@ -58,61 +58,6 @@
 		}
 	},
 	"custom_modules": {
-		"module-sctools": {
-			"vendor": "magentoese",
-			"version": "dev-master",
-			"repository_url": "git@github.com:PMET-public/module-sctools.git"
-		},
-		"module-themecustomizer": {
-			"vendor": "magentoese",
-			"version": "dev-master",
-			"repository_url": "git@github.com:PMET-public/module-themecustomizer.git"
-		},
-		"module-autofill": {
-			"vendor": "magentoese",
-			"version": "dev-master",
-			"repository_url": "git@github.com:PMET-public/module-autofill.git"
-		},
-		"module-magento-framework-data-collection": {
-			"vendor": "skukla",
-			"version": "dev-master",
-			"repository_url": "https://github.com/skukla/module-magento-framework-data-collection.git"
-		},
-		"theme-frontend-custom": {
-			"vendor": "skukla",
-			"version": "dev-master",
-			"repository_url": "git@github.com:skukla/theme-frontend-custom.git"
-		},
-		"module-core": {
-			"vendor": "magezon",
-			"version": "dev-master",
-			"repository_url": "git@github.com:skukla/module-form-core.git"
-		},
-		"module-builder": {
-			"vendor": "magezon",
-			"version": "dev-master",
-			"repository_url": "git@github.com:skukla/module-form-builder.git"
-		},
-		"module-uibuilder": {
-			"vendor": "magezon",
-			"version": "dev-master",
-			"repository_url": "git@github.com:skukla/module-form-uibuilder.git"
-		},
-		"module-blueformbuilder-core": {
-			"vendor": "magezon",
-			"version": "dev-master",
-			"repository_url": "git@github.com:skukla/module-formbuilder.git"
-		},
-		"elasticsuite": {
-			"vendor": "smile",
-			"version": "dev-master",
-			"repository_url": "https://github.com/Smile-SA/elasticsuite.git"
-		},
-		"module-suez-b2b": {
-			"vendor": "adobesv",
-			"version": "dev-master",
-			"repository_url": "git@github.com:skukla/module-suez-b2b.git"
-		}
 	},
 	"application": {
 		"authentication": {
@@ -155,7 +100,7 @@
 				"currency": "USD",
 				"admin_firstname": "Admin",
 				"admin_lastname": "Admin",
-				"admin_email": "admin@suez.com",
+				"admin_email": "admin@luma.com",
 				"admin_user": "admin",
 				"admin_password": "admin4tls",
 				"use_rewrites": true,
@@ -217,8 +162,8 @@
 	"vm": {
 		"provider": "vmware_fusion",
 		"ip": "192.168.57.11",
-		"url": "suezwater.com",
-		"name": "Suez Demo VM",
+		"url": "luma.com",
+		"name": "Luma VM",
 		"box": "bento/ubuntu-18.04"
 	},
 	"provisioner": {
