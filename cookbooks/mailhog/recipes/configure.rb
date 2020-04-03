@@ -39,8 +39,3 @@ end
 execute "Reload all daemons" do
     command "sudo systemctl daemon-reload"
 end
-
-# Define, enable, and start the mailhog service
-service 'mailhog' do
-    action [:enable, :start]
-end

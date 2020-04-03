@@ -5,5 +5,11 @@
 	"json_class": "Chef::Role",
 	"default_attributes": {},
 	"override_attributes": {},
-	"run_list": ["recipe[magento::default]"]
+	"run_list": [
+		"recipe[magento::default]",
+		"recipe[elasticsearch::start]",
+		"recipe[webmin::start]",
+		"recipe[mailhog::start]",
+		"recipe[samba::start]"
+	]
 }

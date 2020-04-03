@@ -6,7 +6,7 @@
 
 # Attributes
 web_root = node[:application][:webserver][:web_root]
-custom_demo_data = node[:custom_demo]
+custom_demo_data = node[:custom_demo][:verticals]
 download_base_code_flag = node[:application][:installation][:options][:download][:base_code]
 download_custom_modules_flag = node[:application][:installation][:options][:download][:custom_modules]
 sample_data_flag = node[:application][:installation][:options][:sample_data]
@@ -23,14 +23,20 @@ end
 b2b_flag = true if b2b_values.include? true
 
 # Recipes
+
+# Start MySQL here
+
+
 # If download base is configured, and web root exists but is not empty
 if download_base_code_flag && File.directory?("#{web_root}") && !Dir.empty?("#{web_root}")
     # Clear the web root, then install
     include_recipe 'magento::uninstall'
     include_recipe 'magento::create_project'
+    include_recipe 'magento::replace_modules'
 # Otherwise, as long as the web root exists...
 elsif download_base_code_flag
     include_recipe 'magento::create_project'
+    include_recipe 'magento::replace_modules'
 end
 # If B2B is comnfigured and code should be dowloaded, add it to composer.json
 if b2b_flag &&  download_b2b_flag
@@ -60,9 +66,12 @@ if sample_data_flag
 end
 # Do these things only after installation, not subsequent extension installs
 if install_flag 
+    # Configure the database before/after install
+    include_recipe 'mysql::configure_pre_install'
     include_recipe 'magento::database'
     include_recipe 'magento::install'
     include_recipe 'magento::configure_nginx'
+    include_recipe 'mysql::configure_post_install'
     include_recipe 'magento::configure_app_base'
     if b2b_flag
         include_recipe 'magento::configure_b2b'

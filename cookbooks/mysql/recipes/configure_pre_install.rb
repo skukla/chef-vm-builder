@@ -1,6 +1,6 @@
 #
 # Cookbook:: mysql
-# Recipe:: configure
+# Recipe:: configure_pre_install
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 
@@ -10,7 +10,7 @@ innodb_buffer_pool_size = node[:infrastructure][:database][:conf_options][:innod
 max_allowed_packet = node[:infrastructure][:database][:conf_options][:max_allowed_packet]
 tmp_table_size = node[:infrastructure][:database][:conf_options][:tmp_table_size]
 max_heap_table_size = node[:infrastructure][:database][:conf_options][:max_heap_table_size]
-root_user_password = node[:infrastructure][:database][:root_user][:password]
+pre_install_settings = node[:infrastructure][:database][:pre_install_settings]
 
 # Create the mysql.conf.d folder
 directory 'Create the mysql.conf.d folder' do
@@ -36,15 +36,17 @@ template 'Configure MariaDB' do
     })
 end
 
-# Allow SUPER privileges
-ruby_block "Allow super privileges" do
-    block do
-        %x[mysql -uroot -e "SET GLOBAL log_bin_trust_function_creators = 1;"]
+# Configure pre-install settings
+pre_install_settings.each do |setting, value|
+    ruby_block "Configure MySQL pre-install setting : #{setting}" do
+        block do
+            "%x[mysql -uroot -e \"SET GLOBAL #{setting} = #{value};\"]"
+        end
+        action :create
     end
-    action :create
 end
 
-# Define, enable, and start the MySQL service
+# Restart MySQL
 service 'mysql' do
-    action [:enable, :start]
+    action :restart
 end

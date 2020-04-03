@@ -7,11 +7,11 @@
 default[:application][:installation][:conf_options] = 
 {
     path: "general/store_information/name",
-    value: "Suez North America"
+    value: "Luma, Inc."
 },
 {
     path: "general/store_information/phone",
-    value: "1 (877) 219-5520"
+    value: "1-310-945-0345"
 },
 {
     path: "general/store_information/hours",
@@ -19,27 +19,27 @@ default[:application][:installation][:conf_options] =
 },
 {
     path: "general/store_information/street_line1",
-    value: "461 From Road"
+    value: "3640 Holdrege Ave"
 },
 {
     path: "general/store_information/street_line2",
-    value: "Suite 400"
+    value: ""
+},
+{
+    path: "general/store_information/city",
+    value: "Los Angeles"
 },
 {
     path: "general/store_information/region_id",
-    value: 41
+    value: 12
 },
 {
     path: "general/store_information/country_id",
     value: "US"
 },
 {
-    path: "general/store_information/city",
-    value: "Paramus"
-},
-{
     path: "general/store_information/postcode",
-    value: 07652
+    value: 90016
 },
 {
     path: "catalog/product_video/youtube_api_key",
@@ -87,7 +87,7 @@ default[:application][:installation][:conf_options] =
 },
 {
     path: "catalog/search/engine",
-    value: "elasticsuite"
+    value: "elasticsearch6+"
 },
 {
     path: "catalog/search/elasticsearch6_server_hostname",
@@ -135,19 +135,23 @@ default[:application][:installation][:conf_options] =
 },
 {
     path: "shipping/origin/street_line1",
-    value: "461 From Road"
+    value: "3640 Holdrege Ave"
 },
 {
     path: "shipping/origin/street_line2",
-    value: "Suite 400"
+    value: ""
 },
 {
     path: "shipping/origin/city",
-    value: "Paramus"
+    value: "Los Angeles"
+},
+{
+    path: "shipping/origin/region_id",
+    value: 12
 },
 {
     path: "shipping/origin/postcode",
-    value: 07652
+    value: 90016
 },
 {
     path: "carriers/ups/active",
@@ -345,7 +349,7 @@ default[:application][:installation][:conf_options] =
 }
 
 
-default[:application][:installation][:custom_modules][:conf_options] = {
+default[:custom_demo][:custom_modules][:conf_options] = {
     path: "magentoese_autofill/general/enable_autofill",
     value: 1
 },
@@ -374,8 +378,12 @@ default[:application][:installation][:custom_modules][:conf_options] = {
     value: "Kukla"
 },
 {
+    path: "magentoese_autofill/persona_1/company_value",
+    value: "Luma, Inc."
+},
+{
     path: "magentoese_autofill/persona_1/address_value",
-    value: "777 S. Citrus Ave"
+    value: "3640 Holdrege Ave"
 },
 {
     path: "magentoese_autofill/persona_1/country_value",
@@ -395,161 +403,5 @@ default[:application][:installation][:custom_modules][:conf_options] = {
 },
 {
     path: "magentoese_autofill/persona_1/telephone_value",
-    value: "818-445-3948"
-},
-{
-    path: "magentoese_autofill/persona_2/enable",
-    value: 1
-},
-{
-    path: "magentoese_autofill/persona_2/label",
-    value: "Michelle Ortiz (Purchasing Agent)"
-},
-{
-    path: "magentoese_autofill/persona_2/email_value",
-    value: "michelle@k2.com"
-},
-{
-    path: "magentoese_autofill/persona_2/password_value",   
-    value: "Password1"
-},
-{
-    path: "magentoese_autofill/persona_2/firstname_value",
-    value: "Michelle"
-},
-{
-    path: "magentoese_autofill/persona_2/lastname_value",
-    value: "Ortiz"
-},
-{
-    path: "magentoese_autofill/persona_2/company_value",
-    value: "K2, Inc."
-},
-{
-    path: "magentoese_autofill/persona_2/address_value",
-    value: "1 K2 West Drive"
-},
-{
-    path: "magentoese_autofill/persona_2/country_value",
-    value: "US"
-},
-{
-    path: "magentoese_autofill/persona_2/state_value",
-    value: 12
-},
-{
-    path: "magentoese_autofill/persona_2/city_value",
-    value: "Commerce"
-},
-{
-    path: "magentoese_autofill/persona_2/zip_value",
-    value: 90023
-},
-{
-    path: "magentoese_autofill/persona_2/telephone_value",
-    value: "213-339-4938"
-},
-{
-    path: "magentoese_autofill/persona_3/enable",
-    value: 1
-},
-{
-    path: "magentoese_autofill/persona_3/label",
-    value: "Casey Kendall (Technical End User)"
-},
-{
-    path: "magentoese_autofill/persona_3/email_value",
-    value: "casey@k2.com"
-},
-{
-    path: "magentoese_autofill/persona_3/password_value",   
-    value: "Password1"
-},
-{
-    path: "magentoese_autofill/persona_3/firstname_value",
-    value: "Casey"
-},
-{
-    path: "magentoese_autofill/persona_3/lastname_value",
-    value: "Kendall"
-},
-{
-    path: "magentoese_autofill/persona_3/company_value",
-    value: "K2, Inc."
-},
-{
-    path: "magentoese_autofill/persona_3/address_value",
-    value: "1 K2 West Drive"
-},
-{
-    path: "magentoese_autofill/persona_3/country_value",
-    value: "US"
-},
-{
-    path: "magentoese_autofill/persona_3/state_value",
-    value: 12
-},
-{
-    path: "magentoese_autofill/persona_3/city_value",
-    value: "Commerce"
-},
-{
-    path: "magentoese_autofill/persona_3/zip_value",
-    value: 90023
-},
-{
-    path: "magentoese_autofill/persona_3/telephone_value",
-    value: "213-304-4939"
-},
-{
-    path: "magentoese_autofill/persona_4/enable",
-    value: 1
-},
-{
-    path: "magentoese_autofill/persona_4/label",
-    value: "Phil Baker (Technical Salesperson)"
-},
-{
-    path: "magentoese_autofill/persona_4/email_value",
-    value: "phil@suezwater.com"
-},
-{
-    path: "magentoese_autofill/persona_4/password_value",   
-    value: "Password1"
-},
-{
-    path: "magentoese_autofill/persona_4/firstname_value",
-    value: "Phil"
-},
-{
-    path: "magentoese_autofill/persona_4/lastname_value",
-    value: "Baker"
-},
-{
-    path: "magentoese_autofill/persona_4/company_value",
-    value: "Suez North America"
-},
-{
-    path: "magentoese_autofill/persona_4/address_value",
-    value: "461 From Road"
-},
-{
-    path: "magentoese_autofill/persona_4/country_value",
-    value: "US"
-},
-{
-    path: "magentoese_autofill/persona_4/state_value",
-    value: 41
-},
-{
-    path: "magentoese_autofill/persona_4/city_value",
-    value: "Paramus"
-},
-{
-    path: "magentoese_autofill/persona_4/zip_value",
-    value: 07653
-},
-{
-    path: "magentoese_autofill/persona_4/telephone_value",
-    value: "201-394-2931"
+    value: "310-945-0345"
 }

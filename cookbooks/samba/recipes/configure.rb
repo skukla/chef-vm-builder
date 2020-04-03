@@ -46,5 +46,5 @@ end
 
 # Define, enable, and start the Samba service
 service 'smbd' do
-    action [:enable, :start]
+    action :enable
 end

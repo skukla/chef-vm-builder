@@ -1,6 +1,7 @@
 {
 	"custom_demo": {
-		"fashion": {
+		"verticals": {
+			"fashion": {
 			"b2c": {
 				"use": true,
 				"url": "luma.com",
@@ -27,8 +28,8 @@
 					"in_hn": false
 				}
 			}
-		},
-		"custom": {
+			},
+			"custom": {
 			"b2c": {
 				"use": false,
 				"url": "custom-demo.com",
@@ -55,16 +56,42 @@
 					"in_hn": false
 				}
 			}
+			}
+		},
+		"custom_modules": {
+			"module-sctools": {
+				"vendor": "magentoese",
+				"version": "dev-master",
+				"repository_url": "git@github.com:PMET-public/module-sctools.git"
+			},
+			"module-themecustomizer": {
+				"vendor": "magentoese",
+				"version": "dev-master",
+				"repository_url": "git@github.com:PMET-public/module-themecustomizer.git"
+			},
+			"module-autofill": {
+				"vendor": "magentoese",
+				"version": "dev-master",
+				"repository_url": "git@github.com:PMET-public/module-autofill.git"
+			},
+			"module-magento-framework-data-collection": {
+				"vendor": "skukla",
+				"version": "dev-master",
+				"repository_url": "https://github.com/skukla/module-magento-framework-data-collection.git"
+			},
+			"theme-frontend-custom": {
+				"vendor": "skukla",
+				"version": "dev-master",
+				"repository_url": "git@github.com:skukla/theme-frontend-custom.git"
+			}
 		}
-	},
-	"custom_modules": {
 	},
 	"application": {
 		"authentication": {
 			"composer": {
-				"username": "",
-				"password": "",
-				"github_token": ""
+				"username": "b17aa908c13768cef2a5a3a043bb3c54",
+				"password": "93f1f71fd779eb46af01fd7587e5fdba",
+				"github_token": "391e909d929bb9f99717ee5cfe590abd777f254b"
 			}
 		},
 		"installation": {
@@ -75,7 +102,15 @@
 				"download": {
 					"base_code": true,
 					"b2b_code": true,
-					"custom_modules": true
+					"custom_modules": true,
+					"modules_to_replace": {
+						"temando": {
+							"module": "module-shipping-m2"
+						},
+						"magento": {
+							"module": "google-shopping-ads"
+						}
+					}
 				},
 				"install": true,
 				"sample_data": false,
@@ -104,8 +139,8 @@
 				"admin_user": "admin",
 				"admin_password": "admin4tls",
 				"use_rewrites": true,
-				"use_secure_frontend": true,
-				"use_secure_admin": true,
+				"use_secure_frontend": false,
+				"use_secure_admin": false,
 				"cleanup_database": true,
 				"session_save": "db"
 			}
@@ -160,7 +195,7 @@
 		}
 	},
 	"vm": {
-		"provider": "vmware_fusion",
+		"provider": "virtualbox",
 		"ip": "192.168.57.11",
 		"url": "luma.com",
 		"name": "Luma VM",

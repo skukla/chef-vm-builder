@@ -70,6 +70,6 @@ end
 
 # Define, enable, and start the Elasticsearch service
 service 'elasticsearch' do
-    action [:start, :enable]
+    action :enable
     only_if { ::File.directory?('/etc/elasticsearch') }
 end

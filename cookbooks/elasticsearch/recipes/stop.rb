@@ -1,17 +1,15 @@
 #
 # Cookbook:: elasticsearch
-# Recipe:: install_java
+# Recipe:: stop
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 
 # Attributes
 use_elasticsearch = node[:infrastructure][:elasticsearch][:use]
 
-# Install Java
 if use_elasticsearch
-    apt_package 'default-jdk' do
-        action :install
-        not_if "which java"
+    service 'elasticsearch' do
+        action [:stop]
+        only_if { ::File.directory?('/etc/elasticsearch') }
     end
 end
-
