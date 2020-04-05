@@ -13,7 +13,7 @@ apply_deploy_mode_flag = node[:application][:installation][:options][:deploy_mod
 
 # Update files/folders ownership
 execute "Set permissions" do
-    command "cd #{web_root} && su #{user} -c 'sudo chown -R #{group}:#{user} var/ && sudo chmod -R 777 var/ pub/ app/etc/ generated/ && sudo rm -rf generated/*'"
+    command "cd #{web_root} && su #{user} -c 'sudo chown -R #{group}:#{user} var/ && sudo chmod -R 777 var/ pub/ app/etc/ generated/ && sudo rm -rf -R generated/*'"
 end
 
 # Set application deployment mode

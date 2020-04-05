@@ -29,11 +29,11 @@ if download_base_code_flag && File.directory?("#{web_root}") && !Dir.empty?("#{w
     # Clear the web root, then install
     include_recipe 'magento::uninstall'
     include_recipe 'magento::create_project'
-    include_recipe 'magento::replace_modules'
+    include_recipe 'magento::remove_modules'
 # Otherwise, as long as the web root exists...
 elsif download_base_code_flag
     include_recipe 'magento::create_project'
-    include_recipe 'magento::replace_modules'
+    include_recipe 'magento::remove_modules'
 end
 # If B2B is comnfigured and code should be dowloaded, add it to composer.json
 if b2b_flag &&  download_b2b_flag

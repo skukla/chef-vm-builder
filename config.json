@@ -47,7 +47,7 @@
 				"enable": 1,
 				"persona_1": {
 					"enable": 1,
-					"label": "Steve Kukla",
+					"label": "Steve Kukla (Test User)",
 					"email": "steve@example.com",
 					"password": "Password1",
 					"first_name": "Steve",
@@ -76,7 +76,7 @@
 					"company": ""
 				},
 				"persona_3": {
-					"enable": 1,
+					"enable": 0,
 					"label": "Casey Kendall (Floor Manager)",
 					"email": "steve@example.com",
 					"password": "Password1",
@@ -91,12 +91,12 @@
 					"company": ""
 				},
 				"persona_4": {
-					"enable": 1,
-					"label": "Phil Baker",
-					"email": "phil@example.com",
+					"enable": 0,
+					"label": "Jack Fitz (Buyer)",
+					"email": "jack@example.com",
 					"password": "Password1",
-					"first_name": "Phil",
-					"last_name": "Baker",
+					"first_name": "Jack",
+					"last_name": "Fitz",
 					"address": "3640 Holdrege Ave",
 					"city": "Los Angeles",
 					"state": 12,
@@ -140,16 +140,36 @@
 			},
 			"shipping": {
 				"origin": {
-					"data": {
-						"street_line1": "Luma, Inc.",
-						"street_line2": "3640 Holdrege Ave",
-						"city": "Los Angeles",
-						"region_id": 12,
-						"postcode": 90016,
-						"country_id": "US"
+					"street_line1": {
+						"value": "Luma, Inc.",
+						"scope": "store",
+						"scope_code": "default"
 					},
-					"scope": "default",
-					"scope_code": ""
+					"street_line2": {
+						"value": "3640 Holdrege Ave",
+						"scope": "store",
+						"scope_code": "default"
+					},
+					"city": {
+						"value": "Los Angeles",
+						"scope": "store",
+						"scope_code": "default"
+					},
+					"region_id": {
+						"value": "CA",
+						"scope": "store",
+						"scope_code": "default"
+					},
+					"postcode": {
+						"value": 90016,
+						"scope": "store",
+						"scope_code": "default"
+					},
+					"country_id": {
+						"value": "US",
+						"scope": "store",
+						"scope_code": "default"
+					}
 				},
 				"carriers": {
 					"ups": {
@@ -191,19 +211,51 @@
 				}
 			},
 			"store_information": {
-				"data": {
-					"name": "Luma, Inc.",
-					"phone": "1-310-945-0345",
-					"hours": "9AM - 5PM",
-					"street_line1": "3640 Holdrege Ave",
-					"street_line2": "",
-					"city": "Los Angeles",
-					"region_id": 12,
-					"country_id": "US",
-					"postcode": 90016
+				"name": {
+					"value": "Luma, Inc.",
+					"scope": "store",
+					"scope_code": "default"
 				},
-				"scope": "store",
-				"scope_code": "default"
+				"phone": {
+					"value": "1-310-945-0345",
+					"scope": "store",
+					"scope_code": "default"
+				},
+				"hours": {
+					"value": "9AM - 5PM",
+					"scope": "store",
+					"scope_code": "default"
+				},
+				"street_line1": {
+					"value": "Luma, Inc.",
+					"scope": "store",
+					"scope_code": "default"
+				},
+				"street_line2": {
+					"value": "3640 Holdrege Ave",
+					"scope": "store",
+					"scope_code": "default"
+				},
+				"city": {
+					"value": "Los Angeles",
+					"scope": "store",
+					"scope_code": "default"
+				},
+				"region_id": {
+					"value": "CA",
+					"scope": "store",
+					"scope_code": "default"
+				},
+				"postcode": {
+					"value": 90016,
+					"scope": "store",
+					"scope_code": "default"
+				},
+				"country_id": {
+					"value": "US",
+					"scope": "store",
+					"scope_code": "default"
+				}
 			}
 		},
 		"verticals": {
@@ -237,7 +289,7 @@
 			},
 			"custom": {
 			"b2c": {
-				"use": false,
+				"use": true,
 				"url": "custom-demo.com",
 				"scope": "website",
 				"code": "custom_b2c",
@@ -250,7 +302,7 @@
 				}
 			},
 			"b2b": {
-				"use": false,
+				"use": true,
 				"url": "b2b.custom-demo.com",
 				"scope": "website",
 				"code": "custom_b2b",
@@ -309,7 +361,7 @@
 					"base_code": true,
 					"b2b_code": true,
 					"custom_modules": true,
-					"modules_to_replace": {
+					"modules_to_remove": {
 						"temando": {
 							"module": "module-shipping"
 						},

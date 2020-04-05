@@ -2,17 +2,11 @@
 
 # Variables
 export TERM=xterm-256color
-IP=<%= @ip %>
-HOSTNAME=<%= @hostname %>
 BOLD=$(tput bold)
 REG=$(tput sgr0)
 CYAN=$(tput setaf 6)
-WEBMIN_USER=<%= @webmin_user %>
-WEBMIN_PASS=<%= @webmin_password %>
 WEBMIN_PORT=$(netstat -tulpn | grep "LISTEN" | grep "perl" | awk '{print $4}' | sed -e 's/.*://')
 MAILHOG_PORT=$(netstat -tulpn | grep "LISTEN" | grep "mailhog" | sort -n | awk '{print $4;exit;}' | sed -e 's/.*://')
-
-# We should refactor this
 if [ $MAILHOG_PORT == 1025 ]; then
     MAILHOG_PORT=$(netstat -tulpn | grep "LISTEN" | grep "mailhog" | sort -r | awk '{print $4;exit;}' | sed -e 's/.*://')
 else
@@ -36,18 +30,20 @@ printf "\n${BOLD}Welcome to the Kukla VM!${REG}\n\n"
 
 # Hosts Entry, Mailhog, and Webmin
 rulem "[ ${CYAN}Hosts Entry, Mailhog, and Webmin${REG} ]"
-printf '\n%23s : %s %s %s %s %s\n' "${BOLD}Host Entry" "${REG}${IP}" "${HOSTNAME}" "b2b.${HOSTNAME}" "custom-demo.com" "b2b.custom-demo.com"
+printf '\n%23s : %s %s %s\n' "${BOLD}Host Entry" "${REG}<%= @ip %>" "<%= "#{@urls.join(" ")}" %>"
 
-if [ $MAILHOG_PORT != "" ]; then
-    printf '%23s : %s  \n' "${BOLD}Mailhog Inbox" "${REG}http://${HOSTNAME}:${MAILHOG_PORT}"
-else
+if [ $MAILHOG_PORT != "" ]; then 
+    printf '%23s : %s  \n' "${BOLD}Mailhog Inbox" "${REG}http://<%= @hostname %>:$MAILHOG_PORT"
+else 
     printf '%23s : %s  \n' "${BOLD}Mailhog Inbox" "${REG}Not installed"
 fi
-if [ $WEBMIN_PORT != "" ]; then
-    printf '%23s : %s  \n\t\t %7s : %s\n\t %15s : %s\n' "${BOLD}Webmin Console" "${REG}http://${HOSTNAME}:${WEBMIN_PORT}" "User" "${WEBMIN_USER}" "Password" "${WEBMIN_PASS}"
+
+if [ $WEBMIN_PORT != "" ]; then 
+    printf '%23s : %s  \n\t\t %7s : %s\n\t %15s : %s\n' "${BOLD}Webmin Console" "${REG}http://<%= @hostname %>:${WEBMIN_PORT}" "User" "<%= @webmin_user %>" "Password" "<%= @webmin_password %>"
 else
     printf '%23s : %s  \n' "${BOLD}Webmin Console" "${REG}Not installed"
 fi
+
 printf "\n"
 
 # Useful Commands
@@ -56,7 +52,6 @@ printf '\n%23s : %s' "${BOLD}www" "${REG}Moves into the web root."
 printf '\n%23s : %s' "${BOLD}clean" "${REG}Re-indexes and clears cache."
 printf '\n%23s : %s' "${BOLD}cache" "${REG}Clears cache."
 printf '\n%23s : %s' "${BOLD}reindex" "${REG}Reindexes all indexes."
-printf '\n%23s : %s' "${BOLD}warm-cache" "${REG}Warms the Luma, Venia, and Custom store view caches."
 printf '\n%23s : %s' "${BOLD}dev-mode" "${REG}Puts application into developer mode."
 printf '\n%23s : %s' "${BOLD}prod-mode" "${REG}Puts application into production mode."
 printf '\n%23s : %s' "${BOLD}process-catalogs" "${REG}Processes B2B Shared Catalogs (Runs \"clean\" and a single cron trigger)."
