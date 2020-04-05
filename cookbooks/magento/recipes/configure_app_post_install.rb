@@ -13,7 +13,7 @@ apply_deploy_mode_flag = node[:application][:installation][:options][:deploy_mod
 
 # Update files/folders ownership
 execute "Set permissions" do
-    command "cd #{web_root} && su #{user} -c 'sudo chown -R #{group}:#{user} var/cache/ var/page_cache/ && sudo chmod -R 777 var/ pub/ app/etc/ generated/'"
+    command "cd #{web_root} && su #{user} -c 'sudo chown -R #{group}:#{user} var/ && sudo chmod -R 777 var/ pub/ app/etc/ generated/ && sudo rm -rf generated/*'"
 end
 
 # Set application deployment mode
@@ -21,6 +21,7 @@ if apply_deploy_mode_flag
     unless deploy_mode.empty?
         execute "Set application mode" do
             command "cd #{web_root} && su #{user} -c './bin/magento deploy:mode:set #{deploy_mode}'"
+            notifies :run, "execute[Set permissions]", :immediately
         end
     end
 end
@@ -30,7 +31,7 @@ execute "Reindex" do
     command "cd #{web_root} && su #{user} -c './bin/magento indexer:reset && ./bin/magento indexer:reindex'"
 end
 
-# Clean cache
+# Clean config and full page cache
 execute "Clean cache" do
-    command "cd #{web_root} && su #{user} -c './bin/magento cache:flush && sudo rm -rf var/cache/* var/page_cache/*'"
+    command "cd #{web_root} && su #{user} -c './bin/magento cache:clean config full_page'"
 end

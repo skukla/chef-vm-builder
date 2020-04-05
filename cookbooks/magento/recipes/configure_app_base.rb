@@ -11,7 +11,7 @@ web_root = node[:infrastructure][:webserver][:conf_options][:web_root]
 
 # Update files/folders ownership
 execute "Set permissions" do
-    command "cd #{web_root} && su #{user} -c 'sudo chown -R #{group}:#{user} var/cache/ var/page_cache/ && sudo chmod -R 777 var/ pub/ app/etc/ generated/'"
+    command "cd #{web_root} && su #{user} -c 'sudo chown -R #{group}:#{user} var/ && sudo chmod -R 777 var/ pub/ app/etc/ generated/ && sudo rm -rf generated/*'"
 end
 
 # Configure cron

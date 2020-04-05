@@ -1,6 +1,48 @@
 {
 	"custom_demo": {
 		"configuration": {
+			"admin_users": {
+				"user_1": {
+					"enable": 1,
+					"first_name": "Christine",
+					"last_name": "Jacobs",
+					"username": "christine",
+					"password": "Password1",
+					"email": "christine@luma.com"
+				},
+				"user_2": {
+					"enable": 0,
+					"first_name": "Fred",
+					"last_name": "Mills",
+					"username": "fred",
+					"password": "Password1",
+					"email": "fred@luma.com"
+				},
+				"user_3": {
+					"enable": 0,
+					"first_name": "Bill",
+					"last_name": "Thomas",
+					"username": "bill",
+					"password": "Password1",
+					"email": "bill@luma.com"
+				},
+				"user_4": {
+					"enable": 0,
+					"first_name": "Shelly",
+					"last_name": "Smith",
+					"username": "shelly",
+					"password": "Password1",
+					"email": "shelly@luma.com"
+				},
+				"user_5": {
+					"enable": 0,
+					"first_name": "Phil",
+					"last_name": "Baker",
+					"username": "phil",
+					"password": "Password1",
+					"email": "phil@luma.com"
+				}
+			},
 			"autofill": {
 				"enable": 1,
 				"persona_1": {
@@ -8,8 +50,8 @@
 					"label": "Steve Kukla",
 					"email": "steve@example.com",
 					"password": "Password1",
-					"firstname": "Steve",
-					"lastname": "Kukla",
+					"first_name": "Steve",
+					"last_name": "Kukla",
 					"address": "3640 Holdrege Ave",
 					"city": "Los Angeles",
 					"state": 12,
@@ -23,8 +65,8 @@
 					"label": "Michelle Ortiz (Purchasing Agent)",
 					"email": "michelle@example.com",
 					"password": "Password1",
-					"firstname": "Michelle",
-					"lastname": "Ortiz",
+					"first_name": "Michelle",
+					"last_name": "Ortiz",
 					"address": "3640 Holdrege Ave",
 					"city": "Los Angeles",
 					"state": 12,
@@ -38,8 +80,8 @@
 					"label": "Casey Kendall (Floor Manager)",
 					"email": "steve@example.com",
 					"password": "Password1",
-					"firstname": "Casey",
-					"lastname": "Kendall",
+					"first_name": "Casey",
+					"last_name": "Kendall",
 					"address": "3640 Holdrege Ave",
 					"city": "Los Angeles",
 					"state": 12,
@@ -53,8 +95,8 @@
 					"label": "Phil Baker",
 					"email": "phil@example.com",
 					"password": "Password1",
-					"firstname": "Phil",
-					"lastname": "Baker",
+					"first_name": "Phil",
+					"last_name": "Baker",
 					"address": "3640 Holdrege Ave",
 					"city": "Los Angeles",
 					"state": 12,
@@ -264,9 +306,9 @@
 				"version": "2.3.4",
 				"b2b_version": "^1.1",
 				"download": {
-					"base_code": false,
-					"b2b_code": false,
-					"custom_modules": false,
+					"base_code": true,
+					"b2b_code": true,
+					"custom_modules": true,
 					"modules_to_replace": {
 						"temando": {
 							"module": "module-shipping"
@@ -276,14 +318,14 @@
 						}
 					}
 				},
-				"install": false,
+				"install": true,
 				"sample_data": false,
 				"deploy_mode": {
-					"apply": false,
+					"apply": true,
 					"mode": "production"
 				},
 				"patches": {
-					"apply": false,
+					"apply": true,
 					"repository_url": "https://github.com/PMET-public/magento-cloud.git"
 				},
 				"configuration": {
@@ -332,22 +374,22 @@
 			"name": "magento"
 		},
 		"elasticsearch": {
-			"use": false,
+			"use": true,
 			"version": "6.x",
 			"memory": "1g",
 			"port": 9200,
 			"plugins": ["analysis-phonetic", "analysis-icu"]
 		},
 		"mailhog": {
-			"use": false,
+			"use": true,
 			"port": 10000
 		},
 		"webmin": {
-			"use": false,
+			"use": true,
 			"port": 20000
 		},
 		"samba": {
-			"use": false,
+			"use": true,
 			"shares": {
 				"composer_credentials": true,
 				"web_root": true,

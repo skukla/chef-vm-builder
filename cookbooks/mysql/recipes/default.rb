@@ -9,4 +9,3 @@
 
 # Recipes
 include_recipe 'mysql::install'
-include_recipe 'mysql::start'

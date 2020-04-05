@@ -504,7 +504,7 @@ default[:application][:installation][:conf_options] =
     scope_code: node[:custom_demo][:configuration][:b2b][:payment_methods][:scope_code]
 }
 
-
+# Custom module configuration (Autofill)
 default[:custom_demo][:custom_modules][:conf_options] = {
     path: "magentoese_autofill/general/enable_autofill",
     value: node[:custom_demo][:configuration][:autofill][:enable]
@@ -527,11 +527,11 @@ default[:custom_demo][:custom_modules][:conf_options] = {
 },
 {
     path: "magentoese_autofill/persona_1/firstname_value",
-    value: node[:custom_demo][:configuration][:autofill][:persona_1][:firstname]
+    value: node[:custom_demo][:configuration][:autofill][:persona_1][:first_name]
 },
 {
     path: "magentoese_autofill/persona_1/lastname_value",
-    value: node[:custom_demo][:configuration][:autofill][:persona_1][:lastname],
+    value: node[:custom_demo][:configuration][:autofill][:persona_1][:last_name],
 },
 {
     path: "magentoese_autofill/persona_1/address_value",
@@ -579,11 +579,11 @@ default[:custom_demo][:custom_modules][:conf_options] = {
 },
 {
     path: "magentoese_autofill/persona_2/firstname_value",
-    value: node[:custom_demo][:configuration][:autofill][:persona_2][:firstname],
+    value: node[:custom_demo][:configuration][:autofill][:persona_2][:first_name],
 },
 {
     path: "magentoese_autofill/persona_2/lastname_value",
-    value: node[:custom_demo][:configuration][:autofill][:persona_2][:lastname]
+    value: node[:custom_demo][:configuration][:autofill][:persona_2][:last_name]
 },
 {
     path: "magentoese_autofill/persona_2/address_value",
@@ -631,11 +631,11 @@ default[:custom_demo][:custom_modules][:conf_options] = {
 },
 {
     path: "magentoese_autofill/persona_3/firstname_value",
-    value: node[:custom_demo][:configuration][:autofill][:persona_3][:firstname]
+    value: node[:custom_demo][:configuration][:autofill][:persona_3][:first_name]
 },
 {
     path: "magentoese_autofill/persona_3/lastname_value",
-    value: node[:custom_demo][:configuration][:autofill][:persona_3][:lastname],
+    value: node[:custom_demo][:configuration][:autofill][:persona_3][:last_name],
 },
 {
     path: "magentoese_autofill/persona_3/address_value",

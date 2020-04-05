@@ -1,6 +1,6 @@
 #
 # Cookbook:: magento
-# Recipe:: configure_base_settings
+# Recipe:: configure_settings
 #
 # 
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
@@ -15,6 +15,7 @@ use_elasticsearch = node[:infrastructure][:elasticsearch][:use]
 custom_module_data = node[:custom_demo][:custom_modules]
 base_configuration = node[:application][:installation][:conf_options]
 custom_module_configuration = node[:custom_demo][:custom_modules][:conf_options]
+admin_users = node[:custom_demo][:configuration][:admin_users]
 apply_base_flag = node[:application][:installation][:options][:configuration][:base]
 apply_b2b_flag = node[:application][:installation][:options][:configuration][:b2b]
 apply_custom_flag = node[:application][:installation][:options][:configuration][:custom_modules]
@@ -26,8 +27,7 @@ if apply_base_flag
         # Build the string
         command_string = "cd #{web_root} && su #{user} -c './bin/magento config:set "
         scope_string = "--scope=#{setting[:scope]} --scope-code=#{setting[:scope_code]} " if setting.key?(:scope)
-        config_string = "#{setting[:path]} \"#{setting[:value]}\"'"
-        
+        config_string = "#{setting[:path]} \"#{setting[:value]}\"'"        
         if setting[:path].include? "elasticsearch"
             if use_elasticsearch 
                 execute "Configuring base setting : #{setting[:path]}" do

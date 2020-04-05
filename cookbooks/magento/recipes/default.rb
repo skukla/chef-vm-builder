@@ -23,10 +23,7 @@ end
 b2b_flag = true if b2b_values.include? true
 
 # Recipes
-
-# Start MySQL here
-
-
+include_recipe 'mysql::start'
 # If download base is configured, and web root exists but is not empty
 if download_base_code_flag && File.directory?("#{web_root}") && !Dir.empty?("#{web_root}")
     # Clear the web root, then install
@@ -79,4 +76,5 @@ if install_flag
 end
 # Do these things after base install and additional extension installs
 include_recipe 'magento::configure_settings'
+include_recipe 'magento::configure_admin_users'
 include_recipe 'magento::configure_app_post_install'
