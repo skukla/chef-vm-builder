@@ -5,5 +5,8 @@
 	"json_class": "Chef::Role",
 	"default_attributes": {},
 	"override_attributes": {},
-	"run_list": ["recipe[init::default]"]
+	"run_list": [
+		"recipe[init::default]",
+		"recipe[ssh::default]"
+	]
 }

@@ -350,7 +350,8 @@
 				"username": "b17aa908c13768cef2a5a3a043bb3c54",
 				"password": "93f1f71fd779eb46af01fd7587e5fdba",
 				"github_token": "391e909d929bb9f99717ee5cfe590abd777f254b"
-			}
+			},
+			"ssh_keys": ["id_rsa.skukla.gitlab"]
 		},
 		"installation": {
 			"options": {
