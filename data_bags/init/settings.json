@@ -341,6 +341,11 @@
 				"vendor": "skukla",
 				"version": "dev-master",
 				"repository_url": "git@github.com:skukla/theme-frontend-custom.git"
+			},
+			"elasticsuite": {
+				"vendor": "smile",
+				"version": "dev-master",
+				"repository_url": "git@github.com:Smile-SA/elasticsuite.git"
 			}
 		}
 	},
@@ -358,9 +363,9 @@
 				"version": "2.3.4",
 				"b2b_version": "^1.1",
 				"download": {
-					"base_code": true,
-					"b2b_code": true,
-					"custom_modules": true,
+					"base_code": false,
+					"b2b_code": false,
+					"custom_modules": false,
 					"modules_to_remove": {
 						"temando": {
 							"module": "module-shipping"
@@ -426,22 +431,22 @@
 			"name": "magento"
 		},
 		"elasticsearch": {
-			"use": true,
+			"use": false,
 			"version": "6.x",
 			"memory": "1g",
 			"port": 9200,
 			"plugins": ["analysis-phonetic", "analysis-icu"]
 		},
 		"mailhog": {
-			"use": true,
+			"use": false,
 			"port": 10000
 		},
 		"webmin": {
-			"use": true,
+			"use": false,
 			"port": 20000
 		},
 		"samba": {
-			"use": true,
+			"use": false,
 			"shares": {
 				"composer_credentials": true,
 				"web_root": true,

@@ -737,3 +737,13 @@ default[:custom_demo][:custom_modules][:conf_options] = {
     path: "magentoese_autofill/persona_4/company_value",
     value: node[:custom_demo][:configuration][:autofill][:persona_4][:company]
 }
+
+# Configuration overrides
+default[:custom_demo][:configuraton_overrides] = {
+    elasticsuite: {
+        path: "catalog/search/engine",
+        value: "elasticsuite",
+        scope: "default",
+        scope_code: ""
+    }
+}

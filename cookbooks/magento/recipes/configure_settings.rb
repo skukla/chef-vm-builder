@@ -12,20 +12,21 @@ web_root = node[:infrastructure][:webserver][:conf_options][:web_root]
 composer_install_dir = node[:application][:composer][:install_dir]
 composer_file = node[:application][:composer][:filename]
 use_elasticsearch = node[:infrastructure][:elasticsearch][:use]
-custom_module_data = node[:custom_demo][:custom_modules]
 base_configuration = node[:application][:installation][:conf_options]
-custom_module_configuration = node[:custom_demo][:custom_modules][:conf_options]
-admin_users = node[:custom_demo][:configuration][:admin_users]
 apply_base_flag = node[:application][:installation][:options][:configuration][:base]
 apply_b2b_flag = node[:application][:installation][:options][:configuration][:b2b]
 apply_custom_flag = node[:application][:installation][:options][:configuration][:custom_modules]
 apply_overrides_flag = node[:application][:installation][:options][:configuration][:overrides]
+custom_module_data = node[:custom_demo][:custom_modules]
+custom_module_configuration = node[:custom_demo][:custom_modules][:conf_options]
+admin_users = node[:custom_demo][:configuration][:admin_users]
+configuration_overrides = node[:custom_demo][:configuraton_overrides]
 
 # Configure base application according to settings
+command_string = "cd #{web_root} && su #{user} -c './bin/magento config:set "
 if apply_base_flag
     base_configuration.each do |setting|
         # Build the string
-        command_string = "cd #{web_root} && su #{user} -c './bin/magento config:set "
         scope_string = "--scope=#{setting[:scope]} --scope-code=#{setting[:scope_code]} " if setting.key?(:scope)
         config_string = "#{setting[:path]} \"#{setting[:value]}\"'"        
         if setting[:path].include? "elasticsearch"
@@ -37,7 +38,7 @@ if apply_base_flag
         elsif setting[:path].include? "btob"
             if apply_b2b_flag
                 # TODO: Include check for b2b and get scope and code from config.json
-                execute "Configuring base setting : #{setting[:path]}" do
+                execute "Configuring b2b setting : #{setting[:path]}" do
                     command [command_string, scope_string, config_string].join
                 end
             end
@@ -51,7 +52,6 @@ end
 if apply_custom_flag
     custom_module_configuration.each do |setting|
         # Build the string
-        command_string = "cd #{web_root} && su #{user} -c './bin/magento config:set "
         scope_string = "--scope=#{setting[:scope]} --scope-code=#{setting[:scope_code]} " if setting.key?(:scope)
         config_string = "#{setting[:path]} \"#{setting[:value]}\"'"
         # Configure third-party modules according to settings
@@ -62,14 +62,8 @@ if apply_custom_flag
 end
 if apply_overrides_flag
     # Calculate any configuration overrides
-    configuraton_overrides = {
-        elasticsuite: {
-            path: "catalog/search/engine",
-            value: "elasticsuite"
-        }
-    }
     overrides_array = []
-    configuraton_overrides.each do |override_key, value|
+    configuration_overrides.each do |override_key, value|
         custom_module_data.keys.each do |custom_module_key|
             if override_key.to_s == custom_module_key.to_s
                 overrides_array << override_key
@@ -77,9 +71,11 @@ if apply_overrides_flag
         end
     end
     # Process overrides
-    overrides_array.each do |value|
-        execute "Configuring overrides for  : #{configuraton_overrides[value]}" do
-            command "cd #{web_root} && su #{user} -c './bin/magento config:set #{configuraton_overrides[value][:path]} \"#{configuraton_overrides[value][:value]}\"'"
+    overrides_array.each do |setting|
+        config_string = "#{configuration_overrides[setting][:path]}} \"#{configuration_overrides[setting][:value]}\"'"
+        scope_string = "--scope=#{configuration_overrides[setting][:scope]} --scope-code=#{configuration_overrides[setting][:scope_code]} " if configuration_overrides[setting].key?(:scope)
+        execute "Configuring overrides for : #{configuration_overrides[setting][:path]}" do
+            command "cd #{web_root} && su #{user} -c './bin/magento config:set #{configuration_overrides[setting][:path]} \"#{configuration_overrides[setting][:value]}\"'"
         end
     end
 end
