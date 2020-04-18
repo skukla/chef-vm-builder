@@ -201,8 +201,8 @@
 				"github_token": "ca5db95d8f9ebea677be19b5943475882682e1d7"
 			},
 			"ssh": {
-				"public_key_files": ["id_rsa.skukla.gitlab.pub"],
-				"private_key_files": ["id_rsa.skukla.gitlab"]
+				"private_key_files": ["id_rsa.skukla.gitlab"],
+				"public_key_files": ["id_rsa.skukla.gitlab.pub"]
 			}
 		},
 		"installation": {

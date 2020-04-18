@@ -19,9 +19,19 @@ function own() {
 }
 export -f own
 
+function own-trigger() {
+  USER=<%= @user %>
+  GROUP=<%= @user %>
+  printf "Updating permissions..."
+  www
+  sudo chown -R ${GROUP}:${USER} var/cache/ var/page_cache/
+  sudo chmod -R 777 var/ pub/ app/etc/ generated/
+}
+export -f own-trigger
+
 function cache() {
   www
-  printf "\nClearing cache...\n"
+  printf "Clearing cache..."
   ./bin/magento cache:clean
   rm -rf var/cache/* var/page_cache/*
 }
@@ -34,6 +44,13 @@ function flush-cache() {
   rm -rf var/cache/* var/page_cache/*
 }
 export -f flush-cache
+
+function cache-trigger() {
+  printf "Cleaning cache..."
+  www
+  ./bin/magento cache:clean config full_page
+}
+export -f cache-trigger
 
 function enable-cache() {
   printf "\nEnabling cache...\n"

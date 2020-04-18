@@ -8,7 +8,8 @@
 #   4. Checks for particular Vagrant plugins based on provider
 #   5. Configures VM settings based on provider
 #   6. Runs the Chef provisioner
-#   7. Saves the settings so they're persisted inside the VM on the next run
+#   7. Updates permissions and clears cache
+#   8. Saves the settings so they're persisted inside the VM on the next run
 #
 # Copyright 2020, Steve Kukla, All Rights Reserved.
 require "json"
@@ -122,11 +123,19 @@ Vagrant.configure("2") do |config|
     chef.arguments = "--chef-license accept"
   end
   
-# Set final file ownership
-config.trigger.after [:up, :reload, :provision] do |trigger|
-  trigger.name = "Setting application permissions..."
-  trigger.run_remote = {inline: "bash -c 'source /home/#{settings["remote_machine"]["user"]}/cli/commands.sh && own'"}
-end
+  # Always set final file ownership
+  config.trigger.after [:up, :reload, :provision] do |trigger|
+    trigger.name = "Setting application permissions..."
+    trigger.run_remote = {inline: "bash -c 'source /home/#{settings["remote_machine"]["user"]}/cli/commands.sh && own-trigger'"}
+  end
+
+  # Clear config and full_page cache if new code is downloaded or installed
+  if settings["application"]["installation"]["options"]["download"]["base_code"] or settings["application"]["installation"]["options"]["download"]["b2b_code"] or settings["application"]["installation"]["options"]["download"]["custom_modules"] or settings["application"]["installation"]["options"]["sample_data"] or settings["application"]["installation"]["options"]["deploy_mode"]["apply"] or settings["application"]["installation"]["options"]["install"]
+    config.trigger.after [:up, :reload, :provision] do |trigger|
+      trigger.name = "Clearing cache"
+      trigger.run_remote = {inline: "bash -c 'source /home/#{settings["remote_machine"]["user"]}/cli/commands.sh && cache-trigger'"}
+    end
+  end
 
   # Save the configured infrastructure settings into a reference file
   config.trigger.after [:up, :reload, :provision] do |trigger|

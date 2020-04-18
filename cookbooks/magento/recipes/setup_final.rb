@@ -47,8 +47,3 @@ end
 execute "Reindex" do
     command "su #{user} -c '#{web_root}/bin/magento indexer:reset && #{web_root}/bin/magento indexer:reindex'"
 end
-
-# Clean config and full page cache
-execute "Clean cache" do
-    command "su #{user} -c '#{web_root}/bin/magento cache:clean config full_page'"
-end
