@@ -7,6 +7,7 @@
 	"override_attributes": {},
 	"run_list": [
 		"recipe[magento::default]",
+		"recipe[nginx::start]",
 		"recipe[elasticsearch::start]",
 		"recipe[webmin::start]",
 		"recipe[mailhog::start]",

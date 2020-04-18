@@ -6,8 +6,8 @@
 
 # Attributes
 version = node[:infrastructure][:elasticsearch][:version]
-user = node[:infrastructure][:elasticsearch][:user]
-group = node[:infrastructure][:elasticsearch][:group]
+user = node[:remote_machine][:user]
+group = node[:remote_machine][:user]
 java_home = node[:infrastructure][:java][:java_home]
 memory = node[:infrastructure][:elasticsearch][:memory]
 cluster_name = node[:infrastructure][:elasticsearch][:conf_options][:cluster_name]

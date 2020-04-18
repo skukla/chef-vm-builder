@@ -1,14 +1,13 @@
 #
 # Cookbook:: magento
-# Recipe:: create_project
+# Recipe:: composer_create_project
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 
 # Attributes
-user = node[:application][:user]
-group = node[:application][:group]
-web_root = node[:application][:webserver][:web_root]
-composer_install_dir = node[:application][:composer][:install_dir]
+user = node[:remote_machine][:user]
+group = node[:remote_machine][:user]
+web_root = node[:application][:installation][:options][:directory]
 composer_file = node[:application][:composer][:filename]
 magento_family = node[:application][:installation][:options][:family]
 magento_family = 'enterprise' if magento_family == 'Commerce'
@@ -37,7 +36,7 @@ create_project_string = "create-project --no-install --repository-url=https://re
 
 # Create base composer.json for base code
 execute "Create Magento composer.json" do
-    command "cd #{web_root} && su #{user} -c '/#{composer_install_dir}/#{composer_file} #{create_project_string}'"
+    command "cd #{web_root} && su #{user} -c '#{composer_file} #{create_project_string}'"
 end
 
 

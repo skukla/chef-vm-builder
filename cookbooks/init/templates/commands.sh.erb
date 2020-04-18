@@ -1,0 +1,367 @@
+# VM Navigation
+function www() {
+  MAGENTO_DIRECTORY=<%= @web_root %>
+  cd ${MAGENTO_DIRECTORY}
+}
+export -f www
+
+# CLI
+function own() {
+  USER=<%= @user %>
+  GROUP=<%= @user %>
+  
+  printf "\nUpdating permissions..."
+  www
+  sudo chown -R ${GROUP}:${USER} var/cache/ var/page_cache/
+  sudo chmod -R 777 var/ pub/ app/etc/ generated/
+  sleep 1
+  printf "done.\n"
+}
+export -f own
+
+function cache() {
+  www
+  printf "\nClearing cache...\n"
+  ./bin/magento cache:clean
+  rm -rf var/cache/* var/page_cache/*
+}
+export -f cache
+
+function flush-cache() {
+  www
+  printf "\nFlushing cache...\n"
+  ./bin/magento cache:flush
+  rm -rf var/cache/* var/page_cache/*
+}
+export -f flush-cache
+
+function enable-cache() {
+  printf "\nEnabling cache...\n"
+  www
+  ./bin/magento cache:enable
+}
+export -f enable-cache
+
+function disable-cache() {
+  printf "\nDisabling cache...\n"
+  www
+  ./bin/magento cache:disable
+}
+export -f disable-cache
+
+function disable-cms-cache() {
+  printf "\nDisabling Layout, Block, and Full Page cache...\n"
+  www
+  ./bin/magento cache:disable layout block_html full_page
+}
+export -f disable-cms-cache
+
+function reindex() {
+  www
+  printf "\nInvalidating indexes...\n"
+  ./bin/magento indexer:reset
+  printf "\nReindexing...\n"
+  ./bin/magento indexer:reindex
+}
+export -f reindex
+
+function clean() {
+  reindex
+  cache
+}
+export -f clean
+
+function enable-cron() {
+  printf "\nEnabling cron...\n"
+  www
+  ./bin/magento cron:install
+  printf "done.\n"
+}
+export -f enable-cron
+
+function cron() {
+  printf "\nRunning cron jobs...\n"
+  www
+  ./bin/magento cron:run
+}
+export -f cron
+
+function disable-cron() {
+  printf "\nDisabling cron...\n"
+  www
+  ./bin/magento cron:remove
+  crontab -r
+  clear-cron-schedule 
+}
+export -f disable-cron
+
+function list-modules() {
+  www
+  ./bin/magento module:status
+}
+export -f list-modules
+
+function enable-all-modules() {
+  printf "\nEnabling all modules...\n"
+  www
+  ./bin/magento module:enable --all
+}
+export -f enable-all-modules
+
+function process-catalogs() {
+  printf "\nProcessing shared catalog(s)...\n"
+  www
+  reindex
+  cache
+  cron
+}
+export -f process-catalogs
+
+function db-upgrade() {
+  printf "\nUpgrading database schema...\n"
+  www
+  ./bin/magento setup:upgrade
+}
+export -f db-upgrade
+
+function di-compile() {
+  printf "\nCompiling dependency injections...\n"
+  www && ./bin/magento setup:di:compile
+}
+export -f di-compile
+
+function deploy-content() {
+  printf "\nDeploying static content...\n"
+  www
+  ./bin/magento setup:static-content:deploy -f
+}
+export -f deploy-content
+
+function deploy-content-de() {
+  printf "\nDeploying German theme static content...\n"
+  www
+  ./bin/magento setup:static-content:deploy -f de_DE
+}
+export -f deploy-content-de
+
+function dev-mode() {
+  printf "\nSwitching to Developer mode...\n"
+  www
+  ./bin/magento deploy:mode:set developer
+  cache
+}
+export -f dev-mode
+
+function prod-mode() {
+  printf "\nSwitching to Production mode...\n"
+  www
+  ./bin/magento deploy:mode:set production
+  cache
+}
+export -f prod-mode
+
+function start-all-consumers() {
+  CONSUMERS_LIST=(product_action_attribute.update product_action_attribute.website.update codegeneratorProcessor exportProcessor negotiableQuotePriceUpdate sharedCatalogUpdatePrice sharedCatalogUpdateCategoryPermissions quoteItemCleaner inventoryQtyCounter)
+  printf "\nStarting all consumers...\n"
+  for consumer in "${CONSUMERS_LIST[@]}"
+    do bin/magento queue:consumers:start $consumer &
+  done
+} 
+export -f start-all-consumers
+
+function configure-proxy() {
+  printf "\nProxying through gitlab firewall...\n"
+  export GIT_SSH_COMMAND='ssh -o ProxyCommand="nc -x 127.0.0.1:8889 %h %p"' HTTP_PROXY=http://127.0.0.1:8888
+  curl -sS https://raw.githubusercontent.com/PMET-public/magento-cloud-extension/0.0.25/sh-scripts/lib.sh \
+    https://raw.githubusercontent.com/PMET-public/magento-cloud-extension/0.0.25/sh-scripts/configure-proxies.sh | env ext_ver=0.0.25 tab_url=https://github.com bash
+  sleep 1
+  printf "\nAdding SSH keys...\n"
+  eval $(ssh-agent)
+  ssh-add ~/.ssh/id_rsa.skukla.gitlab
+  ssh-add ~/.ssh/id_rsa.skukla.github
+}
+export -f configure-proxy
+
+function add-keys() {
+  printf "\nAdding SSH keys...\n"
+  eval $(ssh-agent)
+  <% @private_key_files.each do |private_key_file| %>
+  ssh-add ~/.ssh/<%= private_key_file %>
+  <% end %>
+}
+export -f add-keys
+
+function add-modules() {
+  www
+  apply-patches
+  own
+  db-upgrade
+  di-compile
+  deploy-content
+  deploy-content-de
+  enable-cache
+  clean
+}
+export -f add-modules
+
+function upgrade() {
+  clear
+  printf "Beginning the upgrade process...\n"
+  www
+  own 
+  configure-proxy
+  disable-cron
+  update-composer
+  add-modules
+  enable-cron
+  printf "\nUpgrade finished!\n"
+}
+export -f upgrade
+
+# PHP-FPM
+function start-php() {
+  printf "\nRestarting PHP-FPM <%= @php_version %>...\n"
+  sudo systemctl restart php<%= @php_version%>-fpm
+}
+export -f start-php
+
+function stop-php() {
+  printf "\nStopping PHP-FPM <%= @php_version %>...\n"
+  sudo systemctl stop php<%= @php_version %>-fpm
+}
+export -f stop-php
+
+function status-php() {
+  sudo systemctl status php<%= @php_version %>-fpm
+}
+export -f status-php
+
+# Web
+function start-web() {
+  printf "\nRestarting the web server...\n"
+  sudo systemctl restart nginx
+}
+export -f start-web
+
+function stop-web() {
+  printf "\nStopping the web server...\n"
+  sudo systemctl stop nginx
+}
+export -f stop-web
+
+function status-web() {
+  sudo systemctl status nginx
+}
+export -f status-web
+
+# Database
+function db() {
+  mysql -u <%= @db_user %> -p<%= @db_password %>
+}
+export -f db
+
+function start-db() {
+  printf "\nRestarting the database...\n"
+  sudo systemctl restart mysql
+}
+export -f start-db
+
+function stop-db() {
+  printf "\nStopping the database...\n"
+  sudo systemctl stop mysql
+}
+export -f stop-db
+
+function status-db() {
+  sudo systemctl status mysql
+}
+export -f status-db
+
+# Elasticsearch
+function enable-elasticsearch() {
+  printf "\nEnabling Elasticsearch...\n"
+  sudo systemctl enable elasticsearch
+}
+export -f enable-elasticsearch
+
+function start-elasticsearch() {
+  printf "\nRestarting Elasticsearch...\n"
+  sudo systemctl restart elasticsearch
+}
+export -f start-elasticsearch
+
+function stop-elasticsearch() {
+  printf "\nStopping Elasticsearch...\n"
+  sudo systemctl stop elasticsearch
+}
+export -f stop-elasticsearch
+
+function status-elasticsearch() {
+  sudo systemctl status elasticsearch
+}
+export -f status-elasticsearch
+
+function disable-elasticsearch() {
+  printf "\nDisabling Elasticsearch...\n"
+  sudo systemctl disable elasticsearch
+}
+export -f disable-elasticsearch
+
+# Tools
+function warm-cache() {
+  CLI_DIRECTORY=~/cli
+  SCRIPTS_DIRECTORY=scripts
+  bash ${CLI_DIRECTORY}/${SCRIPTS_DIRECTORY}/cache_warmer.sh
+}
+export -f warm-cache
+
+function motd() {
+  cat /var/run/motd.dynamic
+}
+export -f motd
+
+function cloud-login() {
+  magento-cloud auth:password-login
+}
+export -f cloud-login
+
+function cloud-logout() {
+  magento-cloud logout
+}
+export -f cloud-logout
+
+function clear-cron-schedule() {
+  printf "\nClearing the cron schedule database table..."
+  mysql --login-path=local -e "USE magento;DELETE FROM cron_schedule;"
+  sleep 1
+  printf "done.\n"
+}
+export -f clear-cron-schedule
+
+function apply-patches() {
+  MAGENTO_DIRECTORY=<%= @web_root %>
+  VERSION=<%= @magento_version %>
+  printf "\nGetting patch list...\n"
+  www
+  cd ../cloud
+  git pull
+  git checkout pmet-${VERSION}-demo
+  sleep 1
+  printf "done.\n"
+  sleep 1
+  printf "\nCopying patches..."
+  cp m2-hotfixes/* ${MAGENTO_DIRECTORY}/m2-hotfixes/
+  sleep 1
+  printf "done. \n"
+  sleep 1
+  printf "\nApplying patches...\n"
+  sleep 1
+  php vendor/magentoese/ece-tools/bin/ece-tools patch
+  www
+}
+export -f apply-patches
+
+function show-help() {
+  bash ~/cli/scripts/show_help.sh 
+}
+export -f show-help

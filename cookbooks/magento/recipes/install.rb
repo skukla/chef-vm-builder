@@ -5,9 +5,9 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 
 # Attributes
-web_root = node[:application][:webserver][:web_root]
-user = node[:application][:user]
-group = node[:application][:group]
+user = node[:remote_machine][:user]
+group = node[:remote_machine][:user]
+web_root = node[:application][:installation][:options][:directory]
 db_host = node[:infrastructure][:database][:host]
 db_name = node[:infrastructure][:database][:name]
 db_user = node[:infrastructure][:database][:user]
@@ -44,12 +44,12 @@ cleanup_database_string = "--cleanup-database"
 session_save_string = "--session-save=#{session_save}"
 
 # Create the master install string
-install_string = base_install_string + " #{rewrites_string}" if use_rewrites
-install_string = install_string + " #{use_secure_admin_string}" if use_secure_admin
-install_string = install_string + " #{use_secure_frontend_string}" if use_secure_frontend
-install_string = install_string + " #{secure_url_string}" if use_secure_frontend || use_secure_admin
-install_string = install_string + " #{cleanup_database_string} #{session_save_string}"
+install_string = [base_install_string, rewrites_string].join(" ") if use_rewrites
+install_string = [install_string, use_secure_admin_string].join(" ") if use_secure_admin
+install_string = [install_string, use_secure_frontend_string].join(" ") if use_secure_frontend
+install_string = [install_string, secure_url_string].join(" ") if use_secure_frontend || use_secure_admin
+install_string = [install_string, cleanup_database_string, session_save_string].join(" ")
 
 execute "Install Magento" do
-    command "cd #{web_root} && su #{user} -c './bin/magento setup:install #{install_string}'"
+    command "su #{user} -c '#{web_root}/bin/magento setup:install #{install_string}'"
 end

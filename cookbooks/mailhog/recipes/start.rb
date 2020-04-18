@@ -9,6 +9,6 @@ use_mailhog = node[:infrastructure][:mailhog][:use]
 
 if use_mailhog
     service 'mailhog' do
-        action [:enable, :start]
+        action :start
     end
 end

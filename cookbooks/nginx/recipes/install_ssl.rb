@@ -5,8 +5,8 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 
 # Attributes
-user = node[:vm][:user]
-group = node[:vm][:group]
+user = node[:remote_machine][:user]
+group = node[:remote_machine][:user]
 common_name = node[:fqdn]
 country = node[:infrastructure][:webserver][:ssl_options][:country]
 state = node[:infrastructure][:webserver][:ssl_options][:state]

@@ -15,6 +15,5 @@ default[:infrastructure][:webserver][:ssl_options] = {
     organization: 'Luma',
 }
 default[:infrastructure][:webserver][:conf_options] = {
-    web_root: '/var/www/magento',
     client_max_body_size: '100M'
 }

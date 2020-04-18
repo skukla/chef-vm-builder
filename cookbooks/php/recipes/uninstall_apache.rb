@@ -5,11 +5,7 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 
 # Attributes
-
-# Build Apache package list
-apache_packages = ['apache2', 'apache2-bin', 'apache2-data', 'apache2-utils']
-apache_modules = Array.new
-apache_packages.concat(apache_modules)
+apache_packages = node[:infrastructure][:php][:apache_packages]
 
 # Uninstall Apache packages
 apache_packages.each do |package|

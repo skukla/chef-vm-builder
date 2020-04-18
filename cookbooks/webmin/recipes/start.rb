@@ -9,6 +9,6 @@ use_webmin = node[:infrastructure][:webmin][:use]
 
 if use_webmin
     service 'webmin' do
-        action [:enable, :start]
+        action :start
     end
 end

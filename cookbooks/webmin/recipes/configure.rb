@@ -6,8 +6,8 @@
 
 # Attributes
 port = node[:infrastructure][:webmin][:port]
-owner = node[:infrastructure][:webmin][:user]
-group = node[:infrastructure][:webmin][:group]
+user = node[:remote_machine][:user]
+group = node[:remote_machine][:user]
 use_ssl = node[:infrastructure][:webmin][:use_ssl]
 
 # Convert use_ssl from boolean to number
@@ -17,7 +17,7 @@ use_ssl == true ? use_ssl = 1 : use_ssl = 0
 template 'Webmin configuration' do
     source 'miniserv.conf.erb'
     path '/etc/webmin/miniserv.conf'
-    owner "#{owner}"
+    owner "#{user}"
     group "#{group}"
     mode "644"
     variables({
@@ -34,5 +34,5 @@ end
 
 # Define, enable, and start the webmin service
 service 'webmin' do
-    action [:enable, :start]
+    action :enable
 end

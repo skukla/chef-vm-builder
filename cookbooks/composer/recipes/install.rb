@@ -5,8 +5,8 @@
 # Copyright:: 2020, Steve, All Rights Reserved.
 
 # Attributes
-user = node[:infrastructure][:composer][:user]
-group = node[:infrastructure][:composer][:group]
+user = node[:remote_machine][:user]
+group = node[:remote_machine][:user]
 install_dir = node[:infrastructure][:composer][:install_dir]
 filename = node[:infrastructure][:composer][:filename]
 

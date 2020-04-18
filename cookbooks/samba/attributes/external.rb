@@ -4,12 +4,8 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 
-# Bring in init attributes
-include_attribute 'init::default'
+# Bring in attributes
 include_attribute 'nginx::default'
-
-default[:infrastructure][:samba][:user] = node[:vm][:user]
-default[:infrastructure][:samba][:group] = node[:vm][:group]
 
 default[:infrastructure][:samba][:share_settings][:composer_credentials] = {
     title: 'Composer Credentials',

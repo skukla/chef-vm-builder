@@ -35,6 +35,10 @@ php_versions.each do |version|
     end
 end
 
+service 'mailhog' do
+    action :enable
+end
+
 # Reload the mailhog daemon
 execute "Reload all daemons" do
     command "sudo systemctl daemon-reload"

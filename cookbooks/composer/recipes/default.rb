@@ -6,7 +6,6 @@
 
 # Attributes
 
-
 # Recipes
 include_recipe 'composer::install'
 include_recipe 'composer::configure'

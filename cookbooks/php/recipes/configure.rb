@@ -6,8 +6,8 @@
 
 # Attributes
 fpm_port = node[:infrastructure][:php][:fpm_port]
-user = node[:infrastructure][:php][:user]
-group = node[:infrastructure][:php][:group]
+user = node[:remote_machine][:user]
+group = node[:remote_machine][:group]
 supported_versions = node[:infrastructure][:php][:supported_versions]
 version = node[:infrastructure][:php][:version]
 timezone = node[:infrastructure][:php][:timezone]

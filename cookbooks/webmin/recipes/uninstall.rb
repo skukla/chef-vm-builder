@@ -4,8 +4,6 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 
-# Attributes
-
 # Stop webmin in case its running
 service 'webmin' do
     action :stop

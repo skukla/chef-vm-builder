@@ -5,8 +5,8 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 
 # Attribtues
-user = node[:infrastructure][:samba][:user]
-group = node[:infrastructure][:samba][:group]
+user = node[:remote_machine][:user]
+group = node[:remote_machine][:user]
 share_data = node[:infrastructure][:samba][:shares]
 share_settings = node[:infrastructure][:samba][:share_settings] 
 

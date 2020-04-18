@@ -9,7 +9,7 @@ use_elasticsearch = node[:infrastructure][:elasticsearch][:use]
 
 if use_elasticsearch
     service 'elasticsearch' do
-        action [:start, :enable]
+        action :start
         only_if { ::File.directory?('/etc/elasticsearch') }
     end
 end

@@ -1,5 +1,7 @@
 .DS_Store
 .vagrant/
-nodes/
+nodes/*
 environments/
-cookbooks/ssh/files/
+cookbooks/ssh/files/keys/public/*
+cookbooks/ssh/files/keys/private/*
+*.code-workspace

@@ -5,8 +5,16 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 
 # Attributes
-user = node[:vm][:user]
-group = node[:vm][:group]
+user = node[:remote_machine][:user]
+group = node[:remote_machine][:user]
+web_root = node[:application][:installation][:options][:directory]
+php_version = node[:infrastructure][:php][:version],
+db_user = node[:infrastructure][:database][:user],
+db_password = node[:infrastructure][:database][:password],
+magento_version = node[:application][:installation][:options][:version],
+private_key_files = node[:application][:authentication][:ssh][:private_key_files]
+cli_directories = node[:init][:cli][:directories]
+cli_files = node[:init][:cli][:files]
 
 # Remove the VM cli directory, then create it
 directory 'VM cli path check' do
@@ -15,27 +23,44 @@ directory 'VM cli path check' do
     action :delete
 end
 
-# Clone the VM cli from Steve's public git repo
-git 'VM cli repository' do
-    repository 'https://github.com/skukla/vm-dotfiles.git'
-    revision 'master'
-    destination "/home/#{user}/cli"
-    action :sync
-    user "#{user}"
+# Create the VM CLI directories
+cli_directories.each do |directory_data|
+    directory "Creating #{directory_data[:path]}" do
+        path "#{directory_data[:path]}"
+        owner "#{user}"
+        group "#{group}"
+        mode "#{directory_data[:mode]}"
+        not_if { ::File.directory?("#{directory_data[:path]}") }
+    end
+end
+
+# Copy the commands
+template "VM CLI" do
+    source "commands.sh.erb"
+    path "/home/#{user}/cli/commands.sh"
+    mode "755"
+    owner "#{user}"
     group "#{group}"
+    variables ({
+        user: "#{user}",
+        web_root: "#{web_root}",
+        php_version: "#{php_version}",
+        db_user: "#{db_user}",
+        db_password: "#{db_password}",
+        magento_version: "#{magento_version}",
+        private_key_files: private_key_files
+    })
+    only_if { ::File.directory?("/home/#{user}/cli") }
 end
 
-# Copy the .bashrc file with the cli bash functions
-execute 'Install cli' do
-    command "cp /home/#{user}/cli/.bashrc /home/#{user}/.bashrc"
-    only_if { ::File.exists?("/home/#{user}/cli/.bashrc") }
-end
-
-# Set scripts executable
-directory 'Scripts directory' do
-    path "/home/#{user}/cli/scripts"
-    mode '777'
-    recursive true
-    action :create
-    only_if { ::File.directory?("/home/#{user}/cli/scripts") }
+# Copy the CLI files
+cli_files.each do |cli_file_data|  
+    cookbook_file "Copying file : #{cli_file_data[:source]}" do
+        source "#{cli_file_data[:source]}"
+        path "#{cli_file_data[:path]}"
+        owner "#{user}"
+        group "#{user}"
+        mode "#{cli_file_data[:mode]}"
+        action :create
+    end
 end

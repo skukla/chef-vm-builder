@@ -1,21 +1,18 @@
 #
-# Cookbook:: magento
+# Cookbook:: app_configuration
 # Recipe:: configure_admin_users
 #
 # 
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 
 # Attributes
-user = node[:vm][:user]
-web_root = node[:infrastructure][:webserver][:conf_options][:web_root]
-composer_install_dir = node[:application][:composer][:install_dir]
-composer_file = node[:application][:composer][:filename]
-apply_base_flag = node[:application][:installation][:options][:configuration][:base]
-admin_users = node[:custom_demo][:configuration][:admin_users]
+user = node[:remote_machine][:user]
+web_root = node[:application][:installation][:options][:directory]
+configure_admin_users_flag = node[:application][:installation][:options][:configuration][:admin_users]
+admin_users = node[:custom_demo][:admin_users]
 
-# Configure base application according to settings
-if apply_base_flag
-    # Admin users (Magento CLI, not config:set)
+# Configure admin users according to settings
+if configure_admin_users_flag
     admin_users.each do |user_key, user_value|
         if user_value[:enable]
             execute "Configuring admin user : #{user_value[:first_name]} #{user_value[:last_name]}" do

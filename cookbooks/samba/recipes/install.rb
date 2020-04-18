@@ -8,3 +8,8 @@
 apt_package 'samba' do
     action :install
 end
+
+# Enable Samba
+service 'smbd' do
+    action :enable
+end

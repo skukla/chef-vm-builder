@@ -8,17 +8,16 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 
 # Attributes
-user = node[:vm][:user]
-group = node[:vm][:group]
-web_root = node[:infrastructure][:webserver][:conf_options][:web_root]
-composer_install_dir = node[:application][:composer][:install_dir]
+user = node[:remote_machine][:user]
+group = node[:remote_machine][:user]
+web_root = node[:application][:installation][:options][:directory]
 composer_file = node[:application][:composer][:filename]
 magento_version = node[:application][:installation][:options][:version]
 patches_repository = node[:application][:installation][:options][:patches][:repository_url]
 
 # Include the cweagans composer patches module
 execute "Download cweagans composer patches module" do
-    command "cd #{web_root} && su #{user} -c '/#{composer_install_dir}/#{composer_file} require --no-update cweagans/composer-patches'"
+    command "cd #{web_root} && su #{user} -c '#{composer_file} require --no-update cweagans/composer-patches'"
     not_if { ::File.directory?("#{web_root}/vendor/cweagans") }
 end
 

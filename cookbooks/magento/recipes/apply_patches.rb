@@ -10,10 +10,9 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 
 # Attributes
-user = node[:vm][:user]
-group = node[:vm][:group]
-web_root = node[:infrastructure][:webserver][:conf_options][:web_root]
-composer_install_dir = node[:application][:composer][:install_dir]
+user = node[:remote_machine][:user]
+group = node[:remote_machine][:user]
+web_root = node[:application][:installation][:options][:directory]
 composer_file = node[:application][:composer][:filename]
 
 # Pull out the patches subdirectory
@@ -70,11 +69,11 @@ end
 
 # Update patch permissions
 execute "Update patch permissions" do
-    command "su #{user} -c 'sudo chown #{user}:#{group} -R #{web_root}/m2-hotfixes'"
+    command "sudo chown #{user}:#{group} -R #{web_root}/m2-hotfixes"
     only_if { ::File.directory?("#{web_root}/m2-hotfixes") }
 end
 
 # Update the composer file
 execute "Add the patches file to composer.json" do
-    command "cd #{web_root} && su #{user} -c '/#{composer_install_dir}/#{composer_file} config extra.patches-file m2-hotfixes/patches.json'"
+    command "cd #{web_root} && su #{user} -c '#{composer_file} config extra.patches-file m2-hotfixes/patches.json'"
 end

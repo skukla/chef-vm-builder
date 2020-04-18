@@ -1,6 +1,6 @@
 #
 # Cookbook:: mysql
-# Recipe:: configure
+# Recipe:: start
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 
@@ -8,5 +8,5 @@
 
 # Define, enable, and start the MySQL service
 service 'mysql' do
-    action [:enable, :start]
+    action [:start]
 end

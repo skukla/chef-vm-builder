@@ -26,7 +26,12 @@ default[:infrastructure][:php][:ini_options] = {
     zlib_output_compression: 'On'
 }
 default[:infrastructure][:php][:fpm_options][:backend] = '127.0.0.1'
-
+default[:infrastructure][:php][:apache_packages] = [
+    "apache2", 
+    "apache2-bin", 
+    "apache2-data", 
+    "apache2-utils"
+]
 
 
 

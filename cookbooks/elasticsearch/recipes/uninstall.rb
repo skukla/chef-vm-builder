@@ -10,7 +10,7 @@ plugins = node[:infrastructure][:elasticsearch][:plugins]
 
 # Stop elasticsearch in case it's running
 service 'elasticsearch' do
-    action [:stop]
+    action :stop
 end
 
 # Remove Elasticsearch

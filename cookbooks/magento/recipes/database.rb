@@ -5,21 +5,13 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 
 # Attributes
-user = node[:application][:user]
-group = node[:application][:group]
-web_root = node[:application][:webserver][:web_root]
+user = node[:remote_machine][:user]
+group = node[:remote_machine][:user]
+web_root = node[:application][:installation][:options][:directory]
 db_host = node[:infrastructure][:database][:host]
 db_user = node[:infrastructure][:database][:user]
 db_password = node[:infrastructure][:database][:password]
 db_name = node[:infrastructure][:database][:name]
-db_root_password = node[:application][:database][:root_password]
-
-# ruby_block "Delete the Magento database" do
-#     block do
-#         %x[mysql -uroot -e "DROP DATABASE IF EXISTS #{db_name};"]
-#     end
-#     action :create
-# end
 
 ruby_block "Create the Magento database" do
     block do

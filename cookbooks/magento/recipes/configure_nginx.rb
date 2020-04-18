@@ -5,16 +5,15 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 
 # Attributes
-user = node[:application][:user]
-group = node[:application][:group]
-web_root = node[:application][:webserver][:web_root]
+user = node[:remote_machine][:user]
+group = node[:remote_machine][:user]
+web_root = node[:application][:installation][:options][:directory]
 php_version = node[:infrastructure][:php][:version]
 custom_demo_data = node[:custom_demo][:verticals]
 certificate_file = node[:infrastructure][:webserver][:ssl_files][:certificate_file]
 key_file = node[:infrastructure][:webserver][:ssl_files][:key_file]
 fpm_backend = node[:infrastructure][:webserver][:fpm_backend]
 fpm_port = node[:infrastructure][:php][:fpm_port]
-web_root = node[:infrastructure][:webserver][:conf_options][:web_root]
 client_max_body_size = node[:infrastructure][:webserver][:conf_options][:client_max_body_size]
 http_port = node[:infrastructure][:webserver][:http_port]
 ssl_port = node[:infrastructure][:webserver][:ssl_port]

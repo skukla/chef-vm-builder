@@ -5,14 +5,14 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 
 # Attributes
-user = node[:infrastructure][:ssh][:user]
-group = node[:infrastructure][:ssh][:group]
-ssh_keys = node[:application][:authentication][:ssh_keys]
+user = node[:remote_machine][:user]
+group = node[:remote_machine][:user]
+ssh_keys = node[:application][:authentication][:ssh][:private_key_files]
 
-# Recipes
-ssh_keys.each do |key_file|
-    execute "Adding #{key_file} to the ssh agent" do
-        command "su #{user} -c 'ssh-add /home/#{user}/.ssh/#{key_file}'"
-        only_if { ::File.exists?("/home/#{user}/.ssh/#{key_file}") }
+# Resources
+ssh_keys.each do |private_key_file|
+    execute "Adding #{private_key_file} to the ssh agent" do
+        command "su #{user} -c 'eval \"$(ssh-agent -s)\" && ssh-add /home/#{user}/.ssh/#{private_key_file}'"
+        only_if { ::File.exists?("/home/#{user}/.ssh/#{private_key_file}") }
     end
 end

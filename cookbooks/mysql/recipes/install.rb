@@ -23,3 +23,7 @@ end
         not_if { ::File.directory?('/etc/mysql') }
     end
 end
+
+service 'mysql' do
+    action [:enable]
+end
