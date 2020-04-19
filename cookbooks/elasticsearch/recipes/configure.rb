@@ -15,12 +15,12 @@ node_name = node[:infrastructure][:elasticsearch][:conf_options][:node_name]
 log_file_path = node[:infrastructure][:elasticsearch][:conf_options][:log_file_path]
 port = node[:infrastructure][:elasticsearch][:port]
 
-# Configure Java Options
+# Configure Java Options and Elasticsearch
 template 'JVM Options' do
     source 'jvm.options.erb'
     path '/etc/elasticsearch/jvm.options'
-    user "#{user}"
-    group "#{group}"
+    user "elasticsearch"
+    group "elasticsearch"
     mode '644'
     variables({ memory: "#{memory}" })
 end
@@ -29,8 +29,8 @@ end
 template 'Elasticsearch Configuration ' do
     source 'elasticsearch.yml.erb'
     path '/etc/elasticsearch/elasticsearch.yml'
-    user "#{user}"
-    group "#{group}"
+    user "elasticsearch"
+    group "elasticsearch"
     mode '644'
     variables({ 
         cluster_name: "#{cluster_name}",
@@ -63,8 +63,8 @@ end
 
 # Set ownership to Elasticsearch user and group
 directory '/etc/elasticsearch' do
-    owner "#{user}"
-    group "#{group}"
+    owner "elasticsearch"
+    group "elasticsearch"
     recursive true
 end
 
