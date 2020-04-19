@@ -554,12 +554,8 @@
 		"samba": {
 			"use": true,
 			"shares": {
-				"composer_credentials": true,
-				"web_root": true,
-				"image_drop": true,
-				"application_modules": true,
-				"multisite_configuration": true,
-				"application_design": true
+				"web_root": "/var/www/magento",
+				"image_drop": "/var/www/magento/var/import/images"
 			}
 		}
 	},

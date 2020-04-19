@@ -196,13 +196,13 @@
 	"application": {
 		"authentication": {
 			"composer": {
-				"username": "",
-				"password": "",
-				"github_token": ""
+				"username": "b17aa908c13768cef2a5a3a043bb3c54",
+				"password": "93f1f71fd779eb46af01fd7587e5fdba",
+				"github_token": "ca5db95d8f9ebea677be19b5943475882682e1d7"
 			},
 			"ssh": {
-				"private_key_files": [""],
-				"public_key_files": [""]
+				"private_key_files": ["id_rsa.skukla.gitlab"],
+				"public_key_files": ["id_rsa.skukla.gitlab.pub"]
 			}
 		},
 		"installation": {
@@ -554,12 +554,8 @@
 		"samba": {
 			"use": true,
 			"shares": {
-				"composer_credentials": true,
-				"web_root": true,
-				"image_drop": true,
-				"application_modules": true,
-				"multisite_configuration": true,
-				"application_design": true
+				"web_root": "/var/www/magento",
+				"image_drop": "/var/www/magento/var/import/images"
 			}
 		}
 	},

@@ -63,7 +63,7 @@ Vagrant.configure("2") do |config|
       sleep(1)
     end
   end
-
+  
   # SSH/Password access and VM Box
   config.ssh.insert_key = false
   config.ssh.forward_agent = true
@@ -122,7 +122,7 @@ Vagrant.configure("2") do |config|
     # Accept Chef License
     chef.arguments = "--chef-license accept"
   end
-  
+
   # Always set final file ownership
   config.trigger.after [:up, :reload, :provision] do |trigger|
     trigger.name = "Setting application permissions..."

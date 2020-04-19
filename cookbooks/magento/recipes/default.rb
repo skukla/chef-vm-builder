@@ -35,7 +35,6 @@ if download_base_code_flag
 end
 # If B2B is comnfigured and code should be dowloaded, add it to composer.json
 include_recipe 'magento::download_b2b' if b2b_flag && download_b2b_flag
-
 # If custom modules are configured, add them to composer.json
 if download_custom_modules_flag
     include_recipe 'ssh::add_keys_to_agent'
@@ -70,6 +69,7 @@ if install_flag
 end
 # Do these things after base install and additional extension installs
 include_recipe 'magento::setup_final'
+include_recipe 'app_configuration::create_image_drop'
 include_recipe 'app_configuration::configure_app_settings'
 include_recipe 'custom_modules::configure'
 include_recipe 'app_configuration::configure_admin_users'

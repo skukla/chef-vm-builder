@@ -324,6 +324,36 @@ function disable-elasticsearch() {
 }
 export -f disable-elasticsearch
 
+# Samba
+function enable-samba() {
+  printf "\nEnabling Samba...\n"
+  sudo systemctl enable smbd
+}
+export -f enable-samba
+
+function start-samba() {
+  printf "\nRestarting Samba...\n"
+  sudo systemctl restart smbd
+}
+export -f start-samba
+
+function stop-samba() {
+  printf "\nStopping Samba...\n"
+  sudo systemctl stop smbd
+}
+export -f stop-samba
+
+function status-samba() {
+  sudo systemctl status smbd
+}
+export -f status-samba
+
+function disable-samba() {
+  printf "\nDisabling Samba...\n"
+  sudo systemctl disable smbd
+}
+export -f disable-samba
+
 # Tools
 function warm-cache() {
   CLI_DIRECTORY=~/cli
