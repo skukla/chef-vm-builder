@@ -548,7 +548,7 @@
 			"port": 10000
 		},
 		"webmin": {
-			"use": false,
+			"use": true,
 			"port": 20000
 		},
 		"samba": {

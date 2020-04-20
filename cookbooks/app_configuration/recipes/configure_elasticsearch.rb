@@ -1,21 +1,14 @@
 #
 # Cookbook:: app_configuration
-# Recipe:: configure_app_settings
+# Recipe:: configure_elasticsearch
 #
 # 
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 
 # Attributes
-user = node[:remote_machine][:user]
-group = node[:remote_machine][:user]
 web_root = node[:application][:installation][:options][:directory]
-apply_base_flag = node[:application][:installation][:options][:configuration][:base]
-apply_b2b_flag = node[:application][:installation][:options][:configuration][:b2b]
-use_elasticsearch = node[:infrastructure][:elasticsearch][:use]
-app_config_settings = node[:application][:configuration]
 app_config_paths = node[:application][:installation][:application_configuration_paths]
-custom_module_config_paths = node[:custom_demo][:custom_module_config_paths]
-default_config_settings = node[:application][:installation][:default_configuration]
+elasticsearch_config_settings = node[:application][:installation][:elasticsearch_configuration]
 configurations = Array.new
 
 # Helper method
@@ -112,15 +105,12 @@ end
 
 if node[:application].has_key?(:configuration)
     app_config_paths.each do |config_path|
-        default_setting = default_config_settings.dig(*config_path.split("/"))
-        configured_setting = app_config_settings.dig(*config_path.split("/"))
-        
-        # If configuration should be skipped, or b2b and/or search should be skipped, then skip 
-        if (!apply_base_flag) or (config_path.include?("btob") and !apply_b2b_flag) or (config_path.include?("search") and !use_elasticsearch)
+        unless config_path.include?("search")
             next
         else
+            configured_setting = elasticsearch_config_settings.dig(*config_path.split("/"))
             if configured_setting.class != NilClass and configured_setting.class != Chef::Node::ImmutableMash
-                # Default scope settings
+                # User-configured settings with default scope
                 configuration_setting = {
                     path: config_path,
                     value: configured_setting
@@ -129,7 +119,7 @@ if node[:application].has_key?(:configuration)
             elsif configured_setting.class != NilClass or configured_setting.class == Chef::Node::ImmutableMash
                 [:website, :store].each do |scope|
                     if configured_setting[:scopes].has_key?(scope)
-                        # Scoped settings
+                        # Website or store-view settings
                         configuration_setting = {
                             path: config_path,
                             value: configured_setting[:scopes][scope][:value],
@@ -141,21 +131,7 @@ if node[:application].has_key?(:configuration)
                 end
             end
         end
-        # Default settings
-        if default_setting.class != NilClass and default_setting.class != Chef::Node::ImmutableMash 
-            # Prefer user-configured defaults
-            if configurations.detect {|v| v[:path] == config_path}
-                next
-            else
-                configuration_setting = {
-                    path: config_path,
-                    value: default_setting
-                }
-                configurations << configuration_setting
-            end
-        end
-    end 
-
+    end
     unless configurations.empty?
         command_string = "#{web_root}/bin/magento config:set "
         configurations.each do |setting|
@@ -163,7 +139,7 @@ if node[:application].has_key?(:configuration)
                 scope_string = "--scope=#{setting[:scope]} --scope-code=#{setting[:code]} "
             end
             config_string = "#{setting[:path]} \"#{process_value(setting[:value])}\""
-            execute "Configuring base setting : #{setting[:path]}" do
+            execute "Configuring search setting : #{setting[:path]}" do
                 command [command_string, scope_string, config_string].join
             end
         end
