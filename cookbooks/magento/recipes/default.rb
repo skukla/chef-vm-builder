@@ -12,6 +12,10 @@ download_custom_modules_flag = node[:application][:installation][:options][:down
 sample_data_flag = node[:application][:installation][:options][:sample_data]
 install_flag = node[:application][:installation][:options][:install]
 apply_patches_flag = node[:application][:installation][:options][:patches][:apply]
+apply_base_flag = node[:application][:installation][:options][:configuration][:base]
+apply_custom_flag = node[:application][:installation][:options][:configuration][:custom_modules]
+configure_admin_users_flag = node[:application][:installation][:options][:configuration][:admin_users]
+apply_deploy_mode_flag = node[:application][:installation][:options][:deploy_mode][:apply]
 # Check for B2B flag
 download_b2b_flag = node[:application][:installation][:options][:download][:b2b_code]
 b2b_values = Array.new
@@ -23,11 +27,11 @@ end
 b2b_flag = true if b2b_values.include? true
 
 # Recipes
-include_recipe 'mysql::start'
 # If download base is configured, and web root exists but is not empty
 if download_base_code_flag
     # Clear the web root, then install
     include_recipe 'magento::uninstall_cron'
+    include_recipe 'mysql::start'
     include_recipe 'magento::uninstall_app'
     include_recipe 'magento::create_web_root'
     include_recipe 'magento::composer_create_project'
@@ -48,10 +52,10 @@ end
 # If download base code is configured, do composer install
 if download_base_code_flag
     include_recipe 'magento::composer_install'
-# Otherwise, if we just want custom modules to be added, do composer update
-# Then, shift into developer mode and process setup:upgrade
+# Otherwise, if we just want custom modules to be added...
 elsif download_custom_modules_flag && !download_base_code_flag
     include_recipe 'magento::uninstall_cron'
+    include_recipe 'magento::clear_cron_schedule'
     include_recipe 'custom_modules::install'
 end
 # Add sample data after initial code download
@@ -63,12 +67,14 @@ if install_flag
     include_recipe 'magento::install'
     include_recipe 'magento::configure_nginx'
     include_recipe 'mysql::configure_post_install'
-    include_recipe 'magento::setup_initial'
 end
 # Do these things after base install and additional extension installs
-include_recipe 'magento::setup_final'
 include_recipe 'app_configuration::create_image_drop'
-include_recipe 'app_configuration::configure_app_settings'
-include_recipe 'custom_modules::configure'
-include_recipe 'app_configuration::configure_admin_users'
-include_recipe 'magento::setup_b2b' if b2b_flag
+include_recipe 'app_configuration::configure_app_settings' if apply_base_flag
+include_recipe 'custom_modules::configure' if apply_custom_flag
+include_recipe 'app_configuration::configure_admin_users' if configure_admin_users_flag
+include_recipe 'magento::set_deploy_mode' if apply_deploy_mode_flag
+include_recipe 'magento::setup_install' if install_flag
+include_recipe 'magento::setup_final'
+
+# Note: All infrastructure services except nginx and mysql are started via the the application role

@@ -6,7 +6,7 @@
 
 # Attributes
 
-# Define, enable, and start the MySQL service
+# (Re)start the MySQL service
 service 'mysql' do
-    action [:start]
+    action [:restart]
 end

@@ -20,7 +20,7 @@ directory "Create composer_home directory" do
 end
 
 # Move auth.json into place
-execute "Move auth.json into place" do
+execute "Copy auth.json into place" do
     command "cp /home/#{user}/.#{composer_file}/auth.json #{web_root}/var/composer_home/"
 end
 

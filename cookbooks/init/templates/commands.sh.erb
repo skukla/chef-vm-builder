@@ -48,7 +48,7 @@ export -f flush-cache
 function cache-trigger() {
   printf "Cleaning cache..."
   www
-  ./bin/magento cache:clean config full_page
+  ./bin/magento cache:clean full_page
 }
 export -f cache-trigger
 
