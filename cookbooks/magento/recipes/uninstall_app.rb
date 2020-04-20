@@ -10,11 +10,14 @@ group = node[:remote_machine][:user]
 web_root = node[:application][:installation][:options][:directory]
 db_name = node[:infrastructure][:database][:name]
 
-execute "Remove the web root" do
-    command "su #{user} -c 'sudo rm -rf #{web_root}'"
-    only_if { ::File.directory?("#{web_root}") }
+# Remove the web root
+directory "Web root" do
+    path "#{web_root}"
+    recursive true
+    action :delete
 end
 
+# Remove the database
 ruby_block "Delete the Magento database" do
     block do
         %x[mysql -uroot -e "DROP DATABASE IF EXISTS #{db_name};"]
