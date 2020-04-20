@@ -6,27 +6,13 @@
 					"use": true,
 					"url": "luma.com",
 					"scope": "website",
-					"code": "base",
-					"geos": {
-						"us_en": true,
-						"de_de": false,
-						"pt_br": false,
-						"jp_jp": false,
-						"in_hn": false
-					}
+					"code": "base"
 				},
 				"b2b": {
 					"use": true,
 					"url": "b2b.luma.com",
 					"scope": "website",
-					"code": "luma_b2b",
-					"geos": {
-						"us_en": true,
-						"de_de": false,
-						"pt_br": false,
-						"jp_jp": false,
-						"in_hn": false
-					}
+					"code": "luma_b2b"
 				}
 			},
 			"custom": {
@@ -34,27 +20,13 @@
 					"use": true,
 					"url": "custom-demo.com",
 					"scope": "website",
-					"code": "custom_b2c",
-					"geos": {
-						"us_en": true,
-						"de_de": false,
-						"pt_br": false,
-						"jp_jp": false,
-						"in_hn": false
-					}
+					"code": "custom_b2c"
 				},
 				"b2b": {
 					"use": true,
 					"url": "b2b.custom-demo.com",
 					"scope": "website",
-					"code": "custom_b2b",
-					"geos": {
-						"us_en": true,
-						"de_de": false,
-						"pt_br": false,
-						"jp_jp": false,
-						"in_hn": false
-					}
+					"code": "custom_b2b"
 				}
 			}
 		},

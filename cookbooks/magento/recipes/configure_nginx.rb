@@ -23,18 +23,12 @@ selected_vertical_data = Array.new
 custom_demo_data.each do |vertical_key, vertical_value|
     vertical_value.each do |channel_key, channel_value|
         next unless vertical_value[channel_key][:use]
-        selected_vertical_geos = Array.new
         selected_vertical_collection = Hash.new
         selected_vertical_collection[:vertical] = vertical_key
         selected_vertical_collection[:channel] = channel_key
         selected_vertical_collection[:url] = vertical_value[channel_key][:url]
         selected_vertical_collection[:scope] = vertical_value[channel_key][:scope]
         selected_vertical_collection[:code] = vertical_value[channel_key][:code]
-        vertical_value[channel_key][:geos].each do |selected_geo_key, selected_geo_value|
-            next unless selected_geo_value
-            selected_vertical_geos << selected_geo_key
-        end
-        selected_vertical_collection[:geos] = selected_vertical_geos
         selected_vertical_data << selected_vertical_collection
     end
 end
