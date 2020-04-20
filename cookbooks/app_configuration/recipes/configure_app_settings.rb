@@ -110,60 +110,62 @@ def process_value(user_value)
     end
 end
 
-app_config_paths.each do |config_path|
-    default_setting = default_config_settings.dig(*config_path.split("/"))
-    configured_setting = app_config_settings.dig(*config_path.split("/"))
-    
-    # If configuration should be skipped, or b2b and/or search should be skipped, then skip 
-    if (!apply_base_flag) or (config_path.include?("btob") and !apply_b2b_flag) or (config_path.include?("search") and !use_elasticsearch)
-        next
-    else
-        if configured_setting.class != NilClass and configured_setting.class != Chef::Node::ImmutableMash
-            # Default scope settings
-            configuration_setting = {
-                path: config_path,
-                value: configured_setting
-            }
-            configurations << configuration_setting
-        elsif configured_setting.class != NilClass or configured_setting.class == Chef::Node::ImmutableMash
-            [:website, :store].each do |scope|
-                if configured_setting[:scopes].has_key?(scope)
-                    # Scoped settings
-                    configuration_setting = {
-                        path: config_path,
-                        value: configured_setting[:scopes][scope][:value],
-                        scope: scope,
-                        code: configured_setting[:scopes][scope][:code]
-                    }
-                    configurations << configuration_setting
+if node[:application].has_key?(:configuration)
+    app_config_paths.each do |config_path|
+        default_setting = default_config_settings.dig(*config_path.split("/"))
+        configured_setting = app_config_settings.dig(*config_path.split("/"))
+        
+        # If configuration should be skipped, or b2b and/or search should be skipped, then skip 
+        if (!apply_base_flag) or (config_path.include?("btob") and !apply_b2b_flag) or (config_path.include?("search") and !use_elasticsearch)
+            next
+        else
+            if configured_setting.class != NilClass and configured_setting.class != Chef::Node::ImmutableMash
+                # Default scope settings
+                configuration_setting = {
+                    path: config_path,
+                    value: configured_setting
+                }
+                configurations << configuration_setting
+            elsif configured_setting.class != NilClass or configured_setting.class == Chef::Node::ImmutableMash
+                [:website, :store].each do |scope|
+                    if configured_setting[:scopes].has_key?(scope)
+                        # Scoped settings
+                        configuration_setting = {
+                            path: config_path,
+                            value: configured_setting[:scopes][scope][:value],
+                            scope: scope,
+                            code: configured_setting[:scopes][scope][:code]
+                        }
+                        configurations << configuration_setting
+                    end
                 end
             end
         end
-    end
-    # Default settings
-    if default_setting.class != NilClass and default_setting.class != Chef::Node::ImmutableMash 
-        # Prefer user-configured defaults
-        if configurations.detect {|v| v[:path] == config_path}
-            next
-        else
-            configuration_setting = {
-                path: config_path,
-                value: default_setting
-            }
-            configurations << configuration_setting
+        # Default settings
+        if default_setting.class != NilClass and default_setting.class != Chef::Node::ImmutableMash 
+            # Prefer user-configured defaults
+            if configurations.detect {|v| v[:path] == config_path}
+                next
+            else
+                configuration_setting = {
+                    path: config_path,
+                    value: default_setting
+                }
+                configurations << configuration_setting
+            end
         end
-    end
-end 
+    end 
 
-unless configurations.empty?
-    command_string = "#{web_root}/bin/magento config:set "
-    configurations.each do |setting|
-        if setting.has_key?(:scope)
-            scope_string = "--scope=#{setting[:scope]} --scope-code=#{setting[:code]} "
-        end
-        config_string = "#{setting[:path]} \"#{process_value(setting[:value])}\""
-        execute "Configuring base setting : #{setting[:path]}" do
-            command [command_string, scope_string, config_string].join
+    unless configurations.empty?
+        command_string = "#{web_root}/bin/magento config:set "
+        configurations.each do |setting|
+            if setting.has_key?(:scope)
+                scope_string = "--scope=#{setting[:scope]} --scope-code=#{setting[:code]} "
+            end
+            config_string = "#{setting[:path]} \"#{process_value(setting[:value])}\""
+            execute "Configuring base setting : #{setting[:path]}" do
+                command [command_string, scope_string, config_string].join
+            end
         end
     end
 end
