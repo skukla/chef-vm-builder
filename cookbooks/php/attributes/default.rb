@@ -3,9 +3,6 @@
 # Attribute:: default
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-default[:infrastructure][:php][:supported_versions] = [
-    '7.3'
-]
 default[:infrastructure][:php][:extension_list] = [
     "php%{version}",
     "php%{version}-common",
