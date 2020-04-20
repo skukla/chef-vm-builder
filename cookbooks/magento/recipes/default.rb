@@ -55,9 +55,7 @@ elsif download_custom_modules_flag && !download_base_code_flag
     include_recipe 'custom_modules::install'
 end
 # Add sample data after initial code download
-if sample_data_flag
-    include_recipe 'magento::sample_data'
-end
+include_recipe 'magento::sample_data' if sample_data_flag
 # Do these things only after installation, not subsequent extension installs
 if install_flag 
     include_recipe 'mysql::configure_pre_install'
@@ -73,3 +71,4 @@ include_recipe 'app_configuration::create_image_drop'
 include_recipe 'app_configuration::configure_app_settings'
 include_recipe 'custom_modules::configure'
 include_recipe 'app_configuration::configure_admin_users'
+include_recipe 'magento::setup_b2b' if b2b_flag
