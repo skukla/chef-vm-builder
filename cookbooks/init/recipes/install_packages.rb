@@ -3,14 +3,10 @@
 # Recipe:: install_packages
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
+packages = node[:init][:packages]
 
 # Install some useful OS packages
-[
-    "zip", 
-    "silversearcher-ag", 
-    "figlet", 
-    "unattended-upgrades"
-].each do |package|
+packages.each do |package|
     apt_package package do
         action :install
     end

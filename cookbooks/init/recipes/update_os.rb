@@ -3,6 +3,7 @@
 # Recipe:: update_os
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
+update_os = node[:infrastructure][:os][:update_os]
 
 # Update OS packages
 execute 'Update OS packages' do

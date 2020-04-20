@@ -1,6 +1,6 @@
 #
-# Cookbook:: init
-# Recipe:: install_cli
+# Cookbook:: cli
+# Recipe:: install
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 
@@ -13,8 +13,8 @@ db_user = node[:infrastructure][:database][:user],
 db_password = node[:infrastructure][:database][:password],
 magento_version = node[:application][:installation][:options][:version],
 private_key_files = node[:application][:authentication][:ssh][:private_key_files]
-cli_directories = node[:init][:cli][:directories]
-cli_files = node[:init][:cli][:files]
+cli_directories = node[:cli][:directories]
+cli_files = node[:cli][:files]
 
 # Remove the VM cli directory, then create it
 directory 'VM cli path check' do

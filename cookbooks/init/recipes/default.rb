@@ -11,4 +11,3 @@ update_os = node[:infrastructure][:os][:update_os]
 include_recipe 'init::update_os' if update_os
 include_recipe 'init::install_packages'
 include_recipe 'init::install_motd'
-include_recipe 'init::install_cli'
