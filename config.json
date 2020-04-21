@@ -1,32 +1,18 @@
 {
 	"custom_demo": {
-		"verticals": {
-			"fashion": {
-				"b2c": {
-					"use": true,
-					"url": "luma.com",
-					"scope": "website",
-					"code": "base"
+		"structure": {
+			"b2c": {
+				"website": {
+					"base": "luma.com",
+					"custom_b2c": "custom-demo.com"
 				},
-				"b2b": {
-					"use": true,
-					"url": "b2b.luma.com",
-					"scope": "website",
-					"code": "luma_b2b"
+				"store_view": {
+					"luma_de": "luma.de"
 				}
 			},
-			"custom": {
-				"b2c": {
-					"use": true,
-					"url": "custom-demo.com",
-					"scope": "website",
-					"code": "custom_b2c"
-				},
-				"b2b": {
-					"use": true,
-					"url": "b2b.custom-demo.com",
-					"scope": "website",
-					"code": "custom_b2b"
+			"b2b": {
+				"website": {
+					"luma_b2b": "b2b.luma.com"
 				}
 			}
 		},

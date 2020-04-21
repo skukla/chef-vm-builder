@@ -9,7 +9,7 @@ user = node[:remote_machine][:user]
 group = node[:remote_machine][:user]
 web_root = node[:application][:installation][:options][:directory]
 php_version = node[:infrastructure][:php][:version]
-custom_demo_data = node[:custom_demo][:verticals]
+custom_demo_structure = node[:custom_demo][:structure]
 certificate_file = node[:infrastructure][:webserver][:ssl_files][:certificate_file]
 key_file = node[:infrastructure][:webserver][:ssl_files][:key_file]
 fpm_backend = node[:infrastructure][:webserver][:fpm_backend]
@@ -19,39 +19,41 @@ http_port = node[:infrastructure][:webserver][:http_port]
 ssl_port = node[:infrastructure][:webserver][:ssl_port]
 
 # Extract the data for the virtual host files
-selected_vertical_data = Array.new
-custom_demo_data.each do |vertical_key, vertical_value|
-    vertical_value.each do |channel_key, channel_value|
-        next unless vertical_value[channel_key][:use]
-        selected_vertical_collection = Hash.new
-        selected_vertical_collection[:vertical] = vertical_key
-        selected_vertical_collection[:channel] = channel_key
-        selected_vertical_collection[:url] = vertical_value[channel_key][:url]
-        selected_vertical_collection[:scope] = vertical_value[channel_key][:scope]
-        selected_vertical_collection[:code] = vertical_value[channel_key][:code]
-        selected_vertical_data << selected_vertical_collection
+vhost_data = Array.new
+custom_demo_structure.each do |channel, channel_hash|
+    channel_hash.each do |scope, scope_hash|
+        scope_hash.each do |code, url|
+            demo_data = Hash.new
+            if scope == "store_view"
+                demo_data[:scope] = scope.gsub("store_view", "store")
+            else
+                demo_data[:scope] = scope
+            end
+            demo_data[:code] = code
+            demo_data[:url] = url
+            vhost_data << demo_data
+        end
     end
 end
 
-# Configure the virtual hosts
-selected_vertical_data.each do |selected_vertical|
+vhost_data.each do |vhost|
     # Disable any of the sites if they already exist
-    link "/etc/nginx/sites-enabled/#{selected_vertical[:vertical]}_#{selected_vertical[:channel]}" do
-        to "/etc/nginx/sites-available/#{selected_vertical[:vertical]}_#{selected_vertical[:channel]}"
+    link "/etc/nginx/sites-enabled/#{vhost[:url]}" do
+        to "/etc/nginx/sites-available/#{vhost[:url]}"
         action :delete
-        only_if { ::File.exists?("/etc/nginx/sites-available/#{selected_vertical[:vertical]}_#{selected_vertical[:channel]}") }
+        only_if { ::File.exists?("/etc/nginx/sites-available/#{vhost[:url]}") }
     end
     # Create the virtual hosts
-    template "#{selected_vertical[:vertical]}_#{selected_vertical[:channel]}" do
-        source "#{selected_vertical[:vertical]}_#{selected_vertical[:channel]}.erb"
-        path "/etc/nginx/sites-available/#{selected_vertical[:vertical]}_#{selected_vertical[:channel]}"
+    template "#{vhost[:url]}" do
+        source "vhost.erb"
+        path "/etc/nginx/sites-available/#{vhost[:url]}"
         mode '644'
         owner 'root'
         group 'root'
         variables({
             http_port: "#{http_port}",
             ssl_port: "#{ssl_port}",
-            server_name: "#{selected_vertical[:url]}",
+            server_name: "#{vhost[:url]}",
             client_max_body_size: "#{client_max_body_size}",
             web_root: "#{web_root}",
             key_file: "#{key_file}",
@@ -59,11 +61,11 @@ selected_vertical_data.each do |selected_vertical|
         })
     end
     # Enable the selected sites
-    link "/etc/nginx/sites-enabled/#{selected_vertical[:vertical]}_#{selected_vertical[:channel]}" do
-        to "/etc/nginx/sites-available/#{selected_vertical[:vertical]}_#{selected_vertical[:channel]}"
+    link "/etc/nginx/sites-enabled/#{vhost[:url]}" do
+        to "/etc/nginx/sites-available/#{vhost[:url]}"
         owner 'root'
         group 'root'
-        only_if { ::File.exists?("/etc/nginx/sites-available/#{selected_vertical[:vertical]}_#{selected_vertical[:channel]}") }
+        only_if { ::File.exists?("/etc/nginx/sites-available/#{vhost[:url]}") }
     end
 end
 
@@ -96,7 +98,7 @@ template 'Configure multisite' do
     variables({ 
         fpm_backend: "#{fpm_backend}",
         fpm_port: "#{fpm_port}",
-        vhost_data: selected_vertical_data
+        vhost_data: vhost_data
     })
     only_if { ::File.directory?('/etc/nginx/sites-available/conf') }
 end

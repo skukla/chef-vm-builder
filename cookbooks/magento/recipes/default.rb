@@ -6,7 +6,7 @@
 
 # Attributes
 web_root = node[:application][:installation][:options][:directory]
-custom_demo_data = node[:custom_demo][:verticals]
+custom_demo_data = node[:custom_demo][:structure]
 download_base_code_flag = node[:application][:installation][:options][:download][:base_code]
 download_custom_modules_flag = node[:application][:installation][:options][:download][:custom_modules]
 sample_data_flag = node[:application][:installation][:options][:sample_data]
@@ -66,8 +66,8 @@ include_recipe 'magento::sample_data' if sample_data_flag
 if install_flag 
     include_recipe 'mysql::configure_pre_install'
     include_recipe 'magento::database'
-    include_recipe 'magento::install'
     include_recipe 'magento::configure_nginx'
+    include_recipe 'magento::install'
     include_recipe 'mysql::configure_post_install'
 end
 # Do these things after base install and additional extension installs
