@@ -18,15 +18,7 @@ apply_b2b_flag = node[:application][:installation][:options][:configuration][:b2
 apply_custom_flag = node[:application][:installation][:options][:configuration][:custom_modules]
 configure_admin_users_flag = node[:application][:installation][:options][:configuration][:admin_users]
 apply_deploy_mode_flag = node[:application][:installation][:options][:deploy_mode][:apply]
-# Check for B2B flag
 download_b2b_flag = node[:application][:installation][:options][:download][:b2b_code]
-b2b_values = Array.new
-custom_demo_data.each do |vertical_key, vertical_value|
-    vertical_value.each do |channel_key, channel_value|
-        b2b_values << vertical_value[channel_key][:use]
-    end
-end
-b2b_flag = true if b2b_values.include? true
 
 # Recipes
 # If download base is configured, and web root exists but is not empty
@@ -40,7 +32,7 @@ if download_base_code_flag
     include_recipe 'magento::remove_modules'
 end
 # If B2B is comnfigured and code should be dowloaded, add it to composer.json
-include_recipe 'magento::download_b2b' if b2b_flag && download_b2b_flag
+include_recipe 'magento::download_b2b' if download_b2b_flag
 # If custom modules are configured, add them to composer.json
 if download_custom_modules_flag
     include_recipe 'ssh::add_keys_to_agent'

@@ -10,6 +10,7 @@ web_root = node[:application][:installation][:options][:directory]
 app_config_settings = node[:application][:configuration]
 app_config_paths = node[:application][:installation][:application_configuration_paths]
 configurations = Array.new
+children = Array.new
 
 # Helper method
 def process_value(user_value)
@@ -108,27 +109,43 @@ if node[:application].has_key?(:configuration)
         if config_path.include?("btob")
             next
         else
+            configuration_setting = Hash.new
             configured_setting = app_config_settings.dig(*config_path.split("/"))
             if configured_setting.class != NilClass and configured_setting.class != Chef::Node::ImmutableMash
                 # User-configured settings with default scope
-                configuration_setting = {
-                    path: config_path,
-                    value: configured_setting
-                }
-                configurations << configuration_setting
+                configuration_setting[:path] = config_path
+                configuration_setting[:value] = configured_setting
             elsif configured_setting.class != NilClass or configured_setting.class == Chef::Node::ImmutableMash
-                [:website, :store].each do |scope|
-                    if configured_setting[:scopes].has_key?(scope)
-                        # Website or store-view settings
-                        configuration_setting = {
-                            path: config_path,
-                            value: configured_setting[:scopes][scope][:value],
-                            scope: scope,
-                            code: configured_setting[:scopes][scope][:code]
-                        }
-                        configurations << configuration_setting
+                ["website", "store_view"].each do |scope|
+                    if configured_setting.has_key?(scope)
+                        if scope == "store_view"
+                            scope_value = "store"
+                        else
+                            scope_value = scope
+                        end
+                        # This should REALLY use recursion...
+                        configuration_setting[:path] = config_path
+                        configuration_setting[:scope] = scope_value
+                        if configured_setting[scope].size > 1
+                            configured_setting[scope].each do |code, value|
+                                child_hash = Hash.new
+                                child_hash[:path] = configuration_setting[:path]
+                                child_hash[:scope] = configuration_setting[:scope]
+                                child_hash[:code] = code
+                                child_hash[:value] = value
+                                configurations << child_hash
+                            end
+                        else
+                            configured_setting[scope].each do |code, value|
+                                configuration_setting[:code] = code
+                                configuration_setting[:value] = value
+                            end
+                        end
                     end
                 end
+            end
+            unless configuration_setting.empty?
+                configurations << configuration_setting
             end
         end
     end

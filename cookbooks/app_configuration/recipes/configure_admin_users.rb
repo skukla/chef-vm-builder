@@ -8,13 +8,14 @@
 # Attributes
 user = node[:remote_machine][:user]
 web_root = node[:application][:installation][:options][:directory]
-admin_users = node[:custom_demo][:admin_users]
+custom_demo_data = node[:custom_demo]
+admin_users = custom_demo_data[:admin_users]
 
 # Configure admin users according to settings
-admin_users.each do |user_key, user_value|
-    if user_value[:enable]
-        execute "Configuring admin user : #{user_value[:first_name]} #{user_value[:last_name]}" do
-            command "cd #{web_root} && su #{user} -c './bin/magento admin:user:create --admin-user=#{user_value[:username]} --admin-password=#{user_value[:password]} --admin-email=#{user_value[:email]} --admin-firstname=#{user_value[:first_name]} --admin-lastname=#{user_value[:last_name]}'"
+if custom_demo_data.has_key?(:admin_users)
+    admin_users.each do |field, value|
+        execute "Configuring admin user : #{value[:first_name]} #{value[:last_name]}" do
+            command "cd #{web_root} && su #{user} -c './bin/magento admin:user:create --admin-user=#{value[:username]} --admin-password=#{value[:password]} --admin-email=#{value[:email]} --admin-firstname=#{value[:first_name]} --admin-lastname=#{value[:last_name]}'"
         end
     end
 end

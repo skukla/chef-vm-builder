@@ -73,7 +73,7 @@ Vagrant.configure("2") do |config|
   # Set the hostname and configure networking
   config.vm.define settings["remote_machine"]["name"] do |machine|
     machine.vm.network "private_network", ip: settings["vm"]["ip"]
-    machine.vm.hostname = settings["vm"]["url"]
+    machine.vm.hostname = settings["custom_demo"]["structure"]["website"]["base"]
   end
 
   # Configure VM machine based on provider

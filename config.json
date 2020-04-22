@@ -1,24 +1,18 @@
 {
 	"custom_demo": {
 		"structure": {
-			"b2c": {
-				"website": {
-					"base": "luma.com",
-					"custom_b2c": "custom-demo.com"
-				},
-				"store_view": {
-					"luma_de": "luma.de"
-				}
+			"website": {
+				"base": "luma.com",
+				"luma_b2b": "b2b.luma.com",
+				"custom_b2c": "custom-demo.com",
+				"custom_b2b": "b2b.custom-demo.com"
 			},
-			"b2b": {
-				"website": {
-					"luma_b2b": "b2b.luma.com"
-				}
+			"store_view": {
+				"luma_de": "luma.de"
 			}
 		},
 		"admin_users": {
 			"user_1": {
-				"enable": true,
 				"first_name": "Christine",
 				"last_name": "Jacobs",
 				"username": "christine",
@@ -26,7 +20,6 @@
 				"email": "christine@luma.com"
 			},
 			"user_2": {
-				"enable": false,
 				"first_name": "Fred",
 				"last_name": "Mills",
 				"username": "fred",
@@ -34,7 +27,6 @@
 				"email": "fred@luma.com"
 			},
 			"user_3": {
-				"enable": false,
 				"first_name": "Bill",
 				"last_name": "Thomas",
 				"username": "bill",
@@ -42,7 +34,6 @@
 				"email": "bill@luma.com"
 			},
 			"user_4": {
-				"enable": false,
 				"first_name": "Shelly",
 				"last_name": "Smith",
 				"username": "shelly",
@@ -50,7 +41,6 @@
 				"email": "shelly@luma.com"
 			},
 			"user_5": {
-				"enable": 0,
 				"first_name": "Phil",
 				"last_name": "Baker",
 				"username": "phil",
@@ -218,75 +208,48 @@
 			"general": {
 				"store_information": {
 					"name": {
-						"scopes": {
-							"store": {
-								"value": "Luma, Inc.",
-								"code": "default"
-							}
+						"website": {
+							"base": "Luma, Inc."
 						}
 					},
 					"phone": {
-						"scopes": {
-							"store": {
-								"value": "1-310-945-0345",
-								"code": "default"
-							}
+						"store_view": {
+							"default": "1-310-945-0345"
 						}
 					},
 					"hours": {
-						"scopes": {
-							"store": {
-								"value": "9AM - 5PM",
-								"code": "default"
-							}
+						"store_view": {
+							"default": "9AM - 5PM"
 						}
 					},
 					"street_line1": {
-						"scopes": {
-							"website": {
-								"value": "Luma, Inc.",
-								"code": "base"
-							}
+						"website": {
+							"base": "Luma, Inc."
 						}
 					},
 					"street_line2": {
-						"scopes": {
-							"website": {
-								"value": "3640 Holdrege Ave",
-								"code": "base"
-							}
+						"website": {
+							"base": "3640 Holdrege Ave"
 						}
 					},
 					"city": {
-						"scopes": {
-							"website": {
-								"value": "Los Angeles",
-								"code": "base"
-							}	
+						"website": {
+							"base": "Los Angeles"
 						}
 					},
 					"region_id": {
-						"scopes": {
-							"website": {
-								"value": "CA",
-								"code": "base"
-							}	
+						"website": {
+							"base": "CA"
 						}
 					},
 					"postcode": {
-						"scopes": {
-							"website": {
-								"value": "90016",
-								"code": "base"
-							}
+						"website": {
+							"base": "90016"
 						}
 					},
 					"country_id": {
-						"scopes": {
-							"website": {
-								"value": "US",
-								"code": "base"
-							}
+						"website": {
+							"base": "US"
 						}
 					}
 				}
@@ -299,43 +262,28 @@
 			"btob": {
 				"website_configuration": {
 					"company_active": {
-						"scopes": {
-							"website": {
-								"value": true,
-								"code": "base"
-							}
+						"website": {
+							"base": true
 						}
 					},
 					"sharedcatalog_active": {
-						"scopes": {
-							"website": {
-								"value": true,
-								"code": "base"
-							}
+						"website": {
+							"base": true
 						}
 					},
 					"negotiablequote_active": {
-						"scopes": {
-							"website": {
-								"value": true,
-								"code": "base"
-							}
+						"website": {
+							"base": true
 						}
 					},
 					"quickorder_active": {
-						"scopes": {
-							"website": {
-								"value": true,
-								"code": "base"
-							}
+						"website": {
+							"base": true
 						}
 					},
 					"requisition_list_active": {
-						"scopes": {
-							"website": {
-								"value": true,
-								"code": "base"
-							}
+						"website": {
+							"base": true
 						}
 					}
 				}
@@ -351,43 +299,28 @@
 			"shipping": {
 				"origin": {
 					"street_line1": {
-						"scopes": {
-							"website": {
-								"value": "3640 Holdrege Ave",
-								"code": "base"
-							}
-						}						
+						"website": {
+							"base": "3640 Holdrege Ave"
+						}			
 					},
 					"city": {
-						"scopes": {
-							"website": {
-								"value": "Los Angeles",
-								"code": "base"
-							}
+						"website": {
+							"base": "Los Angeles"
 						}
 					},
 					"region_id": {
-						"scopes": {
-							"website": {
-								"value": "CA",
-								"code": "base"
-							}
+						"website": {
+							"base": "CA"
 						}
 					},
 					"postcode": {
-						"scopes": {
-							"website": {
-								"value": "90016",
-								"code": "base"
-							}
+						"website": {
+							"base": "90016"
 						}
 					},
 					"country_id": {
-						"scopes": {
-							"website": {
-								"value": "US",
-								"code": "base"
-							}
+						"website": {
+							"base": "US"
 						}
 					}
 				}
@@ -395,51 +328,33 @@
 			"carriers": {
 				"ups": {
 					"active": {
-						"scopes": {
-							"website": {
-								"value": true,
-								"code": "base"
-							}
+						"website": {
+							"base": true
 						}
 					},
 					"username": {
-						"scopes": {
-							"website": {
-								"value": "magento",
-								"code": "base"
-							}
+						"website": {
+							"base": "magento"
 						}
 					},
 					"password": {
-						"scopes": {
-							"website": {
-								"value": "magento200",
-								"code": "base"
-							}
+						"website": {
+							"base": "magento200"
 						}
 					},
 					"access_license_number": {
-						"scopes": {
-							"website": {
-								"value": "ECAB751ABF189ECA",
-								"code": "base"
-							}
+						"website": {
+							"base": "ECAB751ABF189ECA"
 						}
 					},
 					"shipper_number": {
-						"scopes": {
-							"website": {
-								"value": "207W88",
-								"code": "base"
-							}
+						"website": {
+							"base": "207W88"
 						}
 					},
 					"allowed_methods": {
-						"scopes": {
-							"website": {
-								"value": ["Ground", "Next Day Air"],
-								"code": "base"
-							}
+						"website": {
+							"base": ["Ground", "Next Day Air"]
 						}
 					}
 				},
@@ -459,11 +374,8 @@
 				},
 				"companycredit": {
 					"active": {
-						"scopes": {
-							"website": {
-								"value": true,
-								"code": "base"
-							}
+						"website": {
+							"base": false
 						}
 					}
 				},
@@ -519,7 +431,6 @@
 	},
 	"vm": {
 		"ip": "192.168.57.11",
-		"url": "luma.com",
 		"name": "Luma VM"
 	},
 	"provisioner": {

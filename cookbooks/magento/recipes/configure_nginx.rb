@@ -20,19 +20,17 @@ ssl_port = node[:infrastructure][:webserver][:ssl_port]
 
 # Extract the data for the virtual host files
 vhost_data = Array.new
-custom_demo_structure.each do |channel, channel_hash|
-    channel_hash.each do |scope, scope_hash|
-        scope_hash.each do |code, url|
-            demo_data = Hash.new
-            if scope == "store_view"
-                demo_data[:scope] = scope.gsub("store_view", "store")
-            else
-                demo_data[:scope] = scope
-            end
-            demo_data[:code] = code
-            demo_data[:url] = url
-            vhost_data << demo_data
+custom_demo_structure.each do |scope, scope_hash|
+    scope_hash.each do |code, url|
+        demo_data = Hash.new
+        if scope == "store_view"
+            demo_data[:scope] = scope.gsub("store_view", "store")
+        else
+            demo_data[:scope] = scope
         end
+        demo_data[:code] = code
+        demo_data[:url] = url
+        vhost_data << demo_data
     end
 end
 

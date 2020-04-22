@@ -106,24 +106,20 @@ end
 if node[:application].has_key?(:configuration)
     app_config_paths.each do |config_path|
         default_setting = default_config_settings.dig(*config_path.split("/"))
+        configuration_setting = Hash.new
         # Default settings
         if default_setting.class != NilClass and default_setting.class != Chef::Node::ImmutableMash
-            configuration_setting = {
-                path: config_path,
-                value: default_setting
-            }
+            configuration_setting[:path] = config_path
+            configuration_setting[:value] = default_setting
             configurations << configuration_setting
         end
     end 
     unless configurations.empty?
         command_string = "#{web_root}/bin/magento config:set "
         configurations.each do |setting|
-            if setting.has_key?(:scope)
-                scope_string = "--scope=#{setting[:scope]} --scope-code=#{setting[:code]} "
-            end
             config_string = "#{setting[:path]} \"#{process_value(setting[:value])}\""
             execute "Configuring default setting : #{setting[:path]}" do
-                command [command_string, scope_string, config_string].join
+                command [command_string, config_string].join
             end
         end
     end

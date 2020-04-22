@@ -18,11 +18,9 @@ end
 
 # Extract the urls for the custom motd
 demo_urls = Array.new
-custom_demo_structure.each do |channel, channel_hash|
-    channel_hash.each do |scope, scope_hash|
-        scope_hash.each do |code, url|
-            demo_urls << url
-        end
+custom_demo_structure.each do |scope, scope_hash|
+    scope_hash.each do |code, url|
+        demo_urls << url
     end
 end
 
