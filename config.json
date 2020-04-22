@@ -256,7 +256,7 @@
 			},
 			"cms": {
 				"pagebuilder": {
-					"google_maps_api_key": "AIzaSyCUpro8_IIHqsD1WKzadd2U0BJKsJDCrqk"
+					"google_maps_api_key": ""
 				}
 			},
 			"btob": {
@@ -334,22 +334,22 @@
 					},
 					"username": {
 						"website": {
-							"base": "magento"
+							"base": ""
 						}
 					},
 					"password": {
 						"website": {
-							"base": "magento200"
+							"base": ""
 						}
 					},
 					"access_license_number": {
 						"website": {
-							"base": "ECAB751ABF189ECA"
+							"base": ""
 						}
 					},
 					"shipper_number": {
 						"website": {
-							"base": "207W88"
+							"base": ""
 						}
 					},
 					"allowed_methods": {
@@ -366,9 +366,9 @@
 				"braintree": {
 					"active": true,
 					"merchant_account_id": "magento",
-					"merchant_id": "zkw2ctrkj75ndvkc",
-					"public_key": "n2bt4844t6xrt56x",
-					"private_key": "e6c98fd99fe699d4169475fef026d5b9",
+					"merchant_id": "",
+					"public_key": "",
+					"private_key": "",
 					"payment_action": "authorize",
 					"cctypes": ["Visa", "MasterCard"]
 				},
@@ -409,7 +409,7 @@
 		"elasticsearch": {
 			"use": true,
 			"version": "6.x",
-			"memory": "1g",
+			"memory": "1G",
 			"port": 9200,
 			"plugins": ["analysis-phonetic", "analysis-icu"]
 		},

@@ -409,7 +409,7 @@
 		"elasticsearch": {
 			"use": true,
 			"version": "6.x",
-			"memory": "1g",
+			"memory": "1 G",
 			"port": 9200,
 			"plugins": ["analysis-phonetic", "analysis-icu"]
 		},
@@ -431,7 +431,7 @@
 	},
 	"vm": {
 		"ip": "192.168.57.11",
-		"name": "Luma VM"
+		"name": "Luma"
 	},
 	"provisioner": {
 		"type": "chef_zero",

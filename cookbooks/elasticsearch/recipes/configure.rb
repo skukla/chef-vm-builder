@@ -5,22 +5,22 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 
 # Attributes
+user = node[:infrastructure][:elasticsearch][:user]
+group = node[:infrastructure][:elasticsearch][:group]
 version = node[:infrastructure][:elasticsearch][:version]
-user = node[:remote_machine][:user]
-group = node[:remote_machine][:user]
 java_home = node[:infrastructure][:java][:java_home]
-memory = node[:infrastructure][:elasticsearch][:memory]
-cluster_name = node[:infrastructure][:elasticsearch][:conf_options][:cluster_name]
-node_name = node[:infrastructure][:elasticsearch][:conf_options][:node_name]
-log_file_path = node[:infrastructure][:elasticsearch][:conf_options][:log_file_path]
+memory = node[:infrastructure][:elasticsearch][:memory_value]
+cluster_name = node[:infrastructure][:elasticsearch][:cluster_name]
+node_name = node[:infrastructure][:elasticsearch][:node_name]
+log_file_path = node[:infrastructure][:elasticsearch][:log_file_path]
 port = node[:infrastructure][:elasticsearch][:port]
 
 # Configure Java Options and Elasticsearch
 template 'JVM Options' do
     source 'jvm.options.erb'
     path '/etc/elasticsearch/jvm.options'
-    user "elasticsearch"
-    group "elasticsearch"
+    user "#{user}"
+    group "#{group}"
     mode '644'
     variables({ memory: "#{memory}" })
 end
@@ -29,8 +29,8 @@ end
 template 'Elasticsearch Configuration ' do
     source 'elasticsearch.yml.erb'
     path '/etc/elasticsearch/elasticsearch.yml'
-    user "elasticsearch"
-    group "elasticsearch"
+    user "#{user}"
+    group "#{group}"
     mode '644'
     variables({ 
         cluster_name: "#{cluster_name}",
@@ -63,8 +63,8 @@ end
 
 # Set ownership to Elasticsearch user and group
 directory '/etc/elasticsearch' do
-    owner "elasticsearch"
-    group "elasticsearch"
+    owner "#{user}"
+    group "#{group}"
     recursive true
 end
 
