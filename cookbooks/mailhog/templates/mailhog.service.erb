@@ -3,9 +3,9 @@ Description=MailHog service
 
 [Service]
 ExecStart=/usr/local/bin/mailhog \
-  -api-bind-addr 0.0.0.0:<%= @settings["port"] %> \
-  -ui-bind-addr 0.0.0.0:<%= @settings["port"] %> \
-  -smtp-bind-addr 0.0.0.0:<%= @settings["smtp_port"] %>
+  -api-bind-addr 0.0.0.0:<%= @port %> \
+  -ui-bind-addr 0.0.0.0:<%= @port %> \
+  -smtp-bind-addr 0.0.0.0:<%= @smtp_port %>
 
 [Install]
 WantedBy=multi-user.target

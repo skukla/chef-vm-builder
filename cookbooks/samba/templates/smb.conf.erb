@@ -30,7 +30,7 @@
 [<%= share_name.to_s.split("_").map(&:capitalize).join(" ")%>]
 <% share_data.each do |field, value| %>
       <% if field.to_s.include?("force") %>
-      <%= field.gsub("_", " ") %> = <%= value %>
+      <%= field.to_s.gsub("_", " ") %> = <%= value %>
       <% else %>
       <%= field %> = <%= value %>
       <% end %>

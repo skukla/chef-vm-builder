@@ -26,22 +26,22 @@ shares.each do |share_name, share_record|
     share_data = Hash.new
     share_fields.each do |field|
         case field
-        when "path"
+        when :path
             if share_record.is_a? String
                 share_data[:path] = share_record
             else
                 share_data[field] = process_value(share_record[field])
             end
-        when "public", "browsable", "writeable"
-            share_data[field] = "Yes" if share_record[field].to_s.empty?
-        when "force_user", "force_group"
-            if share_record[field].to_s.empty?
+        when :public, :browsable, :writeable
+            share_data[field] = "Yes" if share_record[field.to_s].nil?
+        when :force_user, :force_group
+            if share_record[field.to_s].nil?
                 share_data[field] = "#{user}"
             else
                 share_data[field] = process_value(share_record[field])
             end
         else
-            unless share_record[field].to_s.empty?
+            unless share_record[field.to_s].nil?
                 share_data[field] = process_value(share_record[field])
             end
         end

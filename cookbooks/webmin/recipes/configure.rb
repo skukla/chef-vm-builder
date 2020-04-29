@@ -24,7 +24,7 @@ end
 # Reload the mailhog daemon
 execute "Reload all daemons" do
     command "sudo systemctl daemon-reload"
-    notifies :restart, 'service[webmin]', :immediately
+    notifies :reload, 'service[webmin]', :immediately
 end
 
 # Define, enable, and start the webmin service
