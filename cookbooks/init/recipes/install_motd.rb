@@ -8,6 +8,8 @@ group = node[:remote_machine][:user]
 ip = node[:vm][:ip]
 hostname = node[:fqdn]
 custom_demo_structure = node[:custom_demo][:structure]
+use_mailhog = node[:init][:use_mailhog]
+use_webmin = node[:init][:use_webmin]
 
 # Remove permissions on all present MotD files
 execute 'Remove MotDs' do
@@ -32,6 +34,8 @@ template 'Custom MoTD' do
     variables ({
         ip: "#{ip}",
         hostname: "#{hostname}",
+        use_mailhog: "#{use_mailhog}",
+        use_webmin: "#{use_webmin}",
         webmin_user: "#{user}",
         webmin_password: "#{group}",
         urls: demo_urls

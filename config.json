@@ -163,9 +163,9 @@
 				"version": "2.3.4",
 				"directory": "/var/www/magento",
 				"download": {
-					"base_code": false,
-					"b2b_code": false,
-					"custom_modules": false
+					"base_code": true,
+					"b2b_code": true,
+					"custom_modules": true
 				},
 				"modules_to_remove":["temando/module-shipping", "magento/google-shopping-ads"],
 				"install": true,
@@ -326,7 +326,7 @@
 				"ups": {
 					"active": {
 						"website": {
-							"base": true
+							"base": false
 						}
 					},
 					"username": {
@@ -361,11 +361,11 @@
 			},
 			"payment": {
 				"braintree": {
-					"active": true,
-					"merchant_account_id": "magento",
-					"merchant_id": "zkw2ctrkj75ndvkc",
-					"public_key": "n2bt4844t6xrt56x",
-					"private_key": "e6c98fd99fe699d4169475fef026d5b9",
+					"active": false,
+					"merchant_account_id": "",
+					"merchant_id": "",
+					"public_key": "",
+					"private_key": "",
 					"payment_action": "authorize",
 					"cctypes": ["Visa", "MasterCard"]
 				},
@@ -413,11 +413,11 @@
 			"plugins": ["analysis-phonetic", "analysis-icu"]
 		},
 		"mailhog": {
-			"use": true,
+			"use": false,
 			"port": 10000
 		},
 		"webmin": {
-			"use": true,
+			"use": false,
 			"port": 20000
 		},
 		"samba": {

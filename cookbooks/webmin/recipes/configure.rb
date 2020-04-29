@@ -29,5 +29,5 @@ end
 
 # Define, enable, and start the webmin service
 service 'webmin' do
-    action :enable
+    action [:stop, :enable]
 end
