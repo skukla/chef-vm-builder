@@ -1,4 +1,8 @@
 {
+	"vm": {
+		"ip": "192.168.57.11",
+		"name": "Luma VM"
+	},
 	"custom_demo": {
 		"structure": {
 			"website": {
@@ -144,13 +148,13 @@
 	"application": {
 		"authentication": {
 			"composer": {
-				"username": "b17aa908c13768cef2a5a3a043bb3c54",
-				"password": "93f1f71fd779eb46af01fd7587e5fdba",
-				"github_token": "ca5db95d8f9ebea677be19b5943475882682e1d7"
+				"username": "",
+				"password": "",
+				"github_token": ""
 			},
 			"ssh": {
-				"private_key_files": ["id_rsa.skukla.gitlab"],
-				"public_key_files": ["id_rsa.skukla.gitlab.pub"]
+				"private_key_files": [""],
+				"public_key_files": [""]
 			}
 		},
 		"installation": {
@@ -161,16 +165,9 @@
 				"download": {
 					"base_code": true,
 					"b2b_code": true,
-					"custom_modules": true,
-					"modules_to_remove": {
-						"temando": {
-							"module": "module-shipping"
-						},
-						"magento": {
-							"module": "google-shopping-ads"
-						}
-					}
+					"custom_modules": true
 				},
+				"modules_to_remove":["temando/module-shipping", "magento/google-shopping-ads"],
 				"install": true,
 				"sample_data": false,
 				"deploy_mode": {
@@ -329,27 +326,27 @@
 				"ups": {
 					"active": {
 						"website": {
-							"base": true
+							"base": false
 						}
 					},
 					"username": {
 						"website": {
-							"base": "magento"
+							"base": ""
 						}
 					},
 					"password": {
 						"website": {
-							"base": "magento200"
+							"base": ""
 						}
 					},
 					"access_license_number": {
 						"website": {
-							"base": "ECAB751ABF189ECA"
+							"base": ""
 						}
 					},
 					"shipper_number": {
 						"website": {
-							"base": "207W88"
+							"base": ""
 						}
 					},
 					"allowed_methods": {
@@ -364,11 +361,11 @@
 			},
 			"payment": {
 				"braintree": {
-					"active": true,
-					"merchant_account_id": "magento",
-					"merchant_id": "zkw2ctrkj75ndvkc",
-					"public_key": "n2bt4844t6xrt56x",
-					"private_key": "e6c98fd99fe699d4169475fef026d5b9",
+					"active": false,
+					"merchant_account_id": "",
+					"merchant_id": "",
+					"public_key": "",
+					"private_key": "",
 					"payment_action": "authorize",
 					"cctypes": ["Visa", "MasterCard"]
 				},
@@ -416,11 +413,11 @@
 			"plugins": ["analysis-phonetic", "analysis-icu"]
 		},
 		"mailhog": {
-			"use": true,
+			"use": false,
 			"port": 10000
 		},
 		"webmin": {
-			"use": true,
+			"use": false,
 			"port": 20000
 		},
 		"samba": {
@@ -430,10 +427,6 @@
 				"image_drop": "/var/www/magento/var/import/images"
 			}
 		}
-	},
-	"vm": {
-		"ip": "192.168.57.11",
-		"name": "Luma VM"
 	},
 	"provisioner": {
 		"type": "chef_zero",

@@ -20,6 +20,7 @@ default[:magento][:installation][:options][:sample_data] = true
 default[:magento][:installation][:options][:deploy_mode][:apply] = true
 default[:magento][:installation][:options][:deploy_mode][:mode] = "production"
 default[:magento][:installation][:options][:patches][:apply] = false
+default[:magento][:installation][:options][:patches][:repository_url] = "https://github.com/PMET-public/magento-cloud.git"
 default[:magento][:installation][:options][:configuration][:base] = false
 default[:magento][:installation][:options][:configuration][:b2b] = false
 default[:magento][:installation][:options][:configuration][:custom_modules] = false

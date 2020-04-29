@@ -3,15 +3,12 @@
 # Recipe:: default
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-
-# Attributes
-web_root = node[:application][:installation][:options][:directory]
+web_root = node[:magento][:installation][:options][:directory]
 custom_demo_data = node[:custom_demo][:structure]
 download_base_code_flag = node[:application][:installation][:options][:download][:base_code]
 download_custom_modules_flag = node[:application][:installation][:options][:download][:custom_modules]
 sample_data_flag = node[:application][:installation][:options][:sample_data]
-elasticsearch_configuration = node[:infrastructure][:elasticsearch]
-use_elasticsearch = node[:infrastructure][:elasticsearch] or node[:infrastructure][:elasticsearch][:use]
+use_elasticsearch = node[:magento][:use_elasticsearch]
 install_flag = node[:application][:installation][:options][:install]
 apply_patches_flag = node[:application][:installation][:options][:patches][:apply]
 apply_base_flag = node[:application][:installation][:options][:configuration][:base]
@@ -21,7 +18,8 @@ configure_admin_users_flag = node[:application][:installation][:options][:config
 apply_deploy_mode_flag = node[:application][:installation][:options][:deploy_mode][:apply]
 download_b2b_flag = node[:application][:installation][:options][:download][:b2b_code]
 
-# Recipes
+# Handle nginx conifiguration for multisite first
+include_recipe 'magento::configure_nginx' if install_flag
 # If download base is configured, and web root exists but is not empty
 if download_base_code_flag
     # Clear the web root, then install
@@ -59,7 +57,6 @@ include_recipe 'magento::sample_data' if sample_data_flag
 if install_flag 
     include_recipe 'mysql::configure_pre_install'
     include_recipe 'magento::database'
-    include_recipe 'magento::configure_nginx'
     include_recipe 'magento::install'
     include_recipe 'mysql::configure_post_install'
 end

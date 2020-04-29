@@ -5,10 +5,10 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 user = node[:remote_machine][:user]
 group = node[:remote_machine][:user]
-web_root = node[:application][:installation][:options][:directory]
-composer_file = node[:magento][:composer][:filename]
-magento_version = node[:application][:installation][:options][:version]
-patches_repository = node[:application][:installation][:options][:patches][:repository_url]
+web_root = node[:magento][:installation][:options][:directory]
+magento_version = node[:magento][:installation][:options][:version]
+patches_repository = node[:magento][:installation][:options][:patches][:repository_url]
+composer_file = node[:magento][:composer_filename]
 
 # Include the cweagans composer patches module
 execute "Download cweagans composer patches module" do

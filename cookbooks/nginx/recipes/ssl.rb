@@ -1,17 +1,17 @@
 #
-# Cookbook:: ssl
-# Recipe:: install_certificate
+# Cookbook:: nginx
+# Recipe:: ssl
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 user = node[:remote_machine][:user]
 group = node[:remote_machine][:user]
+key_file = node[:nginx][:ssl_key_file]
+certificate_file = node[:nginx][:ssl_certificate_file]
 common_name = node[:fqdn]
-country = node[:ssl][:country]
-region = node[:ssl][:region]
-locality = node[:ssl][:locality]
-organization = node[:ssl][:organization]
-key_file = node[:ssl][:key_file]
-certificate_file = node[:ssl][:certificate_file]
+country = node[:nginx][:ssl_country]
+region = node[:nginx][:ssl_region]
+locality = node[:nginx][:ssl_locality]
+organization = node[:nginx][:ssl_organization]
 
 # Generate the ssl key from the conf file
 execute 'Generate ssl key' do

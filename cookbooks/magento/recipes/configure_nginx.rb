@@ -5,8 +5,8 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 user = node[:remote_machine][:user]
 group = node[:remote_machine][:user]
-web_root = node[:application][:installation][:options][:directory]
-php_version = node[:infrastructure][:php][:version]
+web_root = node[:magento][:installation][:options][:directory]
+php_version = node[:magento][:php_version]
 custom_demo_structure = node[:custom_demo][:structure]
 fpm_backend = node[:magento][:fpm_backend]
 fpm_port = node[:magento][:fpm_port]
