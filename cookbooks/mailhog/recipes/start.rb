@@ -3,11 +3,7 @@
 # Recipe:: start
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-
-# Attributes
-use_mailhog = node[:infrastructure][:mailhog][:use]
-
-if use_mailhog
+if node[:mailhog][:use]
     service 'mailhog' do
         action :start
     end

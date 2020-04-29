@@ -3,8 +3,6 @@
 # Recipe:: add_keys_to_agent
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-
-# Attributes
 user = node[:remote_machine][:user]
 group = node[:remote_machine][:user]
 

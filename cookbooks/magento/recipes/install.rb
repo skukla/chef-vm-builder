@@ -3,34 +3,29 @@
 # Recipe:: install
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-
-# Attributes
 user = node[:remote_machine][:user]
 group = node[:remote_machine][:user]
 web_root = node[:application][:installation][:options][:directory]
-db_host = node[:infrastructure][:database][:host]
-db_name = node[:infrastructure][:database][:name]
-db_user = node[:infrastructure][:database][:user]
-db_password = node[:infrastructure][:database][:password]
-backend_frontname = node[:application][:installation][:settings][:backend_frontname]
-unsecure_base_url = "http://#{node[:fqdn]}/"
-secure_base_url = "https://#{node[:fqdn]}/" 
-language = node[:application][:installation][:settings][:language]
-timezone = node[:infrastructure][:php][:timezone]
-currency = node[:application][:installation][:settings][:currency]
-admin_firstname = node[:application][:installation][:settings][:admin_firstname]
-admin_lastname = node[:application][:installation][:settings][:admin_lastname]
-admin_email = node[:application][:installation][:settings][:admin_email]
-admin_user = node[:application][:installation][:settings][:admin_user]
-admin_password = node[:application][:installation][:settings][:admin_password]
-use_rewrites = node[:application][:installation][:settings][:use_rewrites]
-use_rewrites ? use_rewrites = 1 : use_rewrites = 0
-use_secure_frontend = node[:application][:installation][:settings][:use_secure_frontend]
-use_secure_frontend ? use_secure_frontend = 1 : use_secure_frontend = 0
-use_secure_admin = node[:application][:installation][:settings][:use_secure_admin]
-use_secure_admin ? use_secure_admin = 1 : use_secure_admin = 0
-cleanup_database = node[:application][:installation][:settings][:cleanup_database]
-session_save = node[:application][:installation][:settings][:session_save]
+db_host = node[:magento][:database][:host]
+db_user = node[:magento][:database][:user]
+db_password = node[:magento][:database][:password]
+db_name = node[:magento][:database][:name]
+backend_frontname = node[:magento][:backend_frontname]
+unsecure_base_url = node[:magento][:unsecure_base_url]
+secure_base_url = node[:magento][:secure_base_url]
+language = node[:magento][:language]
+timezone = node[:magento][:timezone]
+currency = node[:magento][:currency]
+admin_firstname = node[:magento][:admin_firstname]
+admin_lastname = node[:magento][:admin_lastname]
+admin_email = node[:magento][:admin_email]
+admin_user = node[:magento][:admin_user]
+admin_password = node[:magento][:admin_password]
+use_rewrites = node[:magento][:use_rewrites]
+use_secure_frontend = node[:magento][:use_secure_frontend]
+use_secure_admin = node[:magento][:use_secure_admin]
+cleanup_database = node[:magento][:cleanup_database]
+session_save = node[:magento][:session_save]
 
 # Base install string
 base_install_string = "--db-host=#{db_host} --db-name=#{db_name} --db-user=#{db_user} --db-password=#{db_password} --backend-frontname=#{backend_frontname} --base-url=#{unsecure_base_url} --language=#{language} --timezone=#{timezone} --currency=#{currency} --admin-firstname=#{admin_firstname} --admin-lastname=#{admin_lastname} --admin-email=#{admin_email} --admin-user=#{admin_user} --admin-password=#{admin_password}"

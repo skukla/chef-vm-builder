@@ -3,8 +3,6 @@
 # Recipe:: uninstall
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-
-# Stop webmin in case its running
 service 'webmin' do
     action :stop
 end

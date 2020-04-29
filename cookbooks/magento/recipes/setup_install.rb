@@ -3,8 +3,6 @@
 # Recipe:: setup_install
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-
-# Attributes
 user = node[:remote_machine][:user]
 web_root = node[:application][:installation][:options][:directory]
 

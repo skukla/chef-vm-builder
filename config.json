@@ -1,4 +1,8 @@
 {
+	"vm": {
+		"ip": "192.168.57.11",
+		"name": "Luma VM"
+	},
 	"custom_demo": {
 		"structure": {
 			"website": {
@@ -159,18 +163,11 @@
 				"version": "2.3.4",
 				"directory": "/var/www/magento",
 				"download": {
-					"base_code": true,
-					"b2b_code": true,
-					"custom_modules": true,
-					"modules_to_remove": {
-						"temando": {
-							"module": "module-shipping"
-						},
-						"magento": {
-							"module": "google-shopping-ads"
-						}
-					}
+					"base_code": false,
+					"b2b_code": false,
+					"custom_modules": false
 				},
+				"modules_to_remove":["temando/module-shipping", "magento/google-shopping-ads"],
 				"install": true,
 				"sample_data": false,
 				"deploy_mode": {
@@ -256,7 +253,7 @@
 			},
 			"cms": {
 				"pagebuilder": {
-					"google_maps_api_key": ""
+					"google_maps_api_key": "AIzaSyCUpro8_IIHqsD1WKzadd2U0BJKsJDCrqk"
 				}
 			},
 			"btob": {
@@ -366,9 +363,9 @@
 				"braintree": {
 					"active": true,
 					"merchant_account_id": "magento",
-					"merchant_id": "",
-					"public_key": "",
-					"private_key": "",
+					"merchant_id": "zkw2ctrkj75ndvkc",
+					"public_key": "n2bt4844t6xrt56x",
+					"private_key": "e6c98fd99fe699d4169475fef026d5b9",
 					"payment_action": "authorize",
 					"cctypes": ["Visa", "MasterCard"]
 				},
@@ -387,30 +384,32 @@
 	},
 	"infrastructure": {
 		"os": {
-			"update": false
+			"update": false,
+			"timezone": "America/Los_Angeles"
 		},
 		"php": {
 			"version": "7.3",
-			"fpm_port": 9000,
+			"port": 9000,
 			"memory_limit": "2G",
-			"upload_max_filesize": "2M",
-			"timezone": "America/Los_Angeles"
-		},
-		"webserver": {
-			"http_port": 80,
-			"ssl_port": 443
+			"upload_max_filesize": "2M"
 		},
 		"database": {
-			"host": "localhost",
+			"host": "myhost",
 			"user": "magento",
 			"password": "password",
 			"name": "magento"
+		},
+		"webserver": {
+			"http_port": 80,
+			"ssl_port": 443,
+			"ssl_locality": "Los Angeles",
+			"ssl_region": "CA",
+			"ssl_country": "US"
 		},
 		"elasticsearch": {
 			"use": true,
 			"version": "6.x",
 			"memory": "1G",
-			"port": 9200,
 			"plugins": ["analysis-phonetic", "analysis-icu"]
 		},
 		"mailhog": {
@@ -428,10 +427,6 @@
 				"image_drop": "/var/www/magento/var/import/images"
 			}
 		}
-	},
-	"vm": {
-		"ip": "192.168.57.11",
-		"name": "Luma VM"
 	},
 	"provisioner": {
 		"type": "chef_zero",

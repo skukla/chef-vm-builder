@@ -3,15 +3,11 @@
 # Recipe:: remove_modules
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-
-# Attributes
 user = node[:remote_machine][:user]
 web_root = node[:application][:installation][:options][:directory]
-composer_file = node[:application][:composer][:filename]
 modules_to_remove = node[:application][:installation][:options][:download][:modules_to_remove]
+composer_file = node[:magento][:composer][:filename]
 
-
-# Remove outdated modules in the core code base (e.g. Temando, etc.)
 ruby_block "Remove outdated core modules" do
     block do
         modules_list = []

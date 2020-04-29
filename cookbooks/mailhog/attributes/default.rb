@@ -3,13 +3,10 @@
 # Attribute:: default
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-default[:infrastructure][:mailhog][:repositories] = [
-    {
-        url: 'github.com/mailhog/MailHog',
-        name: 'MailHog'
-    },
-    {
-        url: 'github.com/mailhog/mhsendmail',
-        name: 'mhsendmail'
-    }
+default[:mailhog][:use] = true
+default[:mailhog][:port] = 10000
+default[:mailhog][:smtp_port] = 1025
+default[:mailhog][:repositories] = [
+    {url: 'github.com/mailhog/MailHog', name: 'MailHog' },
+    {url: 'github.com/mailhog/mhsendmail', name: 'mhsendmail'}
 ]

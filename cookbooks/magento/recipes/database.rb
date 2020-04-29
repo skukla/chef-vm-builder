@@ -3,15 +3,10 @@
 # Recipe:: database
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-
-# Attributes
-user = node[:remote_machine][:user]
-group = node[:remote_machine][:user]
-web_root = node[:application][:installation][:options][:directory]
-db_host = node[:infrastructure][:database][:host]
-db_user = node[:infrastructure][:database][:user]
-db_password = node[:infrastructure][:database][:password]
-db_name = node[:infrastructure][:database][:name]
+db_host = node[:magento][:database][:host]
+db_user = node[:magento][:database][:user]
+db_password = node[:magento][:database][:password]
+db_name = node[:magento][:database][:name]
 
 ruby_block "Create the Magento database" do
     block do

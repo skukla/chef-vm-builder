@@ -2,10 +2,7 @@
 # Cookbook:: app_configuration
 # Recipe:: configure_admin_users
 #
-# 
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-
-# Attributes
 user = node[:remote_machine][:user]
 web_root = node[:application][:installation][:options][:directory]
 custom_demo_data = node[:custom_demo]

@@ -3,17 +3,10 @@
 # Recipe:: uninstall
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-
-# Attributes
-version = node[:infrastructure][:elasticsearch][:version]
-plugins = node[:infrastructure][:elasticsearch][:plugins]
-
-# Stop elasticsearch in case it's running
 service 'elasticsearch' do
     action :stop
 end
 
-# Remove Elasticsearch
 execute 'Purge Elasticsearch package and configuration' do
     command "sudo dpkg --purge --force-all elasticsearch"
 end
@@ -27,7 +20,7 @@ end
 end
 
 # Manually remove the sources list file
-execute "Manually remove the Elasticsearch #{version} sources file" do
+execute "Manually remove the Elasticsearch sources file" do
     command "sudo rm -rf /etc/apt/sources.list.d/elastic*"
     only_if "ls /etc/apt/sources.list.d/elastic*"
 end

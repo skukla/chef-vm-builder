@@ -1,5 +1,5 @@
 #
-# Cookbook:: init
+# Cookbook:: os
 # Recipe:: install_packages
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.

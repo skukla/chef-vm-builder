@@ -5,12 +5,12 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 
 # Attributes
-socket = node[:infrastructure][:database][:conf_options][:socket]
-innodb_buffer_pool_size = node[:infrastructure][:database][:conf_options][:innodb_buffer_pool_size]
-max_allowed_packet = node[:infrastructure][:database][:conf_options][:max_allowed_packet]
-tmp_table_size = node[:infrastructure][:database][:conf_options][:tmp_table_size]
-max_heap_table_size = node[:infrastructure][:database][:conf_options][:max_heap_table_size]
-pre_install_settings = node[:infrastructure][:database][:pre_install_settings]
+socket = node[:database][:socket]
+innodb_buffer_pool_size = node[:database][:innodb_buffer_pool_size]
+max_allowed_packet = node[:database][:max_allowed_packet]
+tmp_table_size = node[:database][:tmp_table_size]
+max_heap_table_size = node[:database][:max_heap_table_size]
+install_settings = node[:database][:install_settings]
 
 # Create the mysql.conf.d folder
 directory 'Create the mysql.conf.d folder' do
@@ -37,7 +37,9 @@ template 'Configure MariaDB' do
 end
 
 # Configure pre-install settings
-pre_install_settings.each do |setting, value|
+install_settings.each do |setting|
+    value = 1 ? setting == "log_bin_trust_function_creators" : value = 0
+
     ruby_block "Configure MySQL pre-install setting : #{setting}" do
         block do
             "%x[mysql -uroot -e \"SET GLOBAL #{setting} = #{value};\"]"

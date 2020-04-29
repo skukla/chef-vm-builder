@@ -3,12 +3,8 @@
 # Recipe:: uninstall_app
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-
-# Attributes
-user = node[:remote_machine][:user]
-group = node[:remote_machine][:user]
 web_root = node[:application][:installation][:options][:directory]
-db_name = node[:infrastructure][:database][:name]
+db_name = node[:magento][:database][:name]
 
 # Remove the web root
 directory "Web root" do

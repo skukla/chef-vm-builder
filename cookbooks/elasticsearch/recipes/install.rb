@@ -1,18 +1,12 @@
-
 #
 # Cookbook:: elasticsearch
 # Recipe:: install
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
+version = node[:elasticsearch][:version]
+plugins = node[:elasticsearch][:plugins]
 
-# Attributes
-use_elasticsearch = node[:infrastructure][:elasticsearch][:use]
-user = node[:remote_machine][:user]
-group = node[:remote_machine][:user]
-version = node[:infrastructure][:elasticsearch][:version]
-plugins = node[:infrastructure][:elasticsearch][:plugins]
-
-# Add the Elasticsearch repository key (We have to use execute over chef resources here)
+# We have to use execute over chef resources here
 execute "Add Elasticsearch #{version} repository" do
     command "sudo wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add - && echo \"deb https://artifacts.elastic.co/packages/#{version}/apt stable main\" | sudo tee -a /etc/apt/sources.list.d/elastic-#{version}.list && sudo apt-get update -y"
     not_if { ::File.directory?('/etc/elasticsearch') }
@@ -22,6 +16,7 @@ end
 apt_package 'elasticsearch' do
     action :install
     ignore_failure true
+    retries 3
     not_if { ::File.directory?('/etc/elasticsearch') }
 end
 

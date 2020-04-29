@@ -3,9 +3,7 @@
 # Recipe:: uninstall
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-
-# Attributes
-repositories = node[:infrastructure][:mailhog][:repositories]
+repositories = node[:mailhog][:repositories]
 
 # Stop mailhog in case its running
 service 'mailhog' do

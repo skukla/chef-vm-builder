@@ -3,9 +3,7 @@
 # Recipe:: install
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-
-# Attributes
-repositories = node[:infrastructure][:mailhog][:repositories]
+repositories = node[:mailhog][:repositories]
 
 # Clone the Mailhog and MHSendmail repositories
 repositories.each do |repository|

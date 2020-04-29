@@ -2,14 +2,9 @@
 # Cookbook:: app_configuration
 # Recipe:: configure_elasticsearch
 #
-# 
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-
-# Attributes
 web_root = node[:application][:installation][:options][:directory]
-app_config_paths = node[:application][:installation][:application_configuration_paths]
-elasticsearch_config_settings = node[:application][:installation][:elasticsearch_configuration]
-configurations = Array.new
+configurations = node[:app_configuration][:user_configuration]
 
 # Helper method
 def process_value(user_value)
@@ -103,45 +98,16 @@ def process_value(user_value)
     end
 end
 
-if node[:application].has_key?(:configuration)
-    app_config_paths.each do |config_path|
-        unless config_path.include?("search")
-            next
-        else
-            configured_setting = elasticsearch_config_settings.dig(*config_path.split("/"))
-            if configured_setting.class != NilClass and configured_setting.class != Chef::Node::ImmutableMash
-                # User-configured settings with default scope
-                configuration_setting = {
-                    path: config_path,
-                    value: configured_setting
-                }
-                configurations << configuration_setting
-            elsif configured_setting.class != NilClass or configured_setting.class == Chef::Node::ImmutableMash
-                [:website, :store].each do |scope|
-                    if configured_setting[:scopes].has_key?(scope)
-                        # Website or store-view settings
-                        configuration_setting = {
-                            path: config_path,
-                            value: configured_setting[:scopes][scope][:value],
-                            scope: scope,
-                            code: configured_setting[:scopes][scope][:code]
-                        }
-                        configurations << configuration_setting
-                    end
-                end
-            end
+unless configurations.empty?
+    command_string = "#{web_root}/bin/magento config:set "
+    configurations.each do |setting|
+        next unless setting[:path].include?("search")
+        if setting.has_key?(:scope)
+            scope_string = "--scope=#{setting[:scope]} --scope-code=#{setting[:code]} "
         end
-    end
-    unless configurations.empty?
-        command_string = "#{web_root}/bin/magento config:set "
-        configurations.each do |setting|
-            if setting.has_key?(:scope)
-                scope_string = "--scope=#{setting[:scope]} --scope-code=#{setting[:code]} "
-            end
-            config_string = "#{setting[:path]} \"#{process_value(setting[:value])}\""
-            execute "Configuring search setting : #{setting[:path]}" do
-                command [command_string, scope_string, config_string].join
-            end
+        config_string = "#{setting[:path]} \"#{process_value(setting[:value])}\""
+        execute "Configuring search setting : #{setting[:path]}" do
+            command [command_string, scope_string, config_string].join
         end
     end
 end

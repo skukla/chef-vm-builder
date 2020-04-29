@@ -3,8 +3,6 @@
 # Recipe:: install
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-
-# Attributes
 version = node[:infrastructure][:php][:version]
 
 # Add PHP repository
@@ -20,7 +18,7 @@ end
 # Install specified PHP and extensions
 # Use string replacement to inject the PHP version, then install the package
 extension_list = Array.new
-node[:infrastructure][:php][:extension_list].each do |raw_extension|
+node[:php][:extension_list].each do |raw_extension|
     extension = format(raw_extension, {version: version})
     apt_package extension do
         action :install

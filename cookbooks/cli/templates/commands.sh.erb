@@ -273,7 +273,7 @@ export -f status-web
 
 # Database
 function db() {
-  mysql -u <%= @db_user %> -p<%= @db_password %>
+  mysql <%= @db_name %> -sN -h <%= @db_host %> -u <%= @db_user %> -p<%= @db_password %>
 }
 export -f db
 

@@ -3,15 +3,13 @@
 # Recipe:: upload_keys
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-
-# Attributes
 user = node[:remote_machine][:user]
 group = node[:remote_machine][:user]
 key_filepath = "/var/chef/cache/cookbooks/ssh/files/keys"
 configured_private_key_files = node[:application][:authentication][:ssh][:private_key_files]
-configured_public_key_files = node[:application][:authentication][:ssh][:public_key_files]
 private_key_files_in_folder = Dir["#{key_filepath}/private/*"]
 public_key_files_in_folder = Dir["#{key_filepath}/public/*"]
+configured_public_key_files = node[:application][:authentication][:ssh][:public_key_files]
 vagrant_ssh_key = node[:infrastructure][:ssh][:vagrant_insecure_key]
 
 # Private keys to ./ssh/

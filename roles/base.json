@@ -7,7 +7,8 @@
 	"override_attributes": {},
 	"run_list": [
 		"recipe[init::default]",
-		"recipe[cli::default]",
-		"recipe[ssh::default]"
+		"recipe[cli::install]",
+		"recipe[ssh::default]",
+		"recipe[ssl::install_certificate]"
 	]
 }

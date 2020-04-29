@@ -1,14 +1,8 @@
 #
-# Cookbook:: app_configuration
+# Cookbook:: custom_modules
 # Attribute:: default
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-#
-# Cookbook:: configuration
-# Attribute:: custom_module_config_paths
-#
-# Copyright:: 2020, Steve Kukla, All Rights Reserved.
-
 autofill_fields = [
     'enable', 
     'label',

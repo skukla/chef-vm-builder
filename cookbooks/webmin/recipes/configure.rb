@@ -3,15 +3,10 @@
 # Recipe:: configure
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-
-# Attributes
-port = node[:infrastructure][:webmin][:port]
 user = node[:remote_machine][:user]
 group = node[:remote_machine][:user]
-use_ssl = node[:infrastructure][:webmin][:use_ssl]
-
-# Convert use_ssl from boolean to number
-use_ssl == true ? use_ssl = 1 : use_ssl = 0
+use_ssl = node[:webmin][:use_ssl]
+port = node[:webmin][:port]
 
 # Configure webmin
 template 'Webmin configuration' do
@@ -21,8 +16,8 @@ template 'Webmin configuration' do
     group "#{group}"
     mode "644"
     variables({
-        port: "#{port}",
-        use_ssl: "#{use_ssl}"
+        use_ssl: "#{use_ssl}",
+        port: "#{port}"
     })
 end
 

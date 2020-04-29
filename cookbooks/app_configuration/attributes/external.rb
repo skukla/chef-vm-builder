@@ -3,8 +3,9 @@
 # Attribute:: external
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
+include_attribute "samba::default"
+default[:app_configuration][:samba_shares] = node[:samba][:shares]
 
-# Bring in other cookbook attributes
-include_attribute 'composer::default'
-
-default[:application][:composer][:filename] = node[:infrastructure][:composer][:filename]
+# This includes either the default ES port value or the override
+include_attribute "elasticsearch::default"
+default[:app_configuration][:elasticsearch_port] = node[:elasticsearch][:port]

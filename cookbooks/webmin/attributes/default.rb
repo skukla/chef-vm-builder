@@ -3,5 +3,6 @@
 # Attribute:: default
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-
-default[:infrastructure][:webmin][:use_ssl] = false
+default[:webmin][:use] = false
+default[:webmin][:use_ssl] = 0
+default[:webmin][:port] = 20000

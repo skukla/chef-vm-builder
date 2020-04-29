@@ -2,14 +2,9 @@
 # Cookbook:: app_configuration
 # Recipe:: configure_b2b
 #
-# 
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-
-# Attributes
 web_root = node[:application][:installation][:options][:directory]
-app_config_settings = node[:application][:configuration]
-app_config_paths = node[:application][:installation][:application_configuration_paths]
-configurations = Array.new
+configurations = node[:app_configuration][:user_configuration]
 
 # Helper method
 def process_value(user_value)
@@ -103,59 +98,16 @@ def process_value(user_value)
     end
 end
 
-if node[:application].has_key?(:configuration)
-    app_config_paths.each do |config_path|
-        unless config_path.include?("btob")
-            next
-        else
-            configuration_setting = Hash.new
-            configured_setting = app_config_settings.dig(*config_path.split("/"))
-            if configured_setting.class != NilClass and configured_setting.class != Chef::Node::ImmutableMash
-                # User-configured settings with default scope
-                configuration_setting[:path] = config_path
-                configuration_setting[:value] = configured_setting
-                configurations << configuration_setting
-            elsif configured_setting.class != NilClass or configured_setting.class == Chef::Node::ImmutableMash
-                ["website", "store_view"].each do |scope|
-                    if configured_setting.has_key?(scope)
-                        if scope == "store_view"
-                            scope_value = "store"
-                        else
-                            scope_value = scope
-                        end
-                        # This should REALLY use recursion...
-                        configuration_setting[:path] = config_path
-                        configuration_setting[:scope] = scope_value
-                        if configured_setting[scope].size > 1
-                            configured_setting[scope].each do |code, value|
-                                child_hash = Hash.new
-                                child_hash[:path] = configuration_setting[:path]
-                                child_hash[:scope] = configuration_setting[:scope]
-                                child_hash[:code] = code
-                                child_hash[:value] = value
-                                configurations << child_hash
-                            end
-                        else
-                            configured_setting[scope].each do |code, value|
-                                configuration_setting[:code] = code
-                                configuration_setting[:value] = value
-                            end
-                        end
-                    end
-                end
-            end
+unless configurations.empty?
+    command_string = "#{web_root}/bin/magento config:set "
+    configurations.each do |setting|
+        next unless setting[:path].include?("btob")
+        if setting.has_key?(:scope)
+            scope_string = "--scope=#{setting[:scope]} --scope-code=#{setting[:code]} "
         end
-    end
-    unless configurations.empty?
-        command_string = "#{web_root}/bin/magento config:set "
-        configurations.each do |setting|
-            if setting.has_key?(:scope)
-                scope_string = "--scope=#{setting[:scope]} --scope-code=#{setting[:code]} "
-            end
-            config_string = "#{setting[:path]} \"#{process_value(setting[:value])}\""
-            execute "Configuring b2b setting : #{setting[:path]}" do
-                command [command_string, scope_string, config_string].join
-            end
+        config_string = "#{setting[:path]} \"#{process_value(setting[:value])}\""
+        execute "Configuring b2b setting : #{setting[:path]}" do
+            command [command_string, scope_string, config_string].join
         end
     end
 end

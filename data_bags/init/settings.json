@@ -387,18 +387,14 @@
 	},
 	"infrastructure": {
 		"os": {
-			"update": false
+			"update": false,
+			"timezone": "America/Los_Angeles"
 		},
 		"php": {
 			"version": "7.3",
-			"fpm_port": 9000,
+			"port": 9000,
 			"memory_limit": "2G",
-			"upload_max_filesize": "2M",
-			"timezone": "America/Los_Angeles"
-		},
-		"webserver": {
-			"http_port": 80,
-			"ssl_port": 443
+			"upload_max_filesize": "2M"
 		},
 		"database": {
 			"host": "localhost",
@@ -406,11 +402,17 @@
 			"password": "password",
 			"name": "magento"
 		},
+		"webserver": {
+			"http_port": 80,
+			"ssl_port": 443,
+			"ssl_locality": "Los Angeles",
+			"ssl_region": "CA",
+			"ssl_country": "US"
+		},
 		"elasticsearch": {
 			"use": true,
 			"version": "6.x",
-			"memory": "1 G",
-			"port": 9200,
+			"memory": "1G",
 			"plugins": ["analysis-phonetic", "analysis-icu"]
 		},
 		"mailhog": {
@@ -431,7 +433,7 @@
 	},
 	"vm": {
 		"ip": "192.168.57.11",
-		"name": "Luma"
+		"name": "Luma VM"
 	},
 	"provisioner": {
 		"type": "chef_zero",

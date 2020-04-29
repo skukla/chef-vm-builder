@@ -4,7 +4,3 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 
-# Attributes
-
-# Recipes
-

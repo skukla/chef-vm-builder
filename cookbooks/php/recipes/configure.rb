@@ -3,18 +3,16 @@
 # Recipe:: configure
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-
-# Attributes
-fpm_port = node[:infrastructure][:php][:fpm_port]
 user = node[:remote_machine][:user]
 group = node[:remote_machine][:user]
+port = node[:infrastructure][:php][:port]
 version = node[:infrastructure][:php][:version]
-timezone = node[:infrastructure][:php][:timezone]
 memory_limit = node[:infrastructure][:php][:memory_limit]
 upload_max_filesize = node[:infrastructure][:php][:upload_max_filesize]
-max_execution_time = node[:infrastructure][:php][:ini_options][:max_execution_time]
-zlib_output_compression = node[:infrastructure][:php][:ini_options][:zlib_output_compression]
-fpm_backend = node[:infrastructure][:php][:fpm_options][:backend]
+timezone = node[:infrastructure][:php][:timezone]
+backend = node[:php][:backend]
+max_execution_time = node[:php][:max_execution_time]
+zlib_output_compression = node[:php][:zlib_output_compression]
 
 # Configure php.ini and php-fpm
 ['cli', 'fpm'].each do |type|
@@ -43,8 +41,8 @@ fpm_backend = node[:infrastructure][:php][:fpm_options][:backend]
                 owner: "#{user}",
                 user: "#{user}",
                 group: "#{group}",
-                backend: "#{fpm_backend}",
-                port: "#{fpm_port}"
+                backend: "#{backend}",
+                port: "#{port}"
             })
         end
     end

@@ -3,9 +3,7 @@
 # Recipe:: start
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-use_samba = node[:infrastructure][:webmin][:use]
-
-if use_samba
+if node[:samba][:use]
     service 'smbd' do
         action :start
     end

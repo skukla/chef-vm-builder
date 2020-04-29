@@ -129,14 +129,6 @@ Vagrant.configure("2") do |config|
     trigger.run_remote = {inline: "bash -c 'source /home/#{settings["remote_machine"]["user"]}/cli/commands.sh && own-trigger'"}
   end
 
-  # Clear config and full_page cache if new code is downloaded or installed
-  if settings["application"]["installation"]["options"]["download"]["base_code"] or settings["application"]["installation"]["options"]["download"]["b2b_code"] or settings["application"]["installation"]["options"]["download"]["custom_modules"] or settings["application"]["installation"]["options"]["sample_data"] or settings["application"]["installation"]["options"]["deploy_mode"]["apply"] or settings["application"]["installation"]["options"]["install"]
-    config.trigger.after [:up, :reload, :provision] do |trigger|
-      trigger.name = "Clearing cache"
-      trigger.run_remote = {inline: "bash -c 'source /home/#{settings["remote_machine"]["user"]}/cli/commands.sh && cache-trigger'"}
-    end
-  end
-
   # Save the configured infrastructure settings into a reference file
   config.trigger.after [:up, :reload, :provision] do |trigger|
     trigger.name = "Saving infrastructure settings..."

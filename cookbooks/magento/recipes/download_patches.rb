@@ -2,16 +2,11 @@
 # Cookbook:: magento
 # Recipe:: download_patches
 #
-# 1. Add cweagans composer patches module
-# 2. Clone repository and folder containing patches
-# 
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-
-# Attributes
 user = node[:remote_machine][:user]
 group = node[:remote_machine][:user]
 web_root = node[:application][:installation][:options][:directory]
-composer_file = node[:application][:composer][:filename]
+composer_file = node[:magento][:composer][:filename]
 magento_version = node[:application][:installation][:options][:version]
 patches_repository = node[:application][:installation][:options][:patches][:repository_url]
 

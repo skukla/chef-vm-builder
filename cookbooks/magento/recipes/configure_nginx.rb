@@ -3,20 +3,18 @@
 # Recipe:: configure-nginx
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-
-# Attributes
 user = node[:remote_machine][:user]
 group = node[:remote_machine][:user]
 web_root = node[:application][:installation][:options][:directory]
 php_version = node[:infrastructure][:php][:version]
 custom_demo_structure = node[:custom_demo][:structure]
-certificate_file = node[:infrastructure][:webserver][:ssl_files][:certificate_file]
-key_file = node[:infrastructure][:webserver][:ssl_files][:key_file]
-fpm_backend = node[:infrastructure][:webserver][:fpm_backend]
-fpm_port = node[:infrastructure][:php][:fpm_port]
-client_max_body_size = node[:infrastructure][:webserver][:conf_options][:client_max_body_size]
-http_port = node[:infrastructure][:webserver][:http_port]
-ssl_port = node[:infrastructure][:webserver][:ssl_port]
+fpm_backend = node[:magento][:fpm_backend]
+fpm_port = node[:magento][:fpm_port]
+client_max_body_size = node[:magento][:client_max_body_size]
+http_port = node[:magento][:http_port]
+ssl_port = node[:magento][:ssl_port]
+certificate_file = node[:magento][:ssl_certificate_file]
+key_file = node[:magento][:ssl_key_file]
 
 # Extract the data for the virtual host files
 vhost_data = Array.new

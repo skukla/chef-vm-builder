@@ -3,22 +3,14 @@
 # Recipe:: configure_pre_install
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-
-# Attributes
-post_install_settings = node[:infrastructure][:database][:post_install_settings]
-
-post_install_settings = [
-    'log_bin_trust_function_creators',
-    'autocommit',
-    'unique_checks',
-    'foreign_key_checks' 
-]
+install_settings = node[:database][:install_settings]
 
 # Configure post-install settings
-post_install_settings.each do |setting, value|
+install_settings.each do |setting|
+    next if setting == "log_bin_trust_function_creators"
     ruby_block "Configure MySQL post-install setting : #{setting}" do
         block do
-            "%x[mysql -uroot -e \"SET GLOBAL #{setting} = #{value};\"]"
+            "%x[mysql -uroot -e \"SET GLOBAL #{setting} = 1;\"]"
         end
         action :create
     end

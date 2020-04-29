@@ -3,22 +3,13 @@
 # Recipe:: configure
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-
-# Attribtues
 user = node[:remote_machine][:user]
 group = node[:remote_machine][:user]
 hostname = node[:hostname]
-shares = node[:infrastructure][:samba][:shares]
-share_fields = [
-    "path", 
-    "public",
-    "browsable", 
-    "writeable", 
-    "force_user",
-    "force_group",
-    "comment"
-]
+share_fields = node[:samba][:share_fields]
+shares = node[:samba][:shares]
 
+# Helper method
 def process_value(value)
     if value == true
         return "Yes"
@@ -71,7 +62,7 @@ template 'Configure Samba' do
     })
 end
 
-# Enable, start, then stop the smbd service
+# Enable the smbd service
 service 'smbd' do
     action :enable
 end

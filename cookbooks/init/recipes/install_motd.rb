@@ -3,10 +3,8 @@
 # Recipe:: install_motd
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-
-# Attributes
-user = node[:vm][:user]
-group = node[:vm][:group]
+user = node[:remote_machine][:user]
+group = node[:remote_machine][:user]
 ip = node[:vm][:ip]
 hostname = node[:fqdn]
 custom_demo_structure = node[:custom_demo][:structure]

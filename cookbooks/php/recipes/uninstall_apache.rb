@@ -3,9 +3,7 @@
 # Recipe:: uninstall_apache
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-
-# Attributes
-apache_packages = node[:infrastructure][:php][:apache_packages]
+apache_packages = node[:php][:apache_packages]
 
 # Uninstall Apache packages
 apache_packages.each do |package|

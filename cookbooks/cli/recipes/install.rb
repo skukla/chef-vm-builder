@@ -3,18 +3,18 @@
 # Recipe:: install
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-
-# Attributes
 user = node[:remote_machine][:user]
 group = node[:remote_machine][:user]
 web_root = node[:application][:installation][:options][:directory]
-php_version = node[:infrastructure][:php][:version],
-db_user = node[:infrastructure][:database][:user],
-db_password = node[:infrastructure][:database][:password],
-magento_version = node[:application][:installation][:options][:version],
+php_version = node[:cli][:php_version]
+magento_version = node[:application][:installation][:options][:version]
 private_key_files = node[:application][:authentication][:ssh][:private_key_files]
 cli_directories = node[:cli][:directories]
 cli_files = node[:cli][:files]
+db_host = node[:cli][:database_host]
+db_user = node[:cli][:database_user]
+db_password = node[:cli][:database_password]
+db_name = node[:cli][:database_name]
 
 # Remove the VM cli directory, then create it
 directory 'VM cli path check' do
@@ -45,8 +45,10 @@ template "VM CLI" do
         user: "#{user}",
         web_root: "#{web_root}",
         php_version: "#{php_version}",
+        db_host: "#{db_host}",
         db_user: "#{db_user}",
         db_password: "#{db_password}",
+        db_name: "#{db_name}",
         magento_version: "#{magento_version}",
         private_key_files: private_key_files
     })

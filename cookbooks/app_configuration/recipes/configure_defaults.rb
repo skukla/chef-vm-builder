@@ -2,14 +2,9 @@
 # Cookbook:: app_configuration
 # Recipe:: configure_defaults
 #
-# 
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-
-# Attributes
 web_root = node[:application][:installation][:options][:directory]
-app_config_paths = node[:application][:installation][:application_configuration_paths]
-default_config_settings = node[:application][:installation][:default_configuration]
-configurations = Array.new
+configurations = node[:app_configuration][:default_configuration]
 
 # Helper method
 def process_value(user_value)
@@ -103,24 +98,12 @@ def process_value(user_value)
     end
 end
 
-if node[:application].has_key?(:configuration)
-    app_config_paths.each do |config_path|
-        default_setting = default_config_settings.dig(*config_path.split("/"))
-        configuration_setting = Hash.new
-        # Default settings
-        if default_setting.class != NilClass and default_setting.class != Chef::Node::ImmutableMash
-            configuration_setting[:path] = config_path
-            configuration_setting[:value] = default_setting
-            configurations << configuration_setting
-        end
-    end 
-    unless configurations.empty?
-        command_string = "#{web_root}/bin/magento config:set "
-        configurations.each do |setting|
-            config_string = "#{setting[:path]} \"#{process_value(setting[:value])}\""
-            execute "Configuring default setting : #{setting[:path]}" do
-                command [command_string, config_string].join
-            end
+unless configurations.empty?
+    command_string = "#{web_root}/bin/magento config:set "
+    configurations.each do |setting|
+        config_string = "#{setting[:path]} \"#{process_value(setting[:value])}\""
+        execute "Configuring default setting : #{setting[:path]}" do
+            command [command_string, config_string].join
         end
     end
 end

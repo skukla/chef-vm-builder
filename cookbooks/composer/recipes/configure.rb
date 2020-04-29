@@ -3,11 +3,9 @@
 # Recipe:: install
 #
 # Copyright:: 2020, Steve, All Rights Reserved.
-
-# Attributes
 user = node[:remote_machine][:user]
 group = node[:remote_machine][:user]
-timeout = node[:infrastructure][:composer][:timeout]
+timeout = node[:composer][:timeout]
 
 # Create composer configuration directory
 directory "#{user} composer configuration directory" do

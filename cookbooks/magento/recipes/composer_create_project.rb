@@ -3,18 +3,16 @@
 # Recipe:: composer_create_project
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-
-# Attributes
 user = node[:remote_machine][:user]
 group = node[:remote_machine][:user]
 web_root = node[:application][:installation][:options][:directory]
-composer_file = node[:application][:composer][:filename]
 magento_family = node[:application][:installation][:options][:family]
 magento_family = 'enterprise' if magento_family == 'Commerce'
 magento_version = node[:application][:installation][:options][:version]
 github_token = node[:application][:authentication][:composer][:github_token]
 composer_username = node[:application][:authentication][:composer][:username]
 composer_password = node[:application][:authentication][:composer][:password]
+composer_file = node[:magento][:composer][:filename]
 
 # Move auth.json into place
 template "Add composer credentials" do

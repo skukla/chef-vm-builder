@@ -1,19 +1,12 @@
 #
 # Cookbook:: magento
 # Recipe:: apply_patches
-#
-# 1. Scan folder to get file name
-# 2. Read each file to find out affected Magento module?
-# 3. Write out patches.json file from filenames
-# 4. Add patches file to composer.json
 # 
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-
-# Attributes
 user = node[:remote_machine][:user]
 group = node[:remote_machine][:user]
 web_root = node[:application][:installation][:options][:directory]
-composer_file = node[:application][:composer][:filename]
+composer_file = node[:magento][:composer][:filename]
 
 # Pull out the patches subdirectory
 execute "Pull out patches from repository" do
