@@ -148,13 +148,13 @@
 	"application": {
 		"authentication": {
 			"composer": {
-				"username": "",
-				"password": "",
-				"github_token": ""
+				"username": "b17aa908c13768cef2a5a3a043bb3c54",
+				"password": "93f1f71fd779eb46af01fd7587e5fdba",
+				"github_token": "ca5db95d8f9ebea677be19b5943475882682e1d7"
 			},
 			"ssh": {
-				"private_key_files": [""],
-				"public_key_files": [""]
+				"private_key_files": ["id_rsa.skukla.gitlab"],
+				"public_key_files": ["id_rsa.skukla.gitlab.pub"]
 			}
 		},
 		"installation": {
