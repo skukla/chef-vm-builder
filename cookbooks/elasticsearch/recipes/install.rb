@@ -25,7 +25,7 @@ unless plugins.empty?
     plugins.each do |plugin|
         execute "Install #{plugin} elasticsearch plugin" do
             command "cd /usr/share/elasticsearch && bin/elasticsearch-plugin install #{plugin}"
-            notifies :restart, "service[elasticsearch]", :immediately
+            notifies :reload, "service[elasticsearch]", :immediately
             only_if { ::File.directory?('/etc/elasticsearch') }
         end
     end

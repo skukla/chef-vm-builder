@@ -12,7 +12,6 @@ log_file_path = node[:elasticsearch][:log_file_path]
 version = node[:elasticsearch][:version]
 memory = node[:elasticsearch][:memory]
 port = node[:elasticsearch][:port]
-plugins = node[:elasticsearch][:plugins]
 
 directory "JVM Options Custom Configuration" do
     path "/etc/elasticsearch/jvm.options.d"
