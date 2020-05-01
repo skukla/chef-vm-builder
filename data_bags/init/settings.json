@@ -153,8 +153,8 @@
 				"github_token": "ca5db95d8f9ebea677be19b5943475882682e1d7"
 			},
 			"ssh": {
-				"private_key_files": [""],
-				"public_key_files": [""]
+				"private_key_files": ["id_rsa.skukla.gitlab"],
+				"public_key_files": ["id_rsa.skukla.gitlab.pub"]
 			}
 		},
 		"installation": {
@@ -163,19 +163,19 @@
 				"version": "2.3.4",
 				"directory": "/var/www/magento",
 				"download": {
-					"base_code": true,
-					"b2b_code": true,
-					"custom_modules": true
+					"base_code": false,
+					"b2b_code": false,
+					"custom_modules": false
 				},
 				"modules_to_remove":["temando/module-shipping", "magento/google-shopping-ads"],
-				"install": true,
+				"install": false,
 				"sample_data": false,
 				"deploy_mode": {
 					"apply": true,
 					"mode": "production"
 				},
 				"patches": {
-					"apply": true,
+					"apply": false,
 					"repository_url": "https://github.com/PMET-public/magento-cloud.git"
 				},
 				"configuration": {
@@ -198,7 +198,8 @@
 				"use_secure_frontend": true,
 				"use_secure_admin": false,
 				"cleanup_database": true,
-				"session_save": "db"
+				"session_save": "db",
+				"key": "5fb338b139111ece4fd8d80fabc900b5"
 			}
 		},
 		"configuration": {
@@ -331,22 +332,22 @@
 					},
 					"username": {
 						"website": {
-							"base": ""
+							"base": "magento"
 						}
 					},
 					"password": {
 						"website": {
-							"base": ""
+							"base": "magento200"
 						}
 					},
 					"access_license_number": {
 						"website": {
-							"base": ""
+							"base": "ECAB751ABF189ECA"
 						}
 					},
 					"shipper_number": {
 						"website": {
-							"base": ""
+							"base": "207W88"
 						}
 					},
 					"allowed_methods": {
@@ -362,10 +363,10 @@
 			"payment": {
 				"braintree": {
 					"active": false,
-					"merchant_account_id": "",
-					"merchant_id": "",
-					"public_key": "",
-					"private_key": "",
+					"merchant_account_id": "magento",
+					"merchant_id": "zkw2ctrkj75ndvkc",
+					"public_key": "n2bt4844t6xrt56x",
+					"private_key": "e6c98fd99fe699d4169475fef026d5b9",
 					"payment_action": "authorize",
 					"cctypes": ["Visa", "MasterCard"]
 				},

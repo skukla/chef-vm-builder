@@ -99,8 +99,13 @@ def process_value(user_value)
 end
 
 unless configurations.empty?
-    command_string = "#{web_root}/bin/magento config:set "
     configurations.each do |setting|
+        if setting[:path].include?("public_key") || setting[:path].include?("private_key")
+            # This should be config:sensitive:set, but there's a bug in Magento, so we'll wait...
+            command_string = "#{web_root}/bin/magento config:set "    
+        else
+            command_string = "#{web_root}/bin/magento config:set "
+        end
         config_string = "#{setting[:path]} \"#{process_value(setting[:value])}\""
         execute "Configuring default setting : #{setting[:path]}" do
             command [command_string, config_string].join

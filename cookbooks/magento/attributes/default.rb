@@ -41,3 +41,4 @@ default[:magento][:installation][:settings][:use_secure_frontend] = 0
 default[:magento][:installation][:settings][:use_secure_admin] = 0
 default[:magento][:installation][:settings][:cleanup_database] = 1
 default[:magento][:installation][:settings][:session_save] = "db"
+default[:magento][:installation][:settings][:encryption_key] = "5fb338b139111ece4fd8d80fabc900b5"

@@ -99,9 +99,14 @@ def process_value(user_value)
 end
 
 unless configurations.empty?
-    command_string = "#{web_root}/bin/magento config:set "
     configurations.each do |setting|
         next if setting[:path].include?("btob") || setting[:path].include?("search")
+        if setting[:path].include?("public_key") || setting[:path].include?("private_key")
+            # This should be config:sensitive:set, but there's a bug in Magento, so we'll wait...
+            command_string = "#{web_root}/bin/magento config:set "    
+        else
+            command_string = "#{web_root}/bin/magento config:set "
+        end
         if setting.has_key?(:scope)
             scope_string = "--scope=#{setting[:scope]} --scope-code=#{setting[:code]} "
         end

@@ -37,7 +37,8 @@ supported_settings = {
                 :use_secure_frontend, 
                 :use_secure_admin,
                 :cleanup_database,
-                :session_save
+                :session_save,
+                :encryption_key
             ]
         }
     }
