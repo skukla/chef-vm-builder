@@ -4,7 +4,7 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 include_attribute "init::default"
-default[:magento][:timezone] = node[:init][:timezone]
+default[:magento][:installation][:settings][:timezone] = node[:init][:timezone]
 
 include_attribute "php::default"
 default[:magento][:php_version] = node[:php][:version]

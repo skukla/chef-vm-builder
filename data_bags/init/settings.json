@@ -163,19 +163,19 @@
 				"version": "2.3.4",
 				"directory": "/var/www/magento",
 				"download": {
-					"base_code": false,
-					"b2b_code": false,
-					"custom_modules": false
+					"base_code": true,
+					"b2b_code": true,
+					"custom_modules": true
 				},
 				"modules_to_remove":["temando/module-shipping", "magento/google-shopping-ads"],
-				"install": false,
+				"install": true,
 				"sample_data": false,
 				"deploy_mode": {
 					"apply": true,
 					"mode": "production"
 				},
 				"patches": {
-					"apply": false,
+					"apply": true,
 					"repository_url": "https://github.com/PMET-public/magento-cloud.git"
 				},
 				"configuration": {
@@ -332,27 +332,27 @@
 					},
 					"username": {
 						"website": {
-							"base": "magento"
+							"base": ""
 						}
 					},
 					"password": {
 						"website": {
-							"base": "magento200"
+							"base": ""
 						}
 					},
 					"access_license_number": {
 						"website": {
-							"base": "ECAB751ABF189ECA"
+							"base": ""
 						}
 					},
 					"shipper_number": {
 						"website": {
-							"base": "207W88"
+							"base": ""
 						}
 					},
 					"allowed_methods": {
 						"website": {
-							"base": ["Ground", "Next Day Air"]
+							"base": ["UPS Ground", "UPS Next Day Air"]
 						}
 					}
 				},
@@ -364,9 +364,9 @@
 				"braintree": {
 					"active": false,
 					"merchant_account_id": "magento",
-					"merchant_id": "zkw2ctrkj75ndvkc",
-					"public_key": "n2bt4844t6xrt56x",
-					"private_key": "e6c98fd99fe699d4169475fef026d5b9",
+					"merchant_id": "",
+					"public_key": "",
+					"private_key": "",
 					"payment_action": "authorize",
 					"cctypes": ["Visa", "MasterCard"]
 				},
