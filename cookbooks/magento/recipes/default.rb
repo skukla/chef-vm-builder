@@ -67,7 +67,10 @@ if apply_base_flag
     include_recipe 'app_configuration::configure_app'
 end
 include_recipe 'app_configuration::configure_b2b' if apply_b2b_flag
-include_recipe 'custom_modules::configure' if apply_custom_flag
+if apply_custom_flag
+    include_recipe 'custom_modules::configure_defaults'
+    include_recipe 'custom_modules::configure_modules'
+end
 include_recipe 'app_configuration::configure_admin_users' if configure_admin_users_flag
 include_recipe 'magento::set_deploy_mode' if apply_deploy_mode_flag
 include_recipe 'magento::setup_install' if install_flag

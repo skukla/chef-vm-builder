@@ -5,7 +5,6 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 include_attribute "app_configuration::user_configuration"
 config_file_hash = node[:application]
-user_config_settings = node[:application][:configuration]
 default_config_settings = node[:app_configuration][:configuration]
 config_paths = node[:app_configuration][:configuration_paths]
 user_configurations = node[:app_configuration][:user_configuration]

@@ -69,7 +69,6 @@
 				"repository_url": "git@github.com:PMET-public/module-autofill.git",
 				"configuration": {
 					"magentoese_autofill": {
-						"enable_autofill": true,
 						"persona_1": {
 							"enable": true,
 							"label": "Steve Kukla (Test User)",
@@ -324,51 +323,11 @@
 				}
 			},
 			"carriers": {
-				"ups": {
-					"active": {
-						"website": {
-							"base": false
-						}
-					},
-					"username": {
-						"website": {
-							"base": ""
-						}
-					},
-					"password": {
-						"website": {
-							"base": ""
-						}
-					},
-					"access_license_number": {
-						"website": {
-							"base": ""
-						}
-					},
-					"shipper_number": {
-						"website": {
-							"base": ""
-						}
-					},
-					"allowed_methods": {
-						"website": {
-							"base": ["UPS Ground", "UPS Next Day Air"]
-						}
-					}
-				},
-				"flatrate": {
-					"active": true
-				}
+				"flatrate": true
 			},
 			"payment": {
-				"braintree": {
-					"active": false,
-					"merchant_account_id": "magento",
-					"merchant_id": "",
-					"public_key": "",
-					"private_key": "",
-					"payment_action": "authorize",
-					"cctypes": ["Visa", "MasterCard"]
+				"checkmo": {
+					"active": false
 				},
 				"companycredit": {
 					"active": {
@@ -376,9 +335,6 @@
 							"base": false
 						}
 					}
-				},
-				"checkmo": {
-					"active": false
 				}
 			}
 		}

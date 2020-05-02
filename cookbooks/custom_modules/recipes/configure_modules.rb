@@ -1,14 +1,10 @@
 #
 # Cookbook:: custom_modules
-# Recipe:: configure
+# Recipe:: configure_modules
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-user = node[:remote_machine][:user]
-group = node[:remote_machine][:user]
-web_root = node[:application][:installation][:options][:directory]
-apply_custom_flag = node[:application][:installation][:options][:configuration][:custom_modules]
-custom_module_data = node[:custom_demo][:custom_modules]
-configurations = Array.new
+web_root = node[:custom_modules][:web_root]
+configurations = node[:custom_modules][:user_configuration]
 
 # Helper method
 def process_value(value)
@@ -69,43 +65,6 @@ def process_value(value)
     end
     
     return value
-end
-
-custom_module_data.each do |module_key, module_value|
-    if node[:custom_demo].has_key?(module_key.gsub(/-/,"_"))
-        if node[:custom_demo][:custom_modules][module_key].has_key?(:configuration)
-            custom_module_settings = node[:custom_demo][:custom_modules][module_key][:configuration]
-        end
-        custom_module_config_paths = node[:custom_demo][module_key.gsub(/-/,"_")][:config_paths]
-        custom_module_config_paths.each do |config_path|
-            configured_setting = custom_module_settings.dig(*config_path.split("/"))
-            if !apply_custom_flag
-                next
-            else 
-                if configured_setting.class != NilClass and configured_setting.class != Chef::Node::ImmutableMash
-                    # Default scope settings
-                    configuration_setting = {
-                        path: config_path,
-                        value: configured_setting
-                    }
-                    configurations << configuration_setting
-                elsif configured_setting.class != NilClass or configured_setting.class == Chef::Node::ImmutableMash
-                    [:website, :store].each do |scope|
-                        if configured_setting[:scopes].has_key?(scope)
-                            # Scoped settings
-                            configuration_setting = {
-                                path: config_path,
-                                value: configured_setting[:scopes][scope][:value],
-                                scope: scope,
-                                code: configured_setting[:scopes][scope][:code]
-                            }
-                            configurations << configuration_setting
-                        end
-                    end
-                end
-            end
-        end
-    end
 end 
 
 unless configurations.empty?

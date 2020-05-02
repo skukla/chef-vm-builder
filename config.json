@@ -69,7 +69,6 @@
 				"repository_url": "git@github.com:PMET-public/module-autofill.git",
 				"configuration": {
 					"magentoese_autofill": {
-						"enable_autofill": true,
 						"persona_1": {
 							"enable": true,
 							"label": "Steve Kukla (Test User)",
