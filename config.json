@@ -150,10 +150,6 @@
 				"username": "",
 				"password": "",
 				"github_token": ""
-			},
-			"ssh": {
-				"private_key_files": [""],
-				"public_key_files": [""]
 			}
 		},
 		"installation": {

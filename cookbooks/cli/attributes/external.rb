@@ -6,6 +6,9 @@
 include_attribute "php::default"
 default[:cli][:php_version] = node[:php][:version]
 
+include_attribute "ssh::default"
+default[:cli][:ssh_private_keys] = node[:ssh]
+
 include_attribute "magento::default"
 default[:cli][:database_host] = node[:magento][:database][:host]
 default[:cli][:database_user] = node[:magento][:database][:user]
