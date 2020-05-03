@@ -9,7 +9,7 @@ vagrant_ssh_key = node[:ssh][:vagrant_insecure_key]
 private_keys = node[:ssh][:private_key_files]
 authorized_keys = node[:ssh][:authorized_keys]
 
-# Private keys to ./ssh/
+# Private keys to ./ssh/ and .bashrc
 unless private_keys.nil?
     private_keys.each do |private_key|
         cookbook_file "Adding private key file : #{private_key}" do
@@ -20,6 +20,15 @@ unless private_keys.nil?
             mode 0400
             sensitive true
             action :create_if_missing
+        end
+
+        ruby_block "Add private keys to .bashrc" do
+            block do
+                file = Chef::Util::FileEdit.new("/home/#{user}/.bashrc")
+                file.insert_line_if_no_match(/#{private_key}/, "eval $(keychain --quiet --eval #{private_key} &>/dev/null)")
+                file.write_file
+            end
+            only_if { ::File.exists?("/home/#{user}/.bashrc") }
         end
     end
 end
