@@ -155,9 +155,6 @@
 				"username": "b17aa908c13768cef2a5a3a043bb3c54",
 				"password": "93f1f71fd779eb46af01fd7587e5fdba",
 				"github_token": "ca5db95d8f9ebea677be19b5943475882682e1d7"
-			},
-			"ssh": {
-				"private_key_files": ["id_rsa.skukla.github", "id_rsa.skukla.gitlab"]
 			}
 		},
 		"installation": {
@@ -170,7 +167,7 @@
 					"b2b_code": true,
 					"custom_modules": true
 				},
-				"modules_to_remove":["temando/module-shipping", "magento/google-shopping-ads"],
+				"modules_to_remove": "temando/module-shipping",
 				"install": true,
 				"sample_data": false,
 				"deploy_mode": {

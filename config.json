@@ -167,7 +167,7 @@
 					"b2b_code": true,
 					"custom_modules": true
 				},
-				"modules_to_remove":["temando/module-shipping", "magento/google-shopping-ads"],
+				"modules_to_remove": ["temando/module-shipping", "magento/google-shopping-ads"],
 				"install": true,
 				"sample_data": false,
 				"deploy_mode": {
