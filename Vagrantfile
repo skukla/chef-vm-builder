@@ -34,7 +34,7 @@ Vagrant.configure("2") do |config|
     trigger.name = "Checking for required plugins..."
     trigger.ruby do
       plugins = settings["vagrant"]["plugins"]["all"]
-      if settings["vagrant"]["provider"] == "virtualbox"
+      if settings["vm"]["provider"] == "virtualbox"
         plugins.push(*settings["vagrant"]["plugins"]["virtualbox"])
       else
         plugins.push(*settings["vagrant"]["plugins"]["vmware"])
@@ -77,8 +77,8 @@ Vagrant.configure("2") do |config|
   end
 
   # Configure VM machine based on provider
-  config.vm.provider "#{settings["vagrant"]["provider"]}" do |machine|
-    if settings["vagrant"]["provider"] == "virtualbox"
+  config.vm.provider "#{settings["vm"]["provider"]}" do |machine|
+    if settings["vm"]["provider"] == "virtualbox"
       machine.gui = settings["remote_machine"]["provider"]["virtualbox"]["gui"]
       machine.linked_clone = settings["remote_machine"]["provider"]["virtualbox"]["linked_clones"]
       machine.default_nic_type = settings["remote_machine"]["provider"]["virtualbox"]["default_nic_type"]
@@ -93,7 +93,7 @@ Vagrant.configure("2") do |config|
           
       ]
     # VMWare-specific settings
-    elsif settings["vagrant"]["provider"].include?("vmware")
+    elsif settings["vm"]["provider"].include?("vmware")
       machine.gui = settings["remote_machine"]["provider"]["vmware"]["gui"]
       machine.linked_clone = settings["remote_machine"]["provider"]["vmware"]["linked_clones"]
       machine.vmx["memsize"] = settings["remote_machine"]["ram"]
