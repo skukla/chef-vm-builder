@@ -8,6 +8,6 @@
 	"run_list": [
 		"recipe[init::default]",
 		"recipe[cli::install]",
-		"recipe[ssh::default]"
+		"recipe[ssh::configure]"
 	]
 }

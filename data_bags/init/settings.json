@@ -157,7 +157,7 @@
 				"github_token": "ca5db95d8f9ebea677be19b5943475882682e1d7"
 			},
 			"ssh": {
-				"private_key_files": ["id_rsa.skukla.gitlab", "id_rsa.skukla.github"]
+				"private_key_files": ["id_rsa.skukla.github", "id_rsa.skukla.gitlab"]
 			}
 		},
 		"installation": {
@@ -378,7 +378,7 @@
 			"port": 10000
 		},
 		"webmin": {
-			"use": false,
+			"use": true,
 			"port": 20000
 		},
 		"samba": {

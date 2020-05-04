@@ -34,7 +34,6 @@ end
 include_recipe 'magento::download_b2b' if download_b2b_flag
 # If custom modules are configured, add them to composer.json
 if download_custom_modules_flag
-    # include_recipe 'ssh::add_keys_to_agent'
     include_recipe 'custom_modules::download'
 end
 # If patches are comnfigured, add them to composer.json
