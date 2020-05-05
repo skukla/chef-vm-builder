@@ -38,8 +38,8 @@ if download_custom_modules_flag
 end
 # If patches are comnfigured, add them to composer.json
 if apply_patches_flag
-    include_recipe 'magento::download_patches'
-    include_recipe 'magento::apply_patches'
+    include_recipe 'app_patches::download_patches'
+    include_recipe 'app_patches::apply_patches'
 end
 # If download base code is configured, do composer install
 if download_base_code_flag

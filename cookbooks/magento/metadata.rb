@@ -15,7 +15,8 @@ depends 'webmin'            # This brings in Webmin configuration options
 depends 'samba'             # This brings in Samba configuration options
 depends 'composer'          # This brings in Composer configuration options
 depends 'custom_modules'    # This brings in Custom Module configuration options
-depends 'app_configuration' # This brings in Configuration configuration options
+depends 'app_patches'       # This brings in App Patches configuration options
+depends 'app_configuration' # This brings in App Configuration configuration options
 
 # The `issues_url` points to the location where issues for this cookbook are
 # tracked.  A `View Issues` link will be displayed on this cookbook's page when
