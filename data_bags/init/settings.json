@@ -133,20 +133,10 @@
 					}
 				}
 			},
-			"module-magento-framework-data-collection": {
-				"vendor": "skukla",
-				"version": "dev-master",
-				"repository_url": "https://github.com/skukla/module-magento-framework-data-collection.git"
-			},
 			"theme-frontend-custom": {
 				"vendor": "skukla",
 				"version": "dev-master",
 				"repository_url": "git@github.com:skukla/theme-frontend-custom.git"
-			},
-			"module-attribute-import": {
-				"vendor": "zt",
-				"version": "dev-master",
-				"repository_url": "git@github.com:skukla/zt-attribute-import-final.git"
 			}
 		}
 	},

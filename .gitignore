@@ -1,6 +1,6 @@
 .DS_Store
 .vagrant/
-nodes/*
+nodes/*.json
 environments/
 cookbooks/ssh/files/keys/public/*
 cookbooks/ssh/files/keys/private/*

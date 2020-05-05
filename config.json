@@ -245,7 +245,7 @@
 			},
 			"cms": {
 				"pagebuilder": {
-					"google_maps_api_key": "AIzaSyCUpro8_IIHqsD1WKzadd2U0BJKsJDCrqk"
+					"google_maps_api_key": ""
 				}
 			},
 			"btob": {
@@ -257,7 +257,7 @@
 					},
 					"sharedcatalog_active": {
 						"website": {
-							"base": true
+							"base": false
 						}
 					},
 					"negotiablequote_active": {
@@ -278,7 +278,7 @@
 				}
 			},
 			"catalog": {
-				"youtube_api_key": "AIzaSyAIqr8akHR1G3qh9Z8vvJI34iITe59G3h0"
+				"youtube_api_key": ""
 			},
 			"customer": {
 				"startup": {
@@ -319,12 +319,12 @@
 			},
 			"payment": {
 				"checkmo": {
-					"active": false
+					"active": true
 				},
 				"companycredit": {
 					"active": {
 						"website": {
-							"base": false
+							"base": true
 						}
 					}
 				}
