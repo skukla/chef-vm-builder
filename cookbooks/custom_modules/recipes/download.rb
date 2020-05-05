@@ -3,11 +3,11 @@
 # Recipe:: download
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-user = node[:remote_machine][:user]
-group = node[:remote_machine][:user]
-web_root = node[:application][:installation][:options][:directory]
-custom_module_data = node[:custom_demo][:custom_modules]
+user = node[:custom_modules][:user]
+group = node[:custom_modules][:user]
+web_root = node[:custom_modules][:web_root]
 composer_file = node[:custom_modules][:composer][:filename]
+custom_module_data = node[:custom_demo][:custom_modules]
 
 # Configure the repositories
 modules_array = Array.new

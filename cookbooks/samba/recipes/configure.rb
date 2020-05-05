@@ -3,11 +3,11 @@
 # Recipe:: configure
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-user = node[:remote_machine][:user]
-group = node[:remote_machine][:user]
-hostname = node[:hostname]
+user = node[:samba][:user]
+group = node[:samba][:user]
 share_fields = node[:samba][:share_fields]
 shares = node[:samba][:shares]
+hostname = node[:hostname]
 
 # Helper method
 def process_value(value)

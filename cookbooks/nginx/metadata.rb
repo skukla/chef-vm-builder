@@ -7,6 +7,7 @@ long_description 'Installs/Configures nginx'
 version '0.1.0'
 chef_version '>= 14.0'
 
+depends 'init'      # This brings in OS settings
 depends 'php'       # This brings in PHP FPM options
 
 # The `issues_url` points to the location where issues for this cookbook are

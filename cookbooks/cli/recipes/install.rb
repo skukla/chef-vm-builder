@@ -3,8 +3,8 @@
 # Recipe:: install
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-user = node[:remote_machine][:user]
-group = node[:remote_machine][:user]
+user = node[:cli][:user]
+group = node[:cli][:user]
 web_root = node[:application][:installation][:options][:directory]
 php_version = node[:cli][:php_version]
 magento_version = node[:application][:installation][:options][:version]
@@ -25,12 +25,12 @@ end
 
 # Create the VM CLI directories
 cli_directories.each do |directory_data|
-    directory "Creating #{directory_data[:path]}" do
-        path "#{directory_data[:path]}"
+    directory "Creating /home/#{user}/#{directory_data[:path]}" do
+        path "/home/#{user}/#{directory_data[:path]}"
         owner "#{user}"
         group "#{group}"
         mode "#{directory_data[:mode]}"
-        not_if { ::File.directory?("#{directory_data[:path]}") }
+        not_if { ::File.directory?("/home/#{user}/#{directory_data[:path]}") }
     end
 end
 
@@ -59,7 +59,7 @@ end
 cli_files.each do |cli_file_data|  
     cookbook_file "Copying file : #{cli_file_data[:source]}" do
         source "#{cli_file_data[:source]}"
-        path "#{cli_file_data[:path]}"
+        path "/home/#{user}/#{cli_file_data[:path]}/#{cli_file_data[:source]}"
         owner "#{user}"
         group "#{user}"
         mode "#{cli_file_data[:mode]}"

@@ -3,7 +3,7 @@
 # Recipe:: install
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-version = node[:infrastructure][:php][:version]
+version = node[:php][:version]
 
 # Add PHP repository
 apt_repository "php-#{version}" do

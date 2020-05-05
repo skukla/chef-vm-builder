@@ -7,7 +7,8 @@ long_description 'Installs/Configures the VM CLI'
 version '0.1.0'
 chef_version '>= 14.0'
 
-depends 'ssh'       # Brings in the private keys
+depends 'init'      # Brings in OS settings
+depends 'ssh'       # Brings in SSH settings
 depends 'php'       # Brings in PHP settings
 depends 'magento'   # Brings in Magento settings
 

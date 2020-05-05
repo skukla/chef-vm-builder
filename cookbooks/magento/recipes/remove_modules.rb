@@ -3,7 +3,7 @@
 # Recipe:: remove_modules
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-user = node[:remote_machine][:user]
+user = node[:magento][:user]
 web_root = node[:magento][:installation][:options][:directory]
 modules_to_remove = node[:magento][:installation][:options][:modules_to_remove]
 composer_file = node[:magento][:composer_filename]

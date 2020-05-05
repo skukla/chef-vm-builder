@@ -3,8 +3,8 @@
 # Recipe:: create_image_drop
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-user = node[:remote_machine][:user]
-group = node[:remote_machine][:user]
+user = node[:app_configuration][:user]
+group = node[:app_configuration][:user]
 shares = node[:app_configuration][:samba_shares]
 
 # Add the image drop directory if it's been asked for

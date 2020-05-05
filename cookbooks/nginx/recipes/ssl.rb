@@ -3,8 +3,8 @@
 # Recipe:: ssl
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-user = node[:remote_machine][:user]
-group = node[:remote_machine][:user]
+user = node[:nginx][:user]
+group = node[:nginx][:user]
 key_file = node[:nginx][:ssl_key_file]
 certificate_file = node[:nginx][:ssl_certificate_file]
 common_name = node[:fqdn]

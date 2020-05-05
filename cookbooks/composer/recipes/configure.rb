@@ -3,8 +3,8 @@
 # Recipe:: install
 #
 # Copyright:: 2020, Steve, All Rights Reserved.
-user = node[:remote_machine][:user]
-group = node[:remote_machine][:user]
+user = node[:composer][:user]
+group = node[:composer][:user]
 timeout = node[:composer][:timeout]
 
 # Create composer configuration directory

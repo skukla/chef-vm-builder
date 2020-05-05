@@ -3,8 +3,8 @@
 # Recipe:: setup_final
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-user = node[:remote_machine][:user]
-group = node[:remote_machine][:user]
+user = node[:magento][:user]
+group = node[:magento][:user]
 web_root = node[:magento][:installation][:options][:directory]
 
 # Reindex

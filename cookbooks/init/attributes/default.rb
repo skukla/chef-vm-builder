@@ -6,3 +6,4 @@
 default[:init][:packages] = ["zip", "silversearcher-ag", "figlet", "unattended-upgrades", "keychain"]
 default[:init][:update] = false
 default[:init][:timezone] = "America/Los_Angeles"
+default[:init][:user] = "vagrant"

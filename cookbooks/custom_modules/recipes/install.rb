@@ -3,10 +3,10 @@
 # Recipe:: install
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-user = node[:remote_machine][:user]
-group = node[:remote_machine][:user]
-web_root = node[:application][:installation][:options][:directory]
-composer_file = node[:application][:composer][:filename]
+user = node[:custom_modules][:user]
+group = node[:custom_modules][:user]
+web_root = node[:custom_modules][:web_root]
+composer_file = node[:custom_modules][:composer][:filename]
 
 # Run composer install to download the code in composer.json
 execute "Download custom module code" do

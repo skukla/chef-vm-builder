@@ -3,8 +3,8 @@
 # Recipe:: apply_patches
 # 
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-user = node[:remote_machine][:user]
-group = node[:remote_machine][:user]
+user = node[:app_patches][:user]
+group = node[:app_patches][:user]
 web_root = node[:app_patches][:web_root]
 composer_file = node[:app_patches][:composer_filename]
 

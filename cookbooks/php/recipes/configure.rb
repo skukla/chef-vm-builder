@@ -3,13 +3,13 @@
 # Recipe:: configure
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-user = node[:remote_machine][:user]
-group = node[:remote_machine][:user]
-port = node[:infrastructure][:php][:port]
-version = node[:infrastructure][:php][:version]
-memory_limit = node[:infrastructure][:php][:memory_limit]
-upload_max_filesize = node[:infrastructure][:php][:upload_max_filesize]
-timezone = node[:infrastructure][:php][:timezone]
+user = node[:php][:user]
+group = node[:php][:user]
+port = node[:php][:port]
+version = node[:php][:version]
+memory_limit = node[:php][:memory_limit]
+upload_max_filesize = node[:php][:upload_max_filesize]
+timezone = node[:php][:timezone]
 backend = node[:php][:backend]
 max_execution_time = node[:php][:max_execution_time]
 zlib_output_compression = node[:php][:zlib_output_compression]

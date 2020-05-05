@@ -3,10 +3,8 @@
 # Recipe:: install
 #
 # Copyright:: 2020, Steve, All Rights Reserved.
-
-# Attributes
-user = node[:remote_machine][:user]
-group = node[:remote_machine][:user]
+user = node[:composer][:user]
+group = node[:composer][:user]
 composer_install_dir = node[:composer][:install_dir]
 composer_file = node[:composer][:filename]
 

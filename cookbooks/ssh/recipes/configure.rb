@@ -3,8 +3,8 @@
 # Recipe:: add_keys_to_agent
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-user = node[:remote_machine][:user]
-group = node[:remote_machine][:user]
+user = node[:ssh][:user]
+group = node[:ssh][:user]
 private_keys = node[:ssh][:private_key_files]
 vagrant_key = node[:ssh][:vagrant_key]
 authorized_keys = node[:ssh][:authorized_keys]

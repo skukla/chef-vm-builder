@@ -3,8 +3,6 @@
 # Recipe:: install
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-
-# Add MariaDB repository
 apt_repository 'MariaDB' do
     uri 'http://mirror.zol.co.zw/mariadb/repo/10.3/ubuntu'
     arch 'amd64'

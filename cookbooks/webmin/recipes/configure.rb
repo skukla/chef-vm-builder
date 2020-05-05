@@ -3,8 +3,8 @@
 # Recipe:: configure
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-user = node[:remote_machine][:user]
-group = node[:remote_machine][:user]
+user = node[:webmin][:user]
+group = node[:webmin][:user]
 use_ssl = node[:webmin][:use_ssl]
 port = node[:webmin][:port]
 

@@ -3,6 +3,9 @@
 # Attribute:: external
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
+include_attribute "init::default"
+default[:app_configuration][:user] = node[:init][:user]
+
 include_attribute "samba::default"
 default[:app_configuration][:samba_shares] = node[:samba][:shares]
 

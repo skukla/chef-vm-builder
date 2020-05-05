@@ -8,7 +8,7 @@
 		"structure": {
 			"website": {
 				"base": "luma.com",
-				"luma_b2b": "b2b.luma.com",
+				"base_b2b": "b2b.luma.com",
 				"custom_b2c": "custom-demo.com",
 				"custom_b2b": "b2b.custom-demo.com"
 			},
@@ -245,7 +245,7 @@
 			},
 			"cms": {
 				"pagebuilder": {
-					"google_maps_api_key": "AIzaSyCUpro8_IIHqsD1WKzadd2U0BJKsJDCrqk"
+					"google_maps_api_key": ""
 				}
 			},
 			"btob": {
@@ -257,7 +257,7 @@
 					},
 					"sharedcatalog_active": {
 						"website": {
-							"base": true
+							"base": false
 						}
 					},
 					"negotiablequote_active": {
@@ -278,7 +278,7 @@
 				}
 			},
 			"catalog": {
-				"youtube_api_key": "AIzaSyAIqr8akHR1G3qh9Z8vvJI34iITe59G3h0"
+				"youtube_api_key": ""
 			},
 			"customer": {
 				"startup": {
@@ -319,12 +319,12 @@
 			},
 			"payment": {
 				"checkmo": {
-					"active": false
+					"active": true
 				},
 				"companycredit": {
 					"active": {
 						"website": {
-							"base": false
+							"base": true
 						}
 					}
 				}
@@ -362,7 +362,7 @@
 			"plugins": ["analysis-phonetic", "analysis-icu"]
 		},
 		"mailhog": {
-			"use": false,
+			"use": true,
 			"port": 10000
 		},
 		"webmin": {
@@ -387,7 +387,6 @@
 	},
 	"remote_machine": {
 		"name": "Kukla-Machine",
-		"user": "vagrant",
 		"box": "bento/ubuntu-18.04",
 		"cpus": 2,
 		"ram": 4096,

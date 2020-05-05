@@ -3,8 +3,6 @@
 # Recipe:: configure_pre_install
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-
-# Attributes
 socket = node[:database][:socket]
 innodb_buffer_pool_size = node[:database][:innodb_buffer_pool_size]
 max_allowed_packet = node[:database][:max_allowed_packet]

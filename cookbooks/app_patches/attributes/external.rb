@@ -3,6 +3,9 @@
 # Attribute:: external
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
+include_attribute "init::default"
+default[:app_patches][:user] = node[:init][:user]
+
 include_attribute "composer::default"
 default[:app_patches][:composer_filename] = node[:composer][:filename]
 

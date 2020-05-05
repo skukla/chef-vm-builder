@@ -7,6 +7,7 @@ long_description 'Installs/Configures application patches'
 version '0.1.0'
 chef_version '>= 14.0'
 
+depends 'init'      # Brings in init attributes
 depends 'composer'  # Brings in composer attributes
 depends 'magento'   # Brings in Magento attribtues
 

@@ -8,7 +8,7 @@
 		"structure": {
 			"website": {
 				"base": "luma.com",
-				"luma_b2b": "b2b.luma.com",
+				"base_b2b": "b2b.luma.com",
 				"custom_b2c": "custom-demo.com",
 				"custom_b2b": "b2b.custom-demo.com"
 			},
@@ -362,7 +362,7 @@
 			"plugins": ["analysis-phonetic", "analysis-icu"]
 		},
 		"mailhog": {
-			"use": false,
+			"use": true,
 			"port": 10000
 		},
 		"webmin": {
@@ -387,7 +387,6 @@
 	},
 	"remote_machine": {
 		"name": "Kukla-Machine",
-		"user": "vagrant",
 		"box": "bento/ubuntu-18.04",
 		"cpus": 2,
 		"ram": 4096,

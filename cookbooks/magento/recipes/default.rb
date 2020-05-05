@@ -4,11 +4,11 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 web_root = node[:magento][:installation][:options][:directory]
+use_elasticsearch = node[:magento][:use_elasticsearch]
 custom_demo_data = node[:custom_demo][:structure]
 download_base_code_flag = node[:application][:installation][:options][:download][:base_code]
 download_custom_modules_flag = node[:application][:installation][:options][:download][:custom_modules]
 sample_data_flag = node[:application][:installation][:options][:sample_data]
-use_elasticsearch = node[:magento][:use_elasticsearch]
 install_flag = node[:application][:installation][:options][:install]
 apply_patches_flag = node[:application][:installation][:options][:patches][:apply]
 apply_base_flag = node[:application][:installation][:options][:configuration][:base]
