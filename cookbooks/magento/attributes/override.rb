@@ -12,6 +12,7 @@ supported_settings = {
             :options => [
                 :family, 
                 :version,
+                :minimum_stability,
                 :directory,
                 :install,
                 :sample_data,

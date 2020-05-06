@@ -160,13 +160,13 @@
 				},
 				"modules_to_remove": ["temando/module-shipping", "magento/google-shopping-ads"],
 				"install": true,
-				"sample_data": false,
+				"sample_data": true,
 				"deploy_mode": {
 					"apply": true,
 					"mode": "production"
 				},
 				"patches": {
-					"apply": true,
+					"apply": false,
 					"repository_url": "https://github.com/PMET-public/magento-cloud.git"
 				},
 				"configuration": {
@@ -356,21 +356,21 @@
 			"ssl_country": "US"
 		},
 		"elasticsearch": {
-			"use": true,
+			"use": false,
 			"version": "6.x",
 			"memory": "1G",
 			"plugins": ["analysis-phonetic", "analysis-icu"]
 		},
 		"mailhog": {
-			"use": true,
+			"use": false,
 			"port": 10000
 		},
 		"webmin": {
-			"use": true,
+			"use": false,
 			"port": 20000
 		},
 		"samba": {
-			"use": true,
+			"use": false,
 			"shares": {
 				"web_root": "/var/www/magento",
 				"image_drop": "/var/www/magento/var/import/images"
@@ -410,8 +410,7 @@
 	"vagrant": {
 		"plugins": {
 			"all": ["vagrant-hostsupdater"],
-			"vmware": ["vagrant-vmware-desktop"],
-			"virtualbox": ["vagrant-vbguest"]
+			"vmware": ["vagrant-vmware-desktop"]
 		}
 	}
 }

@@ -28,7 +28,7 @@ execute "Install sample data" do
 end
 
 # Update files/folders ownership
-directories = ['var/', 'pub/', 'app/etc/', 'generated/']
+directories = ["var/", "pub/", "app/etc/", "generated/"]
 directories.each do |directory|
     directory "Setting permissions for #{directory}" do
         path "#{web_root}/#{directory}"

@@ -151,7 +151,8 @@
 		"installation": {
 			"options": {
 				"family": "Commerce",
-				"version": "2.3.4",
+				"version": "2.3.5-p1",
+				"minimum_stability": "beta",
 				"directory": "/var/www/magento",
 				"download": {
 					"base_code": true,
@@ -166,7 +167,7 @@
 					"mode": "production"
 				},
 				"patches": {
-					"apply": true,
+					"apply": false,
 					"repository_url": "https://github.com/PMET-public/magento-cloud.git"
 				},
 				"configuration": {
@@ -410,8 +411,7 @@
 	"vagrant": {
 		"plugins": {
 			"all": ["vagrant-hostsupdater"],
-			"vmware": ["vagrant-vmware-desktop"],
-			"virtualbox": ["vagrant-vbguest"]
+			"vmware": ["vagrant-vmware-desktop"]
 		}
 	}
 }

@@ -82,7 +82,6 @@ Vagrant.configure("2") do |config|
       machine.gui = settings["remote_machine"]["provider"]["virtualbox"]["gui"]
       machine.linked_clone = settings["remote_machine"]["provider"]["virtualbox"]["linked_clones"]
       machine.default_nic_type = settings["remote_machine"]["provider"]["virtualbox"]["default_nic_type"]
-      config.vbguest.auto_update = settings["remote_machine"]["provider"]["virtualbox"]["auto_update"]
       machine.customize [
         "modifyvm", :id,
           "--name", settings["vm"]["name"],

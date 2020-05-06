@@ -28,6 +28,7 @@ if download_base_code_flag
     include_recipe 'magento::uninstall_app'
     include_recipe 'magento::create_web_root'
     include_recipe 'magento::composer_create_project'
+    include_recipe 'magento::set_project_stability'
     include_recipe 'magento::remove_modules'
 end
 # If B2B is comnfigured and code should be dowloaded, add it to composer.json

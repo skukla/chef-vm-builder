@@ -29,8 +29,10 @@ template "Add composer credentials" do
 end
 
 # Create project string
+base_string = "create-project --no-install --repository-url=https://repo.magento.com/"
 magento_family = 'enterprise' if magento_family == 'Commerce'
-create_project_string = "create-project --no-install --repository-url=https://repo.magento.com/ magento/project-#{magento_family.downcase}-edition=#{magento_version} ."
+version_string = "magento/project-#{magento_family.downcase}-edition=#{magento_version} ."
+create_project_string = [base_string, version_string].join(" ")
 
 # Create base composer.json for base code
 execute "Create Magento composer.json" do

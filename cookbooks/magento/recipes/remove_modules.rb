@@ -19,7 +19,7 @@ ruby_block "Remove outdated core modules" do
             modules_list << sprintf(module_format, "\s", "#{value}")
         end
         file = Chef::Util::FileEdit.new("#{web_root}/composer.json")
-        file.insert_line_after_match(/minimum-stability/, sprintf(replace_block_format, sprintf(replace_string_format, "\s", "\"replace\""), modules_list.join(",\n"), "\s"))
+        file.insert_line_after_match("minimum-stability", sprintf(replace_block_format, sprintf(replace_string_format, "\s", "\"replace\""), modules_list.join(",\n"), "\s"))
         file.write_file
     end
     only_if { ::File.exists?("#{web_root}/composer.json") }

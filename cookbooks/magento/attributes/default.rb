@@ -10,6 +10,7 @@ default[:magento][:database][:name] = "magento"
 
 default[:magento][:installation][:options][:family] = "Open Source"
 default[:magento][:installation][:options][:version] = "2.3.4"
+default[:magento][:installation][:options][:minimum_stability] = ""
 default[:magento][:installation][:options][:directory] = "/var/www/magento"
 default[:magento][:installation][:options][:download][:base_code] = true
 default[:magento][:installation][:options][:download][:b2b_code] = true
