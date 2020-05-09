@@ -5,12 +5,16 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 user = node[:magento][:user]
 web_root = node[:magento][:installation][:options][:directory]
-modules_to_remove = node[:magento][:installation][:build][:modules_to_remove]
+selected_modules = node[:magento][:installation][:build][:modules_to_remove]
 composer_file = node[:magento][:composer_filename]
 
 ruby_block "Remove outdated core modules" do
     block do
-        modules_list = []
+        modules_to_remove = Array.new
+        modules_list = Array.new
+        unless selected_modules.is_a? Chef::Node::ImmutableArray
+            modules_to_remove << selected_modules
+        end
         replace_string_format = "%4s%s:"
         module_format = "%8s\"%s\": \"*\""
         between_format = ",%4s"

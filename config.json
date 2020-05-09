@@ -152,7 +152,6 @@
 			"options": {
 				"family": "Commerce",
 				"version": "2.3.5-p1",
-				"minimum_stability": "stable",
 				"directory": "/var/www/magento"
 			},
 			"build": {

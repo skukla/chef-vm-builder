@@ -161,7 +161,7 @@
 				"b2b_code": true,
 				"custom_modules": true,
 				"sample_data": true,
-				"modules_to_remove": ["temando/module-shipping", "magento/google-shopping-ads"],
+				"modules_to_remove": "magento/google-shopping-ads",
 				"patches": {
 					"apply": false,
 					"repository_url": "https://github.com/PMET-public/magento-cloud.git"
