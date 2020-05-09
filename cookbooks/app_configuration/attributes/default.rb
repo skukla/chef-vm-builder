@@ -7,6 +7,7 @@
 # It's unusual to use external attributes inside default attribute files, so we make sure they're included...
 include_attribute "app_configuration::external"
 default[:app_configuration][:configuration_paths] = [
+    "design/header/welcome",
     "general/restriction/is_active",
     "general/restriction/mode",
     "general/restriction/http_redirect",

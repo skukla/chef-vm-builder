@@ -10,14 +10,14 @@ db_name = node[:magento][:database][:name]
 
 ruby_block "Create the Magento database" do
     block do
-        %x[mysql -uroot -e "CREATE DATABASE IF NOT EXISTS #{db_name};"]
+        %x[mysql --user=root -e "CREATE DATABASE IF NOT EXISTS #{db_name};"]
     end
     action :create
 end
 
 ruby_block "Add permissions for database user" do
     block do
-        %x[mysql -uroot -e "GRANT ALL ON #{db_name}.* TO '#{db_user}'@'#{db_host}' IDENTIFIED BY '#{db_password}' WITH GRANT OPTION;"]
+        %x[mysql --user=root -e "GRANT ALL ON #{db_name}.* TO '#{db_user}'@'#{db_host}' IDENTIFIED BY '#{db_password}' WITH GRANT OPTION;"]
     end
     action :create
 end

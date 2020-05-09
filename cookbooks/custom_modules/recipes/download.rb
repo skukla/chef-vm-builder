@@ -7,21 +7,21 @@ user = node[:custom_modules][:user]
 group = node[:custom_modules][:user]
 web_root = node[:custom_modules][:web_root]
 composer_file = node[:custom_modules][:composer][:filename]
-custom_module_data = node[:custom_demo][:custom_modules]
+custom_module_data = node[:custom_modules][:module_list]
 
 # Configure the repositories
-modules_array = Array.new
-custom_module_data.each do |custom_module_key, custom_module_value|
-    if custom_module_key != "conf_options"
-    execute "Add custom repositories : #{custom_module_key}" do
+unless custom_module_data.nil?
+    modules_array = Array.new
+    custom_module_data.each do |custom_module_key, custom_module_value|
+        execute "Add custom repositories : #{custom_module_key}" do
             command "cd #{web_root} && su #{user} -c '#{composer_file} config repositories.#{custom_module_key} git #{custom_module_value[:repository_url]}'"
         end
-        # Build the require statement (Collect into an array, then join into a string)
+        # Build the require statement
         modules_array << "#{custom_module_value[:vendor]}/#{custom_module_key}:#{custom_module_value[:version]}"
     end
-end
 
-# Require the modules
-execute "Add custom repositories" do
-    command "cd #{web_root} && su #{user} -c '#{composer_file} require --no-update #{modules_array.join(' ')}'"
+    # Require the modules
+    execute "Add custom repositories" do
+        command "cd #{web_root} && su #{user} -c '#{composer_file} require --no-update #{modules_array.join(' ')}'"
+    end
 end

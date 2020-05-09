@@ -14,3 +14,7 @@ default[:app_configuration][:elasticsearch_port] = node[:elasticsearch][:port]
 
 include_attribute "magento::default"
 default[:app_configuration][:web_root] = node[:magento][:installation][:options][:directory]
+default[:app_configuration][:db_host] = node[:magento][:database][:host]
+default[:app_configuration][:db_user] = node[:magento][:database][:user]
+default[:app_configuration][:db_password] = node[:magento][:database][:password]
+default[:app_configuration][:db_name] = node[:magento][:database][:name]

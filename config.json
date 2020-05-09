@@ -52,92 +52,6 @@
 				"password": "Password1",
 				"email": "phil@luma.com"
 			}
-		},
-		"custom_modules": {
-			"module-sctools": {
-				"vendor": "magentoese",
-				"version": "dev-master",
-				"repository_url": "git@github.com:PMET-public/module-sctools.git"
-			},
-			"module-themecustomizer": {
-				"vendor": "magentoese",
-				"version": "dev-master",
-				"repository_url": "git@github.com:PMET-public/module-themecustomizer.git"
-			},
-			"module-autofill": {
-				"vendor": "magentoese",
-				"version": "dev-master",
-				"repository_url": "git@github.com:PMET-public/module-autofill.git",
-				"configuration": {
-					"magentoese_autofill": {
-						"persona_1": {
-							"enable": true,
-							"label": "Steve Kukla (Test User)",
-							"email_value": "steve@example.com",
-							"password_value": "Password1",
-							"firstname_value": "Steve",
-							"lastname_value": "Kukla",
-							"address_value": "3640 Holdrege Ave",
-							"city_value": "Los Angeles",
-							"state_value": "CA",
-							"zip_value": "90016",
-							"country_value": "US",
-							"telephone_value": "310-945-0345",
-							"company_value": "Luma, Inc."
-						},
-						"persona_2": {
-							"enable": false,
-							"label": "Michelle Ortiz (Purchasing Agent)",
-							"email_value": "michelle@example.com",
-							"password_value": "Password1",
-							"firstname_value": "Michelle",
-							"lastname_value": "Ortiz",
-							"address_value": "3640 Holdrege Ave",
-							"city_value": "Los Angeles",
-							"state_value": "CA",
-							"zip_value": "90016",
-							"country_value": "US",
-							"telephone_value": "310-932-0362",
-							"company_value": "Luma, Inc."
-						},
-						"persona_3": {
-							"enable": false,
-							"label": "Casey Kendall (Floor Manager)",
-							"email_value": "casey@example.com",
-							"password_value": "Password1",
-							"firstname_value": "Casey",
-							"lastname_value": "Kendall",
-							"address_value": "3640 Holdrege Ave",
-							"city_value": "Los Angeles",
-							"state_value": "CA",
-							"zip_value": "90016",
-							"country_value": "US",
-							"telephone_value": "310-936-0364",
-							"company_value": "Luma, Inc."
-						},
-						"persona_4": {
-							"enable": false,
-							"label": "Jack Fitz (Buyer)",		
-							"email_value": "jack@example.com",
-							"password_value": "Password1",
-							"firstname_value": "Jack",
-							"lastname_value": "Fitz",
-							"address_value": "3640 Holdrege Ave",
-							"city_value": "Los Angeles",
-							"state_value": "CA",
-							"zip_value": "90016",
-							"country_value": "US",
-							"telephone_value": "310-937-0368",
-							"company_value": "Luma, Inc."
-						}
-					}
-				}
-			},
-			"theme-frontend-custom": {
-				"vendor": "skukla",
-				"version": "dev-master",
-				"repository_url": "git@github.com:skukla/theme-frontend-custom.git"
-			}
 		}
 	},
 	"application": {
@@ -243,6 +157,11 @@
 					}
 				}
 			},
+			"design": {
+				"header": {
+					"welcome": ""
+				}
+			},
 			"cms": {
 				"pagebuilder": {
 					"google_maps_api_key": ""
@@ -252,7 +171,7 @@
 				"website_configuration": {
 					"company_active": {
 						"website": {
-							"base": true
+							"base": false
 						}
 					},
 					"sharedcatalog_active": {
@@ -262,17 +181,17 @@
 					},
 					"negotiablequote_active": {
 						"website": {
-							"base": true
+							"base": false
 						}
 					},
 					"quickorder_active": {
 						"website": {
-							"base": true
+							"base": false
 						}
 					},
 					"requisition_list_active": {
 						"website": {
-							"base": true
+							"base": false
 						}
 					}
 				}
