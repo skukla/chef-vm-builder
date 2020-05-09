@@ -37,7 +37,7 @@ vhost_data.each do |vhost|
     link "/etc/nginx/sites-enabled/#{vhost[:url]}" do
         to "/etc/nginx/sites-available/#{vhost[:url]}"
         action :delete
-        only_if { ::File.exists?("/etc/nginx/sites-available/#{vhost[:url]}") }
+        only_if { ::File.exist?("/etc/nginx/sites-available/#{vhost[:url]}") }
     end
     # Create the virtual hosts
     template "#{vhost[:url]}" do
@@ -61,7 +61,7 @@ vhost_data.each do |vhost|
         to "/etc/nginx/sites-available/#{vhost[:url]}"
         owner 'root'
         group 'root'
-        only_if { ::File.exists?("/etc/nginx/sites-available/#{vhost[:url]}") }
+        only_if { ::File.exist?("/etc/nginx/sites-available/#{vhost[:url]}") }
     end
 end
 
@@ -104,7 +104,7 @@ link '/etc/nginx/sites-enabled/01-multisite.conf' do
     to '/etc/nginx/sites-available/conf/01-multisite.conf'
     owner 'root'
     group 'root'
-    only_if { ::File.exists?('/etc/nginx/sites-available/conf/01-multisite.conf') }
+    only_if { ::File.exist?('/etc/nginx/sites-available/conf/01-multisite.conf') }
     notifies :restart, 'service[nginx]', :immediately
 end
 

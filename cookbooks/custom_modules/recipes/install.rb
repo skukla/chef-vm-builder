@@ -13,11 +13,6 @@ execute "Download custom module code" do
     command "cd #{web_root} && su #{user} -c '#{composer_file} update'"
 end
 
-# Switch to developer mode
-execute "Switch to developer mode" do
-    command "su #{user} -c '#{web_root}/bin/magento deploy:mode:set developer'"
-end
-
 # Upgrade the database
 execute "Upgrade the database" do
     command "su #{user} -c '#{web_root}/bin/magento setup:upgrade'"

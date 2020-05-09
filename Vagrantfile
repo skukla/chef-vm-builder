@@ -122,12 +122,6 @@ Vagrant.configure("2") do |config|
     chef.arguments = "--chef-license accept"
   end
 
-  # Always set final file ownership
-  config.trigger.after [:up, :reload, :provision] do |trigger|
-    trigger.name = "Setting application permissions..."
-    trigger.run_remote = {inline: "bash -c 'source /home/vagrant/cli/commands.sh && own-trigger'"}
-  end
-
   # Save the configured infrastructure settings into a reference file
   config.trigger.after [:up, :reload, :provision] do |trigger|
     trigger.name = "Saving infrastructure settings..."

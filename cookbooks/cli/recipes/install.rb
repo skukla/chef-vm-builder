@@ -30,7 +30,7 @@ cli_directories.each do |directory_data|
         owner "#{user}"
         group "#{group}"
         mode "#{directory_data[:mode]}"
-        not_if { ::File.directory?("/home/#{user}/#{directory_data[:path]}") }
+        not_if { ::File.directory?("#{directory_data[:path]}") }
     end
 end
 
@@ -57,7 +57,7 @@ end
 
 # Copy the CLI files
 cli_files.each do |cli_file_data|  
-    cookbook_file "Copying file : #{cli_file_data[:source]}" do
+    cookbook_file "Copying file : /home/#{user}/#{cli_file_data[:source]}" do
         source "#{cli_file_data[:source]}"
         path "/home/#{user}/#{cli_file_data[:path]}/#{cli_file_data[:source]}"
         owner "#{user}"

@@ -42,7 +42,7 @@ unless private_keys.nil?
 
         execute "Add #{private_key} to the ssh agent" do
             command "su #{user} -c 'ssh-add /home/#{user}/.ssh/#{private_key}'"
-            only_if { ::File.exists?("/home/#{user}/.ssh/#{private_key}") }
+            only_if { ::File.exist?("/home/#{user}/.ssh/#{private_key}") }
         end
     end
 end

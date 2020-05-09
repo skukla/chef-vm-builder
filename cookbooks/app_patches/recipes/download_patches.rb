@@ -5,9 +5,9 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 user = node[:app_patches][:user]
 group = node[:app_patches][:user]
+patches_repository = node[:app_patches][:repository_url]
 web_root = node[:magento][:installation][:options][:directory]
 magento_version = node[:magento][:installation][:options][:version]
-patches_repository = node[:magento][:installation][:options][:patches][:repository_url]
 composer_file = node[:magento][:composer_filename]
 
 # Include the cweagans composer patches module

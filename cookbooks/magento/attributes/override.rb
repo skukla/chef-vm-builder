@@ -13,13 +13,16 @@ supported_settings = {
                 :family, 
                 :version,
                 :minimum_stability,
-                :directory,
+                :directory
+            ],
+            :build => [
                 :install,
+                :base_code, 
+                :b2b_code, 
+                :custom_modules,
                 :sample_data,
                 :modules_to_remove,
-                :download => [:base_code, :b2b_code, :custom_modules],
                 :deploy_mode => [:apply, :mode],
-                :patches => [:apply, :repository],
                 :configuration => [:base, :b2b, :custom_modules, :admin_users]
             ],
             :settings => [
@@ -68,12 +71,20 @@ supported_settings.each do |top_key, top_hash|
                 end
             when :application
                 setting_value.each do |field_key, field_value|
-                    if field_key == :options
+                    if field_key == :options || field_key == :build
                         field_value.each do |option|
                             if option.is_a? Hash
-                                option.each do |option_key, option_value|
-                                    unless node[top_key][setting_key][field_key].dig(option_key).nil?
-                                        override[:magento][setting_key][field_key][option_key] = node[top_key][setting_key][field_key].dig(option_key)
+                                option.each do |option_key, option_value|    
+                                    if option_value.is_a? Array
+                                        option_value.each do |arr_option|
+                                            unless node[top_key][setting_key][field_key][option_key].dig(arr_option).nil?
+                                                override[:magento][setting_key][field_key][option_key][arr_option] = node[top_key][setting_key][field_key][option_key].dig(arr_option)
+                                            end
+                                        end
+                                    else
+                                        unless node[top_key][setting_key][field_key].dig(option_key).nil?
+                                            override[:magento][setting_key][field_key][option_key] = node[top_key][setting_key][field_key].dig(option_key)
+                                        end
                                     end
                                 end     
                             else

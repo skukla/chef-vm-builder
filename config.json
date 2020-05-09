@@ -152,22 +152,23 @@
 			"options": {
 				"family": "Commerce",
 				"version": "2.3.4",
-				"directory": "/var/www/magento",
-				"download": {
-					"base_code": true,
-					"b2b_code": true,
-					"custom_modules": true
-				},
-				"modules_to_remove": ["temando/module-shipping", "magento/google-shopping-ads"],
+				"minimum_stability": "beta",
+				"directory": "/var/www/magento"
+			},
+			"build": {
 				"install": true,
+				"base_code": true,
+				"b2b_code": true,
+				"custom_modules": true,
 				"sample_data": true,
+				"modules_to_remove": ["temando/module-shipping", "magento/google-shopping-ads"],
+				"patches": {
+					"apply": true,
+					"repository_url": "https://github.com/PMET-public/magento-cloud.git"
+				},
 				"deploy_mode": {
 					"apply": true,
 					"mode": "production"
-				},
-				"patches": {
-					"apply": false,
-					"repository_url": "https://github.com/PMET-public/magento-cloud.git"
 				},
 				"configuration": {
 					"base": true,
@@ -186,7 +187,7 @@
 				"admin_user": "admin",
 				"admin_password": "admin4tls",
 				"use_rewrites": true,
-				"use_secure_frontend": true,
+				"use_secure_frontend": false,
 				"use_secure_admin": false,
 				"cleanup_database": true,
 				"session_save": "db",
@@ -339,7 +340,7 @@
 		"php": {
 			"version": "7.3",
 			"port": 9000,
-			"memory_limit": "2G",
+			"memory_limit": "3G",
 			"upload_max_filesize": "2M"
 		},
 		"database": {
@@ -356,21 +357,21 @@
 			"ssl_country": "US"
 		},
 		"elasticsearch": {
-			"use": false,
+			"use": true,
 			"version": "6.x",
 			"memory": "1G",
 			"plugins": ["analysis-phonetic", "analysis-icu"]
 		},
 		"mailhog": {
-			"use": false,
+			"use": true,
 			"port": 10000
 		},
 		"webmin": {
-			"use": false,
+			"use": true,
 			"port": 20000
 		},
 		"samba": {
-			"use": false,
+			"use": true,
 			"shares": {
 				"web_root": "/var/www/magento",
 				"image_drop": "/var/www/magento/var/import/images"

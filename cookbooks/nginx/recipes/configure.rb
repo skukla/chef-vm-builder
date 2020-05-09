@@ -13,14 +13,14 @@ template "Nginx configuration" do
     group "root"
     mode "644"
     variables ({ user: "#{user}" })
-    only_if { ::File.exists?("/etc/nginx/nginx.conf") }
+    only_if { ::File.exist?("/etc/nginx/nginx.conf") }
 end
 
 # Remove the default site
 link "/etc/nginx/sites-enabled/default" do
     to "/etc/nginx/sites-available/default"
     action :delete
-    only_if { ::File.exists?("/etc/nginx/sites-available/default") }
+    only_if { ::File.exist?("/etc/nginx/sites-available/default") }
 end
 
 # Enable the nginx service

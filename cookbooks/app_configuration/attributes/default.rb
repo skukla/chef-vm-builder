@@ -106,15 +106,6 @@ default[:app_configuration][:configuration] =
             upsell_position_limit: 5,
             upsell_position_behavior: 0,
             upsell_rotation_mode: 0
-        },
-        search: {
-            enable_eav_indexer: 1,
-            engine: "elasticsearch6",
-            elasticsearch6_server_hostname: "127.0.0.1",
-            elasticsearch6_server_port: node[:app_configuration][:elasticsearch_port],
-            elasticsearch6_index_prefix: "magento2",
-            elasticsearch6_enable_auth: 0,
-            elasticsearch6_server_timeout: 15
         }
     },
     sales: {

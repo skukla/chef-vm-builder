@@ -12,7 +12,7 @@ directory "#{user} composer configuration directory" do
   path "/home/#{user}/.composer"
   owner "#{user}"
   group "#{group}"
-  mode '755'
+  mode "775"
   not_if { ::File.directory?("/home/#{user}/.composer") }
 end
 
@@ -22,7 +22,7 @@ template 'Composer configuration' do
   path "/home/#{user}/.composer/config.json"
   owner "#{user}"
   group "#{group}"
-  mode '644'
+  mode "644"
   variables({
     timeout: "#{timeout}"
   })

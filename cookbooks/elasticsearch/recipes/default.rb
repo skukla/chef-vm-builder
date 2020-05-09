@@ -3,10 +3,8 @@
 # Recipe:: default
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-use_elasticsearch = node[:infrastructure][:elasticsearch] or node[:infrastructure][:elasticsearch][:use]
-
 include_recipe 'elasticsearch::uninstall'
-if use_elasticsearch
+if node[:elasticsearch][:use]
     include_recipe 'elasticsearch::install_java'
     include_recipe 'elasticsearch::install'
     include_recipe 'elasticsearch::configure'

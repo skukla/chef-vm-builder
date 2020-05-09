@@ -6,6 +6,7 @@
 user = node[:app_configuration][:user]
 group = node[:app_configuration][:user]
 shares = node[:app_configuration][:samba_shares]
+web_root = node[:app_configuration][:web_root]
 
 # Add the image drop directory if it's been asked for
 if shares.has_key?(:image_drop)

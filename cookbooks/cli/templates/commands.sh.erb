@@ -12,22 +12,12 @@ function own() {
   
   printf "\nUpdating permissions..."
   www
-  sudo chown -R ${GROUP}:${USER} var/cache/ var/page_cache/
+  sudo chown -R ${USER}:${GROUP} var/ pub/ generated/ app/etc
   sudo chmod -R 777 var/ pub/ app/etc/ generated/
   sleep 1
   printf "done.\n"
 }
 export -f own
-
-function own-trigger() {
-  USER=<%= @user %>
-  GROUP=<%= @user %>
-  printf "Updating permissions..."
-  www
-  sudo chown -R ${GROUP}:${USER} var/cache/ var/page_cache/
-  sudo chmod -R 777 var/ pub/ app/etc/ generated/
-}
-export -f own-trigger
 
 function cache() {
   www

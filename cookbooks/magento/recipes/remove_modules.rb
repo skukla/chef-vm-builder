@@ -5,7 +5,7 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 user = node[:magento][:user]
 web_root = node[:magento][:installation][:options][:directory]
-modules_to_remove = node[:magento][:installation][:options][:modules_to_remove]
+modules_to_remove = node[:magento][:installation][:build][:modules_to_remove]
 composer_file = node[:magento][:composer_filename]
 
 ruby_block "Remove outdated core modules" do
@@ -22,5 +22,5 @@ ruby_block "Remove outdated core modules" do
         file.insert_line_after_match("minimum-stability", sprintf(replace_block_format, sprintf(replace_string_format, "\s", "\"replace\""), modules_list.join(",\n"), "\s"))
         file.write_file
     end
-    only_if { ::File.exists?("#{web_root}/composer.json") }
+    only_if { ::File.exist?("#{web_root}/composer.json") }
 end

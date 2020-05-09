@@ -3,7 +3,8 @@
 # Recipe:: configure_defaults
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-web_root = node[:application][:installation][:options][:directory]
+user = node[:app_configuration][:user]
+web_root = node[:app_configuration][:web_root]
 configurations = node[:app_configuration][:default_configuration]
 
 # Helper method
@@ -102,13 +103,13 @@ unless configurations.empty?
     configurations.each do |setting|
         if setting[:path].include?("public_key") || setting[:path].include?("private_key")
             # This should be config:sensitive:set, but there's a bug in Magento, so we'll wait...
-            command_string = "#{web_root}/bin/magento config:set "    
+            command_string = "su #{user} -c '#{web_root}/bin/magento config:set"    
         else
-            command_string = "#{web_root}/bin/magento config:set "
+            command_string = "su #{user} -c '#{web_root}/bin/magento config:set"
         end
-        config_string = "#{setting[:path]} \"#{process_value(setting[:value])}\""
+        config_string = "#{setting[:path]} \"#{process_value(setting[:value])}\"'"
         execute "Configuring default setting : #{setting[:path]}" do
-            command [command_string, config_string].join
+            command [command_string, config_string].join(" ")
         end
     end
 end

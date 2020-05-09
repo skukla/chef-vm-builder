@@ -15,6 +15,6 @@ unless minimum_stability.empty?
             file.search_file_replace_line("minimum-stability", sprintf(replace_string_format, "\s"))
             file.write_file
         end
-        only_if { ::File.exists?("#{web_root}/composer.json") }
+        only_if { ::File.exist?("#{web_root}/composer.json") }
     end
 end

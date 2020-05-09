@@ -11,7 +11,7 @@ apt_repository "webmin" do
     action :add
     retries 3
     ignore_failure true
-    not_if { ::File.exists?('/etc/apt/sources.list.d/webmin.list') }
+    not_if { ::File.exist?('/etc/apt/sources.list.d/webmin.list') }
 end
 
 # Stop mailhog in case its running (since Mailhog and Webmin share a default port)

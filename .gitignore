@@ -5,3 +5,4 @@ environments/
 cookbooks/ssh/files/keys/public/*
 cookbooks/ssh/files/keys/private/*
 *.code-workspace
+!README.md

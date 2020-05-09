@@ -15,5 +15,5 @@ end
 # Manually remove the sources list file
 execute "Manually remove the Webmin sources file" do
     command "sudo rm -rf /etc/apt/sources.list.d/webmin*"
-    only_if { ::File.exists?('/etc/apt/sources.list.d/webmin.list') }
+    only_if { ::File.exist?('/etc/apt/sources.list.d/webmin.list') }
 end

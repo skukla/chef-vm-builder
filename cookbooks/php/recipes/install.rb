@@ -5,6 +5,8 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 version = node[:php][:version]
 
+switch_php_user "www-data"
+
 # Add PHP repository
 apt_repository "php-#{version}" do
     uri 'ppa:ondrej/php'

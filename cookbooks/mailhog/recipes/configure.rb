@@ -29,7 +29,7 @@ end
             file.search_file_replace_line(/^sendmail_path =/, 'sendmail_path = /usr/local/bin/mhsendmail')
             file.write_file
         end
-    only_if { ::File.exists?("/etc/php/#{php_version}/#{type}/php.ini") }
+    only_if { ::File.exist?("/etc/php/#{php_version}/#{type}/php.ini") }
     notifies :restart, "service[php#{php_version}-fpm]", :immediately
     end
 end

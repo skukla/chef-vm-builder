@@ -3,8 +3,8 @@
 # Recipe:: configure_admin_users
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-user = node[:remote_machine][:user]
-web_root = node[:application][:installation][:options][:directory]
+user = node[:app_configuration][:user]
+web_root = node[:app_configuration][:web_root]
 custom_demo_data = node[:custom_demo]
 admin_users = custom_demo_data[:admin_users]
 

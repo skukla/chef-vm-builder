@@ -151,30 +151,30 @@
 		"installation": {
 			"options": {
 				"family": "Commerce",
-				"version": "2.3.5-p1",
+				"version": "2.3.4",
 				"minimum_stability": "beta",
-				"directory": "/var/www/magento",
-				"download": {
-					"base_code": true,
-					"b2b_code": true,
-					"custom_modules": true
-				},
-				"modules_to_remove": ["temando/module-shipping", "magento/google-shopping-ads"],
-				"install": true,
+				"directory": "/var/www/magento"
+			},
+			"build": {
+				"install": false,
+				"base_code": false,
+				"b2b_code": false,
+				"custom_modules": true,
 				"sample_data": false,
-				"deploy_mode": {
-					"apply": true,
-					"mode": "production"
-				},
+				"modules_to_remove": ["temando/module-shipping", "magento/google-shopping-ads"],
 				"patches": {
 					"apply": false,
 					"repository_url": "https://github.com/PMET-public/magento-cloud.git"
 				},
+				"deploy_mode": {
+					"apply": true,
+					"mode": "production"
+				},
 				"configuration": {
-					"base": true,
-					"b2b": true,
+					"base": false,
+					"b2b": false,
 					"custom_modules": true,
-					"admin_users": true
+					"admin_users": false
 				}
 			},
 			"settings": {
@@ -187,7 +187,7 @@
 				"admin_user": "admin",
 				"admin_password": "admin4tls",
 				"use_rewrites": true,
-				"use_secure_frontend": true,
+				"use_secure_frontend": false,
 				"use_secure_admin": false,
 				"cleanup_database": true,
 				"session_save": "db",
@@ -340,7 +340,7 @@
 		"php": {
 			"version": "7.3",
 			"port": 9000,
-			"memory_limit": "2G",
+			"memory_limit": "3G",
 			"upload_max_filesize": "2M"
 		},
 		"database": {
@@ -357,21 +357,21 @@
 			"ssl_country": "US"
 		},
 		"elasticsearch": {
-			"use": true,
+			"use": false,
 			"version": "6.x",
 			"memory": "1G",
 			"plugins": ["analysis-phonetic", "analysis-icu"]
 		},
 		"mailhog": {
-			"use": true,
+			"use": false,
 			"port": 10000
 		},
 		"webmin": {
-			"use": true,
+			"use": false,
 			"port": 20000
 		},
 		"samba": {
-			"use": true,
+			"use": false,
 			"shares": {
 				"web_root": "/var/www/magento",
 				"image_drop": "/var/www/magento/var/import/images"

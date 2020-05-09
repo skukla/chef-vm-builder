@@ -5,7 +5,7 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 default[:php][:version] = "7.3"
 default[:php][:port] = 9000
-default[:php][:memory_limit] = "2G"
+default[:php][:memory_limit] = "3G"
 default[:php][:upload_max_filesize] = "2M"
 default[:php][:extension_list] = [
     "php%{version}",

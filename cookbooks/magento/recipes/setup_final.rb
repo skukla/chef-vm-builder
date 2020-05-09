@@ -12,6 +12,14 @@ execute "Reindex" do
     command "su #{user} -c '#{web_root}/bin/magento indexer:reset && #{web_root}/bin/magento indexer:reindex'"
 end
 
+# Update folder ownership
+directories = ["var/", "pub/", "app/etc/", "generated/"]
+directories.each do |directory|
+    execute "Update #{directory} permissions" do
+        command "sudo chown -R #{user}:#{group} #{web_root}/#{directory} && sudo chmod -R 777 #{web_root}/#{directory}"
+    end
+end
+
 # Clean cache
 execute "Clean config and full_page cache" do
     command "su #{user} -c '#{web_root}/bin/magento cache:clean full_page config'"

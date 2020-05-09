@@ -15,13 +15,13 @@ max_execution_time = node[:php][:max_execution_time]
 zlib_output_compression = node[:php][:zlib_output_compression]
 
 # Configure php.ini and php-fpm
-['cli', 'fpm'].each do |type|
+["cli", "fpm"].each do |type|
     template "#{type}" do
-        source 'php.ini.erb'
+        source "php.ini.erb"
         path "/etc/php/#{version}/#{type}/php.ini"
-        owner 'root'
-        group 'root'
-        mode '644'
+        owner "root"
+        group "root"
+        mode "644"
         variables({
             timezone: "#{timezone}",
             memory_limit: "#{memory_limit}",
@@ -30,13 +30,13 @@ zlib_output_compression = node[:php][:zlib_output_compression]
             zlib_output_compression: "#{zlib_output_compression}"
         })
     end
-    if type == 'fpm'
+    if type == "fpm"
         template "#{type}" do
-            source 'www.conf.erb'
+            source "www.conf.erb"
             path "/etc/php/#{version}/#{type}/pool.d/www.conf"
-            owner 'root'
-            group 'root'
-            mode '644'
+            owner "root"
+            group "root"
+            mode "644"
             variables({
                 owner: "#{user}",
                 user: "#{user}",
@@ -46,6 +46,19 @@ zlib_output_compression = node[:php][:zlib_output_compression]
             })
         end
     end
+end
+
+# Set up script to run php as VM user
+template "Run PHP as #{user}" do
+source "php.sh.erb"
+path "/bin/php.sh"
+owner "root"
+group "root"
+mode "644"
+variables({ 
+    user: "#{user}",
+    version: "#{version}" 
+})
 end
 
 # Start the fpm service for the desired version

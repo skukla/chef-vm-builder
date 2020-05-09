@@ -56,7 +56,7 @@ ruby_block "Set JAVA_HOME in /etc/environment" do
         file.search_file_replace_line(/^JAVA_HOME=/, "JAVA_HOME=#{java_home}")
         file.write_file
     end
-    only_if { ::File.exists?('/etc/environment') }
+    only_if { ::File.exist?('/etc/environment') }
 end
 
 ruby_block "Set JAVA_HOME for Elasticsearch #{version}" do
@@ -66,7 +66,7 @@ ruby_block "Set JAVA_HOME for Elasticsearch #{version}" do
         file.search_file_replace_line(/^#JAVA_HOME=/, "JAVA_HOME=#{java_home}")
         file.write_file
     end
-    only_if { ::File.exists?("/etc/default/elasticsearch") }
+    only_if { ::File.exist?("/etc/default/elasticsearch") }
 end
 
 # Set ownership to Elasticsearch user and group
