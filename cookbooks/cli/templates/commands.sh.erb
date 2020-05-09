@@ -21,7 +21,7 @@ export -f own
 
 function cache() {
   www
-  printf "Clearing cache..."
+  printf "Clearing cache...\n"
   ./bin/magento cache:clean
   rm -rf var/cache/* var/page_cache/*
 }
