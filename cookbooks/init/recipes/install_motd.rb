@@ -3,8 +3,7 @@
 # Recipe:: install_motd
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-user = node[:remote_machine][:user]
-group = node[:remote_machine][:user]
+user = node[:init][:user]
 ip = node[:vm][:ip]
 hostname = node[:fqdn]
 custom_demo_structure = node[:custom_demo][:structure]
@@ -37,7 +36,7 @@ template 'Custom MoTD' do
         use_mailhog: "#{use_mailhog}",
         use_webmin: "#{use_webmin}",
         webmin_user: "#{user}",
-        webmin_password: "#{group}",
+        webmin_password: "#{user}",
         urls: demo_urls
     })
 end
