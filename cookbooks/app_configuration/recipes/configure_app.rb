@@ -105,7 +105,7 @@ end
 
 unless configurations.empty?
     configurations.each do |setting|
-        next if setting[:path].include?("btob") || setting[:path].include?("search")
+        next if setting[:path].include?("btob") || setting[:path].include?("search") || (setting[:value].is_a? String) && (setting[:value].empty?)
         # There's no CLI command for the design/header/welcome path, so we update the database instead...
         if setting[:path].include?("welcome")
             ruby_block "Configuring default setting : #{setting[:path]}" do

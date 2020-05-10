@@ -101,6 +101,7 @@ end
 
 unless configurations.empty?
     configurations.each do |setting|
+        next if (setting[:value].is_a? String) && (setting[:value].empty?)
         command_string = "su #{user} -c '#{web_root}/bin/magento config:set"
         config_string = "#{setting[:path]} \"#{process_value(setting[:value])}\"'"
         execute "Configuring default setting : #{setting[:path]}" do

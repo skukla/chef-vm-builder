@@ -68,14 +68,15 @@ def process_value(value)
 end 
 
 unless configurations.empty?
-    command_string = "#{web_root}/bin/magento config:set "
+    command_string = "#{web_root}/bin/magento config:set"
     configurations.each do |setting|
+        next if (setting[:value].is_a? String) && (setting[:value].empty?)
         if setting.has_key?(:scope)
-            scope_string = "--scope=#{setting[:scope]} --scope-code=#{setting[:code]} "
+            scope_string = "--scope=#{setting[:scope]} --scope-code=#{setting[:code]}"
         end
         config_string = "#{setting[:path]} \"#{process_value(setting[:value])}\""
         execute "Configuring custom module setting : #{setting[:path]}" do
-            command [command_string, scope_string, config_string].join
+            command [command_string, scope_string, config_string].join(" ")
         end
     end
 end

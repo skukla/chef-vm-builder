@@ -246,6 +246,15 @@
 							"base": true
 						}
 					}
+				},
+				"braintree": {
+					"active": false,
+					"merchant_account_id": "magento",
+					"merchant_id": "",
+					"public_key": "",
+					"private_key": "",
+					"payment_action": "authorize",
+					"cctypes": ["Visa", "MasterCard"]
 				}
 			}
 		}

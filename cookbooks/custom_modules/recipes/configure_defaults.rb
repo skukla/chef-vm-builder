@@ -8,6 +8,7 @@ configurations = node[:custom_modules][:default_configuration]
 
 unless configurations.empty?
     configurations.each do |setting|
+        next if (setting[:value].is_a? String) && (setting[:value].empty?)
         command_string = "#{web_root}/bin/magento config:set "
         config_string = "#{setting[:path]} \"#{setting[:value]}\""
         execute "Configuring custom module default setting : #{setting[:path]}" do

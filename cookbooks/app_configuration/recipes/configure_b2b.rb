@@ -103,6 +103,7 @@ unless configurations.empty?
     command_string = "su #{user} -c '#{web_root}/bin/magento config:set"
     configurations.each do |setting|
         next unless setting[:path].include?("btob")
+        next if (setting[:value].is_a? String) && (setting[:value].empty?)
         if setting.has_key?(:scope)
             scope_string = "--scope=#{setting[:scope]} --scope-code=#{setting[:code]}"
         end
