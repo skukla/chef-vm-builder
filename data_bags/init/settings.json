@@ -248,10 +248,10 @@
 					}
 				},
 				"braintree": {
-					"active": true,
+					"active": false,
 					"merchant_account_id": "magento",
-					"merchant_id": "zkw2ctrkj75ndvkc",
-					"public_key": "n2bt4844t6xrt56x",
+					"merchant_id": "",
+					"public_key": "",
 					"private_key": "",
 					"payment_action": "authorize",
 					"cctypes": ["Visa", "MasterCard"]
@@ -281,7 +281,8 @@
 			"ssl_port": 443,
 			"ssl_locality": "Los Angeles",
 			"ssl_region": "CA",
-			"ssl_country": "US"
+			"ssl_country": "US",
+			"client_max_body_size": "150M"
 		},
 		"elasticsearch": {
 			"use": true,

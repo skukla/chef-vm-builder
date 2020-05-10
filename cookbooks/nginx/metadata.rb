@@ -9,6 +9,7 @@ chef_version '>= 14.0'
 
 depends 'init'      # This brings in OS settings
 depends 'php'       # This brings in PHP FPM options
+depends 'magento'   # This brings in Magento settings
 
 # The `issues_url` points to the location where issues for this cookbook are
 # tracked.  A `View Issues` link will be displayed on this cookbook's page when

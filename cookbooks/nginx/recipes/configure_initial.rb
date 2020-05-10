@@ -1,6 +1,6 @@
 #
 # Cookbook:: nginx
-# Recipe:: configure
+# Recipe:: configure_initial
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 user = node[:nginx][:user]

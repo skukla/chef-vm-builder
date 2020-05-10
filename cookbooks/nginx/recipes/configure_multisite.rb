@@ -1,20 +1,20 @@
 #
-# Cookbook:: magento
-# Recipe:: configure-nginx
+# Cookbook:: nginx
+# Recipe:: configure_multisite
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-user = node[:magento][:user]
-group = node[:magento][:user]
-web_root = node[:magento][:installation][:options][:directory]
-php_version = node[:magento][:php_version]
-fpm_backend = node[:magento][:fpm_backend]
-fpm_port = node[:magento][:fpm_port]
-client_max_body_size = node[:magento][:client_max_body_size]
-http_port = node[:magento][:http_port]
-ssl_port = node[:magento][:ssl_port]
-certificate_file = node[:magento][:ssl_certificate_file]
-key_file = node[:magento][:ssl_key_file]
-custom_demo_structure = node[:custom_demo][:structure]
+user = node[:nginx][:user]
+group = node[:nginx][:user]
+web_root = node[:nginx][:web_root]
+php_version = node[:nginx][:php_version]
+fpm_backend = node[:nginx][:fpm_backend]
+fpm_port = node[:nginx][:fpm_port]
+client_max_body_size = node[:nginx][:client_max_body_size]
+http_port = node[:nginx][:http_port]
+ssl_port = node[:nginx][:ssl_port]
+certificate_file = node[:nginx][:ssl_certificate_file]
+key_file = node[:nginx][:ssl_key_file]
+custom_demo_structure = node[:nginx][:structure]
 
 # Extract the data for the virtual host files
 vhost_data = Array.new

@@ -23,7 +23,7 @@ apply_custom_flag = node[:application][:installation][:build][:configuration][:c
 switch_php_user "#{user}"
 
 # Handle nginx conifiguration for multisite first
-include_recipe 'magento::configure_nginx' if install_flag
+include_recipe 'nginx::configure_multisite' if install_flag
 # If download base is configured, and web root exists but is not empty
 if download_base_code_flag
     # Clear the web root, then install

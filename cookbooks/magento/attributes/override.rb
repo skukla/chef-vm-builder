@@ -62,12 +62,12 @@ end
 
 supported_settings.each do |top_key, top_hash|
     top_hash.each do |setting_key, setting_value|
-        if !node[top_key].dig(setting_key).nil?
+        unless node[top_key].nil?
             case top_key
             when :infrastructure
                 setting_value.each do |field_value|
-                    unless node[top_key][setting_key].dig(field_value).nil?
-                        override[:magento][setting_key][field_value] = node[top_key][setting_key].dig(field_value)
+                    unless node[top_key][setting_key][field_value].nil?
+                        override[:magento][setting_key][field_value] = node[top_key][setting_key][field_value]
                     end
                 end
             when :application
@@ -78,37 +78,37 @@ supported_settings.each do |top_key, top_hash|
                                 option.each do |option_key, option_value|    
                                     if option_value.is_a? Array
                                         option_value.each do |arr_option|
-                                            unless node[top_key][setting_key][field_key][option_key].dig(arr_option).nil?
-                                                override[:magento][setting_key][field_key][option_key][arr_option] = node[top_key][setting_key][field_key][option_key].dig(arr_option)
+                                            unless node[top_key][setting_key][field_key][option_key][arr_option].nil?
+                                                override[:magento][setting_key][field_key][option_key][arr_option] = node[top_key][setting_key][field_key][option_key][arr_option]
                                             end
                                         end
                                     else
-                                        unless node[top_key][setting_key][field_key].dig(option_key).nil?
-                                            override[:magento][setting_key][field_key][option_key] = node[top_key][setting_key][field_key].dig(option_key)
+                                        unless node[top_key][setting_key][field_key][option_key].nil?
+                                            override[:magento][setting_key][field_key][option_key] = node[top_key][setting_key][field_key][option_key]
                                         end
                                     end
                                 end     
                             else
                                 # Single keys above that may have array values in config.json
-                                if node[top_key][setting_key][field_key].dig(option).is_a? Chef::Node::ImmutableArray
-                                    option_values_array = node[top_key][setting_key][field_key].dig(option)
+                                if node[top_key][setting_key][field_key][option].is_a? Chef::Node::ImmutableArray
+                                    option_values_array = node[top_key][setting_key][field_key][option]
                                     option_values_array.each do |option_value|
-                                        unless node[top_key][setting_key][field_key].dig(option).nil?
-                                            override[:magento][setting_key][field_key][option] = node[top_key][setting_key][field_key].dig(option)
+                                        unless node[top_key][setting_key][field_key][option].nil?
+                                            override[:magento][setting_key][field_key][option] = node[top_key][setting_key][field_key][option]
                                         end
                                     end
                                 # Single keys which have single values in config.json
                                 else
-                                    unless node[top_key][setting_key][field_key].dig(option).nil?
-                                        override[:magento][setting_key][field_key][option] = node[top_key][setting_key][field_key].dig(option)
+                                    unless node[top_key][setting_key][field_key][option].nil?
+                                        override[:magento][setting_key][field_key][option] = node[top_key][setting_key][field_key][option]
                                     end
                                 end
                             end
                         end
                     elsif field_key == :settings
                         field_value.each do |option_value|
-                            unless node[top_key][setting_key][field_key].dig(option_value).nil?
-                                override[:magento][setting_key][field_key][option_value] = node[top_key][setting_key][field_key].dig(option_value)
+                            unless node[top_key][setting_key][field_key][option_value].nil?
+                                override[:magento][setting_key][field_key][option_value] = node[top_key][setting_key][field_key][option_value]
                             end
                         end
                     end
@@ -117,3 +117,5 @@ supported_settings.each do |top_key, top_hash|
         end
     end
 end
+print node[:magento]
+exit

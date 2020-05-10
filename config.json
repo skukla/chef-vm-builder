@@ -281,7 +281,8 @@
 			"ssl_port": 443,
 			"ssl_locality": "Los Angeles",
 			"ssl_region": "CA",
-			"ssl_country": "US"
+			"ssl_country": "US",
+			"client_max_body_size": "150M"
 		},
 		"elasticsearch": {
 			"use": true,

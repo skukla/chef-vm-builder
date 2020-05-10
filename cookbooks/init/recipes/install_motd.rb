@@ -6,7 +6,7 @@
 user = node[:init][:user]
 ip = node[:vm][:ip]
 hostname = node[:fqdn]
-custom_demo_structure = node[:custom_demo][:structure]
+custom_demo_structure = node[:init][:structure]
 use_mailhog = node[:init][:use_mailhog]
 use_webmin = node[:init][:use_webmin]
 

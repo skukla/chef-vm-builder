@@ -3,6 +3,9 @@
 # Attribute:: external
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
+include_attribute "nginx::default"
+default[:init][:structure] = node[:nginx][:structure]
+
 include_attribute "mailhog::default"
 default[:init][:use_mailhog] = node[:mailhog][:use]
 
