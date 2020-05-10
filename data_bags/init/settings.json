@@ -57,9 +57,9 @@
 	"application": {
 		"authentication": {
 			"composer": {
-				"username": "",
-				"password": "",
-				"github_token": ""
+				"username": "b17aa908c13768cef2a5a3a043bb3c54",
+				"password": "93f1f71fd779eb46af01fd7587e5fdba",
+				"github_token": "ca5db95d8f9ebea677be19b5943475882682e1d7"
 			}
 		},
 		"installation": {
@@ -246,6 +246,15 @@
 							"base": true
 						}
 					}
+				},
+				"braintree": {
+					"active": true,
+					"merchant_account_id": "magento",
+					"merchant_id": "zkw2ctrkj75ndvkc",
+					"public_key": "n2bt4844t6xrt56x",
+					"private_key": "",
+					"payment_action": "authorize",
+					"cctypes": ["Visa", "MasterCard"]
 				}
 			}
 		}

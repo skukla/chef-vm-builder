@@ -130,12 +130,7 @@ unless configurations.empty?
                 sensitive true
             end
         else
-            if setting[:path].include?("public_key") || setting[:path].include?("private_key")
-            # This should be config:sensitive:set, but there's a bug in Magento, so we'll wait...
-            command_string = "su #{user} -c '#{web_root}/bin/magento config:set"    
-            else
-                command_string = "su #{user} -c '#{web_root}/bin/magento config:set"
-            end
+            command_string = "su #{user} -c '#{web_root}/bin/magento config:set"
             if setting.has_key?(:scope)
                 scope_string = "--scope=#{setting[:scope]} --scope-code=#{setting[:code]}"
             end

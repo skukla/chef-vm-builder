@@ -16,6 +16,7 @@ supported_settings = {
                 :directory
             ],
             :build => [
+                :clear_cache,
                 :install,
                 :base_code, 
                 :b2b_code, 
