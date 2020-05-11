@@ -105,7 +105,7 @@ end
 
 unless configurations.empty?
     configurations.each do |setting|
-        next if setting[:path].include?("btob") || setting[:path].include?("search") || (setting[:value].is_a? String) && (setting[:value].empty?)
+        next if setting[:path].include?("btob") || setting[:path].include?("search")
         # There's no CLI command for the design/header/welcome path, so we update the database instead...
         if setting[:path].include?("welcome")
             ruby_block "Configuring default setting : #{setting[:path]}" do
@@ -130,6 +130,7 @@ unless configurations.empty?
                 sensitive true
             end
         else
+            next if (setting[:value].is_a? String) && (setting[:value].empty?)
             command_string = "su #{user} -c '#{web_root}/bin/magento config:set"
             if setting.has_key?(:scope)
                 scope_string = "--scope=#{setting[:scope]} --scope-code=#{setting[:code]}"
