@@ -68,7 +68,7 @@ export -f disable-cms-cache
 function reindex() {
   clear
   www
-  printf "\nInvalidating indexes...\n"
+  printf "Invalidating indexes...\n"
   ./bin/magento indexer:reset
   printf "\nReindexing...\n"
   ./bin/magento indexer:reindex
