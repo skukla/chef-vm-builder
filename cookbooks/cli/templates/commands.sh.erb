@@ -11,6 +11,7 @@ function own() {
   GROUP=<%= @user %>
   
   printf "\nUpdating permissions..."
+  clear
   www
   sudo chown -R ${USER}:${GROUP} var/ pub/ generated/ app/etc
   sudo chmod -R 777 var/ pub/ app/etc/ generated/
@@ -20,6 +21,7 @@ function own() {
 export -f own
 
 function cache() {
+  clear
   www
   printf "Clearing cache...\n"
   ./bin/magento cache:clean
@@ -64,6 +66,7 @@ function disable-cms-cache() {
 export -f disable-cms-cache
 
 function reindex() {
+  clear
   www
   printf "\nInvalidating indexes...\n"
   ./bin/magento indexer:reset

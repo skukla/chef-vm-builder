@@ -23,7 +23,7 @@ custom_demo_data = node[:magento][:structure]
 switch_php_user "#{user}"
 
 # Handle nginx conifiguration for multisite first
-include_recipe 'nginx::configure_multisite' if install_flag
+include_recipe 'nginx::configure_multisite'
 # If download base is configured, and web root exists but is not empty
 if download_base_code_flag
     # Clear the web root, then install

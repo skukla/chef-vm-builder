@@ -6,7 +6,7 @@
 user = node[:custom_modules][:user]
 group = node[:custom_modules][:user]
 web_root = node[:custom_modules][:web_root]
-composer_file = node[:custom_modules][:composer][:filename]
+composer_file = node[:custom_modules][:composer_file]
 
 # Run composer install to download the code in composer.json
 execute "Download custom module code" do
