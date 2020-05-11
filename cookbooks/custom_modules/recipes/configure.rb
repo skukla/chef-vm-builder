@@ -69,9 +69,9 @@ end
 
 unless module_list.nil?
     module_list.each do |module_key, module_data|
-        next if module_data[:settings].nil? 
+        next if module_data[:configuration].nil? 
         command_string = "#{web_root}/bin/magento config:set"
-        module_data[:settings].each do |setting|
+        module_data[:configuration].each do |setting|
             next if (setting[:value].is_a? String) && (setting[:value].empty?)
             config_string = "#{setting[:path]} \"#{process_value(setting[:value])}\""
             execute "Configuring custom module setting : #{setting[:path]}" do

@@ -36,18 +36,19 @@ supported_custom_modules = {
 }
 configured_custom_modules = node[:custom_demo][:custom_modules]
 
-supported_custom_modules.each do |module_key, module_data|
-    next if configured_custom_modules.nil?
-    module_configurations = Array.new
-    module_data[:config_paths].each do |config_path|
-        configuration_setting = Hash.new
-        setting_value = module_data[:configuration].dig(*(config_path.split("/").map{ |segment| segment.to_sym }))
-        unless setting_value.nil?
-            configuration_setting[:path] = config_path
-            configuration_setting[:value] = setting_value
-            module_configurations << configuration_setting
+unless configured_custom_modules.nil?
+    supported_custom_modules.each do |module_key, module_data|
+        module_configurations = Array.new
+        module_data[:config_paths].each do |config_path|
+            configuration_setting = Hash.new
+            setting_value = module_data[:configuration].dig(*(config_path.split("/").map{ |segment| segment.to_sym }))
+            unless setting_value.nil?
+                configuration_setting[:path] = config_path
+                configuration_setting[:value] = setting_value
+                module_configurations << configuration_setting
+            end
         end
+        default[:custom_modules][:module_list][module_key][:config_paths] = supported_custom_modules[module_key][:config_paths]
+        default[:custom_modules][:module_list][module_key][:configuration] = module_configurations
     end
-    default[:custom_modules][:module_list][module_key][:config_paths] = supported_custom_modules[module_key][:config_paths]
-    default[:custom_modules][:module_list][module_key][:settings] = module_configurations
 end

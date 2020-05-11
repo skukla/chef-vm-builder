@@ -7,17 +7,19 @@ user = node[:custom_modules][:user]
 group = node[:custom_modules][:user]
 web_root = node[:custom_modules][:web_root]
 composer_file = node[:custom_modules][:composer_file]
-custom_module_data = node[:custom_modules][:module_list]
+module_list = node[:custom_modules][:module_list]
 
 # Configure the repositories
-unless custom_module_data.nil?
+unless module_list.nil?
     modules_array = Array.new
-    custom_module_data.each do |custom_module_key, custom_module_value|
-        execute "Add custom repositories : #{custom_module_key}" do
-            command "cd #{web_root} && su #{user} -c '#{composer_file} config repositories.#{custom_module_key} git #{custom_module_value[:repository_url]}'"
+    module_list.each do |custom_module_key, custom_module_data|
+        next if custom_module_data[:settings].nil?
+        custom_module_key.include?("_") ? escaped_module_key = custom_module_key.gsub("_", "-") : escaped_module_key = custom_module_key
+        execute "Add custom repositories : #{escaped_module_key}" do
+            command "cd #{web_root} && su #{user} -c '#{composer_file} config repositories.#{escaped_module_key} git #{custom_module_data[:settings][:repository_url]}'"
         end
         # Build the require statement
-        modules_array << "#{custom_module_value[:vendor]}/#{custom_module_key}:#{custom_module_value[:version]}"
+        modules_array << "#{custom_module_data[:settings][:vendor]}/#{escaped_module_key}:#{custom_module_data[:settings][:version]}"
     end
 
     # Require the modules
