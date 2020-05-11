@@ -10,7 +10,6 @@ service 'mailhog' do
     action :stop
 end
 
-# Uninstall mailhog
 repositories.each do |repository|
     execute "Uninstall #{repository[:name]}" do
         command "sudo rm -rf /usr/local/bin/#{repository[:name].downcase}"

@@ -5,7 +5,7 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 user = node[:magento][:user]
 group = node[:magento][:user]
-web_root = node[:magento][:installation][:options][:directory]
+web_root = node[:magento][:web_root]
 
 # Reindex
 execute "Reindex" do

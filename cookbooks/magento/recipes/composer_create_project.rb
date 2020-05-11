@@ -5,13 +5,13 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 user = node[:magento][:user]
 group = node[:magento][:user]
-web_root = node[:magento][:installation][:options][:directory]
+web_root = node[:magento][:web_root]
 magento_family = node[:magento][:installation][:options][:family]
 magento_version = node[:magento][:installation][:options][:version]
-composer_file = node[:magento][:composer_filename]
-github_token = node[:application][:authentication][:composer][:github_token]
-composer_username = node[:application][:authentication][:composer][:username]
-composer_password = node[:application][:authentication][:composer][:password]
+composer_file = node[:magento][:composer_file]
+github_token = node[:magento][:github_token]
+composer_username = node[:magento][:composer_username]
+composer_password = node[:magento][:composer_password]
 
 # Move auth.json into place
 template "Add composer credentials" do

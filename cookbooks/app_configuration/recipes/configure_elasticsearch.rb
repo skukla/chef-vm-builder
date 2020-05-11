@@ -3,7 +3,7 @@
 # Recipe:: configure_elasticsearch
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-web_root = node[:application][:installation][:options][:directory]
+web_root = node[:app_configuration][:web_root]
 configurations = node[:app_configuration][:user_configuration]
 
 # Helper method

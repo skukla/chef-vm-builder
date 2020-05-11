@@ -5,8 +5,8 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 user = node[:magento][:user]
 group = node[:magento][:user]
-web_root = node[:magento][:installation][:options][:directory]
-composer_file = node[:magento][:composer_filename]
+web_root = node[:magento][:web_root]
+composer_file = node[:magento][:composer_file]
 
 # Create var/composer_home directory
 directory "Create composer_home directory" do

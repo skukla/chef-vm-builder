@@ -3,14 +3,24 @@
 # Attribute:: override
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-supported_settings = [:clear_composer_cache]
+supported_settings = {
+    :magento_build => [:clear_composer_cache],
+    :credentials => [:github_token, :username, :password]
+}
 
-if node[:application][:installation][:build].is_a? Chef::Node::ImmutableMash
-    supported_settings.each do |setting|
-        if node[:application][:installation][:build].has_key?(setting)
-            unless node[:application][:installation][:build][setting].nil?
-                override[:composer][setting] = node[:application][:installation][:build][setting]
-            end
+supported_settings.each do |setting_key, setting_data|
+    case setting_key
+    when :magento_build
+        next unless node[:application][:installation][:build].is_a? Chef::Node::ImmutableMash
+        setting_data.each do |option|
+            next if (node[:application][:installation][:build][option].nil?) || (node[:application][:installation][:build][option].empty?)
+            override[:composer][option] = node[:application][:installation][:build][option]
+        end
+    when :credentials
+        next unless node[:application][:authentication][:composer].is_a? Chef::Node::ImmutableMash
+        setting_data.each do |option|
+            next if node[:application][:authentication][:composer][option].empty?
+            override[:composer][option] = node[:application][:authentication][:composer][option]
         end
     end
 end

@@ -66,7 +66,9 @@
 			"options": {
 				"family": "Commerce",
 				"version": "2.3.5-p1",
-				"directory": "/var/www/magento"
+				"deploy_mode": {
+					"apply": false
+				}
 			},
 			"build": {
 				"install": true,
@@ -75,14 +77,6 @@
 				"custom_modules": true,
 				"sample_data": true,
 				"modules_to_remove": "magento/google-shopping-ads",
-				"patches": {
-					"apply": false,
-					"repository_url": "https://github.com/PMET-public/magento-cloud.git"
-				},
-				"deploy_mode": {
-					"apply": true,
-					"mode": "production"
-				},
 				"configuration": {
 					"base": true,
 					"b2b": true,
@@ -91,20 +85,13 @@
 				}
 			},
 			"settings": {
-				"backend_frontname": "admin",
 				"language": "en_US",
 				"currency": "USD",
-				"admin_firstname": "Admin",
-				"admin_lastname": "Admin",
+				"admin_firstname": "Steve",
+				"admin_lastname": "Kukla",
 				"admin_email": "admin@luma.com",
 				"admin_user": "admin",
-				"admin_password": "admin4tls",
-				"use_rewrites": true,
-				"use_secure_frontend": false,
-				"use_secure_admin": false,
-				"cleanup_database": true,
-				"session_save": "db",
-				"key": "5fb338b139111ece4fd8d80fabc900b5"
+				"admin_password": "admin4tls"
 			}
 		},
 		"configuration": {
@@ -260,51 +247,10 @@
 		}
 	},
 	"infrastructure": {
-		"os": {
-			"update": false,
-			"timezone": "America/Los_Angeles"
-		},
-		"php": {
-			"version": "7.3",
-			"port": 9000,
-			"memory_limit": "3G",
-			"upload_max_filesize": "2M"
-		},
-		"database": {
-			"host": "localhost",
-			"user": "magento",
-			"password": "password",
-			"name": "magento"
-		},
-		"webserver": {
-			"http_port": 80,
-			"ssl_port": 443,
-			"ssl_locality": "Los Angeles",
-			"ssl_region": "CA",
-			"ssl_country": "US",
-			"client_max_body_size": "150M"
-		},
-		"elasticsearch": {
-			"use": true,
-			"version": "6.x",
-			"memory": "1G",
-			"plugins": ["analysis-phonetic", "analysis-icu"]
-		},
-		"mailhog": {
-			"use": true,
-			"port": 10000
-		},
-		"webmin": {
-			"use": true,
-			"port": 20000
-		},
-		"samba": {
-			"use": true,
-			"shares": {
-				"web_root": "/var/www/magento",
-				"image_drop": "/var/www/magento/var/import/images"
-			}
-		}
+		"php": "7.3",
+		"elasticsearch": true,
+		"mailhog": true,
+		"samba": true
 	},
 	"provisioner": {
 		"type": "chef_zero",

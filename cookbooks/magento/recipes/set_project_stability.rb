@@ -3,11 +3,11 @@
 # Recipe:: set_project_stability
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-web_root = node[:magento][:installation][:options][:directory]
+web_root = node[:magento][:web_root]
 minimum_stability = node[:magento][:installation][:options][:minimum_stability]
-composer_file = node[:magento][:composer_filename]
+composer_file = node[:magento][:composer_file]
 
-unless minimum_stability.empty?
+unless minimum_stability.nil?
     ruby_block "Set project minimum stability" do
         block do
             replace_string_format = "%4s\"minimum-stability\": \"#{minimum_stability}\","

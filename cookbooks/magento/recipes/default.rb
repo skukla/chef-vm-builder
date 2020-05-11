@@ -6,18 +6,18 @@
 user = node[:magento][:user]
 web_root = node[:magento][:installation][:options][:directory]
 use_elasticsearch = node[:magento][:use_elasticsearch]
-custom_demo_data = node[:custom_demo][:structure]
-install_flag = node[:application][:installation][:build][:install]
-download_base_code_flag = node[:application][:installation][:build][:base_code]
-download_b2b_flag = node[:application][:installation][:build][:b2b_code]
-download_custom_modules_flag = node[:application][:installation][:build][:custom_modules]
-download_sample_data_flag = node[:application][:installation][:build][:sample_data]
-apply_patches_flag = node[:application][:installation][:build][:patches][:apply]
-apply_deploy_mode_flag = node[:application][:installation][:build][:deploy_mode][:apply]
-apply_base_flag = node[:application][:installation][:build][:configuration][:base]
-apply_b2b_flag = node[:application][:installation][:build][:configuration][:b2b]
-configure_admin_users_flag = node[:application][:installation][:build][:configuration][:admin_users]
-apply_custom_flag = node[:application][:installation][:build][:configuration][:custom_modules]
+install_flag = node[:magento][:installation][:build][:install]
+download_base_code_flag = node[:magento][:installation][:build][:base_code]
+download_b2b_flag = node[:magento][:installation][:build][:b2b_code]
+download_custom_modules_flag = node[:magento][:installation][:build][:custom_modules]
+download_sample_data_flag = node[:magento][:installation][:build][:sample_data]
+apply_patches_flag = node[:magento][:installation][:build][:patches][:apply]
+apply_deploy_mode_flag = node[:magento][:installation][:build][:deploy_mode][:apply]
+apply_base_flag = node[:magento][:installation][:build][:configuration][:base]
+apply_b2b_flag = node[:magento][:installation][:build][:configuration][:b2b]
+configure_admin_users_flag = node[:magento][:installation][:build][:configuration][:admin_users]
+apply_custom_flag = node[:magento][:installation][:build][:configuration][:custom_modules]
+custom_demo_data = node[:magento][:structure]
 
 # Run PHP as the VM user
 switch_php_user "#{user}"
@@ -64,7 +64,6 @@ include_recipe 'magento::download_sample_data' if download_sample_data_flag
 # Do these things only after installation, not subsequent extension installs
 if install_flag 
     include_recipe 'mysql::configure_pre_install'
-    include_recipe 'magento::database'
     include_recipe 'magento::install'
     include_recipe 'mysql::configure_post_install'
 end
@@ -77,10 +76,7 @@ if apply_base_flag
     include_recipe 'app_configuration::configure_app'
 end
 include_recipe 'app_configuration::configure_b2b' if apply_b2b_flag
-if apply_custom_flag
-    include_recipe 'custom_modules::configure_defaults'
-    include_recipe 'custom_modules::configure_modules'
-end
+include_recipe 'custom_modules::configure' if apply_custom_flag
 include_recipe 'app_configuration::configure_admin_users' if configure_admin_users_flag
 # Configuration is done, so we switch back to the vm user
 switch_php_user "#{user}" if apply_base_flag || apply_b2b_flag || apply_custom_flag

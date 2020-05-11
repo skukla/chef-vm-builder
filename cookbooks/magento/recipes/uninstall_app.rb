@@ -3,7 +3,7 @@
 # Recipe:: uninstall_app
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-web_root = node[:magento][:installation][:options][:directory]
+web_root = node[:magento][:web_root]
 db_name = node[:magento][:database][:name]
 
 # Remove the web root

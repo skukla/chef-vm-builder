@@ -5,7 +5,7 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 user = node[:magento][:user]
 group = node[:magento][:user]
-web_root = node[:magento][:installation][:options][:directory]
+web_root = node[:magento][:web_root]
 db_host = node[:magento][:database][:host]
 db_user = node[:magento][:database][:user]
 db_password = node[:magento][:database][:password]
@@ -57,6 +57,22 @@ install_string = [install_string, use_secure_frontend_string].join(" ") if use_s
 install_string = [install_string, secure_url_string].join(" ") if use_secure_frontend || use_secure_admin
 install_string = [install_string, cleanup_database_string, session_save_string, encryption_key_string].join(" ")
 
+# Create the database
+ruby_block "Create the Magento database" do
+    block do
+        %x[mysql --user=root -e "CREATE DATABASE IF NOT EXISTS #{db_name};"]
+    end
+    action :create
+end
+
+ruby_block "Add permissions for database user" do
+    block do
+        %x[mysql --user=root -e "GRANT ALL ON #{db_name}.* TO '#{db_user}'@'#{db_host}' IDENTIFIED BY '#{db_password}' WITH GRANT OPTION;"]
+    end
+    action :create
+end
+
+# Install the application
 execute "Install Magento" do
     command "su #{user} -c '#{web_root}/bin/magento setup:install #{install_string}'"
 end

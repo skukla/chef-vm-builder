@@ -3,7 +3,7 @@
 # Attribute:: default
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-default[:init][:packages] = ["zip", "silversearcher-ag", "figlet", "unattended-upgrades"]
-default[:init][:update] = false
-default[:init][:timezone] = "America/Los_Angeles"
-default[:init][:user] = "vagrant"
+default[:init][:os][:packages] = ["zip", "silversearcher-ag", "figlet", "unattended-upgrades"]
+default[:init][:os][:update] = false
+default[:init][:os][:timezone] = "America/Los_Angeles"
+default[:init][:os][:user] = "vagrant"

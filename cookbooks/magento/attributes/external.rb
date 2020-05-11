@@ -4,8 +4,14 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 include_attribute "init::default"
-default[:magento][:user] = node[:init][:user]
-default[:magento][:installation][:settings][:timezone] = node[:init][:timezone]
+default[:magento][:user] = node[:init][:os][:user]
+default[:magento][:installation][:settings][:timezone] = node[:init][:os][:timezone]
+
+include_attribute "composer::default"
+default[:magento][:composer_file] = node[:composer][:file]
+default[:magento][:composer_username] = node[:composer][:username]
+default[:magento][:composer_password] = node[:composer][:password]
+default[:magento][:github_token] = node[:composer][:github_token]
 
 include_attribute "php::default"
 default[:magento][:php_version] = node[:php][:version]
@@ -13,14 +19,8 @@ default[:magento][:fpm_backend] = node[:php][:backend]
 default[:magento][:fpm_port] = node[:php][:port]
 
 include_attribute "nginx::default"
-default[:magento][:client_max_body_size] = node[:nginx][:client_max_body_size]
-default[:magento][:http_port] = node[:nginx][:http_port]
-default[:magento][:ssl_port] = node[:nginx][:ssl_port]
-default[:magento][:ssl_key_file] = node[:nginx][:ssl_key_file]
-default[:magento][:ssl_certificate_file] = node[:nginx][:ssl_certificate_file]
-
-include_attribute "composer::default"
-default[:magento][:composer_filename] = node[:composer][:filename]
+default[:magento][:web_root] = node[:nginx][:web_root]
+default[:magento][:structure] = node[:nginx][:structure]
 
 include_attribute "elasticsearch::default"
 default[:magento][:use_elasticsearch] = node[:elasticsearch][:use]

@@ -6,7 +6,7 @@
 user = node[:custom_modules][:user]
 group = node[:custom_modules][:user]
 web_root = node[:custom_modules][:web_root]
-composer_file = node[:custom_modules][:composer][:filename]
+composer_file = node[:custom_modules][:composer_file]
 custom_module_data = node[:custom_modules][:module_list]
 
 # Configure the repositories

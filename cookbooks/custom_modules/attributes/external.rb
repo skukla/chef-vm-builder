@@ -4,10 +4,10 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 include_attribute "init::default"
-default[:custom_modules][:user] = node[:init][:user]
+default[:custom_modules][:user] = node[:init][:os][:user]
 
 include_attribute 'composer::default'
-default[:custom_modules][:composer][:filename] = node[:composer][:filename]
+default[:custom_modules][:composer][:filename] = node[:composer][:file]
 
-include_attribute 'magento::default'
-default[:custom_modules][:web_root] = node[:magento][:installation][:options][:directory]
+include_attribute 'nginx::default'
+default[:custom_modules][:web_root] = node[:nginx][:web_root]
