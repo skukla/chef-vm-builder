@@ -5,8 +5,8 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 user = node[:ssh][:user]
 group = node[:ssh][:user]
-private_keys = node[:ssh][:private_key_files]
 vagrant_key = node[:ssh][:vagrant_key]
+private_keys = node[:ssh][:private_keys][:files]
 authorized_keys = node[:ssh][:authorized_keys]
 
 execute "Stop ssh-agent and previously-active keys" do

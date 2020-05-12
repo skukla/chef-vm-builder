@@ -75,7 +75,7 @@ if apply_base_flag
     include_recipe 'app_configuration::configure_elasticsearch' if use_elasticsearch
     include_recipe 'app_configuration::configure_app'
 end
-include_recipe 'app_configuration::configure_b2b' if apply_b2b_flag
+include_recipe 'app_configuration::configure_b2b' if apply_b2b_flag && download_b2b_flag
 include_recipe 'custom_modules::configure' if apply_custom_flag
 include_recipe 'app_configuration::configure_admin_users' if configure_admin_users_flag
 # Configuration is done, so we switch back to the vm user

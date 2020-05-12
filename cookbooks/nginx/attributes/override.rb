@@ -9,20 +9,20 @@ supported_settings = {
     :custom_demo => :structure
 }
 
-supported_settings.each do |setting_key, setting_value|
-    case setting_key
-    when :webserver
-        next unless node[:infrastructure][setting_key].is_a? Chef::Node::ImmutableMash
-        setting_value.each do |option|
-            next unless (node[:infrastructure][setting_key][option].nil?) || (node[:infrastructure][setting_key][option].is_a? String) && (node[:infrastructure][setting_key][option].empty?)
-            override[:nginx][option] = node[:infrastructure][setting_key][option]
-        end
-    when :magento_build
-        unless node[:application][:installation][:options][:directory].nil?
+if node[:infrastructure].is_a? Chef::Node::ImmutableMash
+    supported_settings.each do |setting_key, setting_value|
+        case setting_key
+        when :webserver
+            next if node[:infrastructure][setting_key].nil?
+            setting_value.each do |option|
+                next if node[:infrastructure][setting_key][option].nil?
+                override[:nginx][option] = node[:infrastructure][setting_key][option]    
+            end
+        when :magento_build
+            next if node[:application][:installation][:options][:directory].nil?
             override[:nginx][setting_value] = node[:application][:installation][:options][:directory]
-        end
-    when :custom_demo
-        unless node[setting_key][setting_value].nil?
+        when :custom_demo
+            next if node[setting_key][setting_value].nil?
             override[:nginx][setting_value] = node[setting_key][setting_value]
         end
     end

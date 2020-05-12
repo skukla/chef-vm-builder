@@ -10,7 +10,7 @@ include_attribute "php::default"
 default[:cli][:php_version] = node[:php][:version]
 
 include_attribute "ssh::default"
-default[:cli][:ssh_private_keys] = node[:ssh][:private_key_files]
+default[:cli][:ssh_private_keys] = node[:ssh][:private_keys][:files]
 
 include_attribute "nginx::default"
 default[:cli][:web_root] = node[:nginx][:web_root]

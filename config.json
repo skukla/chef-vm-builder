@@ -1,14 +1,13 @@
 {
 	"vm": {
 		"ip": "192.168.57.11",
-		"name": "NCR Demo",
+		"name": "Luma Demo",
 		"provider": "virtualbox"
 	},
 	"custom_demo": {
 		"structure": {
 			"website": {
-				"base": "ncr-demo.com",
-				"base_b2b": "b2b.ncr-demo.com"
+				"base": "luma.demo"
 			}
 		},
 		"admin_users": {
@@ -146,23 +145,23 @@
 		"installation": {
 			"options": {
 				"family": "Commerce",
-				"version": "2.3.5-p1",
-				"deploy_mode": {
-					"apply": true
-				}
+				"version": "2.3.5-p1"
 			},
 			"build": {
 				"install": true,
 				"base_code": true,
 				"b2b_code": true,
 				"custom_modules": true,
-				"sample_data": false,
+				"sample_data": true,
 				"modules_to_remove": "magento/google-shopping-ads",
+				"deploy_mode": {
+					"apply": true
+				},
 				"configuration": {
-					"base": true,
-					"b2b": true,
-					"custom_modules": true,
-					"admin_users": true
+					"base": false,
+					"b2b": false,
+					"custom_modules": false,
+					"admin_users": false
 				}
 			},
 			"settings": {
@@ -322,15 +321,6 @@
 							"base": true
 						}
 					}
-				},
-				"braintree": {
-					"active": false,
-					"merchant_account_id": "magento",
-					"merchant_id": "",
-    				"public_key": "",
-					"private_key": "",
-					"payment_action": "authorize",
-					"cctypes": ["Visa", "MasterCard"]
 				}
 			}
 		}

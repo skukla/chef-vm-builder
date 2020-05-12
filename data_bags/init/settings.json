@@ -1,14 +1,14 @@
 {
 	"vm": {
 		"ip": "192.168.57.11",
-		"name": "NCR Demo",
+		"name": "Luma Demo",
 		"provider": "virtualbox"
 	},
 	"custom_demo": {
 		"structure": {
 			"website": {
-				"base": "ncr-demo.com",
-				"base_b2b": "b2b.ncr-demo.com"
+				"base": "luma.demo",
+				"base_b2b": "b2b.luma.demo"
 			}
 		},
 		"admin_users": {
@@ -49,11 +49,6 @@
 			}
 		},
 		"custom_modules": {
-			"module-attribute-import": {
-				"vendor": "zt",
-				"version": "dev-master",
-				"repository_url": "git@github.com:skukla/zt-attribute-import-final.git"
-			},
 			"module-sctools": {
 				"vendor": "magentoese",
 				"version": "dev-master",
@@ -146,28 +141,32 @@
 				"username": "b17aa908c13768cef2a5a3a043bb3c54",
 				"password": "93f1f71fd779eb46af01fd7587e5fdba",
 				"github_token": "ca5db95d8f9ebea677be19b5943475882682e1d7"
+			},
+			"ssh": {
+				"private_keys": ["id_rsa.skukla.github"],
+				"public_keys": ["id_rsa.skukla.github.pub"]
 			}
 		},
 		"installation": {
 			"options": {
 				"family": "Commerce",
-				"version": "2.3.5-p1",
-				"deploy_mode": {
-					"apply": true
-				}
+				"version": "2.3.5-p1"
 			},
 			"build": {
 				"install": true,
 				"base_code": true,
 				"b2b_code": true,
 				"custom_modules": true,
-				"sample_data": false,
+				"sample_data": true,
 				"modules_to_remove": "magento/google-shopping-ads",
+				"deploy_mode": {
+					"apply": true
+				},
 				"configuration": {
-					"base": true,
-					"b2b": true,
-					"custom_modules": true,
-					"admin_users": true
+					"base": false,
+					"b2b": false,
+					"custom_modules": false,
+					"admin_users": false
 				}
 			},
 			"settings": {
@@ -237,7 +236,7 @@
 			},
 			"cms": {
 				"pagebuilder": {
-					"google_maps_api_key": ""
+					"google_maps_api_key": "AIzaSyCUpro8_IIHqsD1WKzadd2U0BJKsJDCrqk"
 				}
 			},
 			"btob": {
@@ -270,7 +269,7 @@
 				}
 			},
 			"catalog": {
-				"youtube_api_key": ""
+				"youtube_api_key": "AIzaSyAIqr8akHR1G3qh9Z8vvJI34iITe59G3h0"
 			},
 			"customer": {
 				"startup": {

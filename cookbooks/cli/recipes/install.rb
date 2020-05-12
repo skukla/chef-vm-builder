@@ -9,7 +9,7 @@ cli_directories = node[:cli][:directories]
 cli_files = node[:cli][:files]
 php_version = node[:cli][:php_version]
 magento_version = node[:cli][:magento_version]
-private_key_files = node[:cli][:ssh_private_keys]
+private_keys = node[:cli][:ssh_private_keys]
 web_root = node[:cli][:web_root]
 db_host = node[:cli][:database_host]
 db_user = node[:cli][:database_user]
@@ -50,7 +50,7 @@ template "VM CLI" do
         db_password: "#{db_password}",
         db_name: "#{db_name}",
         magento_version: "#{magento_version}",
-        private_key_files: private_key_files
+        private_keys: private_keys
     })
     only_if { ::File.directory?("/home/#{user}/cli") }
 end

@@ -195,8 +195,8 @@ export -f configure-proxy
 function add-keys() {
   printf "\nAdding SSH keys...\n"
   eval $(ssh-agent)
-  <% @private_key_files.each do |private_key_file| %>
-  ssh-add ~/.ssh/<%= private_key_file %>
+  <% @private_keys.each do |private_key| %>
+  ssh-add ~/.ssh/<%= private_key %>
   <% end %>
 }
 export -f add-keys
