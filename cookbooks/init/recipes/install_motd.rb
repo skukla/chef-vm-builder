@@ -5,7 +5,7 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 user = node[:init][:os][:user]
 ip = node[:init][:vm][:ip]
-hostname = node[:init][:ohai][:fqdn]
+hostname = node[:fqdn]
 custom_demo_structure = node[:init][:structure]
 use_mailhog = node[:init][:use_mailhog]
 use_webmin = node[:init][:use_webmin]

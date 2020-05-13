@@ -5,9 +5,8 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 
 # Not sure why we need ::override here instead of ::default
-include_attribute "init::override"
+include_attribute "init::default"
 default[:nginx][:user] = node[:init][:os][:user]
-default[:nginx][:fqdn] = node[:init][:ohai][:fqdn]
 
 include_attribute 'php::default'
 default[:nginx][:php_version] = node[:php][:version]

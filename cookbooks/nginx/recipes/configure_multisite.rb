@@ -12,8 +12,10 @@ fpm_port = node[:nginx][:fpm_port]
 client_max_body_size = node[:nginx][:client_max_body_size]
 http_port = node[:nginx][:http_port]
 ssl_port = node[:nginx][:ssl_port]
-certificate_file = node[:nginx][:ssl_certificate_file]
-key_file = node[:nginx][:ssl_key_file]
+cert_directory = node[:nginx][:ssl_cert_directory]
+cert_file = "#{node[:fqdn]}.crt"
+key_directory = node[:nginx][:ssl_key_directory]
+key_file = "#{node[:fqdn]}.key"
 custom_demo_structure = node[:nginx][:structure]
 
 # Extract the data for the virtual host files
@@ -32,14 +34,22 @@ custom_demo_structure.each do |scope, scope_hash|
     end
 end
 
-vhost_data.each do |vhost|
-    # Disable any of the sites if they already exist
-    link "/etc/nginx/sites-enabled/#{vhost[:url]}" do
-        to "/etc/nginx/sites-available/#{vhost[:url]}"
-        action :delete
-        only_if { ::File.exist?("/etc/nginx/sites-available/#{vhost[:url]}") }
+# Clear all sites in sites-available
+Dir["/etc/nginx/sites-available/*"].each do |available_site|
+    execute "Remove #{available_site}" do
+        command "sudo rm -rf #{available_site}"
     end
-    # Create the virtual hosts
+end
+
+# Clear all sites in sites-enabled
+Dir["/etc/nginx/sites-enabled/*"].each do |enabled_site|
+    execute "Remove #{enabled_site}" do
+        command "sudo rm -rf #{enabled_site}"
+    end
+end
+
+# Create the virtual hosts
+vhost_data.each do |vhost|
     template "#{vhost[:url]}" do
         source "vhost.erb"
         path "/etc/nginx/sites-available/#{vhost[:url]}"
@@ -52,8 +62,10 @@ vhost_data.each do |vhost|
             server_name: "#{vhost[:url]}",
             client_max_body_size: "#{client_max_body_size}",
             web_root: "#{web_root}",
+            key_directory: "#{key_directory}",
             key_file: "#{key_file}",
-            certificate_file: "#{certificate_file}"
+            cert_directory: "#{cert_directory}",
+            cert_file: "#{cert_file}"
         })
     end
     # Enable the selected sites

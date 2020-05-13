@@ -5,30 +5,34 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 user = node[:nginx][:user]
 group = node[:nginx][:user]
-key_file = node[:nginx][:ssl_key_file]
-certificate_file = node[:nginx][:ssl_certificate_file]
-common_name = node[:nginx][:fqdn]
+keys_directory = node[:nginx][:ssl_key_directory]
+key_file = "#{node[:fqdn]}.key"
+certs_directory = node[:nginx][:ssl_cert_directory]
+cert_file = "#{node[:fqdn]}.crt"
+common_name = node[:fqdn]
 country = node[:nginx][:ssl_country]
 region = node[:nginx][:ssl_region]
 locality = node[:nginx][:ssl_locality]
 organization = node[:nginx][:ssl_organization]
 
+Dir["#{certs_directory}/*"].each do |old_file|
+    if "#{old_file}" != "#{certs_directory}/#{cert_file}"
+        execute "Remove old ssl certificates" do
+            command "sudo rm -rf #{old_file}"
+        end
+    end
+end
+
 # Generate the ssl key from the conf file
-execute 'Generate ssl key' do
+execute "Generate ssl certificate" do
     command "sudo openssl req -new -newkey rsa:4096 -days 365 -nodes -x509 \
     -subj \"/C=#{country}/ST=#{region}/L=#{locality}/O=#{organization}   /CN=#{common_name}\" \
-    -keyout /home/#{user}/#{key_file}  -out /home/#{user}/#{certificate_file}"
-    not_if { ::File.exist?("/etc/ssl/certs/#{certificate_file}") }
+    -keyout #{keys_directory}/#{key_file} -out #{certs_directory}/#{cert_file}"
+    not_if { ::File.exist?("#{certs_directory}/#{cert_file}") && ::File.exist?("#{keys_directory}/#{key_file}") }
 end
 
-# Copy the certificate to the ssl certs directory, then delete the original
-execute 'Copy SSL certificate to the certs directory' do
-    command "sudo cp /home/#{user}/#{certificate_file} /etc/ssl/certs/#{certificate_file} && sudo rm -rf /home/#{user}/#{certificate_file}"
-    only_if { ::File.exist?("/home/#{user}/#{certificate_file}") }
-end
-
-# Copy the SSL key to the private directory, then delete the original
-execute 'Copy SSL key to the private directory' do
-    command "sudo cp /home/#{user}/#{key_file} /etc/ssl/private/#{key_file} && sudo rm -rf /home/#{user}/#{key_file}"
-    only_if { ::File.exist?("/home/#{user}/#{key_file}") }
+# Refresh the certs bundle
+execute "Refresh the certs list" do
+    command "sudo update-ca-certificates --fresh"
+    not_if { ::File.exist?("#{certs_directory}/#{cert_file}") && ::File.exist?("#{keys_directory}/#{key_file}") }
 end

@@ -7,8 +7,7 @@
 	"custom_demo": {
 		"structure": {
 			"website": {
-				"base": "luma.demo",
-				"base_b2b": "b2b.luma.demo"
+				"base": "luma.demo"
 			}
 		},
 		"admin_users": {
@@ -141,10 +140,6 @@
 				"username": "b17aa908c13768cef2a5a3a043bb3c54",
 				"password": "93f1f71fd779eb46af01fd7587e5fdba",
 				"github_token": "ca5db95d8f9ebea677be19b5943475882682e1d7"
-			},
-			"ssh": {
-				"private_keys": ["id_rsa.skukla.github"],
-				"public_keys": ["id_rsa.skukla.github.pub"]
 			}
 		},
 		"installation": {
@@ -154,13 +149,13 @@
 			},
 			"build": {
 				"install": true,
-				"base_code": true,
-				"b2b_code": true,
-				"custom_modules": true,
-				"sample_data": true,
+				"base_code": false,
+				"b2b_code": false,
+				"custom_modules": false,
+				"sample_data": false,
 				"modules_to_remove": "magento/google-shopping-ads",
 				"deploy_mode": {
-					"apply": true
+					"apply": false
 				},
 				"configuration": {
 					"base": false,
@@ -236,7 +231,7 @@
 			},
 			"cms": {
 				"pagebuilder": {
-					"google_maps_api_key": "AIzaSyCUpro8_IIHqsD1WKzadd2U0BJKsJDCrqk"
+					"google_maps_api_key": ""
 				}
 			},
 			"btob": {
@@ -269,11 +264,11 @@
 				}
 			},
 			"catalog": {
-				"youtube_api_key": "AIzaSyAIqr8akHR1G3qh9Z8vvJI34iITe59G3h0"
+				"youtube_api_key": ""
 			},
 			"customer": {
 				"startup": {
-					"redirect_dashboard": true
+					"redirect_dashboard": false
 				}
 			},
 			"shipping": {
@@ -308,7 +303,7 @@
 			"carriers": {
 				"flatrate": false,
 				"ups": {
-					"active": true,
+					"active": false,
 					"username": "magento",
 					"password": "magento200",
 					"access_license_number": "ECAB751ABF189ECA",
@@ -326,15 +321,6 @@
 							"base": true
 						}
 					}
-				},
-				"braintree": {
-					"active": false,
-					"merchant_account_id": "magento",
-					"merchant_id": "zkw2ctrkj75ndvkc",
-    				"public_key": "n2bt4844t6xrt56x",
-					"private_key": "",
-					"payment_action": "authorize",
-					"cctypes": ["Visa", "MasterCard"]
 				}
 			}
 		}

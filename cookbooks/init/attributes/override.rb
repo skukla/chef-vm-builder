@@ -5,8 +5,7 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 supported_settings = {
     :os => [:update, :timezone],
-    :vm => [:ip, :name],
-    :ohai => [:fqdn]
+    :vm => [:ip, :name]
 }
 
 supported_settings.each do |setting_key, setting_data|
@@ -23,9 +22,5 @@ supported_settings.each do |setting_key, setting_data|
             next if node[setting_key][option].nil? || node[setting_key][option].empty?
             override[:init][setting_key][option] = node[setting_key][option]
         end
-    when :ohai
-        setting_data.each do |option|
-            override[:init][setting_key][option] = node[option]
-        end 
     end
 end
