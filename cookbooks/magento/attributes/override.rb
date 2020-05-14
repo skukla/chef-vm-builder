@@ -22,12 +22,12 @@ supported_settings.each do |setting_key, setting_data|
     when :database
         next unless node[:infrastructure][setting_key].is_a? Chef::Node::ImmutableMash
         setting_data.each do |option|
-            next if (node[:infrastructure][setting_key][option].nil?) || (node[:infrastructure][setting_key][option].empty?)
+            next if node[:infrastructure][setting_key][option].nil?
             override[:magento][setting_key][option] = node[:infrastructure][setting_key][option]
         end
     when :installation_options
         setting_data.each do |option|
-            next if node[:application][:installation][:options][option].nil? || node[:application][:installation][:options][option].empty?
+            next if node[:application][:installation][:options][option].nil?
             override[:magento][:installation][:options][option] = node[:application][:installation][:options][option]
         end
     when :build_options
@@ -36,16 +36,27 @@ supported_settings.each do |setting_key, setting_data|
             next unless node[:application][:installation][:build].is_a? Chef::Node::ImmutableMash
             if option.is_a? Hash
                 option.each do |option_key, field|
-                    next if node[:application][:installation][:build][option_key].nil? || ((node[:application][:installation][:build][option_key].is_a? String) && (node[:application][:installation][:build][option_key].empty?))
-                    if field.is_a? Array
-                        field.each do |value|
-                            next if node[:application][:installation][:build][option_key][value].nil? || ((node[:application][:installation][:build][option_key][value].is_a? String) && (node[:application][:installation][:build][option_key][value].empty?))        
-                            override[:magento][:installation][:build][option_key][value] = node[:application][:installation][:build][option_key][value]
+                    next if node[:application][:installation][:build][option_key].nil?
+                    case option_key
+                    when :deploy_mode
+                        if node[:application][:installation][:build][option_key].is_a? String
+                            override[:magento][:installation][:options][option_key][:mode] = node[:application][:installation][:build][option_key]
+                        end
+                    when :deploy_mode, :patches
+                        if (node[:application][:installation][:build][option_key].is_a? TrueClass) || (node[:application][:installation][:build][option_key].is_a? FalseClass) 
+                            override[:magento][:installation][:build][option_key][:apply] = node[:application][:installation][:build][option_key]
+                        end
+                    else
+                        if field.is_a? Array
+                            field.each do |value|
+                                next if node[:application][:installation][:build][option_key][value].nil?
+                                override[:magento][:installation][:build][option_key][value] = node[:application][:installation][:build][option_key][value]
+                            end
                         end
                     end
                 end
             else
-                next if ((node[:application][:installation][:build][option].nil?) || (node[:application][:installation][:build][option].is_a? String) && (node[:application][:installation][:build][option].empty?))
+                next if node[:application][:installation][:build][option].nil?
                 if node[:application][:installation][:build][option].is_a? Chef::Node::ImmutableArray
                     node[:application][:installation][:build][option].each do |setting| 
                         settings_array << setting if !setting.empty?
@@ -59,7 +70,7 @@ supported_settings.each do |setting_key, setting_data|
     when :installation_settings
         next unless node[:application][:installation][:settings].is_a? Chef::Node::ImmutableMash
         setting_data.each do |option|
-            next if (node[:application][:installation][:settings][option].nil?) || ((node[:application][:installation][:settings][option].is_a? String) && (node[:application][:installation][:settings][option].empty?))
+            next if node[:application][:installation][:settings][option].nil?
             override[:magento][:installation][:settings][option] = node[:application][:installation][:settings][option]
         end
     end

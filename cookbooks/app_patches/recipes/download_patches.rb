@@ -10,9 +10,6 @@ web_root = node[:app_patches][:web_root]
 magento_version = node[:app_patches][:magento_version]
 composer_file = node[:app_patches][:composer_file]
 
-print node[:app_patches]
-exit
-
 # Include the cweagans composer patches module
 execute "Download cweagans composer patches module" do
     command "cd #{web_root} && su #{user} -c '#{composer_file} require --no-update cweagans/composer-patches'"

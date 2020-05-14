@@ -68,9 +68,8 @@
 				"custom_modules": true,
 				"sample_data": true,
 				"modules_to_remove": "magento/google-shopping-ads",
-				"deploy_mode": {
-					"apply": true
-				},
+				"deploy_mode": true,
+				"patches": false,
 				"configuration": {
 					"base": true,
 					"b2b": true,
