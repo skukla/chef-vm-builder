@@ -268,7 +268,7 @@
 	},
 	"vagrant": {
 		"plugins": {
-			"all": ["vagrant-hostsupdater"],
+			"all": ["vagrant-multi-hostsupdater"],
 			"vmware": ["vagrant-vmware-desktop"]
 		}
 	}

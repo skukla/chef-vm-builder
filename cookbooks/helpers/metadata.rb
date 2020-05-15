@@ -1,16 +1,11 @@
-name 'custom_modules'
+name 'helpers'
 maintainer 'Steve Kukla'
 maintainer_email 'kukla@adobe.com'
 license 'All Rights Reserved'
-description 'Installs/Configures custom modules'
-long_description 'Installs/Configures custom modules'
+description 'Stores helper libraries'
+long_description 'Stores helper libraries for all cookbooks'
 version '0.1.0'
 chef_version '>= 14.0'
-
-depends 'init'          # Brings in OS settings
-depends 'helpers'       # Brings in helper libraries
-depends 'composer'      # Brings in Composer settings
-depends 'nginx'         # Brings in the web root
 
 # The `issues_url` points to the location where issues for this cookbook are
 # tracked.  A `View Issues` link will be displayed on this cookbook's page when
