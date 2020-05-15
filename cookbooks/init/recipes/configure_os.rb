@@ -9,3 +9,13 @@ timezone = node[:init][:os][:timezone]
 execute "Configure VM timezone" do
     command "sudo timedatectl set-timezone #{timezone}"
 end
+
+group 'root' do
+    members "#{user}"
+    append true
+    action :modify
+end
+
+directory "/var/www" do
+    mode "775"
+end
