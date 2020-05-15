@@ -14,16 +14,21 @@ unless module_list.nil?
     modules_array = Array.new
     module_list.each do |custom_module_key, custom_module_data|
         next if custom_module_data[:settings].nil?
-        custom_module_key.include?("_") ? escaped_module_key = custom_module_key.gsub("_", "-") : escaped_module_key = custom_module_key
-        execute "Add custom repositories : #{escaped_module_key}" do
-            command "cd #{web_root} && su #{user} -c '#{composer_file} config repositories.#{escaped_module_key} git #{custom_module_data[:settings][:repository_url]}'"
+        unless custom_module_data[:settings][:repository_url].nil?
+            execute "Add custom repositories : #{custom_module_data[:settings][:name]}" do
+                command "cd #{web_root} && su #{user} -c '#{composer_file} config repositories.#{custom_module_data[:settings][:name]} git #{custom_module_data[:settings][:repository_url]}'"
+            end
         end
         # Build the require statement
-        modules_array << "#{custom_module_data[:settings][:vendor]}/#{escaped_module_key}:#{custom_module_data[:settings][:version]}"
+        require_statement = "#{custom_module_data[:settings][:vendor]}/#{custom_module_data[:settings][:name]}"
+        unless custom_module_data[:settings][:version].nil?
+            require_statement = [require_statement, custom_module_data[:settings][:version]].join(":")
+        end
+        modules_array << require_statement
     end
-
+    
     # Require the modules
-    execute "Add custom repositories" do
-        command "cd #{web_root} && su #{user} -c '#{composer_file} require --no-update #{modules_array.join(' ')}'"
+    execute "Require custom modules" do
+        command "cd #{web_root} && su #{user} -c '#{composer_file} require --no-update #{modules_array.join(" ")}'"
     end
 end

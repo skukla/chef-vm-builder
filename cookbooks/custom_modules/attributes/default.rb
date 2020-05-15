@@ -14,14 +14,7 @@ autofill_config_paths << "magentoese_autofill/general/enable_autofill"
 end
 supported_custom_modules = {
     :module_autofill => {
-        :config_paths =>  autofill_config_paths,
-        :configuration => {
-            :magentoese_autofill => {
-                :general => {
-                    :enable_autofill => 1
-                }
-            }
-        }
+        :config_paths =>  autofill_config_paths
     },
     :elasticsuite => {
         :config_paths => ["catalog/search/engine"],
@@ -40,12 +33,14 @@ unless configured_custom_modules.nil?
     supported_custom_modules.each do |module_key, module_data|
         module_configurations = Array.new
         module_data[:config_paths].each do |config_path|
-            configuration_setting = Hash.new
-            setting_value = module_data[:configuration].dig(*(config_path.split("/").map{ |segment| segment.to_sym }))
-            unless setting_value.nil?
-                configuration_setting[:path] = config_path
-                configuration_setting[:value] = setting_value
-                module_configurations << configuration_setting
+            if module_data.has_key?(:configuration)
+                configuration_setting = Hash.new
+                setting_value = module_data[:configuration].dig(*(config_path.split("/").map{ |segment| segment.to_sym }))
+                unless setting_value.nil?
+                    configuration_setting[:path] = config_path
+                    configuration_setting[:value] = setting_value
+                    module_configurations << configuration_setting
+                end
             end
         end
         default[:custom_modules][:module_list][module_key][:config_paths] = supported_custom_modules[module_key][:config_paths]
