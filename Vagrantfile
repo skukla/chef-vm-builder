@@ -9,7 +9,7 @@
 #   5. Configures VM settings based on provider
 #   6. Runs the Chef provisioner
 #   7. Updates permissions and clears cache
-#   8. Saves the settings so they're persisted inside the VM on the next run
+#   8. Saves the settings so they're persisted inside the VM on the next run (WIP)
 #
 # Copyright 2020, Steve Kukla, All Rights Reserved.
 require "json"
@@ -69,11 +69,23 @@ Vagrant.configure("2") do |config|
   config.ssh.forward_agent = true
   
   config.vm.box = settings["remote_machine"]["box"]
-  
+
   # Set the hostname and configure networking
   config.vm.define settings["remote_machine"]["name"] do |machine|
     machine.vm.network "private_network", ip: settings["vm"]["ip"]
-    machine.vm.hostname = settings["custom_demo"]["structure"]["website"]["base"]
+    
+    # Get urls for custom demo and create hostname and aliases
+    demo_urls = Array.new
+    settings["custom_demo"]["structure"].each do |scope, scope_hash|
+      scope_hash.each do |code, url|
+        if code == "base"
+          machine.vm.hostname = settings["custom_demo"]["structure"]["website"]["base"]
+        else
+          demo_urls << url
+        end
+      end
+    end
+    config.multihostsupdater.aliases = demo_urls
   end
 
   # Configure VM machine based on provider

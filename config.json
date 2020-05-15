@@ -7,7 +7,8 @@
 	"custom_demo": {
 		"structure": {
 			"website": {
-				"base": "luma.demo"
+				"base": "luma.demo",
+				"base_b2b": "b2b.luma.demo"
 			}
 		},
 		"admin_users": {
@@ -268,7 +269,7 @@
 	},
 	"vagrant": {
 		"plugins": {
-			"all": ["vagrant-hostsupdater"],
+			"all": ["vagrant-multi-hostsupdater"],
 			"vmware": ["vagrant-vmware-desktop"]
 		}
 	}
