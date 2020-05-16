@@ -44,7 +44,6 @@ secure_url_string = "--base-url-secure=#{secure_base_url}"
 cleanup_database_string = "--cleanup-database"
 session_save_string = "--session-save=#{session_save}"
 encryption_key_string = "--key=#{encryption_key}"
-elasticsearch_string = "--es-hosts=#{elasticsearch_host}:#{elasticsearch_port} --es-enable-ssl=#{use_secure_frontend}"
 
 # Create the master install string
 install_string = [install_string, rewrites_string].join(" ") if use_rewrites
@@ -52,7 +51,6 @@ install_string = [install_string, use_secure_admin_string].join(" ") if use_secu
 install_string = [install_string, use_secure_frontend_string].join(" ") if use_secure_frontend
 install_string = [install_string, secure_url_string].join(" ") if use_secure_frontend || use_secure_admin
 install_string = [install_string, cleanup_database_string, session_save_string, encryption_key_string].join(" ")
-install_string = [install_string, elasticsearch_string].join(" ") if use_elasticsearch
 
 # Create the database
 ruby_block "Create the Magento database" do
