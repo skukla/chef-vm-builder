@@ -40,12 +40,12 @@ end
 include_recipe 'magento::download_b2b' if download_b2b_flag
 # If custom modules are configured, add them to composer.json
 if download_custom_modules_flag
-    include_recipe 'custom_modules::download'
+    include_recipe 'magento_custom_modules::download'
 end
 # If patches are comnfigured, add them to composer.json
 if apply_patches_flag
-    include_recipe 'app_patches::download_patches'
-    include_recipe 'app_patches::apply_patches'
+    include_recipe 'magento_patches::download'
+    include_recipe 'magento_patches::apply'
 end
 # If download base code is configured, do composer install
 if download_base_code_flag
@@ -54,7 +54,7 @@ if download_base_code_flag
 elsif download_custom_modules_flag && !download_base_code_flag
     include_recipe 'magento::uninstall_cron'
     include_recipe 'magento::clear_cron_schedule'
-    include_recipe 'custom_modules::install'
+    include_recipe 'magento_custom_modules::install'
     if !apply_deploy_mode_flag
         include_recipe 'magento::compile_di'
         include_recipe 'magento::deploy_static_content'
@@ -72,18 +72,18 @@ end
 # Using a shell script for php breaks if config strings have commas, so we use www-data here
 switch_php_user "www-data"
 if apply_base_flag
-    include_recipe 'app_configuration::configure_defaults'
-    include_recipe 'app_configuration::configure_elasticsearch' if use_elasticsearch
-    include_recipe 'app_configuration::configure_app'
+    include_recipe 'magento_configuration::configure_defaults'
+    include_recipe 'magento_configuration::configure_elasticsearch' if use_elasticsearch
+    include_recipe 'magento_configuration::configure_app'
 end
-include_recipe 'app_configuration::configure_b2b' if apply_b2b_flag && download_b2b_flag
-include_recipe 'custom_modules::configure' if apply_custom_flag
-include_recipe 'app_configuration::configure_admin_users' if configure_admin_users_flag
+include_recipe 'magento_configuration::configure_b2b' if apply_b2b_flag && download_b2b_flag
+include_recipe 'magento_custom_modules::configure' if apply_custom_flag
+include_recipe 'magento_configuration::configure_admin_users' if configure_admin_users_flag
 # Configuration is done, so we switch back to the vm user
 switch_php_user "#{user}" if apply_base_flag || apply_b2b_flag || apply_custom_flag
 include_recipe 'magento::set_deploy_mode' if apply_deploy_mode_flag
 include_recipe 'magento::setup_install' if install_flag
-include_recipe 'app_configuration::create_image_drop'
+include_recipe 'magento_configuration::create_image_drop'
 include_recipe 'magento::setup_final'
 
 # Note: Nginx, Mailhog, Webmin, and Samba are started via the the application role

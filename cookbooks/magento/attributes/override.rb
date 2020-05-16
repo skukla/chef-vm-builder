@@ -80,5 +80,3 @@ supported_settings.each do |setting_key, setting_data|
         end
     end
 end
-print node[:magento][:installation][:build]
-exit

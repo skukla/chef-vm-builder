@@ -28,5 +28,5 @@ default[:magento][:elasticsearch][:host] = node[:elasticsearch][:host]
 default[:magento][:elasticsearch][:port] = node[:elasticsearch][:port]
 default[:magento][:elasticsearch][:node_name] = node[:elasticsearch][:node_name]
 
-include_attribute "custom_modules::default"
-default[:magento][:custom_modules] = node[:custom_modules][:module_list]
+include_attribute "magento_custom_modules::default"
+default[:magento][:custom_modules] = node[:magento_custom_modules][:module_list]

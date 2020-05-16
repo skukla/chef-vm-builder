@@ -16,7 +16,7 @@ include_attribute "nginx::default"
 default[:cli][:web_root] = node[:nginx][:web_root]
 
 include_attribute "magento::default"
-default[:cli][:magento_version] = node[:application][:installation][:options][:version]
+default[:cli][:magento_version] = node[:magento][:version]
 default[:cli][:database_host] = node[:magento][:database][:host]
 default[:cli][:database_user] = node[:magento][:database][:user]
 default[:cli][:database_password] = node[:magento][:database][:password]
