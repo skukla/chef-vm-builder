@@ -39,10 +39,15 @@ supported_settings.each do |setting_key, setting_data|
                     next if node[:application][:installation][:build][option_key].nil?
                     case option_key
                     when :deploy_mode
-                        if node[:application][:installation][:build][option_key].is_a? String
-                            override[:magento][:installation][:options][option_key][:mode] = node[:application][:installation][:build][option_key]
+                        # e.g. deploy_mode = production | developer
+                        if (node[:application][:installation][:build][option_key].is_a? String)
+                            override[:magento][:installation][:build][option_key][:mode] = node[:application][:installation][:build][option_key]
+                        # e.g. deploy_mode = true | false
+                        elsif (node[:application][:installation][:build][option_key].is_a? TrueClass) || (node[:application][:installation][:build][option_key].is_a? FalseClass)
+                            override[:magento][:installation][:build][option_key][:apply] = node[:application][:installation][:build][option_key]
                         end
-                    when :deploy_mode, :patches
+                    when :patches
+                        # e.g. patches = true | false
                         if (node[:application][:installation][:build][option_key].is_a? TrueClass) || (node[:application][:installation][:build][option_key].is_a? FalseClass) 
                             override[:magento][:installation][:build][option_key][:apply] = node[:application][:installation][:build][option_key]
                         end
@@ -75,3 +80,5 @@ supported_settings.each do |setting_key, setting_data|
         end
     end
 end
+print node[:magento][:installation][:build]
+exit

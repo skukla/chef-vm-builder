@@ -46,9 +46,6 @@
 				"password": "Password1",
 				"email": "phil@luma.com"
 			}
-		},
-		"custom_modules": {
-			"elasticsuite": "smile/elasticsuite"
 		}
 	},
 	"application": {
@@ -69,7 +66,7 @@
 				"base_code": true,
 				"b2b_code": true,
 				"custom_modules": true,
-				"sample_data": true,
+				"sample_data": false,
 				"modules_to_remove": "magento/google-shopping-ads",
 				"deploy_mode": true,
 				"patches": false,
@@ -217,12 +214,9 @@
 				}
 			},
 			"carriers": {
-				"flatrate": false
+				"tablerate": false
 			},
 			"payment": {
-				"checkmo": {
-					"active": true
-				},
 				"companycredit": {
 					"active": {
 						"website": {
