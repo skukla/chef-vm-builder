@@ -1,11 +1,11 @@
 #
 # Cookbook:: elasticsearch
-# Recipe:: start
+# Recipe:: stop
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 if node[:elasticsearch][:use]
     service "elasticsearch" do
-        action :start
+        action :stop
         only_if { ::File.directory?('/etc/elasticsearch') }
     end
 end

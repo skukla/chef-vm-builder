@@ -8,7 +8,7 @@ module_list = node[:custom_modules][:module_list]
 
 unless module_list.nil?
     module_list.each do |module_key, module_data|
-        next if module_data[:configuration].nil? 
+        next if module_data[:configuration].nil?
         command_string = "#{web_root}/bin/magento config:set"
         module_data[:configuration].each do |setting|
             next if (setting[:value].is_a? String) && (setting[:value].empty?)

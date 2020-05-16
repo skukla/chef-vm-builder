@@ -11,3 +11,6 @@ default[:custom_modules][:composer_file] = node[:composer][:file]
 
 include_attribute 'nginx::default'
 default[:custom_modules][:web_root] = node[:nginx][:web_root]
+
+include_attribute 'elasticsearch::default'
+default[:custom_modules][:use_elasticsearch] = node[:elasticsearch][:use]

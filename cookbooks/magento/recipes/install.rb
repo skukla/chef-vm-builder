@@ -27,19 +27,14 @@ use_secure_admin = node[:magento][:installation][:settings][:use_secure_admin]
 cleanup_database = node[:magento][:installation][:settings][:cleanup_database]
 session_save = node[:magento][:installation][:settings][:session_save]
 encryption_key = node[:magento][:installation][:settings][:encryption_key]
-
-def process_value(user_value)
-    if user_value == true
-        return 1
-    elsif user_value == false
-        return 0
-    else
-        return user_value
-    end
-end
+custom_modules = node[:magento][:custom_modules]
+use_elasticsearch = node[:magento][:elasticsearch][:use]
+elasticsearch_host = node[:magento][:elasticsearch][:host]
+elasticsearch_port = node[:magento][:elasticsearch][:port]
+elasticsearch_node_name = node[:magento][:elasticsearch][:node_name]
 
 # Base install string
-base_install_string = "--db-host=#{db_host} --db-name=#{db_name} --db-user=#{db_user} --db-password=#{db_password} --backend-frontname=#{backend_frontname} --base-url=#{unsecure_base_url} --language=#{language} --timezone=#{timezone} --currency=#{currency} --admin-firstname=#{admin_firstname} --admin-lastname=#{admin_lastname} --admin-email=#{admin_email} --admin-user=#{admin_user} --admin-password=#{admin_password}"
+install_string = "--db-host=#{db_host} --db-name=#{db_name} --db-user=#{db_user} --db-password=#{db_password} --backend-frontname=#{backend_frontname} --base-url=#{unsecure_base_url} --language=#{language} --timezone=#{timezone} --currency=#{currency} --admin-firstname=#{admin_firstname} --admin-lastname=#{admin_lastname} --admin-email=#{admin_email} --admin-user=#{admin_user} --admin-password=#{admin_password}"
 
 # Install options
 rewrites_string = "--use-rewrites=#{process_value(use_rewrites)}"
@@ -49,13 +44,15 @@ secure_url_string = "--base-url-secure=#{secure_base_url}"
 cleanup_database_string = "--cleanup-database"
 session_save_string = "--session-save=#{session_save}"
 encryption_key_string = "--key=#{encryption_key}"
+elasticsearch_string = "--es-hosts=#{elasticsearch_host}:#{elasticsearch_port} --es-enable-ssl=#{use_secure_frontend}"
 
 # Create the master install string
-install_string = [base_install_string, rewrites_string].join(" ") if use_rewrites
+install_string = [install_string, rewrites_string].join(" ") if use_rewrites
 install_string = [install_string, use_secure_admin_string].join(" ") if use_secure_admin
 install_string = [install_string, use_secure_frontend_string].join(" ") if use_secure_frontend
 install_string = [install_string, secure_url_string].join(" ") if use_secure_frontend || use_secure_admin
 install_string = [install_string, cleanup_database_string, session_save_string, encryption_key_string].join(" ")
+install_string = [install_string, elasticsearch_string].join(" ") if use_elasticsearch
 
 # Create the database
 ruby_block "Create the Magento database" do

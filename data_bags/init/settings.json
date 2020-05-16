@@ -48,31 +48,7 @@
 			}
 		},
 		"custom_modules": {
-			"module-delete-orders": "mageplaza/module-delete-orders",
-			"module-autofill": {
-				"require": "magentoese/module-autofill",
-				"version": "dev-master",
-				"repository_url": "git@github.com:PMET-public/module-autofill.git",
-				"configuration": {
-					"magentoese_autofill": {
-						"persona_1": {
-							"enable": true,
-							"label": "Steve Kukla (Test User)",
-							"email_value": "steve@example.com",
-							"password_value": "Password1",
-							"firstname_value": "Steve",
-							"lastname_value": "Kukla",
-							"address_value": "3640 Holdrege Ave",
-							"city_value": "Los Angeles",
-							"state_value": "CA",
-							"zip_value": "90016",
-							"country_value": "US",
-							"telephone_value": "310-945-0345",
-							"company_value": "Luma, Inc."
-						}
-					}
-				}
-			}
+			"elasticsuite": "smile/elasticsuite"
 		}
 	},
 	"application": {
@@ -93,7 +69,7 @@
 				"base_code": true,
 				"b2b_code": true,
 				"custom_modules": true,
-				"sample_data": true,
+				"sample_data": false,
 				"modules_to_remove": "magento/google-shopping-ads",
 				"deploy_mode": true,
 				"patches": false,

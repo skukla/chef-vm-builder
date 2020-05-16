@@ -8,6 +8,7 @@ version '0.1.0'
 chef_version '>= 14.0'
 
 depends 'init'              # This brings in OS/Init configuration options
+depends 'helpers'           # This brings in helper libraries
 depends 'php'               # This brings in PHP configuration options
 depends 'nginx'             # This brings in Nginx configuration options
 depends 'mysql'             # This brings in MySQL configuration options

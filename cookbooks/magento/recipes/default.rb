@@ -22,13 +22,14 @@ custom_demo_data = node[:magento][:structure]
 # Run PHP as the VM user
 switch_php_user "#{user}"
 
-# Handle nginx conifiguration for multisite first
+# Handle nginx conifiguration for multisite, then start mysql and elasticsearch since es takes forever to start
 include_recipe 'nginx::configure_multisite'
+include_recipe 'mysql::start'
+include_recipe 'elasticsearch::start'
 # If download base is configured, and web root exists but is not empty
 if download_base_code_flag
     # Clear the web root, then install
     include_recipe 'magento::uninstall_cron'
-    include_recipe 'mysql::start'
     include_recipe 'magento::uninstall_app'
     include_recipe 'magento::create_web_root'
     include_recipe 'magento::composer_create_project'
@@ -62,7 +63,7 @@ end
 # Add sample data after initial code download
 include_recipe 'magento::download_sample_data' if download_sample_data_flag
 # Do these things only after installation, not subsequent extension installs
-if install_flag 
+if install_flag
     include_recipe 'mysql::configure_pre_install'
     include_recipe 'magento::install'
     include_recipe 'mysql::configure_post_install'
@@ -85,4 +86,4 @@ include_recipe 'magento::setup_install' if install_flag
 include_recipe 'app_configuration::create_image_drop'
 include_recipe 'magento::setup_final'
 
-# Note: All infrastructure services except nginx and mysql are started via the the application role
+# Note: Nginx, Mailhog, Webmin, and Samba are started via the the application role
