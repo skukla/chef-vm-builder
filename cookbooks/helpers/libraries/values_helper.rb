@@ -1,3 +1,8 @@
+#
+# Cookbook:: helpers
+# Library:: values_helper
+#
+# Copyright:: 2020, Steve Kukla, All Rights Reserved.
 class Chef
     class Recipe
         def process_value(value)
@@ -36,7 +41,6 @@ class Chef
                     return cc_types_array.join(",")
                 end
                 
-        
                 # Shipping Methods
                 shipping_methods.each do |shipping_method|
                     value.each do |shipping_value|
