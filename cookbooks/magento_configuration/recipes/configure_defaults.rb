@@ -5,7 +5,7 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 user = node[:magento_configuration][:user]
 web_root = node[:magento_configuration][:web_root]
-configurations = node[:magento_configuration][:default_configuration]
+configurations = node[:magento_configuration][:settings][:defaults]
 
 unless configurations.empty?
     configurations.each do |setting|

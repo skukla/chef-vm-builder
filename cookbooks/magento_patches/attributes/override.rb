@@ -3,13 +3,14 @@
 # Attribute:: override
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-supported_settings = {
-    :patches => [:apply, :repository_url]
-}
+supported_settings = [:apply, :repository_url, :repository_directory, :branch, :codebase_directory, :patches_file]
 
-supported_settings.each do |setting_key, setting_value|
-    next unless node[:application][:installation][:build][setting_key].is_a? Chef::Node::ImmutableMash
-    unless node[:application][:installation][:build][setting_key].nil?
-        override[:magento_patches][setting_key] = node[:application][:installation][:build][setting_key][setting_value]
+supported_settings.each do |setting|
+    if node[:application][:installation][:build][:patches].is_a? Chef::Node::ImmutableMash
+        unless node[:application][:installation][:build][:patches][setting].nil?
+            override[:magento_patches][setting] = node[:application][:installation][:build][:patches][setting]
+        end
+    elsif (setting == :apply) && (node[:application][:installation][:build][:patches].is_a? TrueClass) || (node[:application][:installation][:build][:patches].is_a? FalseClass)
+        override[:magento_patches][setting] = node[:application][:installation][:build][:patches]
     end
 end

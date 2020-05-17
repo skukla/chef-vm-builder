@@ -5,9 +5,9 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 include_attribute "magento_configuration::user_configuration"
 config_file_hash = node[:application]
-default_config_settings = node[:magento_configuration][:configuration]
-config_paths = node[:magento_configuration][:configuration_paths]
-user_configurations = node[:magento_configuration][:user_configuration]
+default_config_settings = node[:magento_configuration][:settings][:defaults]
+config_paths = node[:magento_configuration][:paths]
+user_configurations = node[:magento_configuration][:settings][:user]
 default_configurations = Array.new
 
 config_paths.each do |config_path|
@@ -29,4 +29,4 @@ end
 result.flatten.each do |duplicate|
     default_configurations.delete_if{ |default_setting| default_setting[:path] == duplicate[:path] }
 end
-default[:magento_configuration][:default_configuration] = default_configurations
+default[:magento_configuration][:settings][:defaults] = default_configurations

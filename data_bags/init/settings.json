@@ -65,16 +65,23 @@
 				"install": true,
 				"base_code": true,
 				"b2b_code": true,
-				"custom_modules": true,
+				"custom_modules": false,
 				"sample_data": false,
 				"modules_to_remove": "magento/google-shopping-ads",
-				"deploy_mode": true,
-				"patches": false,
+				"deploy_mode": false,
+				"patches": {
+					"apply": true,
+					"repository_url": "https://github.com/skukla/m2-patches.git",
+					"repository_directory": "kukla-patches",
+					"codebase_directory": "m2-patches",
+					"patches_file": "patches.json",
+					"branch": "master"
+				},
 				"configuration": {
 					"base": true,
 					"b2b": true,
-					"custom_modules": true,
-					"admin_users": true
+					"custom_modules": false,
+					"admin_users": false
 				}
 			},
 			"settings": {

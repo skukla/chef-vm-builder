@@ -11,3 +11,6 @@ default[:magento_patches][:composer_file] = node[:composer][:file]
 
 include_attribute "nginx::default"
 default[:magento_patches][:web_root] = node[:nginx][:web_root]
+
+include_attribute "magento::default"
+default[:magento_patches][:magento_version] = node[:magento][:installation][:options][:version]

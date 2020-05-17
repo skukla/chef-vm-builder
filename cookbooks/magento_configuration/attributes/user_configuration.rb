@@ -5,8 +5,8 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 config_file_hash = node[:application]
 user_config_settings = config_file_hash[:configuration]
-default_config_settings = node[:magento_configuration][:configuration]
-config_paths = node[:magento_configuration][:configuration_paths]
+config_paths = node[:magento_configuration][:paths]
+default_config_settings = node[:magento_configuration][:settings][:defaults]
 
 user_configurations = Array.new
 config_paths.each do |config_path|
@@ -54,4 +54,4 @@ config_paths.each do |config_path|
         end
     end
 end
-default[:magento_configuration][:user_configuration] = user_configurations
+default[:magento_configuration][:settings][:user] = user_configurations

@@ -5,11 +5,11 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 user = node[:magento_configuration][:user]
 web_root = node[:magento_configuration][:web_root]
-db_host = node[:magento_configuration][:db_host]
-db_user = node[:magento_configuration][:db_user]
-db_password = node[:magento_configuration][:db_password]
-db_name = node[:magento_configuration][:db_name]
-configurations = node[:magento_configuration][:user_configuration]
+db_host = node[:magento_configuration][:database][:host]
+db_user = node[:magento_configuration][:database][:user]
+db_password = node[:magento_configuration][:database][:password]
+db_name = node[:magento_configuration][:database][:name]
+configurations = node[:magento_configuration][:settings][:user]
 
 unless configurations.empty?
     configurations.each do |setting|

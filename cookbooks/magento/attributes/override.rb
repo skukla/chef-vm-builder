@@ -6,16 +6,9 @@
 supported_settings = {
     :database => [:host, :user, :password, :name],
     :installation_options => [:family, :version, :minimum_stability, :directory],
-    :build_options => [:clear_cache, :install, :base_code, :b2b_code, :custom_modules, :sample_data, :modules_to_remove, :deploy_mode => [:apply, :mode], :patches => [:apply, :repository_url], :configuration => [:base, :b2b, :custom_modules, :admin_users]],
+    :build_options => [:clear_cache, :install, :base_code, :b2b_code, :custom_modules, :sample_data, :modules_to_remove, :deploy_mode => [:apply, :mode]],
     :installation_settings => [:backend_frontname, :unsecure_base_url, :secure_base_url, :language, :timezone, :currency, :admin_firstname, :admin_lastname, :admin_email, :admin_user, :admin_password, :use_rewrites, :use_secure_frontend,  :use_secure_admin, :cleanup_database, :session_save, :encryption_key]
 }
-
-# Helper method
-def process_value(user_value)
-    return 1 if user_value == true
-    return 0 if user_value == false
-    return user_value
-end
 
 supported_settings.each do |setting_key, setting_data|
     case setting_key
@@ -44,11 +37,6 @@ supported_settings.each do |setting_key, setting_data|
                             override[:magento][:installation][:build][option_key][:mode] = node[:application][:installation][:build][option_key]
                         # e.g. deploy_mode = true | false
                         elsif (node[:application][:installation][:build][option_key].is_a? TrueClass) || (node[:application][:installation][:build][option_key].is_a? FalseClass)
-                            override[:magento][:installation][:build][option_key][:apply] = node[:application][:installation][:build][option_key]
-                        end
-                    when :patches
-                        # e.g. patches = true | false
-                        if (node[:application][:installation][:build][option_key].is_a? TrueClass) || (node[:application][:installation][:build][option_key].is_a? FalseClass) 
                             override[:magento][:installation][:build][option_key][:apply] = node[:application][:installation][:build][option_key]
                         end
                     else

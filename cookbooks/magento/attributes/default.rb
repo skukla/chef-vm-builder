@@ -16,13 +16,8 @@ default[:magento][:installation][:build][:b2b_code] = true
 default[:magento][:installation][:build][:custom_modules] = true
 default[:magento][:installation][:build][:modules_to_remove] = []
 default[:magento][:installation][:build][:sample_data] = true
-default[:magento][:installation][:build][:patches][:magentoly] = false
-default[:magento][:installation][:build][:deploy_mode][:magentoly] = true
+default[:magento][:installation][:build][:deploy_mode][:apply] = true
 default[:magento][:installation][:build][:deploy_mode][:mode] = "production"
-default[:magento][:installation][:build][:configuration][:base] = false
-default[:magento][:installation][:build][:configuration][:b2b] = false
-default[:magento][:installation][:build][:configuration][:custom_modules] = false
-default[:magento][:installation][:build][:configuration][:admin_users] = false
 
 default[:magento][:installation][:settings][:backend_frontname] = "admin"
 default[:magento][:installation][:settings][:unsecure_base_url] = "http://#{node[:fqdn]}/"

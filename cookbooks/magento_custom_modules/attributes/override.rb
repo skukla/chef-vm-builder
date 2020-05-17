@@ -24,7 +24,11 @@ unless configured_custom_modules.nil?
         end
         # Now we have the require statement value whether the setting is a hash or a string, so we can further parse it
         override[:magento_custom_modules][:module_list][escaped_module_key][:settings][:vendor] = node[:magento_custom_modules][:module_list][escaped_module_key][:settings][:require].split("/")[0]
-        override[:magento_custom_modules][:module_list][escaped_module_key][:settings][:name] = node[:magento_custom_modules][:module_list][escaped_module_key][:settings][:require].split("/")[1]
+        if node[:magento_custom_modules][:module_list][escaped_module_key][:settings][:require].include?("/")
+            override[:magento_custom_modules][:module_list][escaped_module_key][:settings][:name] = node[:magento_custom_modules][:module_list][escaped_module_key][:settings][:require].split("/")[1]
+        else
+            override[:magento_custom_modules][:module_list][escaped_module_key][:settings][:name] = node[:magento_custom_modules][:module_list][escaped_module_key][:settings][:require]
+        end
         # Now check for and process a configuration settings hash
         if configured_custom_modules[module_key]["configuration"].is_a? Chef::Node::ImmutableMash
             module_configurations = Array.new

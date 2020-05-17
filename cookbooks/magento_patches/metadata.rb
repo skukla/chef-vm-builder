@@ -7,9 +7,11 @@ long_description 'Installs/Configures application patches'
 version '0.1.0'
 chef_version '>= 14.0'
 
-depends 'init'      # Brings in init attributes
-depends 'nginx'     # Brings in web root
-depends 'composer'  # Brings in composer attributes
+depends 'init'              # Brings in init attributes
+depends 'helpers'           # Brings in the build_patch_file helper
+depends 'nginx'             # Brings in web root
+depends 'composer'          # Brings in composer attributes
+depends 'magento_internal'  # Brings in the internal patch resources
 
 # The `issues_url` points to the location where issues for this cookbook are
 # tracked.  A `View Issues` link will be displayed on this cookbook's page when

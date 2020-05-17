@@ -5,10 +5,14 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 user = node[:magento_patches][:user]
 group = node[:magento_patches][:user]
-patches_repository = node[:magento_patches][:repository_url]
 web_root = node[:magento_patches][:web_root]
+patches_repository = node[:magento_patches][:repository_url]
+patches_branch = node[:magento_patches][:branch]
 magento_version = node[:magento_patches][:magento_version]
 composer_file = node[:magento_patches][:composer_file]
+directory_in_repo = node[:magento_patches][:repository_directory]
+directory_in_codebase = node[:magento_patches][:codebase_directory]
+patches_holding_area = node[:magento_patches][:holding_area]
 
 # Include the cweagans composer patches module
 execute "Download cweagans composer patches module" do
@@ -16,24 +20,40 @@ execute "Download cweagans composer patches module" do
     not_if { ::File.directory?("#{web_root}/vendor/cweagans") }
 end
 
-# Remove patches directory if it exists
-execute "Remove patches directory" do
-    command "sudo rm -rf /var/www/patches"
-    only_if { ::File.directory?('/var/www/patches') }
+# Remove patches holding area if it exists
+execute "Remove patches holding area" do
+    command "sudo rm -rf #{patches_holding_area}"
+    only_if { ::File.directory?("#{patches_holding_area}") }
 end
 
 # Remove patches from web root if they exist
 execute "Remove patches from web root" do
-    command "sudo rm -rf #{web_root}/m2-hotfixes"
-    only_if { ::File.directory?("#{web_root}/m2-hotfixes") }
+    command "sudo rm -rf #{web_root}/#{directory_in_codebase}"
+    only_if { ::File.directory?("#{web_root}/#{directory_in_codebase}") }
 end
 
 # Clone the patches repository via github
-git 'Magento patches' do
-    repository "#{patches_repository}"
-    revision "pmet-#{magento_version}-ref"
-    destination "/var/www/patches"
-    action :sync
-    user 'root'
-    group 'root'
+if patches_repository.include?("PMET-public")
+    include_recipe "magento_internal::download_patches"
+else
+    git 'Custom patches' do
+        repository "#{patches_repository}"
+        revision "#{patches_branch}"
+        destination "#{patches_holding_area}"
+        enable_checkout patches_branch == "master" ? false : true
+        action :sync
+        user "#{user}"
+        group "#{group}"
+    end
+end
+
+# Pull out the patches subdirectory
+execute "Pull out patches from repository" do
+    command "cd #{patches_holding_area} && git filter-branch --subdirectory-filter #{directory_in_repo}"
+end
+
+# Move patches into web root
+execute "Move patches into web root" do
+    command "mv #{patches_holding_area} #{web_root}/#{directory_in_codebase}"
+    only_if { ::File.directory?("#{patches_holding_area}") }
 end

@@ -3,10 +3,9 @@
 # Attribute:: default
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-
 # It's unusual to use external attributes inside default attribute files, so we make sure they're included...
 include_attribute "magento_configuration::external"
-default[:magento_configuration][:configuration_paths] = [
+default[:magento_configuration][:paths] = [
     "admin/security/admin_account_sharing",
     "admin/security/max_number_password_reset_requests",
     "admin/security/password_is_forced",
@@ -169,7 +168,7 @@ default[:magento_configuration][:configuration_paths] = [
     "yotpo/module_info/yotpo_installation_date",
     "yotpo/sync_settings/orders_sync_start_date"
 ]
-default[:magento_configuration][:configuration] =
+default[:magento_configuration][:settings][:defaults] =
 {
     admin: {
         dashboard: {
@@ -225,3 +224,7 @@ default[:magento_configuration][:configuration] =
         }
     }
 }
+default[:magento_configuration][:flags][:base] = false
+default[:magento_configuration][:flags][:b2b] = false
+default[:magento_configuration][:flags][:custom_modules] = false
+default[:magento_configuration][:flags][:admin_users] = false

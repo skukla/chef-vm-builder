@@ -5,7 +5,7 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 user = node[:magento_configuration][:user]
 web_root = node[:magento_configuration][:web_root]
-configurations = node[:magento_configuration][:user_configuration]
+configurations = node[:magento_configuration][:settings][:user]
 
 unless configurations.empty?
     command_string = "su #{user} -c '#{web_root}/bin/magento config:set"
