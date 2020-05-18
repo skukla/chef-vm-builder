@@ -6,34 +6,38 @@
 default_custom_modules = node[:magento_custom_modules][:module_list]
 configured_custom_modules = node[:custom_demo][:custom_modules]
 user_configurations = Array.new
-supported_settings = [:require, :version, :repository_url]
+supported_settings = [:name, :version, :repository_url]
 
 unless configured_custom_modules.nil?
     configured_custom_modules.each do |module_key, module_value|
         module_key.include?("-") ? escaped_module_key = module_key.gsub("-", "_") : escaped_module_key = module_key
         if configured_custom_modules[module_key].is_a? Chef::Node::ImmutableMash
             supported_settings.each do |setting|
-                unless configured_custom_modules[module_key][setting].nil?
-                    override[:magento_custom_modules][:module_list][escaped_module_key][:settings][setting] = configured_custom_modules[module_key][setting]
+                if setting == :version && configured_custom_modules[module_key][setting].nil?
+                    override[:magento_custom_modules][:module_list][escaped_module_key][:settings][setting] = "dev-master"
+                else
+                    unless configured_custom_modules[module_key][setting].nil?
+                        override[:magento_custom_modules][:module_list][escaped_module_key][:settings][setting] = configured_custom_modules[module_key][setting]
+                    end
                 end
             end
         else
             unless configured_custom_modules[module_key].empty?
-                override[:magento_custom_modules][:module_list][escaped_module_key][:settings][:require] = configured_custom_modules[module_key]
+                override[:magento_custom_modules][:module_list][escaped_module_key][:settings][:name] = configured_custom_modules[module_key]
             end
         end
         # Now we have the require statement value whether the setting is a hash or a string, so we can further parse it
-        override[:magento_custom_modules][:module_list][escaped_module_key][:settings][:vendor] = node[:magento_custom_modules][:module_list][escaped_module_key][:settings][:require].split("/")[0]
-        if node[:magento_custom_modules][:module_list][escaped_module_key][:settings][:require].include?("/")
-            override[:magento_custom_modules][:module_list][escaped_module_key][:settings][:name] = node[:magento_custom_modules][:module_list][escaped_module_key][:settings][:require].split("/")[1]
+        if node[:magento_custom_modules][:module_list][escaped_module_key][:settings][:name].include?("/")
+            override[:magento_custom_modules][:module_list][escaped_module_key][:settings][:vendor] = node[:magento_custom_modules][:module_list][escaped_module_key][:settings][:name].split("/")[0]
+            override[:magento_custom_modules][:module_list][escaped_module_key][:settings][:module_name] = node[:magento_custom_modules][:module_list][escaped_module_key][:settings][:name].split("/")[1]
         else
-            override[:magento_custom_modules][:module_list][escaped_module_key][:settings][:name] = node[:magento_custom_modules][:module_list][escaped_module_key][:settings][:require]
+            override[:magento_custom_modules][:module_list][escaped_module_key][:settings][:module_name] = node[:magento_custom_modules][:module_list][escaped_module_key][:settings][:name]
         end
         # Now check for and process a configuration settings hash
         if configured_custom_modules[module_key]["configuration"].is_a? Chef::Node::ImmutableMash
             module_configurations = Array.new
-            unless node[:magento_custom_modules][:module_list][escaped_module_key][:settings][:require].nil?
-                module_name = node[:magento_custom_modules][:module_list][escaped_module_key][:settings][:name]
+            unless node[:magento_custom_modules][:module_list][escaped_module_key][:settings][:module_name].nil?
+                module_name = node[:magento_custom_modules][:module_list][escaped_module_key][:settings][:module_name]
                 module_name.include?("-") ? escaped_module_name = module_name.gsub("-", "_") : escaped_module_name = module_name
                 default_custom_modules[escaped_module_name][:config_paths].each do |config_path|
                     configuration_setting = Hash.new

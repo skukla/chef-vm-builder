@@ -65,10 +65,9 @@
 				"install": true,
 				"base_code": true,
 				"b2b_code": true,
-				"custom_modules": false,
-				"sample_data": false,
+				"custom_modules": true,
+				"sample_data": true,
 				"modules_to_remove": "magento/google-shopping-ads",
-				"deploy_mode": false,
 				"configuration": {
 					"base": true,
 					"b2b": true,
