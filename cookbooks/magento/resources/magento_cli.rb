@@ -99,8 +99,9 @@ end
 
 action :config_set do
     command_string = "su #{new_resource.user} -c '#{new_resource.web_root}/bin/magento config:set"
-    scope_string = "--scope=\"#{new_resource.config_scope}\" --scope-code=\"#{new_resource.config_scope_code}\""
-    config_string = "#{new_resource.config_path} #{new_resource.config_value}"
+    scope_string = "--scope=\"#{new_resource.config_scope}\""
+    scope_string = "--scope-code=\"#{new_resource.config_scope_code}\"" unless new_resource.config_scope_code.nil?
+    config_string = "#{new_resource.config_path} #{new_resource.config_value}'"
     execute "#{new_resource.name}" do
         command [command_string, scope_string, config_string].join(" ")
     end
