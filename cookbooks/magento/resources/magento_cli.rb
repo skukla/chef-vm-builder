@@ -4,22 +4,22 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 resource_name :magento_cli
-property :name,             String, name_property: true
-property :web_root,         String, default: node[:magento][:web_root]
-property :user,             String, default: node[:magento][:user]
-property :install_string,   String
-property :config_path,      String
-property :config_value,     String
-property :scope,            String
-property :scope_code,       String
-property :deploy_mode,      String, default: node[:magento][:installation][:build][:deploy_mode][:mode]
-property :cache_types,      Array, default: Array.new
-property :indexers,         Array, default: Array.new
-property :admin_username,   String
-property :admin_password,   String
-property :admin_email,      String
-property :admin_firstname,  String
-property :admin_lastname,   String
+property :name,               String, name_property: true
+property :web_root,           String, default: node[:magento][:web_root]
+property :user,               String, default: node[:magento][:user]
+property :install_string,     String
+property :config_path,        String
+property :config_value,       String
+property :config_scope,       String
+property :config_scope_code,  String
+property :deploy_mode,        String, default: node[:magento][:installation][:build][:deploy_mode][:mode]
+property :cache_types,        Array, default: Array.new
+property :indexers,           Array, default: Array.new
+property :admin_username,     String
+property :admin_password,     String
+property :admin_email,        String
+property :admin_firstname,    String
+property :admin_lastname,     String
 
 action :install do
     execute "#{new_resource.name}" do
@@ -99,7 +99,7 @@ end
 
 action :config_set do
     command_string = "su #{new_resource.user} -c '#{new_resource.web_root}/bin/magento config:set"
-    scope_string = "--scope=\"#{new_resource.scope}\" --scope-code=\"#{new_resource.scope_code}\""
+    scope_string = "--scope=\"#{new_resource.config_scope}\" --scope-code=\"#{new_resource.config_scope_code}\""
     config_string = "#{new_resource.config_path} #{new_resource.config_value}"
     execute "#{new_resource.name}" do
         command [command_string, scope_string, config_string].join(" ")
