@@ -7,13 +7,14 @@ user = node[:magento_custom_modules][:user]
 group = node[:magento_custom_modules][:user]
 web_root = node[:magento_custom_modules][:web_root]
 composer_file = node[:magento_custom_modules][:composer_file]
+custom_modules = node[:magento_custom_modules][:module_list]
 
 # Run composer install to download the code in composer.json
-execute "Download custom module code" do
-    command "cd #{web_root} && su #{user} -c '#{composer_file} update'"
+composer "Download custom modules" do
+    action :update 
 end
 
 # Upgrade the database
-execute "Upgrade the database" do
-    command "su #{user} -c '#{web_root}/bin/magento setup:upgrade'"
+magento_cli "Upgrade Magento database" do
+    action :db_upgrade 
 end

@@ -3,12 +3,17 @@
 # Recipe:: configure
 #
 # Copyright:: 2020, Steve, All Rights Reserved.
-composer "run" do
-  timeout node[:composer][:timeout]
-  action :configure
+web_root = node[:composer][:web_root]
+timeout = node[:composer][:timeout]
+clearcache = node[:composer][:clear_composer_cache]
+
+composer "Set composer timeout" do
+  timeout timeout
+  action :configure_app
 end
 
-composer "run" do
+composer "Clear composer cache" do
   action :clearcache
-  only_if { node[:composer][:clear_composer_cache] }
+  only_if { Dir.exist?("#{web_root}") && clearcache }
 end
+

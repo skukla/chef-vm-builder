@@ -15,28 +15,30 @@ directory_in_codebase = node[:magento_patches][:codebase_directory]
 patches_holding_area = node[:magento_patches][:holding_area]
 
 # Include the cweagans composer patches module
-execute "Download cweagans composer patches module" do
-    command "cd #{web_root} && su #{user} -c '#{composer_file} require --no-update cweagans/composer-patches'"
-    not_if { ::File.directory?("#{web_root}/vendor/cweagans") }
+composer "Download CWeagans Composer Patches module" do
+    action :require
+    package_name "cweagans/composer-patches"
+    options ["no-update"]
+    only_if { !File.foreach("#{web_root}/composer.json").grep(/cweagans/).any? }
 end
 
 # Remove patches holding area if it exists
 execute "Remove patches holding area" do
     command "sudo rm -rf #{patches_holding_area}"
-    only_if { ::File.directory?("#{patches_holding_area}") }
+    only_if { Dir.exist?("#{patches_holding_area}") }
 end
 
 # Remove patches from web root if they exist
 execute "Remove patches from web root" do
     command "sudo rm -rf #{web_root}/#{directory_in_codebase}"
-    only_if { ::File.directory?("#{web_root}/#{directory_in_codebase}") }
+    only_if { Dir.exist?("#{web_root}/#{directory_in_codebase}") }
 end
 
 # Clone the patches repository via github
 if patches_repository.include?("PMET-public")
     include_recipe "magento_internal::download_patches"
 else
-    git 'Custom patches' do
+    git 'Downlaod custom patches' do
         repository "#{patches_repository}"
         revision "#{patches_branch}"
         destination "#{patches_holding_area}"
@@ -55,5 +57,5 @@ end
 # Move patches into web root
 execute "Move patches into web root" do
     command "mv #{patches_holding_area} #{web_root}/#{directory_in_codebase}"
-    only_if { ::File.directory?("#{patches_holding_area}") }
+    only_if { ::Dir.exist?("#{patches_holding_area}") }
 end

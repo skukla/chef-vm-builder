@@ -3,10 +3,10 @@
 # Recipe:: install
 #
 # Copyright:: 2020, Steve, All Rights Reserved.
-composer "run" do
-  action :download
+composer "Download composer application" do
+    action :download_app
 end
 
-composer "run" do
-  action :install_app
+composer "Install composer application" do
+    action :install_app
 end

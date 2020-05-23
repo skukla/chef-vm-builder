@@ -1,11 +1,11 @@
 #
-# Cookbook:: magento
+# Cookbook:: nginx
 # Recipe:: create_web_root
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-user = node[:magento][:user]
-group = node[:magento][:user]
-web_root = node[:magento][:web_root]
+user = node[:nginx][:user]
+group = node[:nginx][:user]
+web_root = node[:nginx][:web_root]
 
 # Create the web root
 directory 'Web root directory' do
@@ -15,11 +15,6 @@ directory 'Web root directory' do
     mode '0770'
     recursive true
     not_if { ::File.directory?("#{web_root}") }
-end
-
-execute "Set permissions" do
-    command "chown -R #{user}:#{group} #{web_root}"
-    only_if { ::File.directory?("#{web_root}") }
 end
 
 execute "Set setgid on webroot" do

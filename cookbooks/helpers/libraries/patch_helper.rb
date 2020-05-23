@@ -1,9 +1,9 @@
 #
 # Cookbook:: helpers
-# Library:: patches_helper
+# Library:: patch_helper
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-module PatchesHelper
+module PatchHelper
     def self.build_patch_file(patch_file_directory, patches_file)
         require 'json'
         files = Dir["#{patch_file_directory}/*.patch"].sort!

@@ -8,12 +8,13 @@ default[:magento][:database][:user] = "magento"
 default[:magento][:database][:password] = "password"
 default[:magento][:database][:name] = "magento"
 
-default[:magento][:installation][:options][:family] = "Open Source"
+default[:magento][:installation][:options][:family] = "community"
 default[:magento][:installation][:options][:version] = "2.3.4"
-default[:magento][:installation][:build][:install] = true
-default[:magento][:installation][:build][:base_code] = true
+default[:magento][:installation][:options][:minimum_stability] = "stable"
+default[:magento][:installation][:build][:action] = "install"
+default[:magento][:installation][:build][:force_install] = false
 default[:magento][:installation][:build][:b2b_code] = true
-default[:magento][:installation][:build][:custom_modules] = true
+default[:magento][:installation][:build][:custom_module_code] = true
 default[:magento][:installation][:build][:modules_to_remove] = []
 default[:magento][:installation][:build][:sample_data] = true
 default[:magento][:installation][:build][:deploy_mode][:apply] = true

@@ -6,7 +6,7 @@
 supported_settings = {
     :database => [:host, :user, :password, :name],
     :installation_options => [:family, :version, :minimum_stability, :directory],
-    :build_options => [:clear_cache, :install, :base_code, :b2b_code, :custom_modules, :sample_data, :modules_to_remove, :deploy_mode => [:apply, :mode]],
+    :build_options => [:clear_cache, :action, :force_install, :b2b_code, :custom_module_code, :sample_data, :modules_to_remove, :deploy_mode => [:apply, :mode]],
     :installation_settings => [:backend_frontname, :unsecure_base_url, :secure_base_url, :language, :timezone, :currency, :admin_firstname, :admin_lastname, :admin_email, :admin_user, :admin_password, :use_rewrites, :use_secure_frontend,  :use_secure_admin, :cleanup_database, :session_save, :encryption_key]
 }
 
@@ -21,7 +21,13 @@ supported_settings.each do |setting_key, setting_data|
     when :installation_options
         setting_data.each do |option|
             next if node[:application][:installation][:options][option].nil?
-            override[:magento][:installation][:options][option] = node[:application][:installation][:options][option]
+            if option == :family
+                if node[:application][:installation][:options][:family].downcase == "commerce"
+                    override[:magento][:installation][:options][option] = "enterprise"
+                end
+            else
+                override[:magento][:installation][:options][option] = node[:application][:installation][:options][option]
+            end
         end
     when :build_options
         settings_array = Array.new

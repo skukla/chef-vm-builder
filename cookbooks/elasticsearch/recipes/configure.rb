@@ -49,24 +49,13 @@ template "Elasticsearch Configuration" do
 end
 
 # Set Java Home for Elasticsearch
-ruby_block "Set JAVA_HOME in /etc/environment" do
-    block do
-        file = Chef::Util::FileEdit.new("/etc/environment")
-        file.insert_line_if_no_match(/^JAVA_HOME=/, "JAVA_HOME=#{java_home}")
-        file.search_file_replace_line(/^JAVA_HOME=/, "JAVA_HOME=#{java_home}")
-        file.write_file
-    end
-    only_if { ::File.exist?('/etc/environment') }
-end
-
 ruby_block "Set JAVA_HOME for Elasticsearch #{version}" do
-    block do
-        file = Chef::Util::FileEdit.new("/etc/default/elasticsearch")
-        file.insert_line_if_no_match(/^#JAVA_HOME=/, "JAVA_HOME=#{java_home}")
-        file.search_file_replace_line(/^#JAVA_HOME=/, "JAVA_HOME=#{java_home}")
-        file.write_file
+    ["/etc/environment", "/etc/default/elasticsearch"].each do |file|
+        block do
+            StringReplaceHelper.set_java_home("#{file}", "#{java_home}")
+            only_if { ::File.exist?("#{file}") }
+        end
     end
-    only_if { ::File.exist?("/etc/default/elasticsearch") }
 end
 
 # Set ownership to Elasticsearch user and group

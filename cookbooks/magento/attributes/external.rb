@@ -38,6 +38,7 @@ default[:magento][:configuration][:flags][:base] = node[:magento_configuration][
 default[:magento][:configuration][:flags][:b2b] = node[:magento_configuration][:flags][:b2b]
 default[:magento][:configuration][:flags][:custom_modules] = node[:magento_configuration][:flags][:custom_modules]
 default[:magento][:configuration][:flags][:admin_users] = node[:magento_configuration][:flags][:admin_users]
+default[:magento][:admin_users] = node[:magento_configuration][:admin_users]
 
 include_attribute "magento_custom_modules::default"
 default[:magento][:custom_modules] = node[:magento_custom_modules][:module_list]
