@@ -5,6 +5,7 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 web_root = node[:magento][:web_root]
 build_action = node[:magento][:installation][:build][:action]
+base_code = node[:magento][:installation][:build][:base_code]
 force_install = node[:magento][:installation][:build][:force_install]
 install_settings = {
     backend_frontname: node[:magento][:installation][:settings][:backend_frontname],
@@ -25,33 +26,35 @@ install_settings = {
     encryption_key: node[:magento][:installation][:settings][:encryption_key]
 }
 
-include_recipe "mysql::configure_pre_install" if (!File.exist?("#{web_root}/app/etc/config.php") && build_action == "install") || build_action == "upgrade" || force_install
+if !File.exist?("#{web_root}/app/etc/config.php")
+    include_recipe "mysql::configure_pre_install" if (!File.exist?("#{web_root}/app/etc/config.php") && (build_action == "install" || build_action == "upgrade")) || force_install
 
-magento_app "Install Magento" do
-    action :install
-    install_settings install_settings
-    only_if { (!File.exist?("#{web_root}/app/etc/config.php") && build_action == "install") || force_install }
-end
+    magento_app "Install Magento" do
+        action :install
+        install_settings install_settings
+        only_if { build_action == "install" || force_install }
+    end
+else
+    magento_cli "Upgrade Magento database" do
+        action :db_upgrade
+        only_if { (build_action == "upgrade" || build_action == "custom_modules") && !apply_deploy_mode }
+    end
 
-magento_cli "Upgrade Magento database" do
-    action :db_upgrade
-    only_if { File.exist?("#{web_root}/app/etc/config.php") && build_action == "upgrade" }
-end
+    magento_cli "Re-compile dependency injections" do
+        action :di_compile
+        only_if { (build_action == "upgrade" || build_action == "custom_modules") && !apply_deploy_mode }
+    end
 
-magento_cli "Re-compile dependency injections" do
-    action :di_compile
-    only_if { File.exist?("#{web_root}/app/etc/config.php") && build_action == "upgrade" }
-end
+    magento_cli "Deploy static content" do
+        action :deploy_static_content
+        only_if { build_action == "upgrade" }
+    end
 
-magento_cli "Deploy static content" do
-    action :deploy_static_content
-    only_if { File.exist?("#{web_root}/app/etc/config.php") && build_action == "upgrade" }
-end
+    include_recipe "mysql::configure_post_install" if (build_action == "install" || build_action == "upgrade") || force_install
 
-include_recipe "mysql::configure_post_install" if (File.exist?("#{web_root}/app/etc/config.php") && (build_action == "install" || build_action == "upgrade")) || force_install
-
-magento_app "Set permissions after installation or database upgrade" do
-    action :set_permissions
-    only_if { (File.exist?("#{web_root}/app/etc/config.php") && (build_action == "install" || build_action == "upgrade")) || force_install }
+    magento_app "Set permissions after installation or database upgrade" do
+        action :set_permissions
+        only_if {  (build_action == "install" || build_action == "upgrade" || build_action == "custom_modules") || force_install }
+    end
 end
 

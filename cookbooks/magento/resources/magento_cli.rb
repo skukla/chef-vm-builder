@@ -74,7 +74,7 @@ end
 
 action :set_application_mode do
     execute "#{new_resource.name}" do
-        command "su #{new_resource.user} -c '#{new_resource.web_root}/bin/magento deploy:mode:set #{deploy_mode}'"
+        command "su #{new_resource.user} -c '#{new_resource.web_root}/bin/magento deploy:mode:set #{new_resource.deploy_mode}'"
     end
 end
 
