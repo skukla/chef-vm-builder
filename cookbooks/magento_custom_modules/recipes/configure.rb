@@ -12,7 +12,7 @@ module_list.each do |module_key, module_data|
             action :config_set
             config_path "#{setting[:path]}"
             config_value "#{ValueHelper.process_value(setting[:value])}"
-            not_if { module_data[:configuration].nil? || setting[:value].is_a? String) && (setting[:value].empty?) }
+            not_if { module_data[:configuration].nil? || ((setting[:value].is_a? String) && setting[:value].empty?) }
         end
     end
 end

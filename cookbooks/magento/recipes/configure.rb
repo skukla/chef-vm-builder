@@ -4,6 +4,7 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 user = node[:magento][:user]
+web_root = node[:magento][:web_root]
 family = node[:magento][:installation][:options][:family]
 custom_modules = node[:magento][:custom_modules]
 admin_users = node[:magento][:admin_users]
