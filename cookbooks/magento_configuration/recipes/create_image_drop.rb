@@ -21,6 +21,6 @@ if shares.has_key?(:image_drop)
         group "#{group}"
         mode "777"
         recursive true
-        not_if { ::File.directory?("#{image_drop_path}") }
+        not_if { Dir.exist?("#{image_drop_path}") }
     end
 end

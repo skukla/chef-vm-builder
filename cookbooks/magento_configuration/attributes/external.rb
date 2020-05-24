@@ -18,10 +18,14 @@ default[:magento_configuration][:samba_shares] = node[:samba][:shares]
 include_attribute "elasticsearch::default"
 default[:magento_configuration][:elasticsearch_port] = node[:elasticsearch][:port]
 
+include_attribute "magento_custom_modules::default"
+default[:magento_configuration][:custom_modules] = node[:magento_custom_modules][:module_list]
+
 # We need both of these to ensure overrides are included for some reason
 include_attribute "magento::default"
 include_attribute "magento::override"
 default[:magento_configuration][:magento_version] = node[:magento][:installation][:options][:version]
+default[:magento_configuration][:magento_family] = node[:magento][:installation][:options][:family]
 default[:magento_configuration][:database][:host] = node[:magento][:database][:host]
 default[:magento_configuration][:database][:user] = node[:magento][:database][:user]
 default[:magento_configuration][:database][:password] = node[:magento][:database][:password]

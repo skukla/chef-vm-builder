@@ -58,6 +58,7 @@ action :add_sample_data do
         owner "#{new_resource.user}"
         group "#{new_resource.group}"
         mode "0777"
+        not_if { Dir.exist?("#{new_resource.web_root}/var/composer_home") }
     end
 
     execute "Copy auth.json into place" do

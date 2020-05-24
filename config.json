@@ -14,9 +14,9 @@
 	"application": {
 		"authentication": {
 			"composer": {
-				"username": "",
-				"password": "",
-				"github_token": ""
+				"username": "b17aa908c13768cef2a5a3a043bb3c54",
+				"password": "93f1f71fd779eb46af01fd7587e5fdba",
+				"github_token": "ca5db95d8f9ebea677be19b5943475882682e1d7"
 			}
 		},
 		"installation": {
@@ -26,7 +26,7 @@
 			},
 			"build": {
 				"action": "install",
-				"force_install": true,
+				"force_install": false,
 				"sample_data": true,
 				"modules_to_remove": "magento/google-shopping-ads"
 			}

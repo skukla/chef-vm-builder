@@ -6,5 +6,8 @@
         {
             "path": "../module-custom-demo"
         }
-    ]
+    ],
+    "settings": {
+        "editor.formatOnSave": true
+    }
 }

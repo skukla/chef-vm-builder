@@ -13,14 +13,17 @@ supported_settings.each do |setting_key, setting_data|
     when :magento_build
         next unless node[:application][:installation][:build].is_a? Chef::Node::ImmutableMash
         setting_data.each do |option|
-            next if (node[:application][:installation][:build][option].nil?) || (node[:application][:installation][:build][option].empty?)
-            override[:composer][option] = node[:application][:installation][:build][option]
+            unless node[:application][:installation][:build][option].nil?
+                override[:composer][option] = node[:application][:installation][:build][option]
+            end
         end
     when :credentials
         next unless node[:application][:authentication][:composer].is_a? Chef::Node::ImmutableMash
         setting_data.each do |option|
             next if node[:application][:authentication][:composer][option].empty?
-            override[:composer][option] = node[:application][:authentication][:composer][option]
+            unless node[:application][:authentication][:composer][option].nil?
+                override[:composer][option] = node[:application][:authentication][:composer][option]
+            end
         end
     end
 end

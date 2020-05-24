@@ -3,9 +3,7 @@
 # Attribute:: default
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-# It's unusual to use external attributes inside default attribute files, so we make sure they're included...
-include_attribute "magento_configuration::external"
-default[:magento_configuration][:paths] = [
+community_paths = [
     "admin/security/admin_account_sharing",
     "admin/security/max_number_password_reset_requests",
     "admin/security/password_is_forced",
@@ -14,11 +12,6 @@ default[:magento_configuration][:paths] = [
     "admin/dashboard/enable_charts",
     "admin/usage/enabled",
     "analytics/subscription/enabled",
-    "btob/website_configuration/company_active",
-    "btob/website_configuration/negotiablequote_active",
-    "btob/website_configuration/quickorder_active",
-    "btob/website_configuration/requisition_list_active",
-    "btob/website_configuration/sharedcatalog_active",
     "carriers/dhl/active_rma",
     "carriers/dhl/free_method_nondoc",
     "carriers/dhl/free_shipping_enable",
@@ -76,15 +69,6 @@ default[:magento_configuration][:paths] = [
     "carriers/usps/specificcountry",
     "carriers/usps/userid",
     "catalog/category/root_id",
-    "catalog/magento_targetrule/crosssell_position_behavior",
-    "catalog/magento_targetrule/crosssell_position_limit",
-    "catalog/magento_targetrule/crosssell_rotation_mode",
-    "catalog/magento_targetrule/related_position_behavior",
-    "catalog/magento_targetrule/related_position_limit",
-    "catalog/magento_targetrule/related_rotation_mode",
-    "catalog/magento_targetrule/upsell_position_behavior",
-    "catalog/magento_targetrule/upsell_position_limit",
-    "catalog/magento_targetrule/upsell_rotation_mode",
     "catalog/product_video/youtube_api_key",
     "catalog/search/enable_eav_indexer",
     "catalog/search/engine",
@@ -126,10 +110,6 @@ default[:magento_configuration][:paths] = [
     "general/store_information/street_line1",
     "general/store_information/street_line2",
     "msp_securitysuite_twofactorauth/duo/application_key",
-    "sales/magento_rma/enabled",
-    "sales/magento_rma/enabled_on_product",
-    "sales/magento_rma/use_store_address",
-    "sales/msrp/enabled",
     "shipping/origin/city",
     "shipping/origin/country_id",
     "shipping/origin/postcode",
@@ -163,12 +143,33 @@ default[:magento_configuration][:paths] = [
     "web/secure/use_in_frontend",
     "web/secure/use_in_adminhtml",
     "web/seo/use_rewrites",
-    "web/unsecure/base_url",
+    "web/unsecure/base_url"
+]
+enterprise_paths = [
+    "btob/website_configuration/company_active",
+    "btob/website_configuration/negotiablequote_active",
+    "btob/website_configuration/quickorder_active",
+    "btob/website_configuration/requisition_list_active",
+    "btob/website_configuration/sharedcatalog_active",
+    "catalog/magento_targetrule/crosssell_position_behavior",
+    "catalog/magento_targetrule/crosssell_position_limit",
+    "catalog/magento_targetrule/crosssell_rotation_mode",
+    "catalog/magento_targetrule/related_position_behavior",
+    "catalog/magento_targetrule/related_position_limit",
+    "catalog/magento_targetrule/related_rotation_mode",
+    "catalog/magento_targetrule/upsell_position_behavior",
+    "catalog/magento_targetrule/upsell_position_limit",
+    "catalog/magento_targetrule/upsell_rotation_mode",
+    "sales/magento_rma/enabled",
+    "sales/magento_rma/enabled_on_product",
+    "sales/magento_rma/use_store_address",
+    "sales/msrp/enabled",
     "wishlist/general/multiple_enabled",
     "yotpo/module_info/yotpo_installation_date",
     "yotpo/sync_settings/orders_sync_start_date"
 ]
-default[:magento_configuration][:settings][:defaults] =
+
+default[:magento_configuration][:settings] =
 {
     admin: {
         dashboard: {
@@ -187,8 +188,8 @@ default[:magento_configuration][:settings][:defaults] =
         }
     },
     carriers: {
-        flatrate: {
-            active: false
+        tablerate: {
+            active: 0
         }
     },
     catalog: {
@@ -224,7 +225,14 @@ default[:magento_configuration][:settings][:defaults] =
         }
     }
 }
-default[:magento_configuration][:flags][:base] = false
-default[:magento_configuration][:flags][:b2b] = false
-default[:magento_configuration][:flags][:custom_modules] = false
-default[:magento_configuration][:flags][:admin_users] = false
+default[:magento_configuration][:flags][:base] = true
+default[:magento_configuration][:flags][:b2b] = true
+default[:magento_configuration][:flags][:custom_modules] = true
+default[:magento_configuration][:flags][:admin_users] = true
+
+include_attribute "magento_configuration::external"
+if node[:magento_configuration][:magento_family] == "enterprise"
+    default[:magento_configuration][:paths] = community_paths.concat(enterprise_paths)
+else
+    default[:magento_configuration][:paths] = community_paths
+end
