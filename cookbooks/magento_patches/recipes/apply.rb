@@ -6,7 +6,7 @@
 user = node[:magento_patches][:user]
 group = node[:magento_patches][:user]
 web_root = node[:magento_patches][:web_root]
-composer_file = node[:magento_patches][:composer_file]
+composer_file = node[:magento_patches][:composer][:file]
 directory_in_codebase = node[:magento_patches][:codebase_directory]
 patches_file = node[:magento_patches][:patches_file]
 

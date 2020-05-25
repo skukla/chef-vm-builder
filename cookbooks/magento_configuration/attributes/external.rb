@@ -7,7 +7,7 @@ include_attribute "init::default"
 default[:magento_configuration][:user] = node[:init][:os][:user]
 
 include_attribute "composer::default"
-default[:magento_configuration][:composer_file] = node[:composer][:file]
+default[:magento_configuration][:composer][:file] = node[:composer][:file]
 
 include_attribute "nginx::default"
 default[:magento_configuration][:web_root] = node[:nginx][:web_root]
@@ -19,6 +19,7 @@ include_attribute "elasticsearch::default"
 default[:magento_configuration][:elasticsearch_port] = node[:elasticsearch][:port]
 
 include_attribute "magento_custom_modules::default"
+include_attribute "magento_custom_modules::override"
 default[:magento_configuration][:custom_modules] = node[:magento_custom_modules][:module_list]
 
 # We need both of these to ensure overrides are included for some reason

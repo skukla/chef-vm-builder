@@ -29,10 +29,15 @@ module StringReplaceHelper
         file.write_file
     end
 
-    def self.upgrade_app_version(version, family, composer_json)
+    def self.update_app_version(version, family, custom_module_count, composer_json)
         replace_string_format = "%4s\"%s\": \"#{version}\","
         file = Chef::Util::FileEdit.new("#{composer_json}")
         file.search_file_replace_line("version", sprintf(replace_string_format, "\s", "version"))
+        if custom_module_count == 0
+            replace_string_format = "%8s\"%s\": \"#{version}\""
+        else
+            replace_string_format = "%8s\"%s\": \"#{version}\","
+        end
         file.search_file_replace_line("magento/product-#{family}-edition", sprintf(replace_string_format, "\s", "magento/product-#{family}-edition"))
         file.write_file
     end

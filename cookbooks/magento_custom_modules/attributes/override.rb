@@ -3,59 +3,49 @@
 # Attribute:: override
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-default_custom_modules = node[:magento_custom_modules][:module_list]
 configured_custom_modules = node[:custom_demo][:custom_modules]
 user_configurations = Array.new
 supported_settings = [:name, :version, :repository_url]
 
 unless configured_custom_modules.nil?
-    configured_custom_modules.each do |module_key, module_value|
-        module_key.include?("-") ? escaped_module_key = module_key.gsub("-", "_") : escaped_module_key = module_key
-        if configured_custom_modules[module_key].is_a? Chef::Node::ImmutableMash
+    configured_custom_modules.each do |custom_key, custom_value|
+        custom_module_hash = Hash.new
+        if !custom_value.is_a? Hash
+            if custom_value.include?("/")
+                name = custom_value
+                vendor = custom_value.split("/")[0]
+                module_name = custom_value.split("/")[1]
+            else
+                name = custom_value
+                vendor = custom_value
+            end
+            custom_module_hash[:name] = name
+            custom_module_hash[:vendor] = vendor
+            custom_module_hash[:module_name] = module_name
+        else
             supported_settings.each do |setting|
-                if setting == :version && configured_custom_modules[module_key][setting].nil?
-                    override[:magento_custom_modules][:module_list][escaped_module_key][:settings][setting] = "dev-master"
+                case setting
+                when :version
+                    custom_module_hash[:version] = "dev-master" if custom_value[setting].nil?
+                when :name
+                    unless custom_value[setting].nil?
+                        custom_module_hash[setting] = custom_value[setting]
+                        if custom_value[setting].include?("/")
+                            custom_module_hash[:vendor] = custom_value[setting].split("/")[0]
+                            custom_module_hash[:module_name] = custom_value[setting].split("/")[1]
+                        else
+                            custom_module_hash[:vendor] = custom_value[setting]
+                            custom_module_hash[:module_name] = custom_value[setting]
+                        end
+                    end
                 else
-                    unless configured_custom_modules[module_key][setting].nil?
-                        override[:magento_custom_modules][:module_list][escaped_module_key][:settings][setting] = configured_custom_modules[module_key][setting]
-                    end
+                    custom_module_hash[setting] = custom_value[setting]
                 end
             end
-        else
-            unless configured_custom_modules[module_key].empty?
-                override[:magento_custom_modules][:module_list][escaped_module_key][:settings][:name] = configured_custom_modules[module_key]
-            end
         end
-        # Now we have the require statement value whether the setting is a hash or a string, so we can further parse it
-        if node[:magento_custom_modules][:module_list][escaped_module_key][:settings][:name].include?("/")
-            override[:magento_custom_modules][:module_list][escaped_module_key][:settings][:vendor] = node[:magento_custom_modules][:module_list][escaped_module_key][:settings][:name].split("/")[0]
-            override[:magento_custom_modules][:module_list][escaped_module_key][:settings][:module_name] = node[:magento_custom_modules][:module_list][escaped_module_key][:settings][:name].split("/")[1]
-        else
-            override[:magento_custom_modules][:module_list][escaped_module_key][:settings][:module_name] = node[:magento_custom_modules][:module_list][escaped_module_key][:settings][:name]
-        end
-        # Now check for and process a configuration settings hash
-        if configured_custom_modules[module_key]["configuration"].is_a? Chef::Node::ImmutableMash
-            module_configurations = Array.new
-            unless node[:magento_custom_modules][:module_list][escaped_module_key][:settings][:module_name].nil?
-                module_name = node[:magento_custom_modules][:module_list][escaped_module_key][:settings][:module_name]
-                module_name.include?("-") ? escaped_module_name = module_name.gsub("-", "_") : escaped_module_name = module_name
-                default_custom_modules[escaped_module_name][:config_paths].each do |config_path|
-                    configuration_setting = Hash.new
-                    # Include the default setting for enabling autofill
-                    if config_path.include?("enable_autofill")
-                        configuration_setting[:path] = config_path
-                        configuration_setting[:value] = 1
-                        module_configurations << configuration_setting
-                    end
-                    setting_value = configured_custom_modules[module_key]["configuration"].dig(*config_path.split("/"))
-                    unless setting_value.nil?
-                        configuration_setting[:path] = config_path
-                        configuration_setting[:value] = setting_value
-                        module_configurations << configuration_setting
-                    end
-                end
-            end
-            override[:magento_custom_modules][:module_list][escaped_module_key][:configuration] = module_configurations
-        end
+        user_configurations << custom_module_hash
+    end
+    user_configurations.each do |module_data|
+        override[:magento_custom_modules][:module_list][module_data[:name]][:settings] = module_data
     end
 end

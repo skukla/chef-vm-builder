@@ -5,7 +5,7 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 supported_settings = {
     :magento_build => [:clear_composer_cache],
-    :credentials => [:github_token, :username, :password]
+    :credentials => [:github_token, :public_key, :private_key]
 }
 
 supported_settings.each do |setting_key, setting_data|

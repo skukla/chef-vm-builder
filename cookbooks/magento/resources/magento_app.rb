@@ -4,22 +4,26 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 resource_name :magento_app
-property :name,                 String, name_property: true
-property :pwd,                  String, default: node[:magento][:web_root]
-property :web_root,             String, default: node[:magento][:web_root]
-property :composer_file,        String, default: node[:magento][:composer_file]
-property :permission_dirs,      Array,  default: ["var/", "pub/", "app/etc/", "generated/"]
-property :user,                 String, default: node[:magento][:user]
-property :group,                String, default: node[:magento][:user]
-property :family,               String, default: node[:magento][:installation][:options][:family]
-property :version,              String, default: node[:magento][:installation][:options][:version]
-property :minimum_stability,    String, default: node[:magento][:installation][:options][:minimum_stability]
-property :modules_to_remove,    String
-property :db_host,              String, default: node[:magento][:database][:host]
-property :db_user,              String, default: node[:magento][:database][:user]
-property :db_password,          String, default: node[:magento][:database][:password]
-property :db_name,              String, default: node[:magento][:database][:name]
-property :install_settings,     Hash
+property :name,                   String, name_property: true
+property :pwd,                    String, default: node[:magento][:web_root]
+property :web_root,               String, default: node[:magento][:web_root]
+property :composer_file,          String, default: node[:magento][:composer][:file]
+property :composer_public_key,    String, default: node[:magento][:composer][:public_key]
+property :composer_private_key,   String, default: node[:magento][:composer][:private_key]
+property :composer_github_token,  String, default: node[:magento][:composer][:github_token]
+property :permission_dirs,        Array,  default: ["var/", "pub/", "app/etc/", "generated/"]
+property :user,                   String, default: node[:magento][:user]
+property :group,                  String, default: node[:magento][:user]
+property :family,                 String, default: node[:magento][:installation][:options][:family]
+property :version,                String, default: node[:magento][:installation][:options][:version]
+property :minimum_stability,      String, default: node[:magento][:installation][:options][:minimum_stability]
+property :modules_to_remove,      String
+property :db_host,                String, default: node[:magento][:database][:host]
+property :db_user,                String, default: node[:magento][:database][:user]
+property :db_password,            String, default: node[:magento][:database][:password]
+property :db_name,                String, default: node[:magento][:database][:name]
+property :custom_module_count,    Integer
+property :install_settings,       Hash
 
 action :install do
     install_string = "--db-host=#{new_resource.db_host} --db-name=#{new_resource.db_name} --db-user=#{new_resource.db_user} --db-password=#{new_resource.db_password} --backend-frontname=#{new_resource.install_settings[:backend_frontname]} --base-url=#{new_resource.install_settings[:unsecure_base_url]} --language=#{new_resource.install_settings[:language]} --timezone=#{new_resource.install_settings[:timezone]} --currency=#{new_resource.install_settings[:currency]} --admin-firstname=#{new_resource.install_settings[:admin_firstname]} --admin-lastname=#{new_resource.install_settings[:admin_lastname]} --admin-email=#{new_resource.install_settings[:admin_email]} --admin-user=#{new_resource.install_settings[:admin_user]} --admin-password=#{new_resource.install_settings[:admin_password]}"
@@ -52,6 +56,21 @@ action :install do
     end
 end
 
+action :set_auth_credentials do
+    template "#{new_resource.name}" do
+        source 'auth.json.erb'
+        path "/home/#{new_resource.user}/.composer/auth.json"
+        owner "#{new_resource.user}"
+        group "#{new_resource.group}"
+        mode '664'
+        variables({
+            public_key: "#{new_resource.composer_public_key}",
+            private_key: "#{new_resource.composer_private_key}",
+            github_token: "#{new_resource.composer_github_token}"
+        })
+    end
+end
+
 action :add_sample_data do
     directory "Create composer_home directory" do
         path "#{new_resource.web_root}/var/composer_home"
@@ -79,10 +98,10 @@ action :add_sample_data do
     end
 end
 
-action :upgrade_version do
+action :update_version do
     ruby_block "#{new_resource.name}" do
         block do
-            StringReplaceHelper.upgrade_app_version("#{new_resource.version}", "#{new_resource.family}", "#{new_resource.web_root}/composer.json")
+            StringReplaceHelper.update_app_version("#{new_resource.version}", "#{new_resource.family}", "#{new_resource.custom_module_count}", "#{new_resource.web_root}/composer.json")
         end
     end
 end

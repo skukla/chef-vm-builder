@@ -5,9 +5,9 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 user = node[:magento][:user]
 web_root = node[:magento][:web_root]
-force_install = node[:magento][:installation][:build][:force_install]
+build_action = node[:magento][:installation][:build][:action]
 
 magento_app "Uninstall Magento" do
     action :uninstall
-    only_if { !Dir.empty?("#{web_root}") && force_install }
+    only_if { !Dir.empty?("#{web_root}") && build_action == "force_install" }
 end

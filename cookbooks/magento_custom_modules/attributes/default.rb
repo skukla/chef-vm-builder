@@ -13,11 +13,13 @@ autofill_config_paths << "magentoese_autofill/general/enable_autofill"
     end
 end
 supported_custom_modules = {
-    :module_autofill => {
-        :config_paths =>  autofill_config_paths
+    :module_1 => {
+        :config_paths =>  autofill_config_paths,
+        :name => "magentoese/module-autofill"
     },
-    :elasticsuite => {
+    :module_2 => {
         :config_paths => ["catalog/search/engine"],
+        :name => "smile/elasticsuite",
         :configuration => {
             :catalog => {
                 :search  => {
@@ -28,22 +30,36 @@ supported_custom_modules = {
     }
 }
 configured_custom_modules = node[:custom_demo][:custom_modules]
+module_configurations = Array.new
 
 unless configured_custom_modules.nil?
-    supported_custom_modules.each do |module_key, module_data|
-        module_configurations = Array.new
-        module_data[:config_paths].each do |config_path|
-            if module_data.has_key?(:configuration)
-                configuration_setting = Hash.new
-                setting_value = module_data[:configuration].dig(*(config_path.split("/").map{ |segment| segment.to_sym }))
-                unless setting_value.nil?
-                    configuration_setting[:path] = config_path
-                    configuration_setting[:value] = setting_value
-                    module_configurations << configuration_setting
+    configured_custom_modules.select do |configured_key, configured_value|
+        unless configured_value.nil?
+            (configured_value.is_a? Hash) ? custom_module_name = configured_value[:name] : custom_module_name = configured_value
+            selected_modules = supported_custom_modules.select { |supported_key, supported_value| supported_value[:name] == custom_module_name }
+            selected_modules.each do |selected_key, selected_value|
+                selected_value[:config_paths].each do |config_path|
+                    if selected_value.has_key?(:configuration)
+                        configuration_setting = Hash.new
+                        setting_value = selected_value[:configuration].dig(*(config_path.split("/").map{ |segment| segment.to_sym }))
+                        unless setting_value.nil?
+                            configuration_setting[:path] = config_path
+                            configuration_setting[:value] = setting_value
+                            module_configurations << configuration_setting
+                        end
+                    end
                 end
+                default[:magento_custom_modules][:module_list][selected_value[:name]][:settings][:name] = selected_value[:name]
+                if selected_value[:name].include?("/")
+                    default[:magento_custom_modules][:module_list][selected_value[:name]][:settings][:vendor] = selected_value[:name].split("/")[0]
+                    default[:magento_custom_modules][:module_list][selected_value[:name]][:settings][:module_name] = selected_value[:name].split("/")[1]
+                else
+                    default[:magento_custom_modules][:module_list][selected_value[:name]][:settings][:vendor] = selected_value[:name]
+                    default[:magento_custom_modules][:module_list][selected_value[:name]][:settings][:module_name] = selected_value[:name]
+                end
+                default[:magento_custom_modules][:module_list][selected_value[:name]][:config_paths] = selected_value[:config_paths]
+                default[:magento_custom_modules][:module_list][selected_value[:name]][:configuration] = module_configurations
             end
         end
-        default[:magento_custom_modules][:module_list][module_key][:config_paths] = supported_custom_modules[module_key][:config_paths]
-        default[:magento_custom_modules][:module_list][module_key][:configuration] = module_configurations
     end
 end

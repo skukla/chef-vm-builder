@@ -8,13 +8,27 @@ web_root = node[:magento][:web_root]
 version = node[:magento][:installation][:options][:version]
 family = node[:magento][:installation][:options][:family]
 build_action = node[:magento][:installation][:build][:action]
-force_install = node[:magento][:installation][:build][:force_install]
 sample_data = node[:magento][:installation][:build][:sample_data]
 custom_modules = node[:magento][:custom_modules]
 modules_to_remove = node[:magento][:installation][:build][:modules_to_remove]
 apply_patches = node[:magento_patches][:apply]
 
 switch_php_user "#{user}"
+
+magento_app "Clear the cron schedule" do
+    action :clear_cron_schedule
+    only_if { ::File.exist?("/var/spool/cron/crontabs/#{user}") && build_action != "install"  }
+end
+
+magento_cli "Disable cron" do
+    action :disable_cron
+    only_if { ::File.exist?("/var/spool/cron/crontabs/#{user}") && build_action != "install" }
+end
+
+magento_app "Set auth.json credentials" do
+    action :set_auth_credentials
+    not_if { ::File.exist?("/home/#{user}/.composer/auth.json") }
+end
 
 composer "Create Magento #{family.capitalize} #{version} project" do
     action :create_project
@@ -23,70 +37,61 @@ composer "Create Magento #{family.capitalize} #{version} project" do
     package_version "#{version}"
     project_name "magento/project-#{family}-edition"
     project_directory "#{web_root}"
-    only_if { Dir.empty?("#{web_root}") && build_action == "install" }
+    only_if { Dir.empty?("#{web_root}") && (build_action == "install" || build_action == "force_install") }
 end
 
-magento_app "Upgrade Magento" do
-    action :upgrade_version
-    only_if { build_action == "upgrade" && ::File.exist?("#{web_root}/composer.json") && !::File.foreach("#{web_root}/composer.json").grep(/#{version}/).any? }
+magento_app "Update Magento version" do
+    action :update_version
+    custom_module_count custom_modules.length
+    only_if { ::File.exist?("#{web_root}/composer.json") && ::File.foreach("#{web_root}/composer.json").grep(/#{version}/).any? && build_action == "update"  }
 end
 
-# Since composer create-project --stability flag doesn't work...
 magento_app "Set project stability" do
     action :set_minimum_stability
-    only_if { ::File.exist?("#{web_root}/composer.json") && build_action == "install" }
+    only_if { (::File.exist?("#{web_root}/composer.json")) || (::File.exist?("#{web_root}/app/etc/config.php") && build_action != "install" && build_action != "reinstall") || (!::File.exist?("#{web_root}/app/etc/config.php") && build_action != "reinstall") }
 end
 
 magento_app "Remove outdated modules" do
     action :remove_modules
     modules_to_remove modules_to_remove
-    only_if { ::File.exist?("#{web_root}/composer.json") && !::File.foreach("#{web_root}/composer.json").grep(/replace/).any? && build_action == "install" }
+    only_if { (!::File.foreach("#{web_root}/composer.json").grep(/replace/).any?) && ((::File.exist?("#{web_root}/app/etc/config.php") && build_action != "install" && build_action != "reinstall") || (!::File.exist?("#{web_root}/app/etc/config.php") && build_action != "reinstall")) }
 end
 
-composer "Require B2B modules" do
+composer "Require the B2B modules" do
     action :require
     package_name "magento/extension-b2b"
     package_version "^1.0"
     options ["no-update"]
-    only_if { family == "enterprise" && ::File.exist?("#{web_root}/composer.json") && !::File.foreach("#{web_root}/composer.json").grep(/extension-b2b/).any? && build_action == "install"}
+    only_if { (family == "enterprise" && ::File.exist?("#{web_root}/composer.json") && !::File.foreach("#{web_root}/composer.json").grep(/extension-b2b/).any?) && (build_action == "force_install") || (!::File.exist?("#{web_root}/app/etc/config.php") && build_action == "install") }
 end
 
-if !custom_modules.nil? && (build_action == "install" || build_action == "custom_modules")
-    include_recipe "magento_custom_modules::download"
-end
-
-if apply_patches
+if apply_patches && (build_action == "force_install") || (build_action == "install" && !::File.exist?("#{web_root}/app/etc/config.php"))
     include_recipe "magento_patches::download"
     include_recipe "magento_patches::apply"
 end
 
-# Magento hasn't been installed yet...
-composer "Download codebase" do
+if (build_action == "force_install") || (build_action != "install" && build_action != "force_install" && ::File.exist?("#{web_root}/app/etc/config.php"))
+    if !custom_modules.nil?
+        include_recipe "magento_custom_modules::download"
+    end
+end
+
+composer "Download the codebase" do
     action :install
-    only_if { !(::File.exist?("#{web_root}/app/etc/config.php") && build_action == "install") || force_install }
-end
-# Magento is installed already
-magento_cli "Disable cron" do
-    action :disable_cron
-    only_if { ::File.exist?("#{web_root}/app/etc/config.php") && ::File.exist?("/var/spool/cron/crontabs/#{user}") && (build_action == "install" || build_action == "upgrade" || build_action == "custom_modules") }
+    not_if { (::File.exist?("#{web_root}/app/etc/config.php") && build_action != "reinstall") || build_action != "force_install" }
 end
 
-magento_app "Clear cron schedule" do
-    action :clear_cron_schedule
-    only_if { ::File.exist?("#{web_root}/app/etc/config.php") && (build_action == "install" || build_action == "upgrade" || build_action == "custom_modules") }
-end
-
-composer "Update codebase" do
-    action :upgrade
-    only_if { ::File.exist?("#{web_root}/app/etc/config.php") && (build_action == "upgrade" || build_action == "custom_modules") }
+composer "Update the codebase" do
+    action :update
+    only_if { ::File.exist?("#{web_root}/app/etc/config.php") && build_action == "update"  }
 end
 
 magento_app "Add sample data" do
     action :add_sample_data
-    only_if { !::File.exist?("#{web_root}/var/.sample-data-state.flag") && sample_data }
+    not_if { ::File.exist?("#{web_root}/var/.sample-data-state.flag") || !sample_data }
 end
 
-magento_app "Set permissions" do
+magento_app "Set permissions after downloading code" do
     action :set_permissions
-    only_if { ::File.exist?("#{web_root}/app/etc/config.php") && (build_action == "install" || build_action == "upgrade" || build_action == "custom_modules") }
+    only_if { ::File.exist?("#{web_root}/app/etc/config.php") }
 end

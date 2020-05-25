@@ -6,7 +6,7 @@
 user = node[:magento_custom_modules][:user]
 group = node[:magento_custom_modules][:user]
 web_root = node[:magento_custom_modules][:web_root]
-composer_file = node[:magento_custom_modules][:composer_file]
+composer_file = node[:magento_custom_modules][:composer][:file]
 custom_modules = node[:magento_custom_modules][:module_list]
 
 # Run composer install to download the code in composer.json

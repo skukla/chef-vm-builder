@@ -8,10 +8,10 @@ default[:magento][:user] = node[:init][:os][:user]
 default[:magento][:installation][:settings][:timezone] = node[:init][:os][:timezone]
 
 include_attribute "composer::default"
-default[:magento][:composer_file] = node[:composer][:file]
-default[:magento][:composer_username] = node[:composer][:username]
-default[:magento][:composer_password] = node[:composer][:password]
-default[:magento][:github_token] = node[:composer][:github_token]
+default[:magento][:composer][:file] = node[:composer][:file]
+default[:magento][:composer][:public_key] = node[:composer][:public_key]
+default[:magento][:composer][:private_key] = node[:composer][:private_key]
+default[:magento][:composer][:github_token] = node[:composer][:github_token]
 
 include_attribute "php::default"
 default[:magento][:php_version] = node[:php][:version]
