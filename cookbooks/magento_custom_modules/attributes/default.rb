@@ -29,6 +29,7 @@ supported_custom_modules = {
         }
     }
 }
+default[:magento_custom_modules][:module_list] = Hash.new if node[:magento_custom_modules].nil?
 configured_custom_modules = node[:custom_demo][:custom_modules]
 module_configurations = Array.new
 
