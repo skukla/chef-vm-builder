@@ -13,4 +13,4 @@ include_attribute 'nginx::default'
 default[:magento_custom_modules][:web_root] = node[:nginx][:web_root]
 
 include_attribute 'elasticsearch::default'
-default[:magento_custom_modules][:use_elasticsearch] = node[:elasticsearch][:use]
+default[:magento_custom_modules][:elasticsearch][:use] = node[:elasticsearch][:use]

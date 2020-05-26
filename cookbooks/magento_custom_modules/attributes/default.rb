@@ -29,7 +29,6 @@ supported_custom_modules = {
         }
     }
 }
-default[:magento_custom_modules][:module_list] = Hash.new if node[:magento_custom_modules].nil?
 configured_custom_modules = node[:custom_demo][:custom_modules]
 module_configurations = Array.new
 
@@ -39,8 +38,8 @@ unless configured_custom_modules.nil?
             (configured_value.is_a? Hash) ? custom_module_name = configured_value[:name] : custom_module_name = configured_value
             selected_modules = supported_custom_modules.select { |supported_key, supported_value| supported_value[:name] == custom_module_name }
             selected_modules.each do |selected_key, selected_value|
-                selected_value[:config_paths].each do |config_path|
-                    if selected_value.has_key?(:configuration)
+                if selected_value.has_key?(:configuration)
+                    selected_value[:config_paths].each do |config_path|
                         configuration_setting = Hash.new
                         setting_value = selected_value[:configuration].dig(*(config_path.split("/").map{ |segment| segment.to_sym }))
                         unless setting_value.nil?

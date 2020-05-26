@@ -26,7 +26,11 @@ unless configured_custom_modules.nil?
             supported_settings.each do |setting|
                 case setting
                 when :version
-                    custom_module_hash[:version] = "dev-master" if custom_value[setting].nil?
+                    if custom_value[setting].nil?
+                        custom_module_hash[:version] = "dev-master"
+                    else
+                        custom_module_hash[:version] = custom_value[setting]
+                    end
                 when :name
                     unless custom_value[setting].nil?
                         custom_module_hash[setting] = custom_value[setting]

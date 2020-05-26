@@ -54,9 +54,9 @@ module ValueHelper
         end
         
         # Booleans
-        if value == true
+        if value.to_s == "true"
             return 1
-        elsif value == false
+        elsif value.to_s == "false"
             return 0
         end
         

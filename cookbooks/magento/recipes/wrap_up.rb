@@ -9,42 +9,38 @@ build_action = node[:magento][:installation][:build][:action]
 force_install = node[:magento][:installation][:build][:force_install]
 apply_deploy_mode = node[:magento][:installation][:build][:deploy_mode][:apply]
 
-magento_cli "Set application mode" do
+magento_app "Set application mode" do
     action :set_application_mode
     only_if { apply_deploy_mode }
 end
 
-if ::File.exist?("#{web_root}/app/etc/config.php") && (build_action == "force_install")
-    magento_cli "Enable cron" do
-        action :enable_cron
-        only_if { ::File.exist?("#{web_root}/app/etc/config.php") && !::File.exist?("/var/spool/cron/crontabs/#{user}") }
-    end
-
-    magento_cli "Set indexers to On Schedule mode" do
-        action :set_indexer_mode
-        only_if { !::File.exist?("#{web_root}/app/etc/config.php") && (build_action == "install" || build_action == "force_install") }
-    end
-
-    include_recipe "magento_configuration::create_image_drop"
+magento_app "Enable cron" do
+    action :enable_cron
+    not_if { ::File.exist?("/var/spool/cron/crontabs/#{user}") }
 end
 
-magento_cli "Reset indexers" do
+magento_app "Set indexers to On Schedule mode" do
+    action :set_indexer_mode
+    only_if { (!::File.exist?("#{web_root}/app/etc/config.php") && build_action == "install") || build_action == "force_install" }
+end
+
+magento_config "Create image drop directory" do
+    action :create_image_drop
+end
+
+magento_app "Reset indexers" do
     action :reset_indexers
-    only_if { ::File.exist?("#{web_root}/app/etc/config.php") &&  (build_action == "install" || build_action == "force_install") }
 end
 
-magento_cli "Reindex" do
+magento_app "Reindex" do
     action :reindex
-    only_if { ::File.exist?("#{web_root}/app/etc/config.php") &&  (build_action == "install" || build_action == "force_install") }
 end
 
-magento_cli "Clean config and full page cache" do
+magento_app "Clean config and full page cache" do
     action :clean_cache
     cache_types ["config", "full_page"]
-    only_if { ::File.exist?("#{web_root}/app/etc/config.php") &&  (build_action == "install" || build_action == "force_install") }
 end
 
 magento_app "Set final permissions" do
     action :set_permissions
-    only_if { ::File.exist?("#{web_root}/app/etc/config.php") }
 end

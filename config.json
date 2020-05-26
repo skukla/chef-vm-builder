@@ -26,7 +26,7 @@
 			},
 			"build": {
 				"action": "install",
-				"sample_data": true,
+				"sample_data": false,
 				"modules_to_remove": "magento/google-shopping-ads"
 			}
 		}

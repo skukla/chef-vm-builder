@@ -11,7 +11,13 @@
 			}
 		},
 		"custom_modules": {
-			"module-1": {
+			"elasticsuite": {
+				"name": "smile/elasticsuite",
+				"version": "~2.8"
+			},
+			"elasticsuite-shared-catalog": "smile/module-elasticsuite-shared-catalog",
+			"elasticsuite-quick-order": "smile/module-elasticsuite-quick-order",
+			"autofill": {
 				"name": "magentoese/module-autofill",
 				"repository_url": "git@github.com:PMET-public/module-autofill.git",
 				"configuration": {
@@ -33,9 +39,16 @@
 						}
 					}
 				}
-			},
-			"module-2": "mageplaza/magento-delete-orders",
-			"module-3": "smile/elasticsuite"
+			}
+		},
+		"admin_users": {
+			"Christine": {
+				"first_name": "Christine",
+				"last_name": "Jacobs",
+				"username": "christine",
+				"password": "Password1",
+				"email": "christine@luma.com"
+			}
 		}
 	},
 	"application": {
@@ -54,16 +67,42 @@
 			"build": {
 				"action": "update",
 				"sample_data": false,
-				"deploy_mode": true,
-				"modules_to_remove": "magento/google-shopping-ads"
+				"modules_to_remove": "magento/google-shopping-ads",
+				"deploy_mode": false
+			}
+		},
+		"configuration": {
+			"btob": {
+				"website_configuration": {
+					"company_active": {
+						"website": {
+							"base": true
+						}
+					},
+					"negotiablequote_active": {
+						"website": {
+							"base": true
+						}
+					},
+					"quickorder_active": {
+						"website": {
+							"base": true
+						}
+					},
+					"requisition_list_active": {
+						"website": {
+							"base": true
+						}
+					}
+				}
 			}
 		}
 	},
 	"infrastructure": {
 		"php": "7.3",
-		"elasticsearch": false,
-		"mailhog": false,
-		"samba": false
+		"elasticsearch": true,
+		"mailhog": true,
+		"samba": true
 	},
 	"provisioner": {
 		"type": "chef_zero",

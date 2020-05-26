@@ -11,18 +11,19 @@ build_action = node[:magento][:installation][:build][:action]
 sample_data = node[:magento][:installation][:build][:sample_data]
 custom_modules = node[:magento][:custom_modules]
 modules_to_remove = node[:magento][:installation][:build][:modules_to_remove]
-apply_patches = node[:magento_patches][:apply]
+apply_patches = node[:magento][:patches][:apply]
+use_elasticsearch = node[:magento][:elasticsearch][:use]
 
 switch_php_user "#{user}"
 
 magento_app "Clear the cron schedule" do
     action :clear_cron_schedule
-    only_if { ::File.exist?("/var/spool/cron/crontabs/#{user}") && build_action != "install"  }
+    only_if { ::File.exist?("#{web_root}/app/etc/config.php") && ::File.exist?("/var/spool/cron/crontabs/#{user}") && build_action != "install"  }
 end
 
-magento_cli "Disable cron" do
+magento_app "Disable cron" do
     action :disable_cron
-    only_if { ::File.exist?("/var/spool/cron/crontabs/#{user}") && build_action != "install" }
+    only_if { ::File.exist?("#{web_root}/app/etc/config.php") && ::File.exist?("/var/spool/cron/crontabs/#{user}") && build_action != "install" }
 end
 
 magento_app "Set auth.json credentials" do
@@ -40,21 +41,25 @@ composer "Create Magento #{family.capitalize} #{version} project" do
     only_if { Dir.empty?("#{web_root}") && (build_action == "install" || build_action == "force_install") }
 end
 
-magento_app "Update Magento version" do
-    action :update_version
-    custom_module_count custom_modules.length
-    only_if { ::File.exist?("#{web_root}/composer.json") && ::File.foreach("#{web_root}/composer.json").grep(/#{version}/).any? && build_action == "update"  }
+composer "Set the project stability setting" do
+    action :set_project_stability
+    only_if { (::File.exist?("#{web_root}/composer.json")) || (::File.exist?("#{web_root}/app/etc/config.php") && build_action != "install" && build_action != "reinstall") || (!::File.exist?("#{web_root}/app/etc/config.php") && build_action != "reinstall") }
 end
 
-magento_app "Set project stability" do
-    action :set_minimum_stability
+composer "Update the project sort-packages setting" do
+    action :update_sort_packages
     only_if { (::File.exist?("#{web_root}/composer.json")) || (::File.exist?("#{web_root}/app/etc/config.php") && build_action != "install" && build_action != "reinstall") || (!::File.exist?("#{web_root}/app/etc/config.php") && build_action != "reinstall") }
+end
+
+magento_app "Update the Magento version" do
+    action :update_version
+    only_if { ::File.exist?("#{web_root}/composer.json") && ::File.foreach("#{web_root}/composer.json").grep(/#{version}/).any? && build_action == "update"  }
 end
 
 magento_app "Remove outdated modules" do
     action :remove_modules
     modules_to_remove modules_to_remove
-    only_if { (!::File.foreach("#{web_root}/composer.json").grep(/replace/).any?) && ((::File.exist?("#{web_root}/app/etc/config.php") && build_action != "install" && build_action != "reinstall") || (!::File.exist?("#{web_root}/app/etc/config.php") && build_action != "reinstall")) }
+    not_if { ::File.foreach("#{web_root}/composer.json").grep(/replace/).any? || (::File.exist?("#{web_root}/app/etc/config.php") && (build_action == "install" || build_action == "reinstall")) }
 end
 
 composer "Require the B2B modules" do
@@ -70,18 +75,24 @@ if apply_patches && (build_action == "force_install") || (build_action == "insta
     include_recipe "magento_patches::apply"
 end
 
-if (build_action == "force_install") || (build_action != "install" && build_action != "force_install" && ::File.exist?("#{web_root}/app/etc/config.php"))
-    if !custom_modules.nil?
-        include_recipe "magento_custom_modules::download"
+custom_modules.each do |custom_module_key, custom_module_data|
+    custom_module "Add #{custom_module_data[:settings][:name]}" do
+        action :download
+        module_name "#{custom_module_data[:settings][:module_name]}"
+        package_name "#{custom_module_data[:settings][:name]}"
+        package_version "#{custom_module_data[:settings][:version]}"
+        repository_url "#{custom_module_data[:settings][:repository_url]}"
+        options ["no-update"]
+        not_if { build_action == "reinstall" || (build_action == "install" && ::File.exist?("#{web_root}/app/etc/config.php")) || (!use_elasticsearch && custom_module_data[:setting][:module_name].include?("elasticsuite")) }
     end
 end
 
-composer "Download the codebase" do
-    action :install
+magento_app "Download the codebase" do
+    action :download
     not_if { (::File.exist?("#{web_root}/app/etc/config.php") && build_action != "reinstall") || build_action != "force_install" }
 end
 
-composer "Update the codebase" do
+magento_app "Update the codebase" do
     action :update
     only_if { ::File.exist?("#{web_root}/app/etc/config.php") && build_action == "update"  }
 end
@@ -93,5 +104,5 @@ end
 
 magento_app "Set permissions after downloading code" do
     action :set_permissions
-    only_if { ::File.exist?("#{web_root}/app/etc/config.php") }
+    not_if { (::File.exist?("#{web_root}/app/etc/config.php") && build_action == "install") }
 end

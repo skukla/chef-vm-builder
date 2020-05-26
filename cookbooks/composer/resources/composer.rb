@@ -9,7 +9,7 @@ property :install_directory,    String, default: node[:composer][:install_dir]
 property :file,                 String, default: node[:composer][:file]
 property :user,                 String, default: node[:composer][:user]
 property :group,                String, default: node[:composer][:user]
-property :pwd,                  String, default: node[:composer][:web_root]
+property :web_root,             String, default: node[:composer][:web_root]
 property :options,              Array
 property :project_name,         String
 property :project_directory,    String
@@ -68,15 +68,31 @@ end
 action :create_project do
     execute "#{new_resource.name}" do
         options_string = "--#{new_resource.options.join(" --")}" if !new_resource.options.nil?
-        command "su #{new_resource.user} -c '#{new_resource.install_directory}/#{new_resource.file} create-project #{options_string} --stability #{new_resource.project_stability} --repository-url=#{new_resource.repository_url} #{new_resource.project_name}:#{new_resource.package_version} #{new_resource.pwd}'"
-        cwd "#{new_resource.pwd}"
+        command "su #{new_resource.user} -c '#{new_resource.install_directory}/#{new_resource.file} create-project #{options_string} --stability #{new_resource.project_stability} --repository-url=#{new_resource.repository_url} #{new_resource.project_name}:#{new_resource.package_version} #{new_resource.web_root}'"
+        cwd "#{new_resource.web_root}"
+    end
+end
+
+action :set_project_stability do
+    ruby_block "#{new_resource.name}" do
+        block do
+            StringReplaceHelper.set_project_stability("#{new_resource.project_stability}", "#{new_resource.web_root}/composer.json")
+        end
+    end
+end
+
+action :update_sort_packages do
+    ruby_block "#{new_resource.name}" do
+        block do
+            StringReplaceHelper.update_sort_packages("#{new_resource.web_root}/composer.json")
+        end
     end
 end
 
 action :add_repository do
     execute "#{new_resource.name}" do
         command "su #{new_resource.user} -c '#{new_resource.install_directory}/#{new_resource.file} config repositories.#{new_resource.package_name} git #{new_resource.repository_url}'"
-        cwd "#{new_resource.pwd}"
+        cwd "#{new_resource.web_root}"
     end
 end
 
@@ -89,28 +105,21 @@ action :require do
     end
     execute "#{new_resource.name}" do
         command "su #{new_resource.user} -c '#{new_resource.install_directory}/#{new_resource.file} require #{options_string} #{package_string}'"
-        cwd "#{new_resource.pwd}"
+        cwd "#{new_resource.web_root}"
     end
 end
     
 action :install do
     execute "#{new_resource.name}" do
         command "su #{new_resource.user} -c '#{new_resource.install_directory}/#{new_resource.file} install'"
-        cwd "#{new_resource.pwd}"
+        cwd "#{new_resource.web_root}"
     end
 end
 
 action :update do
     execute "#{new_resource.name}" do
         command "su #{new_resource.user} -c '#{new_resource.install_directory}/#{new_resource.file} update'"
-        cwd "#{new_resource.pwd}"
-    end
-end
-
-action :upgrade do
-    execute "#{new_resource.name}" do
-        command "su #{new_resource.user} -c '#{new_resource.install_directory}/#{new_resource.file} upgrade'"
-        cwd "#{new_resource.pwd}"
+        cwd "#{new_resource.web_root}"
     end
 end
 
@@ -123,6 +132,6 @@ end
 action :config_extra do
     execute "#{new_resource.name}" do
         command "su #{new_resource.user} -c '#{new_resource.install_directory}/#{new_resource.file} config extra.patches-file #{new_resource.extra_content}'"
-        cwd "#{new_resource.pwd}"
+        cwd "#{new_resource.web_root}"
     end
 end

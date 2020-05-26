@@ -22,23 +22,26 @@ module StringReplaceHelper
         file.write_file
     end
     
-    def self.set_minimum_stability(stability_level, composer_json)
+    def self.set_project_stability(stability_level, composer_json)
         replace_string_format = "%4s\"minimum-stability\": \"#{stability_level}\","
         file = Chef::Util::FileEdit.new("#{composer_json}")
         file.search_file_replace_line("minimum-stability", sprintf(replace_string_format, "\s"))
         file.write_file
     end
 
-    def self.update_app_version(version, family, custom_module_count, composer_json)
-        replace_string_format = "%4s\"%s\": \"#{version}\","
+    def self.update_sort_packages(composer_json)
+        replace_string_format = "%8s\"sort-packages\": false"
         file = Chef::Util::FileEdit.new("#{composer_json}")
-        file.search_file_replace_line("version", sprintf(replace_string_format, "\s", "version"))
-        if custom_module_count == 0
-            replace_string_format = "%8s\"%s\": \"#{version}\""
-        else
-            replace_string_format = "%8s\"%s\": \"#{version}\","
-        end
+        file.search_file_replace_line("sort-packages", sprintf(replace_string_format, "\s"))
+        file.write_file
+    end
+
+    def self.update_app_version(version, family, composer_json)
+        replace_string_format = "%8s\"%s\": \"#{version}\","
+        file = Chef::Util::FileEdit.new("#{composer_json}")
         file.search_file_replace_line("magento/product-#{family}-edition", sprintf(replace_string_format, "\s", "magento/product-#{family}-edition"))
+        replace_string_format = "%4s\"%s\": \"#{version}\","
+        file.search_file_replace_line("version", sprintf(replace_string_format, "\s", "version"))
         file.write_file
     end
 

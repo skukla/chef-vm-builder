@@ -3,7 +3,6 @@
 # Recipe:: uninstall
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-user = node[:magento][:user]
 web_root = node[:magento][:web_root]
 build_action = node[:magento][:installation][:build][:action]
 

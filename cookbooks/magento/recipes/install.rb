@@ -27,32 +27,32 @@ install_settings = {
 }
 
 
-include_recipe "mysql::configure_pre_install"
+include_recipe "mysql::configure_pre_install" unless (::File.exist?("#{web_root}/app/etc/config.php") && build_action == "install")
 
 magento_app "Install Magento" do
     action :install
     install_settings install_settings
-    only_if { !::File.exist?("#{web_root}/app/etc/config.php") && (build_action == "install" || build_action == "force_install") || (::File.exist?("#{web_root}/app/etc/config.php") && build_action == "reinstall") }
+    not_if { ::File.exist?("#{web_root}/app/etc/config.php") && (build_action != "reinstall") }
 end
 
-magento_cli "Upgrade Magento database" do
+magento_app "Upgrade Magento database" do
     action :db_upgrade
     only_if { ::File.exist?("#{web_root}/app/etc/config.php") && build_action == "update" }
 end
 
-magento_cli "Re-compile dependency injections" do
+magento_app "Re-compile dependency injections" do
     action :di_compile
     only_if { ::File.exist?("#{web_root}/app/etc/config.php") && build_action == "update" && !apply_deploy_mode }
 end
 
-magento_cli "Deploy static content" do
+magento_app "Deploy static content" do
     action :deploy_static_content
     only_if { ::File.exist?("#{web_root}/app/etc/config.php") && build_action == "update" && !apply_deploy_mode }
 end
 
-include_recipe "mysql::configure_post_install"
+include_recipe "mysql::configure_post_install" unless (::File.exist?("#{web_root}/app/etc/config.php") && build_action == "install")
 
 magento_app "Set permissions after installation or database upgrade" do
     action :set_permissions
-    only_if { ::File.exist?("#{web_root}/app/etc/config.php") }
+    not_if { (::File.exist?("#{web_root}/app/etc/config.php") && build_action == "install") }
 end

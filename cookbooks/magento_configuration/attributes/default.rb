@@ -168,7 +168,6 @@ enterprise_paths = [
     "yotpo/module_info/yotpo_installation_date",
     "yotpo/sync_settings/orders_sync_start_date"
 ]
-
 default[:magento_configuration][:settings] =
 {
     admin: {
@@ -203,6 +202,9 @@ default[:magento_configuration][:settings] =
             upsell_position_limit: 5,
             upsell_position_behavior: 0,
             upsell_rotation_mode: 0
+        },
+        search: {
+            engine: "elasticsearch6"
         }
     },
     customer: {
@@ -225,6 +227,7 @@ default[:magento_configuration][:settings] =
         }
     }
 }
+default[:magento_configuration][:admin_users] = Hash.new
 default[:magento_configuration][:flags][:base] = true
 default[:magento_configuration][:flags][:b2b] = true
 default[:magento_configuration][:flags][:custom_modules] = true
