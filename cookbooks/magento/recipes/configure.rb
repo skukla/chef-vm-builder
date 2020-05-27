@@ -9,7 +9,6 @@ family = node[:magento][:installation][:options][:family]
 build_action = node[:magento][:installation][:build][:action]
 use_elasticsearch = node[:magento][:elasticsearch][:use]
 custom_modules = node[:magento][:custom_modules]
-exclude_list = ["smile/elasticsuite"] if !use_elasticsearch
 config_paths = node[:magento][:configuration][:paths]
 config_settings = node[:magento][:configuration][:settings]
 admin_users = node[:magento][:configuration][:admin_users]
@@ -56,7 +55,7 @@ end
 custom_module_config "Configure custom modules" do
     action :process_configuration
     module_list custom_modules
-    exclude_list exclude_list
+    exclude_list ["smile/elasticsuite"] if !use_elasticsearch
     not_if { !configure_custom_modules || custom_modules.empty? || (::File.exist?("#{web_root}/app/etc/config.php") && build_action == "install") }
 end
 

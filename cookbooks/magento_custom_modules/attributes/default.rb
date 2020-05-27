@@ -12,7 +12,7 @@ autofill_config_paths << "magentoese_autofill/general/enable_autofill"
         autofill_config_paths << "magentoese_autofill/persona_#{i}/#{field}"
     end
 end
-supported_custom_modules = {
+supported_modules = {
     :module_1 => {
         :config_paths =>  autofill_config_paths,
         :name => "magentoese/module-autofill"
@@ -29,15 +29,27 @@ supported_custom_modules = {
         }
     }
 }
-configured_custom_modules = node[:custom_demo][:custom_modules]
-module_configurations = Array.new
 
-unless configured_custom_modules.nil?
-    configured_custom_modules.select do |configured_key, configured_value|
+configured_modules = node[:custom_demo][:custom_modules]
+default_configurations = Array.new
+module_list = Array.new
+
+unless configured_modules.nil?
+    configured_modules.select do |configured_key, configured_value|
         unless configured_value.nil?
             (configured_value.is_a? Hash) ? custom_module_name = configured_value[:name] : custom_module_name = configured_value
-            selected_modules = supported_custom_modules.select { |supported_key, supported_value| supported_value[:name] == custom_module_name }
+            selected_modules = supported_modules.select { |supported_key, supported_value| supported_value[:name] == custom_module_name }
             selected_modules.each do |selected_key, selected_value|
+                custom_module_hash = Hash.new
+                custom_module_hash[:package_name] = selected_value[:name]
+                if selected_value[:name].include?("/")
+                    custom_module_hash[:vendor] = selected_value[:name].split("/")[0]
+                    custom_module_hash[:module_name] = selected_value[:name].split("/")[1]
+                else
+                    custom_module_hash[:vendor] = selected_value[:name]
+                    custom_module_hash[:module_name] = selected_value[:name]
+                end
+                custom_module_hash[:config_paths] = selected_value[:config_paths]
                 if selected_value.has_key?(:configuration)
                     selected_value[:config_paths].each do |config_path|
                         configuration_setting = Hash.new
@@ -45,21 +57,18 @@ unless configured_custom_modules.nil?
                         unless setting_value.nil?
                             configuration_setting[:path] = config_path
                             configuration_setting[:value] = setting_value
-                            module_configurations << configuration_setting
+                            default_configurations << configuration_setting
                         end
                     end
                 end
-                default[:magento_custom_modules][:module_list][selected_value[:name]][:settings][:name] = selected_value[:name]
-                if selected_value[:name].include?("/")
-                    default[:magento_custom_modules][:module_list][selected_value[:name]][:settings][:vendor] = selected_value[:name].split("/")[0]
-                    default[:magento_custom_modules][:module_list][selected_value[:name]][:settings][:module_name] = selected_value[:name].split("/")[1]
-                else
-                    default[:magento_custom_modules][:module_list][selected_value[:name]][:settings][:vendor] = selected_value[:name]
-                    default[:magento_custom_modules][:module_list][selected_value[:name]][:settings][:module_name] = selected_value[:name]
-                end
-                default[:magento_custom_modules][:module_list][selected_value[:name]][:config_paths] = selected_value[:config_paths]
-                default[:magento_custom_modules][:module_list][selected_value[:name]][:configuration] = module_configurations
+                custom_module_hash[:configuration] = default_configurations
+                module_list << custom_module_hash
             end
         end
     end
+    module_list.each do |module_data|
+        default[:magento_custom_modules][:module_list][module_data[:package_name]] = module_data
+    end
 end
+# If none of the OOB-supported modules are in use, set module_list to an empty hash
+default[:magento_custom_modules][:module_list] = Hash.new if node[:magento_custom_modules].nil?

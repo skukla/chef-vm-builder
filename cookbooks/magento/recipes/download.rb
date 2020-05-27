@@ -75,15 +75,17 @@ if apply_patches && (build_action == "force_install") || (build_action == "insta
     include_recipe "magento_patches::apply"
 end
 
-custom_modules.each do |custom_module_key, custom_module_data|
-    custom_module "Add #{custom_module_data[:settings][:name]}" do
-        action :download
-        module_name "#{custom_module_data[:settings][:module_name]}"
-        package_name "#{custom_module_data[:settings][:name]}"
-        package_version "#{custom_module_data[:settings][:version]}"
-        repository_url "#{custom_module_data[:settings][:repository_url]}"
-        options ["no-update"]
-        not_if { build_action == "reinstall" || (build_action == "install" && ::File.exist?("#{web_root}/app/etc/config.php")) || (!use_elasticsearch && custom_module_data[:setting][:module_name].include?("elasticsuite")) }
+unless custom_modules.empty?
+    custom_modules.each do |custom_module_key, custom_module_data|
+        custom_module "Add #{custom_module_data[:module_name]}" do
+            action :download
+            package_name "#{custom_module_data[:package_name]}"
+            module_name "#{custom_module_data[:module_name]}"
+            package_version "#{custom_module_data[:package_version]}"
+            repository_url "#{custom_module_data[:repository_url]}"
+            options ["no-update"]
+            not_if { build_action == "reinstall" || build_action == "install" && (::File.exist?("#{web_root}/app/etc/config.php")) || (!use_elasticsearch && custom_module_data[:module_name].include?("elasticsuite")) }
+        end
     end
 end
 

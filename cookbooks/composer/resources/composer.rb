@@ -14,9 +14,10 @@ property :options,              Array
 property :project_name,         String
 property :project_directory,    String
 property :project_stability,    String, default: node[:composer][:project_stability]
-property :repository_url,       String
 property :package_name,         String
 property :package_version,      String
+property :module_name,          String
+property :repository_url,       String
 property :extra_content,        String
 property :timeout,              Integer
 
@@ -91,7 +92,7 @@ end
 
 action :add_repository do
     execute "#{new_resource.name}" do
-        command "su #{new_resource.user} -c '#{new_resource.install_directory}/#{new_resource.file} config repositories.#{new_resource.package_name} git #{new_resource.repository_url}'"
+        command "su #{new_resource.user} -c '#{new_resource.install_directory}/#{new_resource.file} config repositories.#{new_resource.module_name} git #{new_resource.repository_url}'"
         cwd "#{new_resource.web_root}"
     end
 end

@@ -11,12 +11,6 @@
 			}
 		},
 		"custom_modules": {
-			"elasticsuite": {
-				"name": "smile/elasticsuite",
-				"version": "~2.8"
-			},
-			"elasticsuite-shared-catalog": "smile/module-elasticsuite-shared-catalog",
-			"elasticsuite-quick-order": "smile/module-elasticsuite-quick-order",
 			"autofill": {
 				"name": "magentoese/module-autofill",
 				"repository_url": "git@github.com:PMET-public/module-autofill.git",
@@ -40,15 +34,6 @@
 					}
 				}
 			}
-		},
-		"admin_users": {
-			"Christine": {
-				"first_name": "Christine",
-				"last_name": "Jacobs",
-				"username": "christine",
-				"password": "Password1",
-				"email": "christine@luma.com"
-			}
 		}
 	},
 	"application": {
@@ -65,42 +50,15 @@
 				"version": "2.3.5-p1"
 			},
 			"build": {
-				"action": "update",
+				"action": "force_install",
 				"sample_data": false,
-				"modules_to_remove": "magento/google-shopping-ads",
-				"deploy_mode": false
-			}
-		},
-		"configuration": {
-			"btob": {
-				"website_configuration": {
-					"company_active": {
-						"website": {
-							"base": true
-						}
-					},
-					"negotiablequote_active": {
-						"website": {
-							"base": true
-						}
-					},
-					"quickorder_active": {
-						"website": {
-							"base": true
-						}
-					},
-					"requisition_list_active": {
-						"website": {
-							"base": true
-						}
-					}
-				}
+				"modules_to_remove": "magento/google-shopping-ads"
 			}
 		}
 	},
 	"infrastructure": {
 		"php": "7.3",
-		"elasticsearch": true,
+		"elasticsearch": false,
 		"mailhog": true,
 		"samba": true
 	},

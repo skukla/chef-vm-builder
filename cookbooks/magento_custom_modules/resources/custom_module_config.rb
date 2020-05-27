@@ -9,8 +9,7 @@ property :module_list,            Hash
 property :exclude_list,           Array, default: Array.new
 
 action :process_configuration do
-    selected_modules = new_resource.module_list.select{|key, data| !new_resource.exclude_list.include? data[:settings][:name] }
-    print selected_modules
+    selected_modules = new_resource.module_list.select{|key, data| !new_resource.exclude_list.include? data[:name] }
     unless selected_modules.empty?
         new_resource.module_list.each do |module_key, module_data|    
             unless module_data[:configuration].nil?
