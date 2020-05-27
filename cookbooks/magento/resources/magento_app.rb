@@ -141,6 +141,11 @@ action :set_permissions do
             command "sudo chown -R #{new_resource.user}:#{new_resource.group} #{new_resource.web_root}/#{directory} && sudo chmod -R 777 #{new_resource.web_root}/#{directory}"
             only_if { Dir.exist?("#{new_resource.web_root}/#{directory}") }
         end
+
+        execute "Clear #{new_resource.web_root}/generated/" do
+            command "sudo rm -rf #{web_root}/generated/*"
+            only_if { Dir.exist?("#{new_resource.web_root}/#{directory}") }
+        end
     end
 end
 

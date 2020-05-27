@@ -7,7 +7,7 @@
 autofill_fields = [:enable, :label, :email_value, :password_value, :firstname_value, :lastname_value, :address_value, :city_value, :state_value, :zip_value, :country_value, :telephone_value, :company_value]
 autofill_config_paths = Array.new
 autofill_config_paths << "magentoese_autofill/general/enable_autofill"
-[*1..17].each do |i|
+[*1..2].each do |i|
     autofill_fields.each_with_index do |field, index|
         autofill_config_paths << "magentoese_autofill/persona_#{i}/#{field}"
     end
@@ -39,8 +39,8 @@ unless configured_modules.nil?
         unless configured_value.nil?
             (configured_value.is_a? Hash) ? custom_module_name = configured_value[:name] : custom_module_name = configured_value
             selected_modules = supported_modules.select { |supported_key, supported_value| supported_value[:name] == custom_module_name }
+            custom_module_hash = Hash.new
             selected_modules.each do |selected_key, selected_value|
-                custom_module_hash = Hash.new
                 custom_module_hash[:package_name] = selected_value[:name]
                 if selected_value[:name].include?("/")
                     custom_module_hash[:vendor] = selected_value[:name].split("/")[0]
@@ -57,11 +57,11 @@ unless configured_modules.nil?
                         unless setting_value.nil?
                             configuration_setting[:path] = config_path
                             configuration_setting[:value] = setting_value
-                            default_configurations << configuration_setting
                         end
+                        default_configurations << configuration_setting
+                        custom_module_hash[:configuration] = default_configurations
                     end
                 end
-                custom_module_hash[:configuration] = default_configurations
                 module_list << custom_module_hash
             end
         end

@@ -16,12 +16,17 @@ end
 
 magento_app "Enable cron" do
     action :enable_cron
-    not_if { ::File.exist?("/var/spool/cron/crontabs/#{user}") }
+    not_if { 
+        ::File.exist?("/var/spool/cron/crontabs/#{user}") 
+    }
 end
 
 magento_app "Set indexers to On Schedule mode" do
     action :set_indexer_mode
-    only_if { (!::File.exist?("#{web_root}/app/etc/config.php") && build_action == "install") || build_action == "force_install" }
+    only_if { 
+        (!::File.exist?("#{web_root}/app/etc/config.php") && build_action == "install") || 
+        build_action == "force_install"
+    }
 end
 
 magento_config "Create image drop directory" do

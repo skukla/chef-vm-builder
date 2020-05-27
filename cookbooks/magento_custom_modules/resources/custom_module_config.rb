@@ -4,14 +4,14 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 resource_name :custom_module_config
-property :name,                   String, name_property: true
-property :module_list,            Hash
-property :exclude_list,           Array, default: Array.new
+property :name,                       String, name_property: true
+property :module_list,                Hash
+property :use_elasticsearch,          String, default: node[:magento][:elasticsearch][:use].to_s
 
 action :process_configuration do
-    selected_modules = new_resource.module_list.select{|key, data| !new_resource.exclude_list.include? data[:name] }
-    unless selected_modules.empty?
+    unless new_resource.module_list.empty?
         new_resource.module_list.each do |module_key, module_data|    
+            next if (module_key.include?("elasticsuite") && new_resource.use_elasticsearch == "false")
             unless module_data[:configuration].nil?
                 module_data[:configuration].each do |setting|
                     magento_cli "Configuring custom module setting : #{setting[:path]}" do

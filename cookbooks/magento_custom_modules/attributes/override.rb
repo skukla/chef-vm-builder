@@ -49,29 +49,30 @@ unless configured_custom_modules.nil?
                 end
             end
             if custom_value.has_key?(:configuration)
-                supported_modules_list = supported_modules.select do |supported_key, supported_value|
-                    unless supported_value[:config_paths].nil?
-                        supported_value[:config_paths].each do |config_path|
-                            configuration_setting = Hash.new
-                            if config_path.include?("enable_autofill")
-                                configuration_setting[:path] = config_path
-                                configuration_setting[:value] = 1
-                                user_configurations << configuration_setting
-                            end
-                            setting_value = custom_value[:configuration].dig(*(config_path.split("/").map{ |segment| segment.to_sym }))
-                            unless setting_value.nil?
-                                configuration_setting[:path] = config_path
-                                configuration_setting[:value] = setting_value
-                                user_configurations << configuration_setting                                
-                            end
+                supported_modules.each do |supported_key, supported_value|
+                    if supported_value[:package_name] == custom_value[:name]
+                        supported_config_paths = supported_value[:config_paths]
+                    end
+                    supported_value[:config_paths].each do |config_path|
+                        configuration_setting = Hash.new
+                        if config_path.include?("enable_autofill")
+                            configuration_setting[:path] = config_path
+                            configuration_setting[:value] = 1
+                            user_configurations << configuration_setting
+                        end
+                        setting_value = custom_value[:configuration].dig(*(config_path.split("/").map{ |segment| segment.to_sym }))
+                        unless setting_value.nil?
+                            configuration_setting[:path] = config_path
+                            configuration_setting[:value] = setting_value
+                            user_configurations << configuration_setting                                
                         end
                     end
+                    custom_module_hash[:configuration] = user_configurations
                 end
             end
         end
-        custom_module_hash[:configuration] = user_configurations
         module_list << custom_module_hash
-    end    
+    end
     module_list.each do |module_data|
         override[:magento_custom_modules][:module_list][module_data[:package_name]] = module_data
     end

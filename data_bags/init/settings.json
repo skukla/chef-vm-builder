@@ -33,7 +33,13 @@
 						}
 					}
 				}
-			}
+			},
+			"elasticsuite": {
+				"name": "smile/elasticsuite",
+				"version": "~2.8"
+			},
+			"elasticsuite-shared-catalog": "smile/module-elasticsuite-shared-catalog",
+			"elasticsuite-quick-order": "smile/module-elasticsuite-quick-order"
 		}
 	},
 	"application": {
@@ -58,7 +64,7 @@
 	},
 	"infrastructure": {
 		"php": "7.3",
-		"elasticsearch": false,
+		"elasticsearch": true,
 		"mailhog": true,
 		"samba": true
 	},

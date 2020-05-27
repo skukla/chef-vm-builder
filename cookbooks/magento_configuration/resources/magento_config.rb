@@ -13,6 +13,7 @@ property :admin_users,            Hash, default: node[:magento_configuration][:a
 property :shares,                 Hash, default: node[:magento_configuration][:samba_shares]
 property :user,                   String, default: node[:magento_configuration][:user]
 property :group,                  String, default: node[:magento_configuration][:user]
+property :use_elasticsearch,      String, default: node[:magento][:elasticsearch][:use].to_s
 
 action :process_configuration do
     new_resource.config_paths.each do |config_path|
