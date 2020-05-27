@@ -142,8 +142,8 @@ action :set_permissions do
             only_if { Dir.exist?("#{new_resource.web_root}/#{directory}") }
         end
 
-        execute "Clear #{new_resource.web_root}/generated/" do
-            command "sudo rm -rf #{web_root}/generated/*"
+        execute "Delete #{new_resource.web_root}/generated/" do
+            command "sudo rm -rf #{new_resource.web_root}/generated/*"
             only_if { Dir.exist?("#{new_resource.web_root}/#{directory}") }
         end
     end
