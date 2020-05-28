@@ -19,6 +19,7 @@ depends 'composer'                # This brings in Composer configuration option
 depends 'magento_custom_modules'  # This brings in Custom Module configuration options
 depends 'magento_patches'         # This brings in Magento Patches configuration options
 depends 'magento_configuration'   # This brings in Magento Configuration configuration options
+depends 'demo_builder'            # This brings in the Demo Builder resource
 
 # The `issues_url` points to the location where issues for this cookbook are
 # tracked.  A `View Issues` link will be displayed on this cookbook's page when
