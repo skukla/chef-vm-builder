@@ -1,6 +1,6 @@
 #
 # Cookbook:: ssh
-# Recipe:: add_keys_to_agent
+# Recipe:: configure
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 user = node[:ssh][:user]
