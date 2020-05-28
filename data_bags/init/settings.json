@@ -11,35 +11,14 @@
 			}
 		},
 		"custom_modules": {
-			"autofill": {
-				"name": "magentoese/module-autofill",
-				"repository_url": "git@github.com:PMET-public/module-autofill.git",
-				"configuration": {
-					"magentoese_autofill": {
-						"persona_1": {
-							"enable": true,
-							"label": "Steve Kukla (Test User)",
-							"email_value": "steve@example.com",
-							"password_value": "Password1",
-							"firstname_value": "Steve",
-							"lastname_value": "Kukla",
-							"address_value": "3640 Holdrege Ave",
-							"city_value": "Los Angeles",
-							"state_value": "CA",
-							"zip_value": "90016",
-							"country_value": "US",
-							"telephone_value": "310-945-0345",
-							"company_value": "Luma, Inc."
-						}
-					}
-				}
+			"data-install": {
+				"name": "magentoese/module-data-install",
+				"repository_url": "git@github.com:PMET-public/module-data-install.git"
 			},
-			"elasticsuite": {
-				"name": "smile/elasticsuite",
-				"version": "~2.8"
-			},
-			"elasticsuite-shared-catalog": "smile/module-elasticsuite-shared-catalog",
-			"elasticsuite-quick-order": "smile/module-elasticsuite-quick-order"
+			"custom-demo-shell": {
+				"name": "skukla/module-custom-demo-shell",
+				"repository_url": "git@github.com:skukla/module-custom-demo-shell.git"
+			}
 		}
 	},
 	"application": {
@@ -57,8 +36,12 @@
 			},
 			"build": {
 				"action": "force_install",
-				"sample_data": false,
-				"modules_to_remove": "magento/google-shopping-ads"
+				"sample_data": true,
+				"modules_to_remove": "magento/google-shopping-ads",
+				"configuration": {
+					"base": false,
+					"b2b": false
+				}
 			}
 		}
 	},

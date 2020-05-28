@@ -9,14 +9,24 @@
 			"website": {
 				"base": "luma.demo"
 			}
+		},
+		"custom_modules": {
+			"data-install": {
+				"name": "magentoese/module-data-install",
+				"repository_url": "git@github.com:PMET-public/module-data-install.git"
+			},
+			"custom-demo-shell": {
+				"name": "skukla/module-custom-demo-shell",
+				"repository_url": "git@github.com:skukla/module-custom-demo-shell.git"
+			}
 		}
 	},
 	"application": {
 		"authentication": {
 			"composer": {
-				"public_key": "b17aa908c13768cef2a5a3a043bb3c54",
-				"private_key": "93f1f71fd779eb46af01fd7587e5fdba",
-				"github_token": "ca5db95d8f9ebea677be19b5943475882682e1d7"
+				"public_key": "",
+				"private_key": "",
+				"github_token": ""
 			}
 		},
 		"installation": {
@@ -27,7 +37,11 @@
 			"build": {
 				"action": "force_install",
 				"sample_data": true,
-				"modules_to_remove": "magento/google-shopping-ads"
+				"modules_to_remove": "magento/google-shopping-ads",
+				"configuration": {
+					"base": false,
+					"b2b": false
+				}
 			}
 		}
 	},
