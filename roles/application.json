@@ -6,7 +6,6 @@
 	"default_attributes": {},
 	"override_attributes": {},
 	"run_list": [
-		"recipe[nginx::create_web_root]",
 		"recipe[nginx::configure_multisite]",
 		"recipe[mysql::start]",
 		"recipe[elasticsearch::start]",
