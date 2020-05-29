@@ -35,13 +35,9 @@
 				"version": "2.3.5-p1"
 			},
 			"build": {
-				"action": "force_install",
-				"sample_data": true,
-				"modules_to_remove": "magento/google-shopping-ads",
-				"configuration": {
-					"base": false,
-					"b2b": false
-				}
+				"action": "install",
+				"sample_data": false,
+				"modules_to_remove": "magento/google-shopping-ads"
 			}
 		}
 	},

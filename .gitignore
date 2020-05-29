@@ -4,6 +4,6 @@ nodes/*.json
 environments/
 cookbooks/ssh/files/keys/public/*
 cookbooks/ssh/files/keys/private/*
-cookbooks/custom_demo/files/*.csv
+cookbooks/demo_builder/files/*.csv
 *.code-workspace
 !README.md

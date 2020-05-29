@@ -1,13 +1,13 @@
 {
-	"folders": [
-		{
-			"path": "."
-		},
-		{
-			"path": "../module-custom-demo-shell"
-		}
-	],
-	"settings": {
-		"editor.formatOnSave": true
-	}
+    "folders": [
+        {
+            "path": "."
+        },
+        {
+            "path": "../module-custom-demo"
+        }
+    ],
+    "settings": {
+        "editor.formatOnSave": true
+    }
 }

@@ -10,6 +10,10 @@ property :group,                  String, default: node[:demo_builder][:user]
 property :web_root,               String, default: node[:demo_builder][:web_root]
 property :demo_shell_data_path,   String
 property :data_files,             Array
+property :patch_class,            String
+property :db_user,                String, default: node[:demo_builder][:database][:user]
+property :db_password,            String, default: node[:demo_builder][:database][:password]
+property :db_name,                String, default: node[:demo_builder][:database][:name]
 
 action :run do
     new_resource.data_files.each do |file|
@@ -21,3 +25,17 @@ action :run do
         end
     end
 end
+
+action :refresh_data do
+    ruby_block "Remove existing data patch" do
+        block do
+            DatabaseHelper.remove_data_patch(
+                "#{new_resource.patch_class}", 
+                "#{new_resource.db_user}", 
+                "#{new_resource.db_password}", 
+                "#{new_resource.db_name}"
+            )
+        end
+    end
+end
+

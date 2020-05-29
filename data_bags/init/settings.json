@@ -7,7 +7,8 @@
 	"custom_demo": {
 		"structure": {
 			"website": {
-				"base": "luma.demo"
+				"base": "luma.demo",
+				"base_b2b": "b2b.luma.demo"
 			}
 		},
 		"custom_modules": {
@@ -35,8 +36,8 @@
 				"version": "2.3.5-p1"
 			},
 			"build": {
-				"action": "force_install",
-				"sample_data": true,
+				"action": "reinstall",
+				"sample_data": false,
 				"modules_to_remove": "magento/google-shopping-ads",
 				"configuration": {
 					"base": false,
@@ -47,7 +48,7 @@
 	},
 	"infrastructure": {
 		"php": "7.3",
-		"elasticsearch": true,
+		"elasticsearch": false,
 		"mailhog": true,
 		"samba": true
 	},

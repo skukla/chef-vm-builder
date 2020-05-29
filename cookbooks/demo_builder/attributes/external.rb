@@ -13,3 +13,6 @@ default[:demo_builder][:web_root] = node[:nginx][:web_root]
 include_attribute "magento::default"
 include_attribute "magento::override"
 default[:demo_builder][:build][:action] = node[:magento][:installation][:build][:action]
+default[:demo_builder][:database][:user] = node[:magento][:database][:user]
+default[:demo_builder][:database][:password] = node[:magento][:database][:password]
+default[:demo_builder][:database][:name] = node[:magento][:database][:name]
