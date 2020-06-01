@@ -78,11 +78,11 @@ magento_config "Configure search settings" do
     config_data config_settings
     not_if {
         (build_action == "install" && ::File.exist?("#{web_root}/var/.first-run-state.flag")) ||
-        (!use_elasticsearch || !configure_base)
+        (!use_elasticsearch)
     }
     only_if { 
         ::File.exist?("#{web_root}/app/etc/config.php") && 
-        (use_elasticsearch || configure_base)
+        (use_elasticsearch)
     }
 end
 
