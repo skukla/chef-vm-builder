@@ -12,7 +12,7 @@ apply_deploy_mode = node[:magento][:installation][:build][:deploy_mode][:apply]
 magento_app "Set application mode" do
     action :set_application_mode
     not_if {
-        ::File.exist?("#{web_root}/var/.first-run-state.flag")
+        ::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == "install"
     }
     only_if { 
         apply_deploy_mode 
