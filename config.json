@@ -1,6 +1,6 @@
 {
 	"vm": {
-		"ip": "192.168.57.11",
+		"ip": "192.168.57.12",
 		"name": "Luma Demo",
 		"provider": "virtualbox"
 	},
@@ -8,16 +8,6 @@
 		"structure": {
 			"website": {
 				"base": "luma.demo"
-			}
-		},
-		"custom_modules": {
-			"data-install": {
-				"name": "magentoese/module-data-install",
-				"repository_url": "git@github.com:PMET-public/module-data-install.git"
-			},
-			"custom-demo-shell": {
-				"name": "skukla/module-custom-demo-shell",
-				"repository_url": "git@github.com:skukla/module-custom-demo-shell.git"
 			}
 		}
 	},
@@ -36,7 +26,7 @@
 			},
 			"build": {
 				"action": "install",
-				"sample_data": false,
+				"sample_data": true,
 				"modules_to_remove": "magento/google-shopping-ads"
 			}
 		}
@@ -50,7 +40,6 @@
 	"provisioner": {
 		"type": "chef_zero",
 		"nodes_path": "nodes",
-		"data_bags_path": "data_bags",
 		"environments_path": "environments",
 		"roles_path": "roles",
 		"cookbooks_path": "cookbooks"

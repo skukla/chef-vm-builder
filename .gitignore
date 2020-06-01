@@ -1,9 +1,8 @@
 .DS_Store
 .vagrant/
-nodes/*.json
-environments/
-cookbooks/ssh/files/keys/public/*
-cookbooks/ssh/files/keys/private/*
-cookbooks/demo_builder/files/*.csv
+data/*
+keys/*
 *.code-workspace
-!README.md
+!keys/.gitignore
+!data/.gitignore
+

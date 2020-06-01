@@ -1,0 +1,171 @@
+#
+# Vagrantfile
+#
+# This file:
+#   1. Reads VM settings from config/vm.json for use in VM setup
+#   2. Reads demo settings from config/demo.json for use as Chef attributes
+#   3. Converts demo settings to a ruby hash and writes out /environments/vb.rb for Chef
+#   4. Checks for particular Vagrant plugins based on provider
+#   5. Configures VM settings based on provider
+#   6. Runs the Chef provisioner
+#   7. Updates permissions and clears cache
+#
+# Copyright 2020, Steve Kukla, All Rights Reserved.
+require "json"
+
+# Clear the screen
+system ("clear")
+
+top_dir = File.expand_path("..", Dir.pwd)
+app_dir = File.dirname(File.expand_path(__FILE__))
+app_structure = {
+  config_file: "config.json",
+  environment_file: "environments/vm.rb",
+  user_content: {
+    keys: Dir.entries("#{top_dir}/keys") - [".", ".."].delete_if{|filename| filename.include?("README.md") || filename.include?(".DS_Store") },
+    data: Dir.entries("#{top_dir}/data") - [".DS_Store", "README.md", ".", ".."].delete_if{|filename| filename.include?("README.md") || filename.include?(".DS_Store") }
+  }
+}
+config_file = "#{top_dir}/#{app_structure[:config_file]}"
+infra_settings_file = "#{app_dir}/#{app_structure[:infra_settings_file]}"
+environment_file = "#{app_dir}/#{app_structure[:environment_file]}"
+
+# Read the configuration json file
+config_file_content = File.read(config_file)
+settings = JSON.parse(config_file_content)
+
+# Start VM Setup
+Vagrant.configure("2") do |config|
+  
+  # Plugin check (VMWare Fusion and Virtualbox will want different Vagrant plugins)
+  config.trigger.before :up do |trigger|
+    trigger.name = "Checking for required plugins..."
+    trigger.ruby do
+      plugins = settings["vagrant"]["plugins"]["all"]
+      if settings["vm"]["provider"] == "virtualbox"
+        plugins.push(*settings["vagrant"]["plugins"]["virtualbox"])
+      else
+        plugins.push(*settings["vagrant"]["plugins"]["vmware"])
+      end
+      plugins.each do |plugin|
+        unless Vagrant.has_plugin?("#{plugin}")
+          system("vagrant plugin install #{plugin}", :chdir=>"/tmp") || exit!
+        end
+      end
+      sleep(1)
+    end
+  end
+
+  # Copy keys
+  unless app_structure[:user_content][:keys].empty?
+    config.trigger.before [:up, :reload, :provision] do |trigger|
+      trigger.name = "Preparing key files..."
+      trigger.ruby do
+        app_structure[:user_content][:keys].each do |filename|
+          if filename.include?(".pub")
+            FileUtils.cp("#{top_dir}/keys/#{filename}", "#{app_dir}/cookbooks/ssh/files/keys/public")
+          else
+            FileUtils.cp("#{top_dir}/keys/#{filename}", "#{app_dir}/cookbooks/ssh/files/keys/private")
+          end
+        end
+      end
+    end
+  end
+
+  # Copy data files
+  unless app_structure[:user_content][:data].empty?
+    config.trigger.before [:up, :reload, :provision] do |trigger|
+      trigger.name = "Preparing data files..."
+      trigger.ruby do
+        app_structure[:user_content][:data].each do |filename|
+          FileUtils.cp("#{top_dir}/data/#{filename}", "#{app_dir}/cookbooks/magento_demo_builder/files")
+        end
+      end
+    end
+  end
+
+  # Write out chef environment file from configuration
+  config.trigger.before [:up, :reload, :provision] do |trigger|
+    trigger.name = "Creating environment file..."
+    trigger.ruby do
+      environment_file_content = [
+          'name "vm"',
+          'description "Configuration file for the Kukla Demo VM"',
+          "default_attributes(#{settings})"
+      ]  
+      File.open(environment_file, "w+") do |file|
+          file.puts(environment_file_content)
+      end
+      sleep(1)
+    end
+  end
+  
+  # SSH/Password access and VM Box
+  config.ssh.insert_key = false
+  config.ssh.forward_agent = true
+  
+  config.vm.box = settings["remote_machine"]["box"]
+
+  # Set the hostname and configure networking
+  config.vm.define settings["remote_machine"]["name"] do |machine|
+    machine.vm.network "private_network", ip: settings["vm"]["ip"]
+    
+    # Get urls for custom demo and create hostname and aliases
+    demo_urls = Array.new
+    settings["custom_demo"]["structure"].each do |scope, scope_hash|
+      scope_hash.each do |code, url|
+        if code == "base"
+          machine.vm.hostname = settings["custom_demo"]["structure"]["website"]["base"]
+        else
+          demo_urls << url
+        end
+      end
+    end
+    config.multihostsupdater.aliases = demo_urls
+  end
+
+  # Configure VM machine based on provider
+  config.vm.provider "#{settings["vm"]["provider"]}" do |machine|
+    if settings["vm"]["provider"] == "virtualbox"
+      machine.gui = settings["remote_machine"]["provider"]["virtualbox"]["gui"]
+      machine.linked_clone = settings["remote_machine"]["provider"]["virtualbox"]["linked_clones"]
+      machine.default_nic_type = settings["remote_machine"]["provider"]["virtualbox"]["default_nic_type"]
+      machine.customize [
+        "modifyvm", :id,
+          "--name", settings["vm"]["name"],
+          "--memory", settings["remote_machine"]["ram"],
+          "--cpus", settings["remote_machine"]["cpus"],
+          "--vram", settings["remote_machine"]["vram"],
+          "--vrde", settings["remote_machine"]["provider"]["virtualbox"]["remote_display"]
+          
+      ]
+    # VMWare-specific settings
+    elsif settings["vm"]["provider"].include?("vmware")
+      machine.gui = settings["remote_machine"]["provider"]["vmware"]["gui"]
+      machine.linked_clone = settings["remote_machine"]["provider"]["vmware"]["linked_clones"]
+      machine.vmx["memsize"] = settings["remote_machine"]["ram"]
+      machine.vmx["numvcpus"] = settings["remote_machine"]["cpus"]
+      machine.vmx["ethernet0.pcislotnumber"] = settings["remote_machine"]["provider"]["vmware"]["eth0_pcislotnumber"]
+      machine.vmx["ethernet1.pcislotnumber"] = settings["remote_machine"]["provider"]["vmware"]["eth1_pcislotnumber"]
+    end
+  end
+
+  # Run Chef check provisioner
+  config.vm.provision "#{settings["provisioner"]["type"]}" do |chef|
+    chef.nodes_path = "#{settings["provisioner"]["nodes_path"]}"
+    chef.environments_path = "#{settings["provisioner"]["environments_path"]}"
+    chef.roles_path = "#{settings["provisioner"]["roles_path"]}"
+    chef.cookbooks_path = "#{settings["provisioner"]["cookbooks_path"]}"  
+
+    # Environment
+    chef.environment = "vm"
+
+    # Roles
+    chef.add_role "base"
+    chef.add_role "infrastructure"
+    chef.add_role "application"
+
+    # Accept Chef License
+    chef.arguments = "--chef-license accept"
+  end
+end
