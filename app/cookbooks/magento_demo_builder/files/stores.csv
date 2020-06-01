@@ -1,2 +1,0 @@
-site_code,site_name,site_order,is_default_site,store_code,store_name,store_root_category,is_default_store,view_code,view_name,is_default_view,view_order,view_is_active
-base_b2b,Luma B2B Website,2,,luma_b2b_store,Custom B2B Store,,Y,luma_b2b_us,US English,Y,,Y
