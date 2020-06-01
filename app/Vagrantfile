@@ -77,7 +77,7 @@ Vagrant.configure("2") do |config|
     config.trigger.before [:up, :reload, :provision] do |trigger|
       trigger.name = "Preparing data files..."
       trigger.ruby do
-        FileUtils.rm_f("#{app_dir}/cookbooks/magento_demo_builder/files/*")
+        FileUtils.rm_f Dir.glob("#{app_dir}/cookbooks/magento_demo_builder/files/*")
         app_structure[:user_content][:data].each do |filename|
           FileUtils.cp("#{top_dir}/data/#{filename}", "#{app_dir}/cookbooks/magento_demo_builder/files")
         end
