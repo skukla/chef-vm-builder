@@ -139,6 +139,7 @@ community_paths = [
     "payment/checkmo/active",
     "payment/companycredit/active",
     "sync_settings/addressbook/allow_non_subscribers",
+    "web/default/cms_home_page",
     "web/secure/base_url",
     "web/secure/use_in_frontend",
     "web/secure/use_in_adminhtml",
