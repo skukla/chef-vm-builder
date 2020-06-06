@@ -92,6 +92,8 @@ community_paths = [
     "design/theme/theme_id",
     "design/head/includes",
     "design/header/welcome",
+    "design/header/logo_width",
+    "design/header/logo_height",
     "general/locale/code",
     "general/locale/timezone",
     "general/region/display_all",
