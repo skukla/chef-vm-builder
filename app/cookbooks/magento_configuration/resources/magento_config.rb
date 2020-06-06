@@ -106,20 +106,22 @@ action :process_admin_users do
     end
 end
 
-action :create_image_drop do
-    if new_resource.shares.has_key?(:image_drop)
-        if new_resource.shares[:image_drop].is_a? String and !new_resource.shares[:image_drop].empty?
-            image_drop_path = new_resource.shares[:image_drop]
-        elsif new_resource.shares[:image_drop].has_key?(:path) && !new_resource.shares[:image_drop][:path].empty?
-            image_drop_path = new_resource.shares[:image_drop][:path]
-        end
-        directory "Image Drop" do
-            path "#{image_drop_path}"
-            owner "#{new_resource.user}"
-            group "#{new_resource.group}"
-            mode "777"
-            recursive true
-            not_if { Dir.exist?("#{image_drop_path}") }
+action :create_media_drops do
+    [:product_media_drop, :content_media_drop].each do |drop_directory|
+        if new_resource.shares.has_key?(drop_directory)
+            if new_resource.shares[drop_directory].is_a? String and !new_resource.shares[drop_directory].empty?
+                media_drop_path = new_resource.shares[drop_directory]
+            elsif new_resource.shares[drop_directory].has_key?(:path) && !new_resource.shares[drop_directory][:path].empty?
+                media_drop_path = new_resource.shares[drop_directory][:path]
+            end
+            directory "Media Drop" do
+                path "#{media_drop_path}"
+                owner "#{new_resource.user}"
+                group "#{new_resource.group}"
+                mode "777"
+                recursive true
+                not_if { Dir.exist?("#{media_drop_path}") }
+            end
         end
     end
 end

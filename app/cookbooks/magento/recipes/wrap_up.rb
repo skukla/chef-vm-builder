@@ -26,13 +26,6 @@ magento_app "Enable cron" do
     }
 end
 
-magento_config "Create image drop directory" do
-    action :create_image_drop
-    not_if {
-        ::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == "install"
-    }
-end
-
 magento_app "Set indexers to On Schedule mode" do
     action :set_indexer_mode
     not_if {

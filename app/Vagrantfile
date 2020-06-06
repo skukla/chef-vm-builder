@@ -22,8 +22,12 @@ app_structure = {
   config_file: "config.json",
   environment_file: "environments/vm.rb",
   user_content: {
-    keys: Dir.entries("#{top_dir}/keys") - [".", ".."].delete_if{|filename| filename.include?("README.md") || filename.include?(".DS_Store") },
-    data: Dir.entries("#{top_dir}/data") - [".DS_Store", "README.md", ".", ".."].delete_if{|filename| filename.include?("README.md") || filename.include?(".DS_Store") }
+    keys: Dir.entries("#{top_dir}/keys") - [".", ".."].delete_if{|filename| filename.include?(".DS_Store") },
+    data: Dir.entries("#{top_dir}/data") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") },
+    media: {
+      content: Dir.entries("#{top_dir}/media/content") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") },
+      products: Dir.entries("#{top_dir}/media/products") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") }
+    }
   }
 }
 config_file = "#{top_dir}/#{app_structure[:config_file]}"
@@ -77,9 +81,28 @@ Vagrant.configure("2") do |config|
     config.trigger.before [:up, :reload, :provision] do |trigger|
       trigger.name = "Preparing data files..."
       trigger.ruby do
-        FileUtils.rm_f Dir.glob("#{app_dir}/cookbooks/magento_demo_builder/files/*")
-        app_structure[:user_content][:data].each do |filename|
-          FileUtils.cp("#{top_dir}/data/#{filename}", "#{app_dir}/cookbooks/magento_demo_builder/files")
+        if Dir.exist?("#{app_dir}/cookbooks/magento_demo_builder/files/data") && !Dir.empty?("#{app_dir}/cookbooks/magento_demo_builder/files/data")
+          FileUtils.remove_entry("#{app_dir}/cookbooks/magento_demo_builder/files/data")
+        end
+        if !Dir.exist?("#{app_dir}/cookbooks/magento_demo_builder/files/data") && !Dir.empty?("#{top_dir}/data")
+          FileUtils.copy_entry("#{top_dir}/data", "#{app_dir}/cookbooks/magento_demo_builder/files/data")
+        end
+      end
+    end
+  end
+
+  # Copy media files
+  unless app_structure[:user_content][:data].empty?
+    config.trigger.before [:up, :reload, :provision] do |trigger|
+      trigger.name = "Preparing media files..."
+      trigger.ruby do
+        app_structure[:user_content][:media].each do |media_type_key, media_type_content|
+          if Dir.exist?("#{app_dir}/cookbooks/magento_demo_builder/files/media/#{media_type_key}") && !Dir.empty?("#{app_dir}/cookbooks/magento_demo_builder/files/media/#{media_type_key}")
+            FileUtils.remove_entry("#{app_dir}/cookbooks/magento_demo_builder/files/media/#{media_type_key}")
+          end
+          if !Dir.exist?("#{app_dir}/cookbooks/magento_demo_builder/files/media/#{media_type_key}") && !Dir.empty?("#{top_dir}/media/#{media_type_key}")
+            FileUtils.copy_entry("#{top_dir}/media/#{media_type_key}", "#{app_dir}/cookbooks/magento_demo_builder/files/media/#{media_type_key}")
+          end
         end
       end
     end

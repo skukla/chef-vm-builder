@@ -2,6 +2,7 @@
 .vagrant/
 data/*
 keys/*
+media/*
 app/cookbooks/magento_demo_builder/files/*
 *.code-workspace
 !keys/.gitignore

@@ -26,7 +26,6 @@ install_settings = {
     encryption_key: node[:magento][:installation][:settings][:encryption_key]
 }
 
-
 include_recipe "mysql::configure_pre_install" unless (::File.exist?("#{web_root}/app/etc/config.php") && build_action == "install")
 
 magento_app "Install Magento" do

@@ -8,6 +8,8 @@ version '0.1.0'
 chef_version '>= 14.0'
 
 depends 'helpers'   # Brings in the database helper
+depends 'nginx'     # Brings in web root
+depends 'samba'     # Brings in samba shares
 depends 'magento'   # Brings in Magento settings
 
 # The `issues_url` points to the location where issues for this cookbook are

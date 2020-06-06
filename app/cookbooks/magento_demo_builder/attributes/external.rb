@@ -10,6 +10,9 @@ include_attribute "nginx::default"
 include_attribute "nginx::override"
 default[:magento_demo_builder][:web_root] = node[:nginx][:web_root]
 
+include_attribute "samba::default"
+default[:magento_demo_builder][:samba][:shares] = node[:samba][:shares]
+
 include_attribute "magento::default"
 include_attribute "magento::override"
 default[:magento_demo_builder][:build][:action] = node[:magento][:installation][:build][:action]

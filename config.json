@@ -21,7 +21,7 @@
 		},
 		"installation": {
 			"options": {
-				"family": "Commerce",
+				"family": "Open Source",
 				"version": "2.3.5-p1"
 			},
 			"build": {
