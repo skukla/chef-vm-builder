@@ -13,6 +13,28 @@ module ValueHelper
         
         shipping_methods = [{code: "11", value: "UPS Standard"}, {code: "12", value: "UPS Three-Day Select"}, {code: "14", value: "UPS Next Day Air Early A.M."}, {code: "54", value: "UPS Worldwide Express Plus"}, {code: "59", value: "UPS Second Day Air A.M."}, {code: "65", value: "UPS Worldwide Saver"}, {code: "01", value: "UPS Next Day Air"}, {code: "02", value: "UPS Second Day Air"}, {code: "03", value: "UPS Ground"}, {code: "07", value: "UPS Worldwide Express"}, {code: "08", value: "UPS Worldwide Expedited"}]
         
+        website_restriction_modes = [
+            {code: "0", value: "Website Closed"}, 
+            {code: "1", value: "Login and Register"}, 
+            {code: "2", value: "Login Only"}
+        ]
+
+        website_restriction_startup_pages = [
+            {code: "0", value: "Login form"}, 
+            {code: "1", value: "Landing page"}
+        ]
+        
+        website_restriction_landing_pages = [
+            {code: "no-route", value: "404 Not Found"}, 
+            {code: "home", value: "Home page"}, 
+            {code: "enable-cookies", value: "Enable Cookies"},
+            {code: "privacy-policy-cookie-restriction-mode", value: "Privacy and Cookie Policy"},
+            {code: "access-denied-page", value: "Company: Access Denied"},
+            {code: "service-unavailable", value: "503 Service Unavailable"},
+            {code: "private-sales", value: "Welcome to our Exclusive Online Store"},
+            {code: "reward-points", value: "Reward Points"}
+        ]
+
         # Regions
         regions.each_with_index do |region, index|
             if value == region[:value] || value == region[:postal_code]
