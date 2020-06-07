@@ -93,7 +93,7 @@ end
 
 action :disable_cron do
     execute "#{new_resource.name}" do
-        command "su #{new_resource.user} -c '#{new_resource.web_root}/bin/magento cron:remove'"
+        command "crontab -r -u #{new_resource.user}"
     end
 end
 
