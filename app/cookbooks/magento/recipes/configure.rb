@@ -20,14 +20,7 @@ configure_admin_users = node[:magento][:configuration][:flags][:admin_users]
 switch_php_user "www-data" do
     not_if {
         build_action == "install" &&
-        ::File.exist?("#{web_root}/var/.first-run-state.flag") ||
-        (
-            !configure_base || 
-            !configure_b2b || 
-            !use_elasticsearch || 
-            !configure_custom_modules || 
-            !configure_admin_users
-        )
+        ::File.exist?("#{web_root}/var/.first-run-state.flag")
     }
     only_if { 
         ::File.exist?("#{web_root}/app/etc/config.php") && 
@@ -117,18 +110,10 @@ custom_module_config "Configure custom modules" do
     }
 end
 
-magento_app "Set permissions" do
-    action :set_permissions
+switch_php_user "#{user}" do
     not_if {
         build_action == "install" &&
-        ::File.exist?("#{web_root}/var/.first-run-state.flag") ||
-        (
-            !configure_base || 
-            !configure_b2b || 
-            !use_elasticsearch || 
-            !configure_custom_modules || 
-            !configure_admin_users
-        )
+        ::File.exist?("#{web_root}/var/.first-run-state.flag")
     }
     only_if { 
         ::File.exist?("#{web_root}/app/etc/config.php") && 
@@ -142,17 +127,11 @@ magento_app "Set permissions" do
     }
 end
 
-switch_php_user "#{user}" do
+magento_app "Set permissions" do
+    action :set_permissions
     not_if {
         build_action == "install" &&
-        ::File.exist?("#{web_root}/var/.first-run-state.flag") ||
-        (
-            !configure_base || 
-            !configure_b2b || 
-            !use_elasticsearch || 
-            !configure_custom_modules || 
-            !configure_admin_users
-        )
+        ::File.exist?("#{web_root}/var/.first-run-state.flag")
     }
     only_if { 
         ::File.exist?("#{web_root}/app/etc/config.php") && 
