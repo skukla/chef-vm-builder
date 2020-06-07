@@ -85,6 +85,7 @@ community_paths = [
     "currency/options/allow",
     "currency/options/base",
     "currency/options/default",
+    "customer/account_share/scope",
     "customer/password/lockout_failures",
     "customer/password/minimum_password_length",
     "customer/password/required_character_classes_number",
