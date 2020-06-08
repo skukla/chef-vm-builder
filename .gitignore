@@ -1,5 +1,6 @@
 .DS_Store
 .vagrant/
+config.json
 data/*
 keys/*
 media/content/*
@@ -9,4 +10,5 @@ media/products/*
 !data/.gitkeep
 !media/content/.gitkeep
 !media/products/.gitkeep
+!config.json.sample
 
