@@ -347,6 +347,36 @@ function disable-samba() {
 }
 export -f disable-samba
 
+# Mailhog
+function enable-mailhog() {
+  printf "\nEnabling Mailhog...\n"
+  sudo systemctl enable mailhog
+}
+export -f enable-mailhog
+
+function start-mailhog() {
+  printf "\nRestarting Mailhog...\n"
+  sudo systemctl restart mailhog
+}
+export -f start-mailhog
+
+function stop-mailhog() {
+  printf "\nStopping Mailhog...\n"
+  sudo systemctl stop mailhog
+}
+export -f stop-mailhog
+
+function status-mailhog() {
+  sudo systemctl status mailhog
+}
+export -f status-mailhog
+
+function disable-mailhog() {
+  printf "\nDisabling Mailhog...\n"
+  sudo systemctl disable mailhog
+}
+export -f disable-mailhog
+
 # Tools
 function warm-cache() {
   CLI_DIRECTORY=~/cli
