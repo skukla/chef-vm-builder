@@ -60,6 +60,7 @@ end
 
 magento_app "Set final permissions" do
     action :set_permissions
+    remove_generated "false"
     not_if {
         ::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == "install"
     }
