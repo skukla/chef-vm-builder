@@ -27,8 +27,7 @@ end
 
 magento_app "Disable cron" do
     action :disable_cron
-    only_if { 
-        ::File.exist?("#{web_root}/var/.first-run-state.flag") && 
+    only_if {
         ::File.exist?("/var/spool/cron/crontabs/#{user}") && 
         build_action != "install" 
     }
@@ -36,9 +35,6 @@ end
 
 magento_app "Set auth.json credentials" do
     action :set_auth_credentials
-    not_if { 
-        ::File.exist?("/home/#{user}/.composer/auth.json") 
-    }
 end
 
 composer "Create Magento #{family.capitalize} #{version} project" do
