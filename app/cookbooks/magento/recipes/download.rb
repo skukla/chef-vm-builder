@@ -101,8 +101,7 @@ composer "Require the B2B modules" do
     }
     only_if { 
         family == "enterprise" && 
-        ::File.exist?("#{web_root}/composer.json") && 
-        build_action == "force_install"
+        ::File.exist?("#{web_root}/composer.json")
     }
 end
 
