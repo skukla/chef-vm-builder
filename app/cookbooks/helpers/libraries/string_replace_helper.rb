@@ -36,13 +36,20 @@ module StringReplaceHelper
         file.write_file
     end
 
-    def self.update_app_version(version, family, composer_json)
-        replace_string_format = "%8s\"%s\": \"#{version}\","
-        file = Chef::Util::FileEdit.new("#{composer_json}")
-        file.search_file_replace_line("magento/product-#{family}-edition", sprintf(replace_string_format, "\s", "magento/product-#{family}-edition"))
-        replace_string_format = "%4s\"%s\": \"#{version}\","
-        file.search_file_replace_line("version", sprintf(replace_string_format, "\s", "version"))
-        file.write_file
+    def self.update_app_version(user, version, family, web_root, composer_json)
+        output_file = "#{web_root}/new_composer.json"
+        File.open(output_file, "a") do |output|
+            File.foreach("#{web_root}/#{composer_json}") do |line|
+                if line.include?("product-#{family}-edition") || line.include?("version")
+                    output.write(line.gsub(/(\d{1})\.(\d{1})\.(\d{1})('-'.)?/, version))
+                else
+                    output.write(line)
+                end
+            end
+        end
+        FileUtils.mv(output_file, "#{web_root}/#{composer_json}")
+        FileUtils.chmod(0664, "#{web_root}/#{composer_json}")
+        FileUtils.chown("vagrant", "vagrant", "#{web_root}/#{composer_json}")
     end
 
     def self.set_java_home(file, java_home)

@@ -76,7 +76,7 @@ magento_app "Update the Magento version" do
     action :update_version
     only_if { 
         ::File.exist?("#{web_root}/composer.json") && 
-        ::File.foreach("#{web_root}/composer.json").grep(/#{version}/).any? && 
+        !::File.foreach("#{web_root}/composer.json").grep(/#{version}/).any? && 
         build_action == "update"  
     }
 end
