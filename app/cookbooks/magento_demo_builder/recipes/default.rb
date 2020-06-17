@@ -62,13 +62,14 @@ magento_demo_builder "Remove existing custom demo media" do
     action :remove_media
     content_media_destination wysiwyg_directory
     product_media_destination product_media_import_directory
-    only_if {
-        !wysiwyg_directory.empty? ||
-        !product_media_import_directory.empty? &&
-        Dir.exist?("#{wysiwyg_directory}") &&
-        Dir.exist?("#{product_media_import_directory}") &&
-        build_action == "update" &&
+    not_if {
+        wysiwyg_directory.empty? ||
+        product_media_import_directory.empty? &&
         sample_data_flag
+    }
+    only_if {
+        Dir.exist?("#{wysiwyg_directory}") &&
+        Dir.exist?("#{product_media_import_directory}")
     }
 end
 
@@ -81,8 +82,11 @@ magento_demo_builder "Copy custom demo media" do
     not_if {
         wysiwyg_directory.empty? ||
         product_media_import_directory.empty? &&
-        !Dir.exist?("#{wysiwyg_directory}") &&
-        !Dir.exist?("#{product_media_import_directory}")
+        sample_data_flag
+    }
+    only_if {
+        Dir.exist?("#{wysiwyg_directory}") &&
+        Dir.exist?("#{product_media_import_directory}")
     }
 end
 
