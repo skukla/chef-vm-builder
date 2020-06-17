@@ -1,5 +1,5 @@
 #
-# Cookbook:: magentodemo_builder
+# Cookbook:: magento_demo_builder
 # Recipe:: default
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
@@ -16,12 +16,16 @@ chef_content_media_path = node[:magento_demo_builder][:media_files][:content_dir
 chef_product_media_path = node[:magento_demo_builder][:media_files][:products_directory]
 wysiwyg_directory = node[:magento_demo_builder][:samba][:shares][:content_media_drop]
 product_media_import_directory = node[:magento_demo_builder][:samba][:shares][:product_media_drop]
+sample_data_flag = node[:magento_demo_builder][:build][:sample_data]
 build_action = node[:magento_demo_builder][:build][:action]
 
 magento_config "Create the product and content media drop directories" do
     action :create_media_drops
     not_if {
-        ::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == "install"
+        (::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == "install") ||
+        Dir.exist?("#{wysiwyg_directory}") ||
+        Dir.exist?("#{product_media_import_directory}") ||
+        sample_data_flag
     }
 end
 
@@ -63,7 +67,8 @@ magento_demo_builder "Remove existing custom demo media" do
         !product_media_import_directory.empty? &&
         Dir.exist?("#{wysiwyg_directory}") &&
         Dir.exist?("#{product_media_import_directory}") &&
-        build_action == "update"
+        build_action == "update" &&
+        sample_data_flag
     }
 end
 
