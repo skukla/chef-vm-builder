@@ -39,6 +39,7 @@
 	},
 	"provisioner": {
 		"type": "chef_zero",
+		"version": "latest",
 		"nodes_path": "nodes",
 		"environments_path": "environments",
 		"roles_path": "roles",

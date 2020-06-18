@@ -183,10 +183,11 @@ Vagrant.configure("2") do |config|
 
   # Run Chef check provisioner
   config.vm.provision "#{settings["provisioner"]["type"]}" do |chef|
+    chef.version = "#{settings["provisioner"]["version"]}"
     chef.nodes_path = "#{settings["provisioner"]["nodes_path"]}"
     chef.environments_path = "#{settings["provisioner"]["environments_path"]}"
     chef.roles_path = "#{settings["provisioner"]["roles_path"]}"
-    chef.cookbooks_path = "#{settings["provisioner"]["cookbooks_path"]}"  
+    chef.cookbooks_path = "#{settings["provisioner"]["cookbooks_path"]}"
 
     # Environment
     chef.environment = "vm"
