@@ -4,6 +4,8 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 resource_name :composer
+provides :composer
+
 property :name,                 String, name_property: true
 property :install_directory,    String, default: node[:composer][:install_dir]
 property :file,                 String, default: node[:composer][:file]

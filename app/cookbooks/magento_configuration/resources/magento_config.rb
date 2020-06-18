@@ -4,6 +4,8 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 resource_name :magento_config
+provides :magento_config
+
 property :name,                   String, name_property: true
 property :web_root,               String, default: node[:magento][:web_root]
 property :config_group,           String

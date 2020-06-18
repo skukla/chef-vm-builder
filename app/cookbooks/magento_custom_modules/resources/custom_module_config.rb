@@ -4,6 +4,8 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 resource_name :custom_module_config
+provides :custom_module_config
+
 property :name,                       String, name_property: true
 property :module_list,                Hash
 property :use_elasticsearch,          String, default: node[:magento][:elasticsearch][:use].to_s

@@ -4,6 +4,8 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 resource_name :magento_demo_builder
+provides :magento_demo_builder
+
 property :name,                         String, name_property: true
 property :user,                         String, default: node[:magento_demo_builder][:user]
 property :group,                        String, default: node[:magento_demo_builder][:user]

@@ -4,6 +4,8 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 resource_name :magento_app
+provides :magento_app
+
 property :name,                   String, name_property: true
 property :web_root,               String, default: node[:magento][:web_root]
 property :composer_file,          String, default: node[:magento][:composer][:file]

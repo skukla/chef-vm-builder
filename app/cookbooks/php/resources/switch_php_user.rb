@@ -1,5 +1,10 @@
-# To learn more about Custom Resources, see https://docs.chef.io/custom_resources.html
+#
+# Cookbook:: php
+# Resource:: switch_php_user 
+#
+# Copyright:: 2020, Steve Kukla, All Rights Reserved.
 resource_name :switch_php_user
+provides :switch_php_user
 
 action :run do
     if new_resource.name != "www-data"

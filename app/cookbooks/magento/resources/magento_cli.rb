@@ -4,6 +4,8 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 resource_name :magento_cli
+provides :magento_cli
+
 property :name,               String, name_property: true
 property :web_root,           String, default: node[:magento][:web_root]
 property :user,               String, default: node[:magento][:user]

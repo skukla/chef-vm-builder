@@ -4,6 +4,8 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 resource_name :custom_module
+provides :custom_module
+
 property :name,                   String, name_property: true
 property :package_name,           String
 property :module_name,            String
