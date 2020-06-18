@@ -168,6 +168,13 @@ enterprise_paths = [
     "sales/magento_rma/enabled_on_product",
     "sales/magento_rma/use_store_address",
     "sales/msrp/enabled",
+    "services_connector/services_connector_integration/production_api_key",
+    "services_connector/services_connector_integration/sandbox_api_key",
+    "services_connector/services_id/project_name",
+    "services_connector/services_id/environment_name",
+    "services_connector/services_id/environment",
+    "services_connector/services_id/project_id",
+    "services_connector/services_id/environment_id",
     "wishlist/general/multiple_enabled",
     "yotpo/module_info/yotpo_installation_date",
     "yotpo/sync_settings/orders_sync_start_date"
