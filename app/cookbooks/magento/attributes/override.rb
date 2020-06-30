@@ -4,7 +4,6 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 supported_settings = {
-    :database => [:host, :user, :password, :name],
     :installation_options => [:family, :version, :minimum_stability, :directory],
     :build_options => [:clear_cache, :action, :force_install, :sample_data, :modules_to_remove, :deploy_mode => [:apply, :mode]],
     :installation_settings => [:backend_frontname, :unsecure_base_url, :secure_base_url, :language, :timezone, :currency, :admin_firstname, :admin_lastname, :admin_email, :admin_user, :admin_password, :use_rewrites, :use_secure_frontend,  :use_secure_admin, :cleanup_database, :session_save, :encryption_key]
@@ -12,12 +11,6 @@ supported_settings = {
 
 supported_settings.each do |setting_key, setting_data|
     case setting_key
-    when :database
-        next unless node[:infrastructure][setting_key].is_a? Chef::Node::ImmutableMash
-        setting_data.each do |option|
-            next if node[:infrastructure][setting_key][option].nil?
-            override[:magento][setting_key][option] = node[:infrastructure][setting_key][option]
-        end
     when :installation_options
         setting_data.each do |option|
             next if node[:application][:installation][:options][option].nil?

@@ -3,12 +3,14 @@
 # Recipe:: configure_pre_install
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-socket = node[:database][:socket]
-innodb_buffer_pool_size = node[:database][:innodb_buffer_pool_size]
-max_allowed_packet = node[:database][:max_allowed_packet]
-tmp_table_size = node[:database][:tmp_table_size]
-max_heap_table_size = node[:database][:max_heap_table_size]
-install_settings = node[:database][:install_settings]
+socket = node[:mysql][:socket]
+port = node[:mysql][:port]
+innodb_buffer_pool_size = node[:mysql][:innodb_buffer_pool_size]
+max_allowed_packet = node[:mysql][:max_allowed_packet]
+tmp_table_size = node[:mysql][:tmp_table_size]
+max_heap_table_size = node[:mysql][:max_heap_table_size]
+install_settings = node[:mysql][:install_settings]
+
 
 # Create the mysql.conf.d folder
 directory 'Create the mysql.conf.d folder' do

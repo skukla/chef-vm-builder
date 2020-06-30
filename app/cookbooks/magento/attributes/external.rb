@@ -7,6 +7,12 @@ include_attribute "init::default"
 default[:magento][:user] = node[:init][:os][:user]
 default[:magento][:installation][:settings][:timezone] = node[:init][:os][:timezone]
 
+include_attribute "mysql::default"
+default[:magento][:database][:host] = node[:mysql][:db_host]
+default[:magento][:database][:user] = node[:mysql][:db_user]
+default[:magento][:database][:password] = node[:mysql][:db_password]
+default[:magento][:database][:name] = node[:mysql][:db_name]
+
 include_attribute "composer::default"
 default[:magento][:composer][:file] = node[:composer][:file]
 default[:magento][:composer][:public_key] = node[:composer][:public_key]

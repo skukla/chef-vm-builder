@@ -6,6 +6,12 @@
 include_attribute "init::default"
 default[:magento_configuration][:user] = node[:init][:os][:user]
 
+include_attribute "mysql::default"
+default[:magento_configuration][:database][:host] = node[:mysql][:db_host]
+default[:magento_configuration][:database][:user] = node[:mysql][:db_user]
+default[:magento_configuration][:database][:password] = node[:mysql][:db_password]
+default[:magento_configuration][:database][:name] = node[:mysql][:db_name]
+
 include_attribute "composer::default"
 default[:magento_configuration][:composer][:file] = node[:composer][:file]
 
@@ -27,7 +33,3 @@ include_attribute "magento::default"
 include_attribute "magento::override"
 default[:magento_configuration][:magento_version] = node[:magento][:installation][:options][:version]
 default[:magento_configuration][:magento_family] = node[:magento][:installation][:options][:family]
-default[:magento_configuration][:database][:host] = node[:magento][:database][:host]
-default[:magento_configuration][:database][:user] = node[:magento][:database][:user]
-default[:magento_configuration][:database][:password] = node[:magento][:database][:password]
-default[:magento_configuration][:database][:name] = node[:magento][:database][:name]

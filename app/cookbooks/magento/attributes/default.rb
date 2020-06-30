@@ -3,11 +3,6 @@
 # Attribute:: default
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-default[:magento][:database][:host] = "localhost"
-default[:magento][:database][:user] = "magento"
-default[:magento][:database][:password] = "password"
-default[:magento][:database][:name] = "magento"
-
 default[:magento][:installation][:options][:family] = "community"
 default[:magento][:installation][:options][:version] = "2.3.4"
 default[:magento][:installation][:options][:minimum_stability] = "stable"

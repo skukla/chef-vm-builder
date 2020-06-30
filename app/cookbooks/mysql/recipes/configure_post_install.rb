@@ -3,7 +3,7 @@
 # Recipe:: configure_pre_install
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-install_settings = node[:database][:install_settings]
+install_settings = node[:mysql][:install_settings]
 
 # Configure post-install settings
 install_settings.each do |setting|
