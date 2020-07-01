@@ -4,6 +4,20 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 module StringReplaceHelper
+    def self.set_php_sendmail_path(php_type, php_version, sendmail_path)
+        file = Chef::Util::FileEdit.new("/etc/php/#{php_version}/#{php_type}/php.ini")
+        file.insert_line_if_no_match(/^sendmail_path =/, "#{sendmail_path}")
+        file.search_file_replace_line(/^sendmail_path =/, "sendmail_path =#{sendmail_path}")
+        file.write_file
+    end
+    
+    def self.set_java_home(file, java_home)
+        file = Chef::Util::FileEdit.new("#{file}")
+        file.insert_line_if_no_match(/^JAVA_HOME=/, "JAVA_HOME=#{java_home}")
+        file.search_file_replace_line(/^JAVA_HOME=/, "JAVA_HOME=#{java_home}")
+        file.write_file
+    end
+
     def self.remove_modules(selected_modules, composer_json)
         modules_to_remove = Array.new
         modules_list = Array.new
@@ -50,12 +64,5 @@ module StringReplaceHelper
         FileUtils.mv(output_file, "#{web_root}/#{composer_json}")
         FileUtils.chmod(0664, "#{web_root}/#{composer_json}")
         FileUtils.chown("vagrant", "vagrant", "#{web_root}/#{composer_json}")
-    end
-
-    def self.set_java_home(file, java_home)
-        file = Chef::Util::FileEdit.new("#{file}")
-        file.insert_line_if_no_match(/^JAVA_HOME=/, "JAVA_HOME=#{java_home}")
-        file.search_file_replace_line(/^JAVA_HOME=/, "JAVA_HOME=#{java_home}")
-        file.write_file
     end
 end

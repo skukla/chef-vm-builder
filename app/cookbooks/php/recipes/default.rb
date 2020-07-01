@@ -3,6 +3,26 @@
 # Recipe:: default
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-include_recipe 'php::install'
-include_recipe 'php::configure'
-include_recipe 'php::uninstall_apache'
+user = node[:php][:user]
+group = node[:php][:group]
+version = node[:php][:version]
+extension_list = node[:php][:extension_list]
+configuration = {
+    port: node[:php][:port],
+    memory_limit: node[:php][:memory_limit],
+    upload_max_filesize: node[:php][:upload_max_filesize],
+    timezone: node[:php][:timezone],
+    backend: node[:php][:backend],
+    max_execution_time: node[:php][:max_execution_time],
+    zlib_output_compression: node[:php][:zlib_output_compression]
+}
+
+php "Set PHP user, then install, configure, enable, and start PHP" do
+    action [:set_user, :install, :configure, :enable, :restart]
+    php_user "www-data"
+    vm_user "#{user}"
+    vm_group "#{group}"
+    version "#{version}"
+    extension_list extension_list
+    configuration configuration
+end

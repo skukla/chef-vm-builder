@@ -11,7 +11,6 @@
 		"recipe[magento::default]",
 		"recipe[nginx::start]",
 		"recipe[webmin::start]",
-		"recipe[mailhog::start]",
 		"recipe[samba::start]"
 	]
 }

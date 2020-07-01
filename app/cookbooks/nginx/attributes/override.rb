@@ -14,9 +14,11 @@ if node[:infrastructure].is_a? Chef::Node::ImmutableMash
         case setting_key
         when :webserver
             next if node[:infrastructure][setting_key].nil?
-            setting_value.each do |option|
-                next if node[:infrastructure][setting_key][option].nil?
-                override[:nginx][option] = node[:infrastructure][setting_key][option]    
+            if setting_value.is_a? Chef::Node::ImmutableMash
+                setting_value.each do |option|
+                    next if node[:infrastructure][setting_key][option].nil?
+                    override[:nginx][option] = node[:infrastructure][setting_key][option]    
+                end
             end
         when :magento_build
             next if node[:application][:installation][:options][:directory].nil?

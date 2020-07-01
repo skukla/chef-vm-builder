@@ -14,7 +14,10 @@ modules_to_remove = node[:magento][:installation][:build][:modules_to_remove]
 apply_patches = node[:magento][:patches][:apply]
 use_elasticsearch = node[:magento][:elasticsearch][:use]
 
-switch_php_user "#{user}"
+php "Switch PHP user to #{user}" do
+    action :set_user
+    php_user "#{user}"
+end
 
 magento_app "Clear the cron schedule" do
     action :clear_cron_schedule

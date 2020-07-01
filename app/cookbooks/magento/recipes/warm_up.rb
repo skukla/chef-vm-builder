@@ -3,6 +3,10 @@
 # Recipe:: warm_up
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-mysql "Start the database" do
-    action :start
+mysql "Restart mysql" do
+    action :restart
+end
+
+mailhog "Restart mailhog" do
+    action :restart
 end

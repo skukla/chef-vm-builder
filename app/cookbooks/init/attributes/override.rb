@@ -5,7 +5,8 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 supported_settings = {
     :os => [:update, :timezone],
-    :vm => [:ip, :name]
+    :vm => [:ip, :name],
+    :webserver => [:type]
 }
 
 supported_settings.each do |setting_key, setting_data|
@@ -21,6 +22,17 @@ supported_settings.each do |setting_key, setting_data|
         setting_data.each do |option|
             next if node[setting_key][option].nil? || node[setting_key][option].empty?
             override[:init][setting_key][option] = node[setting_key][option]
+        end
+    when :webserver
+        if node[:infrastructure][setting_key].is_a? Chef::Node::ImmutableMash
+            setting_data.each do |option|
+                next if node[:infrastructure][setting_key][option].nil?
+                override[:init][setting_key][option] = node[:infrastructure][setting_key][option]
+            end
+        else
+            unless node[:infrastructure][setting_key].nil? || node[:infrastructure][setting_key].empty?
+                override[:init][setting_key][:type] = node[:infrastructure][setting_key]
+            end
         end
     end
 end

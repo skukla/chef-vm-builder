@@ -59,7 +59,7 @@ action :configure do
     end
 end
 
-action :start do
+action :restart do
     service 'mysql' do
         action :restart
     end

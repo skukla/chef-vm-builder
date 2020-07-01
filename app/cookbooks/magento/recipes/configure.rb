@@ -17,7 +17,9 @@ configure_b2b = node[:magento][:configuration][:flags][:b2b]
 configure_custom_modules = node[:magento][:configuration][:flags][:custom_modules]
 configure_admin_users = node[:magento][:configuration][:flags][:admin_users]
 
-switch_php_user "www-data" do
+php "Switch PHP user to www-data" do
+    action :set_user
+    php_user "www-data"
     not_if {
         build_action == "install" &&
         ::File.exist?("#{web_root}/var/.first-run-state.flag")
@@ -110,7 +112,9 @@ custom_module_config "Configure custom modules" do
     }
 end
 
-switch_php_user "#{user}" do
+php "Switch PHP user to #{user}" do
+    action :set_user
+    php_user "#{user}"
     not_if {
         build_action == "install" &&
         ::File.exist?("#{web_root}/var/.first-run-state.flag")

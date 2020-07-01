@@ -11,11 +11,7 @@ configuration = {
     max_heap_table_size: node[:mysql][:max_heap_table_size]
 }
 
-mysql "Install and enable MySQL" do
-    action [:install, :enable]
-end
-
-mysql "Configure MySQL" do
-    action :configure
+mysql "Install, configure, and enable MySQL" do
+    action [:install, :configure, :enable]
     configuration configuration
 end

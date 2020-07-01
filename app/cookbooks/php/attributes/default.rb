@@ -25,7 +25,6 @@ default[:php][:extension_list] = [
 default[:php][:max_execution_time] = 1800
 default[:php][:zlib_output_compression] = "On"
 default[:php][:backend] = "127.0.0.1"
-default[:php][:apache_packages] = ["apache2", "apache2-bin", "apache2-data", "apache2-utils"]
 
 
 

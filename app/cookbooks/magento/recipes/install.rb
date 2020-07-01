@@ -27,7 +27,7 @@ install_settings = {
 }
 
 mysql "Configure MySQL settings before installation" do
-    action [:configure_pre_app_install, :start]
+    action [:configure_pre_app_install, :restart]
     not_if {
         ::File.exist?("#{web_root}/app/etc/config.php") && build_action == "install"
     }
@@ -73,7 +73,7 @@ magento_app "Deploy static content" do
 end
 
 mysql "Configure MySQL settings after installation" do
-    action [:configure_post_app_install, :start]
+    action [:configure_post_app_install, :restart]
     not_if {
         ::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == "install"
     }
