@@ -51,14 +51,6 @@ action :install do
     install_string = [install_string, cleanup_database_string] if new_resource.install_settings[:cleanup_database]
     install_string = [install_string, session_save_string, encryption_key_string].join(" ")
     
-    ruby_block "Create the Magento database" do
-        block do
-            %x[mysql --user=root -e "CREATE DATABASE IF NOT EXISTS #{new_resource.db_name};"]
-            %x[mysql --user=root -e "GRANT ALL ON #{new_resource.db_name}.* TO '#{new_resource.db_user}'@'#{new_resource.db_host}' IDENTIFIED BY '#{new_resource.db_password}' WITH GRANT OPTION;"]
-        end
-        action :create
-    end
-    
     magento_cli "Install via the Magento CLI" do
         action :install
         install_string install_string

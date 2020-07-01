@@ -7,7 +7,6 @@
 	"override_attributes": {},
 	"run_list": [
 		"recipe[nginx::configure_multisite]",
-		"recipe[mysql::start]",
 		"recipe[elasticsearch::start]",
 		"recipe[magento::default]",
 		"recipe[nginx::start]",

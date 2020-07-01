@@ -26,13 +26,22 @@ install_settings = {
     encryption_key: node[:magento][:installation][:settings][:encryption_key]
 }
 
-include_recipe "mysql::configure_pre_install" unless (::File.exist?("#{web_root}/app/etc/config.php") && build_action == "install")
+mysql "Configure MySQL settings before installation" do
+    action [:configure_pre_app_install, :start]
+    not_if {
+        ::File.exist?("#{web_root}/app/etc/config.php") && build_action == "install"
+    }
+end
+
+mysql "Create the database" do
+    action :create_database
+end
 
 magento_app "Install Magento" do
     action :install
     install_settings install_settings
     not_if { 
-        ::File.exist?("#{web_root}/var/.first-run-state.flag") && (build_action != "reinstall") 
+        ::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action != "reinstall"
     }
 end
 
@@ -63,7 +72,12 @@ magento_app "Deploy static content" do
     }
 end
 
-include_recipe "mysql::configure_post_install" unless (::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == "install")
+mysql "Configure MySQL settings after installation" do
+    action [:configure_post_app_install, :start]
+    not_if {
+        ::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == "install"
+    }
+end
 
 magento_app "Set permissions after installation or database upgrade" do
     action :set_permissions

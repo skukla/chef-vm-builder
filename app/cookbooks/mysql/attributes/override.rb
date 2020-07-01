@@ -8,9 +8,11 @@ supported_settings = [:socket, :port, :innodb_buffer_pool_size, :max_allowed_pac
 supported_settings.each do |setting|
     if node[:infrastructure][:database].is_a? Chef::Node::ImmutableMash
         next if node[:infrastructure][:database][setting].nil?
-        override[:infrastructure][:database][setting] = node[:infrastructure][:database][setting]
+        override[:mysql][setting] = node[:infrastructure][:database][setting]
     else
-        next unless (node[:infrastructure][:database].is_a? String) && (!node[:infrastructure][:database].empty?)
-        override[:infrastructure][:database][:name] = node[:infrastructure][:database]
+        next unless node[:infrastructure][:database].is_a? String
+        unless node[:infrastructure][:database].empty?
+            override[:mysql][:db_name] = node[:infrastructure][:database]
+        end
     end
 end
