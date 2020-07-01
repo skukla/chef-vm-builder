@@ -49,8 +49,9 @@ action :install do
     install_string = [install_string, use_secure_frontend_string].join(" ") if new_resource.install_settings[:use_secure_frontend]
     install_string = [install_string, secure_url_string].join(" ") if new_resource.install_settings[:use_secure_frontend] || new_resource.install_settings[:use_secure_admin]
     install_string = [install_string, cleanup_database_string] if new_resource.install_settings[:cleanup_database]
-    install_string = [install_string, session_save_string, encryption_key_string].join(" ")
-    
+    install_string = [install_string, session_save_string].join(" ")
+    install_string = [install_string, encryption_key_string].join(" ") unless new_resource.install_settings[:encryption_key].nil? || new_resource.install_settings[:encryption_key].empty?
+
     magento_cli "Install via the Magento CLI" do
         action :install
         install_string install_string
