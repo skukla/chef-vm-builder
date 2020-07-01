@@ -10,3 +10,7 @@ end
 mailhog "Restart mailhog" do
     action :restart
 end
+
+samba "Restart samba" do
+    action :restart
+end
