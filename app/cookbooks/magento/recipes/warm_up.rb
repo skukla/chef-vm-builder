@@ -14,3 +14,7 @@ end
 samba "Restart samba" do
     action :restart
 end
+
+nginx "Restart nginx" do
+    action :restart
+end

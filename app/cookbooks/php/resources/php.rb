@@ -8,9 +8,9 @@ provides :php
 
 property :name,                     String, name_property: true
 property :php_user,                 String
-property :vm_user,                  String
-property :vm_group,                 String
-property :version,                  String
+property :vm_user,                  String, default: node[:php][:user]
+property :vm_group,                 String, default: node[:php][:user]
+property :version,                  String, default: node[:php][:version]
 property :extension_list,           Array
 property :sendmail_path,            String
 property :configuration,            Hash

@@ -3,9 +3,6 @@
 # Recipe:: default
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-user = node[:php][:user]
-group = node[:php][:group]
-version = node[:php][:version]
 extension_list = node[:php][:extension_list]
 configuration = {
     port: node[:php][:port],
@@ -20,9 +17,6 @@ configuration = {
 php "Set PHP user, then install, configure, enable, and start PHP" do
     action [:set_user, :install, :configure, :enable, :restart]
     php_user "www-data"
-    vm_user "#{user}"
-    vm_group "#{group}"
-    version "#{version}"
     extension_list extension_list
     configuration configuration
 end
