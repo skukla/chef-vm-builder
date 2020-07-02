@@ -3,8 +3,6 @@
 	"description": "VM infrastructure: Nginx, PHP, MySQL, Composer, Elasticsearch, Mailhog, Webmin, Samba",
 	"chef_type": "role",
 	"json_class": "Chef::Role",
-	"default_attributes": {},
-	"override_attributes": {},
 	"run_list": [
 		"recipe[php::default]",
 		"recipe[composer::default]",

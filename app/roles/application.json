@@ -3,12 +3,7 @@
 	"description": "Magento baseline",
 	"chef_type": "role",
 	"json_class": "Chef::Role",
-	"default_attributes": {},
-	"override_attributes": {},
 	"run_list": [
-		"recipe[nginx::default]",
-		"recipe[elasticsearch::default]",
-		"recipe[magento::default]",
-		"recipe[webmin::start]"
+		"recipe[magento::default]"
 	]
 }

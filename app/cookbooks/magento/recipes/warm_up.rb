@@ -7,6 +7,10 @@ mysql "Restart Mysql" do
     action :restart
 end
 
+nginx "Restart Nginx" do
+    action :restart
+end
+
 mailhog "Restart Mailhog" do
     action :restart
 end
@@ -15,10 +19,10 @@ samba "Restart Samba" do
     action :restart
 end
 
-nginx "Restart Nginx" do
+elasticsearch "Restart Elasticsearch" do
     action :restart
 end
 
-elasticsearch "Restart Elasticsearch" do
+webmin "Restart Webmin" do
     action :restart
 end
