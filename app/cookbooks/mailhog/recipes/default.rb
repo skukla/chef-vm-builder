@@ -3,6 +3,7 @@
 # Recipe:: default
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
+use_mailhog = node[:mailhog][:use]
 php_version = node[:mailhog][:php][:version]
 sendmail_path = node[:mailhog][:sendmail_path]
 configuration = {
@@ -17,7 +18,7 @@ end
 
 golang "Install golang" do
     action :install
-    only_if { node[:mailhog][:use] }
+    only_if { use_mailhog }
 end
 
 mailhog "Stop and uninstall mailhog" do
@@ -27,7 +28,7 @@ end
 mailhog "Install, configure, enable, reload, and stop  mailhog" do
     action [:install, :configure, :enable, :reload, :stop]
     configuration configuration
-    only_if { node[:mailhog][:use] }
+    only_if { use_mailhog }
 end
 
 php "Configure mailhog sendmail path and restart PHP" do

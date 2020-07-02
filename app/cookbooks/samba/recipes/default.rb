@@ -3,6 +3,7 @@
 # Recipe:: default
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
+use_samba = node[:samba][:use]
 user = node[:samba][:user]
 group = node[:samba][:user]
 shares = node[:samba][:shares]
@@ -16,5 +17,5 @@ samba "Install and configure samba" do
     user "#{user}"
     group "#{group}"
     shares shares
-    only_if { node[:samba][:use] }
+    only_if { use_samba }
 end
