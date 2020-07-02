@@ -3,69 +3,35 @@
 # Recipe:: configure
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-user = node[:elasticsearch][:user]
-group = node[:elasticsearch][:group]
-java_home = node[:elasticsearch][:java_home]
+use_elasticsearch = node[:elasticsearch][:use]
+java_home = node[:elasticsearch][:java][:java_home]
+elasticsearch_app_file = node[:elasticsearch][:app_file]
+memory = node[:elasticsearch][:memory]
+port = node[:elasticsearch][:port]
 cluster_name = node[:elasticsearch][:cluster_name]
 node_name = node[:elasticsearch][:node_name]
 log_file_path = node[:elasticsearch][:log_file_path]
-version = node[:elasticsearch][:version]
-memory = node[:elasticsearch][:memory]
-port = node[:elasticsearch][:port]
 
-directory "JVM Options Custom Configuration" do
-    path "/etc/elasticsearch/jvm.options.d"
-    owner "#{user}"
-    group "#{user}"
-    mode "755"
-    only_if { ::File.directory?("/etc/elasticsearch") }
+java "Set java home in elasticsearch application file" do
+    action :set_java_home
+    configuration({
+        java_home: "#{java_home}",
+        filename: "#{elasticsearch_app_file}"
+    })
+    only_if { 
+        use_elasticsearch &&
+        ::File.exist?("#{elasticsearch_app_file}") 
+    }
 end
 
-# Configure Java Options and Elasticsearch
-template "JVM Options" do
-    source "jvm.options.erb"
-    path "/etc/elasticsearch/jvm.options.d/jvm.options"
-    user "#{user}"
-    group "#{group}"
-    mode '644'
-    variables({ memory: "#{memory}" })
-    only_if { ::File.directory?("/etc/elasticsearch/jvm.options.d") }
-end
-
-# Configure Elasticsearch
-template "Elasticsearch Configuration" do
-    source "elasticsearch.yml.erb"
-    path "/etc/elasticsearch/elasticsearch.yml"
-    user "#{user}"
-    group "#{group}"
-    mode "644"
-    variables({ 
+elasticsearch "Configure Elasticsearch JVM options and Elasticsearch application" do
+    action [:configure_jvm_options, :configure_app]
+    configuration({
+        memory: "#{memory}",
+        port: "#{port}",
         cluster_name: "#{cluster_name}",
         node_name: "#{node_name}",
-        log_file_path: "#{log_file_path}",
-        port: "#{port}"
+        log_file_path: "#{log_file_path}"
     })
-    only_if { ::File.directory?("/etc/elasticsearch") }
-end
-
-# Set Java Home for Elasticsearch
-ruby_block "Set JAVA_HOME for Elasticsearch #{version}" do
-    ["/etc/environment", "/etc/default/elasticsearch"].each do |file|
-        block do
-            StringReplaceHelper.set_java_home("#{file}", "#{java_home}")
-            only_if { ::File.exist?("#{file}") }
-        end
-    end
-end
-
-# Set ownership to Elasticsearch user and group
-directory "/etc/elasticsearch" do
-    owner "#{user}"
-    group "#{group}"
-    recursive true
-end
-
-service "elasticsearch" do
-    action :enable
-    only_if { ::File.directory?("/etc/elasticsearch") }
+    only_if { use_elasticsearch }
 end

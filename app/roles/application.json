@@ -7,7 +7,7 @@
 	"override_attributes": {},
 	"run_list": [
 		"recipe[nginx::default]",
-		"recipe[elasticsearch::start]",
+		"recipe[elasticsearch::default]",
 		"recipe[magento::default]",
 		"recipe[webmin::start]"
 	]

@@ -3,30 +3,32 @@
 # Recipe:: install
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
+use_elasticsearch = node[:elasticsearch][:use]
+java_home = node[:elasticsearch][:java][:java_home]
+environment_file = node[:elasticsearch][:java][:environment_file]
 version = node[:elasticsearch][:version]
-plugins = node[:elasticsearch][:plugins]
+plugin_list = node[:elasticsearch][:plugin_list]
 
-# We have to use execute over chef resources here
-execute "Add Elasticsearch #{version} repository" do
-    command "sudo wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add - && echo \"deb https://artifacts.elastic.co/packages/#{version}/apt stable main\" | sudo tee -a /etc/apt/sources.list.d/elastic-#{version}.list && sudo apt-get update -y"
-    not_if { ::File.directory?('/etc/elasticsearch') }
-end
-
-# Install Elasticsearch
-apt_package 'elasticsearch' do
+java "Install Java" do
     action :install
-    ignore_failure true
-    retries 3
-    not_if { ::File.directory?('/etc/elasticsearch') }
+    only_if { use_elasticsearch }
 end
 
-# Install Elasticsearch plugins
-unless plugins.empty?
-    plugins.each do |plugin|
-        execute "Install #{plugin} elasticsearch plugin" do
-            command "cd /usr/share/elasticsearch && bin/elasticsearch-plugin install #{plugin}"
-            notifies :reload, "service[elasticsearch]", :immediately
-            only_if { ::File.directory?('/etc/elasticsearch') }
-        end
-    end
+java "Set java_home in environment file" do
+    action :set_java_home
+    configuration({
+        java_home: "#{java_home}",
+        filename: "#{environment_file}" 
+    })
+    only_if { 
+        use_elasticsearch &&
+        ::File.exist?("#{environment_file}") 
+    }
+end
+
+elasticsearch "Install Elasticsearch and Elasticsearch plugins and restart" do
+    action [:install_app, :install_plugins, :restart, :stop]
+    version "#{version}"
+    configuration({ plugin_list: plugin_list })
+    only_if { use_elasticsearch }
 end
