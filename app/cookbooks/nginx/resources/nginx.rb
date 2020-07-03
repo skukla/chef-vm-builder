@@ -7,8 +7,8 @@ resource_name :nginx
 provides :nginx
 
 property :name,                    String, name_property: true
-property :user,                    String
-property :group,                   String
+property :user,                    String, default: node[:nginx][:user]
+property :group,                   String, default: node[:nginx][:user]
 property :web_root,                String, default: node[:nginx][:web_root]
 property :php_version,             String, default: node[:nginx][:php_version]
 property :configuration,           Hash
