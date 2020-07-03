@@ -5,7 +5,7 @@
 	"json_class": "Chef::Role",
 	"run_list": [
 		"recipe[init::default]",
-		"recipe[cli::install]",
+		"recipe[cli::default]",
 		"recipe[ssh::default]"
 	]
 }
