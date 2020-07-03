@@ -4,29 +4,22 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 user = node[:ssh][:user]
-group = node[:ssh][:user]
-vagrant_key = node[:ssh][:vagrant_key]
-private_keys = node[:ssh][:private_keys][:files]
 authorized_keys = node[:ssh][:authorized_keys]
+private_keys = node[:ssh][:private_keys][:files]
 
 ssh "Stop the ssh-agent" do
     action :stop_ssh_agent
 end
 
-ssh "Clear the ssh directory" do
-    action :clear_ssh_directory
+ssh "Clear the ssh directory and create ssh_config" do
+    action [:clear_ssh_directory, :create_ssh_config]
     only_if { ::File.directory?("/home/#{user}/.ssh") }
 end
 
-ssh "Create ssh_config" do
-    action :create_ssh_config
-end
-
-ssh "Add private and public ssh keys and restart" do
-    action [:add_private_keys, :add_public_keys, :restart]
+ssh "Add public keys to authorized_keys and private keys to .ssh/ and restart" do
+    action [:add_public_keys, :add_private_keys, :restart]
     configuration({
-        vagrant_key: "#{vagrant_key}",
-        private_keys: private_keys,
-        authorized_keys: authorized_keys
+        authorized_keys: authorized_keys,
+        private_keys: private_keys
     })
 end

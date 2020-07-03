@@ -16,7 +16,7 @@ default[:cli][:database][:password] = node[:mysql][:db_password]
 default[:cli][:database][:name] = node[:mysql][:db_name]
 
 include_attribute "ssh::default"
-default[:cli][:ssh][:private_keys_list] = node[:ssh][:private_keys][:files]
+default[:cli][:ssh][:private_keys] = node[:ssh][:private_keys][:files]
 
 include_attribute "nginx::default"
 default[:cli][:nginx][:web_root] = node[:nginx][:web_root]

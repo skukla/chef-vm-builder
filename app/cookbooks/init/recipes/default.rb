@@ -6,7 +6,23 @@
 update_os = node[:init][:os][:update]
 webserver_type = node[:init][:webserver][:type]
 
-include_recipe "init::update_os" if update_os
-include_recipe "init::configure_os"
-include_recipe "init::manage_packages"
-include_recipe "init::install_motd"
+os "Update OS" do
+    action :update
+    only_if { update_os }
+end
+
+os "Configure OS" do
+    action [:configure, :add_os_packages]
+end
+
+init "Remove Apache packages" do
+    action :remove_apache_packages
+    only_if { 
+        "dpkg --get-selections | grep apache" &&
+        webserver_type != "apache" 
+    }
+end
+
+init "Install MOTD" do
+    action :install_motd
+end

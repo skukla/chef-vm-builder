@@ -9,6 +9,7 @@ provides :ssh
 property :name,                     String, name_property: true
 property :user,                     String, default: node[:ssh][:user]
 property :group,                    String, default: node[:ssh][:user]
+property :vagrant_key,              String, default: node[:ssh][:vagrant_key]
 property :configuration,            Hash
 
 action :stop_ssh_agent do
@@ -33,12 +34,29 @@ action :create_ssh_config do
     end
 end
 
+action :add_public_keys do
+    unless new_resource.configuration[:authorized_keys].nil?
+        template "Authorized keys configuration" do
+            source "authorized_keys.erb"
+            path "/home/#{new_resource.user}/.ssh/authorized_keys"
+            owner "#{new_resource.user}"
+            group "#{new_resource.group}"
+            mode "600"
+            sensitive true
+            variables ({ 
+                vagrant_key: "#{new_resource.vagrant_key}",
+                authorized_keys: new_resource.configuration[:authorized_keys] 
+            })
+        end
+    end
+end
+
 action :add_private_keys do
-    unless new_resource.configuration[:private_key_list].nil?
-        new_resource.configuration[:private_key_list].each do |private_key|
+    unless new_resource.configuration[:private_keys].nil?
+        new_resource.configuration[:private_keys].each do |private_key|
             cookbook_file "Adding private key file : #{private_key}" do
                 source "keys/private/#{private_key}"
-                path "/home/#{user}/.ssh/#{private_key}"
+                path "/home/#{new_resource.user}/.ssh/#{private_key}"
                 owner "#{new_resource.user}"
                 group "#{new_resource.group}"
                 mode "0400"
@@ -50,23 +68,6 @@ action :add_private_keys do
                 command "su #{new_resource.user} -c 'ssh-add /home/#{new_resource.user}/.ssh/#{private_key}'"
                 only_if { ::File.exist?("/home/#{new_resource.user}/.ssh/#{private_key}") }
             end
-        end
-    end
-end
-
-action :add_public_keys do
-    unless new_resource.configuration[:authorized_keys].nil?
-        template "Authorized keys configuration" do
-            source "authorized_keys.erb"
-            path "/home/#{new_resource.user}/.ssh/authorized_keys"
-            owner "#{new_resource.user}"
-            group "#{new_resource.group}"
-            mode "600"
-            sensitive true
-            variables ({ 
-                vagrant_key: "#{new_resource.configuration[:vagrant_key]}",
-                authorized_keys: new_resource.configuration[:authorized_keys] 
-            })
         end
     end
 end

@@ -185,21 +185,22 @@ function configure-proxy() {
   curl -sS https://raw.githubusercontent.com/PMET-public/magento-cloud-extension/0.0.25/sh-scripts/lib.sh \
     https://raw.githubusercontent.com/PMET-public/magento-cloud-extension/0.0.25/sh-scripts/configure-proxies.sh | env ext_ver=0.0.25 tab_url=https://github.com bash
   sleep 1
-  printf "\nAdding SSH keys...\n"
-  eval $(ssh-agent)
-  ssh-add ~/.ssh/id_rsa.skukla.gitlab
-  ssh-add ~/.ssh/id_rsa.skukla.github
+  <% unless @private_keys.empty? %>
+  add-keys
+  <% end %>
 }
 export -f configure-proxy
 
+<% unless @private_keys.empty? %>
 function add-keys() {
   printf "\nAdding SSH keys...\n"
-  eval $(ssh-agent)
-  <% @private_keys_list.each do |private_key| %>
+  eval $(ssh-agent)>
+  <% @private_keys.each do |private_key| %>
   ssh-add ~/.ssh/<%= private_key %>
   <% end %>
 }
 export -f add-keys
+<% end %>
 
 function add-modules() {
   www
@@ -218,7 +219,7 @@ function upgrade() {
   clear
   printf "Beginning the upgrade process...\n"
   www
-  own 
+  own
   configure-proxy
   disable-cron
   update-composer

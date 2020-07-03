@@ -16,7 +16,6 @@ property :db_host,                  String, default: node[:cli][:database][:host
 property :db_user,                  String, default: node[:cli][:database][:user]
 property :db_password,              String, default: node[:cli][:database][:password]
 property :db_name,                  String, default: node[:cli][:database][:name]
-property :private_keys_list,        Array, default: node[:ssh][:private_keys][:files]
 property :configuration,            Hash
 
 action :create_directories do
@@ -38,6 +37,8 @@ action :create_directories do
 end
 
 action :install do
+    private_keys = new_resource.configuration[:private_keys]
+
     template "VM CLI" do
         source "commands.sh.erb"
         path "/home/#{new_resource.user}/cli/commands.sh"
@@ -53,7 +54,7 @@ action :install do
             db_user: "#{new_resource.db_user}",
             db_password: "#{new_resource.db_password}",
             db_name: "#{new_resource.db_name}",
-            private_keys_list: new_resource.private_keys_list
+            private_keys: private_keys
         })
         only_if { ::File.directory?("/home/#{new_resource.user}/cli") }
     end
