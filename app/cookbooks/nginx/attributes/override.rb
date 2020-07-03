@@ -4,7 +4,7 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 supported_settings = {
-    :webserver => [:http_port, :client_max_body_size, :ssl_port, :ssl_locality, :ssl_region, :ssl_country],
+    :webserver => [:http_port, :client_max_body_size],
     :magento_build => :web_root,
     :custom_demo => :structure
 }

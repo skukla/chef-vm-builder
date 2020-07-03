@@ -3,16 +3,16 @@
 # Recipe:: multisite
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-fpm_backend = node[:nginx][:fpm_backend]
-fpm_port = node[:nginx][:fpm_port]
+cert_file = "#{node[:fqdn]}.crt"
+key_file = "#{node[:fqdn]}.key"
 client_max_body_size = node[:nginx][:client_max_body_size]
 http_port = node[:nginx][:http_port]
-ssl_port = node[:nginx][:ssl_port]
-cert_directory = node[:nginx][:ssl_cert_directory]
-cert_file = "#{node[:fqdn]}.crt"
-key_directory = node[:nginx][:ssl_key_directory]
-key_file = "#{node[:fqdn]}.key"
 custom_demo_structure = node[:nginx][:structure]
+fpm_backend = node[:nginx][:php][:fpm_backend]
+fpm_port = node[:nginx][:php][:fpm_port]
+ssl_port = node[:nginx][:ssl][:port]
+cert_directory = node[:nginx][:ssl][:cert_directory]
+key_directory = node[:nginx][:ssl][:key_directory]
 
 nginx "Clear sites-available and sites-enabled" do
     action :clear_sites

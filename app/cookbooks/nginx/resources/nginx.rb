@@ -10,10 +10,10 @@ property :name,                    String, name_property: true
 property :user,                    String, default: node[:nginx][:user]
 property :group,                   String, default: node[:nginx][:user]
 property :web_root,                String, default: node[:nginx][:web_root]
-property :php_version,             String, default: node[:nginx][:php_version]
-property :configuration,           Hash
-property :ssl_configuration,       Hash
+property :php_version,             String, default: node[:nginx][:php][:version]
 property :custom_demo_structure,   Hash
+property :ssl_configuration,       Hash
+property :configuration,           Hash
 
 action :uninstall do
     apt_package "nginx" do
@@ -75,19 +75,19 @@ action :clear_sites do
 end
 
 action :configure_multisite do
-    directory 'Multisite configuration directory' do
-        path '/etc/nginx/sites-available/conf'
-        owner 'root'
-        group 'root'
-        mode '644'
+    directory "Multisite configuration directory" do
+        path "/etc/nginx/sites-available/conf"
+        owner "root"
+        group "root"
+        mode "644"
     end
     
-    template 'Configure Magento and Nginx' do
-        source '00-nginx-magento.conf.erb'
-        path '/etc/nginx/sites-available/conf/00-nginx-magento.conf'
-        owner 'root'
-        group 'root'
-        mode '644'
+    template "Configure Magento and Nginx" do
+        source "00-nginx-magento.conf.erb"
+        path "/etc/nginx/sites-available/conf/00-nginx-magento.conf"
+        owner "root"
+        group "root"
+        mode "644"
     end
 
     # Collect vhost data
@@ -105,12 +105,12 @@ action :configure_multisite do
             vhost_data << demo_data
         end
 
-        template 'Configure multisite' do
-            source '01-multisite.conf.erb'
-            path '/etc/nginx/sites-available/conf/01-multisite.conf'
-            owner 'root'
-            group 'root'
-            mode '644'
+        template "Configure multisite" do
+            source "01-multisite.conf.erb"
+            path "/etc/nginx/sites-available/conf/01-multisite.conf"
+            owner "root"
+            group "root"
+            mode "644"
             variables({ 
                 fpm_backend: "#{new_resource.configuration[:fpm_backend]}",
                 fpm_port: "#{new_resource.configuration[:fpm_port]}",
@@ -157,38 +157,14 @@ action :enable_multisite do
     end
 end
 
-action :remove_ssl_certificates do
-    Dir["#{new_resource.ssl_configuration[:certs_directory]}/*"].each do |old_file|
-        if "#{old_file}" != "#{new_resource.ssl_configuration[:certs_directory]}/#{new_resource.ssl_configuration[:cert_file]}"
-            execute "Remove old ssl certificates" do
-                command "sudo rm -rf #{old_file}"
-            end
-        end
-    end
-end
-
-action :generate_ssl_certificate do
-    execute "Generate ssl certificate" do
-        command "sudo openssl req -new -newkey rsa:4096 -days 365 -nodes -x509 \
-        -subj \"/C=#{new_resource.ssl_configuration[:country]}/ST=#{new_resource.ssl_configuration[:region]}/L=#{new_resource.ssl_configuration[:locality]}/O=#{new_resource.ssl_configuration[:organization]}/CN=#{new_resource.ssl_configuration[:common_name]}\" \
-        -keyout #{new_resource.ssl_configuration[:keys_directory]}/#{new_resource.ssl_configuration[:key_file]} -out #{new_resource.ssl_configuration[:certs_directory]}/#{new_resource.ssl_configuration[:cert_file]}"
-    end
-end
-
-action :refresh_ssl_certificate_list do
-    execute "Refresh the certs list" do
-        command "sudo update-ca-certificates --fresh"
+action :enable do
+    service "nginx" do
+        action :enable
     end
 end
 
 action :restart do
     service "nginx" do
         action :restart
-    end
-end
-
-action :enable do
-    service "nginx" do
-        action :enable
     end
 end
