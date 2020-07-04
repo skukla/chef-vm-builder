@@ -4,6 +4,8 @@
 	"chef_type": "role",
 	"json_class": "Chef::Role",
 	"run_list": [
-		"recipe[magento::default]"
+		"recipe[service_launcher::pre_install]",
+		"recipe[magento::default]",
+		"recipe[service_launcher::post_install]"
 	]
 }
