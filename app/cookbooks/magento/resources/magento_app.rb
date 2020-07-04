@@ -7,21 +7,21 @@ resource_name :magento_app
 provides :magento_app
 
 property :name,                   String, name_property: true
-property :web_root,               String, default: node[:magento][:web_root]
+property :web_root,               String, default: node[:magento][:init][:web_root]
 property :composer_file,          String, default: node[:magento][:composer][:file]
 property :composer_public_key,    String, default: node[:magento][:composer][:public_key]
 property :composer_private_key,   String, default: node[:magento][:composer][:private_key]
 property :composer_github_token,  String, default: node[:magento][:composer][:github_token]
 property :permission_dirs,        Array,  default: ["var/", "pub/", "app/etc/", "generated/"]
-property :user,                   String, default: node[:magento][:user]
-property :group,                  String, default: node[:magento][:user]
+property :user,                   String, default: node[:magento][:init][:user]
+property :group,                  String, default: node[:magento][:init][:user]
 property :family,                 String, default: node[:magento][:installation][:options][:family]
 property :version,                String, default: node[:magento][:installation][:options][:version]
 property :modules_to_remove,      String
-property :db_host,                String, default: node[:magento][:database][:host]
-property :db_user,                String, default: node[:magento][:database][:user]
-property :db_password,            String, default: node[:magento][:database][:password]
-property :db_name,                String, default: node[:magento][:database][:name]
+property :db_host,                String, default: node[:magento][:mysql][:db_host]
+property :db_user,                String, default: node[:magento][:mysql][:db_user]
+property :db_password,            String, default: node[:magento][:mysql][:db_password]
+property :db_name,                String, default: node[:magento][:mysql][:db_name]
 property :install_settings,       Hash
 property :cache_types,            Array
 property :indexers,               Array

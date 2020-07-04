@@ -7,7 +7,7 @@ cert_file = "#{node[:fqdn]}.crt"
 key_file = "#{node[:fqdn]}.key"
 client_max_body_size = node[:nginx][:client_max_body_size]
 http_port = node[:nginx][:http_port]
-custom_demo_structure = node[:nginx][:structure]
+demo_structure = node[:nginx][:init][:demo_structure]
 fpm_backend = node[:nginx][:php][:fpm_backend]
 fpm_port = node[:nginx][:php][:fpm_port]
 ssl_port = node[:nginx][:ssl][:port]
@@ -21,7 +21,7 @@ end
 nginx "Configure multisite" do
     action :configure_multisite
     web_root "#{web_root}"
-    custom_demo_structure custom_demo_structure
+    demo_structure demo_structure
     configuration({
         http_port: http_port,
         client_max_body_size: client_max_body_size,

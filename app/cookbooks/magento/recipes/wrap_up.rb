@@ -3,8 +3,8 @@
 # Recipe:: wrap_up
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-user = node[:magento][:user]
-web_root = node[:magento][:web_root]
+user = node[:magento][:init][:user]
+web_root = node[:magento][:init][:web_root]
 build_action = node[:magento][:installation][:build][:action]
 force_install = node[:magento][:installation][:build][:force_install]
 apply_deploy_mode = node[:magento][:installation][:build][:deploy_mode][:apply]

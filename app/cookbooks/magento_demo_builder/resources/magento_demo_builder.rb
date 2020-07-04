@@ -7,15 +7,15 @@ resource_name :magento_demo_builder
 provides :magento_demo_builder
 
 property :name,                         String, name_property: true
-property :user,                         String, default: node[:magento_demo_builder][:user]
-property :group,                        String, default: node[:magento_demo_builder][:user]
-property :web_root,                     String, default: node[:magento_demo_builder][:web_root]
+property :user,                         String, default: node[:magento_demo_builder][:init][:user]
+property :group,                        String, default: node[:magento_demo_builder][:init][:user]
+property :web_root,                     String, default: node[:magento_demo_builder][:init][:web_root]
 property :demo_shell_data_path,         String
 property :data_files,                   Array
 property :patch_class,                  String
-property :db_user,                      String, default: node[:magento_demo_builder][:database][:user]
-property :db_password,                  String, default: node[:magento_demo_builder][:database][:password]
-property :db_name,                      String, default: node[:magento_demo_builder][:database][:name]
+property :db_user,                      String, default: node[:magento_demo_builder][:mysql][:db_user]
+property :db_password,                  String, default: node[:magento_demo_builder][:mysql][:db_password]
+property :db_name,                      String, default: node[:magento_demo_builder][:mysql][:db_name]
 property :content_media_source,         String
 property :content_media_destination,    String
 property :product_media_source,         String

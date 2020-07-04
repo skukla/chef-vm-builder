@@ -3,12 +3,12 @@
 # Recipe:: download
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-user = node[:magento_patches][:user]
-group = node[:magento_patches][:user]
-web_root = node[:magento_patches][:web_root]
+user = node[:magento_patches][:init][:user]
+group = node[:magento_patches][:init][:user]
+web_root = node[:magento_patches][:init][:web_root]
+magento_version = node[:magento_patches][:magento][:version]
 patches_repository = node[:magento_patches][:repository_url]
 patches_branch = node[:magento_patches][:branch]
-magento_version = node[:magento_patches][:magento_version]
 composer_file = node[:magento_patches][:composer][:file]
 directory_in_repo = node[:magento_patches][:repository_directory]
 directory_in_codebase = node[:magento_patches][:codebase_directory]

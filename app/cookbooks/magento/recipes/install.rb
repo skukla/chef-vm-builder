@@ -3,7 +3,7 @@
 # Recipe:: install
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-web_root = node[:magento][:web_root]
+web_root = node[:magento][:init][:web_root]
 build_action = node[:magento][:installation][:build][:action]
 apply_deploy_mode = node[:magento][:installation][:build][:deploy_mode][:apply]
 install_settings = {

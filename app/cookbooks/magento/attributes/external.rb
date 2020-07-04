@@ -4,14 +4,15 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 include_attribute "init::default"
-default[:magento][:user] = node[:init][:os][:user]
-default[:magento][:installation][:settings][:timezone] = node[:init][:os][:timezone]
+default[:magento][:init][:user] = node[:init][:os][:user]
+default[:magento][:init][:installation][:settings][:timezone] = node[:init][:os][:timezone]
+default[:magento][:init][:web_root] = node[:init][:webserver][:web_root]
 
 include_attribute "mysql::default"
-default[:magento][:database][:host] = node[:mysql][:db_host]
-default[:magento][:database][:user] = node[:mysql][:db_user]
-default[:magento][:database][:password] = node[:mysql][:db_password]
-default[:magento][:database][:name] = node[:mysql][:db_name]
+default[:magento][:mysql][:db_host] = node[:mysql][:db_host]
+default[:magento][:mysql][:db_user] = node[:mysql][:db_user]
+default[:magento][:mysql][:db_password] = node[:mysql][:db_password]
+default[:magento][:mysql][:db_name] = node[:mysql][:db_name]
 
 include_attribute "composer::default"
 default[:magento][:composer][:file] = node[:composer][:file]
@@ -20,15 +21,9 @@ default[:magento][:composer][:private_key] = node[:composer][:private_key]
 default[:magento][:composer][:github_token] = node[:composer][:github_token]
 
 include_attribute "php::default"
-default[:magento][:php_version] = node[:php][:version]
-default[:magento][:fpm_backend] = node[:php][:backend]
-default[:magento][:fpm_port] = node[:php][:port]
-
-# We need both of these to include structure for some reason
-include_attribute "nginx::default"
-include_attribute "nginx::override"
-default[:magento][:web_root] = node[:nginx][:web_root]
-default[:magento][:structure] = node[:nginx][:structure]
+default[:magento][:php][:version] = node[:php][:version]
+default[:magento][:php][:fpm_backend] = node[:php][:backend]
+default[:magento][:php][:fpm_port] = node[:php][:port]
 
 include_attribute "elasticsearch::default"
 default[:magento][:elasticsearch][:use] = node[:elasticsearch][:use]

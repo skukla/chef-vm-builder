@@ -13,7 +13,7 @@ property :configuration,            Hash
 action :uninstall do
     new_resource.repository_list.each do |repository|
         execute "Uninstall #{repository[:name]}" do
-            command "sudo rm -rf /usr/local/bin/#{repository[:name].downcase}"
+            command "rm -rf /usr/local/bin/#{repository[:name].downcase}"
         end
     end
 end

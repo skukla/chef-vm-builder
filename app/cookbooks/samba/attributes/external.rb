@@ -4,7 +4,5 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 include_attribute "init::default"
-default[:samba][:user] = node[:init][:os][:user]
-
-include_attribute "nginx::default"
-default[:samba][:web_root] = node[:nginx][:web_root]
+default[:samba][:init][:user] = node[:init][:os][:user]
+default[:samba][:init][:web_root] = node[:init][:webserver][:web_root]

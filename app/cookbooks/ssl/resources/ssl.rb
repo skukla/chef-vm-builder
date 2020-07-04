@@ -7,9 +7,8 @@ resource_name :ssl
 provides :ssl
 
 property :name,                     String, name_property: true
-property :user,                     String, default: node[:cli][:user]
-property :group,                    String, default: node[:cli][:user]
-property :web_root,                 String, default: node[:cli][:nginx][:web_root]
+property :user,                     String, default: node[:ssh][:init][:user]
+property :group,                    String, default: node[:ssh][:init][:user]
 property :configuration,            Hash
 
 action :remove_certificates do

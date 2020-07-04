@@ -3,9 +3,9 @@
 # Recipe:: apply
 # 
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-user = node[:magento_patches][:user]
-group = node[:magento_patches][:user]
-web_root = node[:magento_patches][:web_root]
+user = node[:magento_patches][:init][:user]
+group = node[:magento_patches][:init][:user]
+web_root = node[:magento_patches][:init][:web_root]
 composer_file = node[:magento_patches][:composer][:file]
 directory_in_codebase = node[:magento_patches][:codebase_directory]
 patches_file = node[:magento_patches][:patches_file]

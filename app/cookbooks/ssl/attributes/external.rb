@@ -4,4 +4,5 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 include_attribute "init::default"
-default[:ssl][:user] = node[:init][:os][:user]
+default[:ssl][:init][:user] = node[:init][:os][:user]
+default[:ssl][:init][:web_root] = node[:init][:webserver][:web_root]

@@ -8,7 +8,6 @@ version '0.1.0'
 chef_version '>= 14.0'
 
 depends 'init'      # Brings in OS settings
-depends 'nginx'     # Brings in web root
 depends 'ssh'       # Brings in SSH settings
 depends 'php'       # Brings in PHP settings
 depends 'magento'   # Brings in Magento settings

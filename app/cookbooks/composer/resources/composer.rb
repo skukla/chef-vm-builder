@@ -9,13 +9,13 @@ provides :composer
 property :name,                 String, name_property: true
 property :install_directory,    String, default: node[:composer][:install_dir]
 property :file,                 String, default: node[:composer][:file]
-property :user,                 String, default: node[:composer][:user]
-property :group,                String, default: node[:composer][:user]
-property :web_root,             String, default: node[:composer][:web_root]
+property :user,                 String, default: node[:composer][:init][:user]
+property :group,                String, default: node[:composer][:init][:user]
+property :web_root,             String, default: node[:composer][:init][:web_root]
 property :options,              Array
 property :project_name,         String
 property :project_directory,    String
-property :project_stability,    String, default: node[:composer][:project_stability]
+property :project_stability,    String, default: node[:composer][:magento][:project_stability]
 property :package_name,         String
 property :package_version,      String
 property :module_name,          String

@@ -7,8 +7,8 @@ resource_name :webmin
 provides :webmin
 
 property :name,                     String, name_property: true
-property :user,                     String, default: node[:webmin][:user]
-property :group,                    String, default: node[:webmin][:user]
+property :user,                     String, default: node[:webmin][:init][:user]
+property :group,                    String, default: node[:webmin][:init][:user]
 property :configuration,            Hash
 
 action :uninstall do

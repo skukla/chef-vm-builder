@@ -6,7 +6,9 @@
 supported_settings = {
     :os => [:update, :timezone],
     :vm => [:ip, :name],
-    :webserver => [:type]
+    :webserver => :type,
+    :magento_build => :web_root,
+    :custom_demo => :structure
 }
 
 supported_settings.each do |setting_key, setting_data|
@@ -34,5 +36,8 @@ supported_settings.each do |setting_key, setting_data|
                 override[:init][setting_key][:type] = node[:infrastructure][setting_key]
             end
         end
+    when :custom_demo
+        next if node[setting_key][setting_data].nil?
+        override[:init][setting_key][setting_data] = node[setting_key][setting_data]
     end
 end

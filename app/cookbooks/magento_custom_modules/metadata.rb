@@ -10,7 +10,6 @@ chef_version '>= 14.0'
 depends 'init'                      # Brings in OS settings
 depends 'helpers'                   # Brings in helper libraries
 depends 'composer'                  # Brings in Composer settings
-depends 'nginx'                     # Brings in the web root
 depends 'magento'                   # Brings in the magento resources
 
 # The `issues_url` points to the location where issues for this cookbook are

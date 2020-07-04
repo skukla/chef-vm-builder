@@ -3,8 +3,8 @@
 # Recipe:: configure
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-user = node[:magento][:user]
-web_root = node[:magento][:web_root]
+user = node[:magento][:init][:user]
+web_root = node[:magento][:init][:web_root]
 family = node[:magento][:installation][:options][:family]
 build_action = node[:magento][:installation][:build][:action]
 use_elasticsearch = node[:magento][:elasticsearch][:use]

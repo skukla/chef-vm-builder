@@ -7,8 +7,8 @@ resource_name :samba
 provides :samba
 
 property :name,                    String, name_property: true
-property :user,                    String
-property :group,                   String
+property :user,                    String, default: node[:samba][:init][:user]
+property :group,                   String, default: node[:samba][:init][:user]
 property :shares,                  Hash
 property :share_fields,            Array, default: node[:samba][:share_fields]
 property :hostname,                String, default: node[:hostname]

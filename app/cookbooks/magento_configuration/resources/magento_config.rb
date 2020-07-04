@@ -7,15 +7,15 @@ resource_name :magento_config
 provides :magento_config
 
 property :name,                   String, name_property: true
-property :web_root,               String, default: node[:magento][:web_root]
+property :user,                   String, default: node[:magento_configuration][:init][:user]
+property :group,                  String, default: node[:magento_configuration][:init][:user]
+property :web_root,               String, default: node[:magento_configuration][:init][:web_root]
 property :config_group,           String
 property :config_paths,           Array
 property :config_data,            Hash
-property :admin_users,            Hash, default: node[:magento_configuration][:admin_users]
-property :shares,                 Hash, default: node[:magento_configuration][:samba_shares]
-property :user,                   String, default: node[:magento_configuration][:user]
-property :group,                  String, default: node[:magento_configuration][:user]
-property :use_elasticsearch,      String, default: node[:magento][:elasticsearch][:use].to_s
+property :admin_users,            Hash,   default: node[:magento_configuration][:admin_users]
+property :shares,                 Hash,   default: node[:magento_configuration][:samba_shares]
+property :use_elasticsearch,      String, default: node[:magento_configuration][:elasticsearch][:use].to_s
 
 action :process_configuration do
     new_resource.config_paths.each do |config_path|

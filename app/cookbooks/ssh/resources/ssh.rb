@@ -7,8 +7,8 @@ resource_name :ssh
 provides :ssh
 
 property :name,                     String, name_property: true
-property :user,                     String, default: node[:ssh][:user]
-property :group,                    String, default: node[:ssh][:user]
+property :user,                     String, default: node[:ssh][:init][:user]
+property :group,                    String, default: node[:ssh][:init][:user]
 property :vagrant_key,              String, default: node[:ssh][:vagrant_key]
 property :configuration,            Hash
 

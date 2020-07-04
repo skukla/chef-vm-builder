@@ -11,7 +11,7 @@ property :package_name,           String
 property :module_name,            String
 property :package_version,        String
 property :repository_url,         String
-property :options,                 Array
+property :options,                Array
 
 action :download do
     composer "Add repository #{new_resource.module_name}" do

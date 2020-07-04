@@ -3,7 +3,7 @@
 # Recipe:: default
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-user = node[:ssh][:user]
+user = node[:ssh][:init][:user]
 authorized_keys = node[:ssh][:authorized_keys]
 private_keys = node[:ssh][:private_keys][:files]
 

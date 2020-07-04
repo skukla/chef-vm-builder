@@ -10,7 +10,7 @@ property :name,                     String, name_property: true
 property :hostname,                 String, default: node[:fqdn]
 property :user,                     String, default: node[:init][:os][:user]
 property :ip,                       String, default: node[:init][:vm][:ip]
-property :custom_demo_structure,    Hash,   default: node[:init][:structure]
+property :demo_structure,           Hash,   default: node[:init][:custom_demo][:structure]
 property :use_mailhog,              String, default: node[:init][:use_mailhog].to_s
 property :use_webmin,               String, default: node[:init][:use_webmin].to_s
 property :apache_packages,          Array,  default: node[:init][:webserver][:apache_package_list]
@@ -21,7 +21,7 @@ action :install_motd do
     end
 
     demo_urls = Array.new
-    new_resource.custom_demo_structure.each do |scope, scope_hash|
+    new_resource.demo_structure.each do |scope, scope_hash|
         scope_hash.each do |code, url|
             demo_urls << url
         end

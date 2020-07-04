@@ -7,8 +7,8 @@ resource_name :magento_cli
 provides :magento_cli
 
 property :name,               String, name_property: true
-property :web_root,           String, default: node[:magento][:web_root]
-property :user,               String, default: node[:magento][:user]
+property :web_root,           String, default: node[:magento][:init][:web_root]
+property :user,               String, default: node[:magento][:init][:user]
 property :install_string,     String
 property :config_path,        String
 property :config_value,       String

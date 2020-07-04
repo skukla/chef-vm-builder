@@ -9,7 +9,6 @@ chef_version '>= 14.0'
 
 depends 'init'              # This brings in OS settings
 depends 'helpers'           # This brings in helper libraries
-depends 'nginx'             # This brings in webserver settings
 depends 'composer'          # This brings in composer settings
 depends 'samba'             # This brings in samba settings
 depends 'elasticsearch'     # This brings in elasticsearch settings

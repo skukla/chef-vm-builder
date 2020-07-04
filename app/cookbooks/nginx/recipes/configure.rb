@@ -3,8 +3,8 @@
 # Recipe:: configure
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-user = node[:nginx][:user]
-web_root = node[:nginx][:web_root]
+user = node[:nginx][:init][:user]
+web_root = node[:nginx][:init][:web_root]
 
 nginx "Configure nginx" do
     action :configure

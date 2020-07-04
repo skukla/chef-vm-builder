@@ -7,15 +7,15 @@ resource_name :cli
 provides :cli
 
 property :name,                     String, name_property: true
-property :user,                     String, default: node[:cli][:user]
-property :group,                    String, default: node[:cli][:user]
-property :web_root,                 String, default: node[:cli][:nginx][:web_root]
+property :user,                     String, default: node[:cli][:init][:user]
+property :group,                    String, default: node[:cli][:init][:user]
+property :web_root,                 String, default: node[:cli][:init][:web_root]
 property :php_version,              String, default: node[:cli][:php][:version]
 property :magento_version,          String, default: node[:cli][:magento][:version]
-property :db_host,                  String, default: node[:cli][:database][:host]
-property :db_user,                  String, default: node[:cli][:database][:user]
-property :db_password,              String, default: node[:cli][:database][:password]
-property :db_name,                  String, default: node[:cli][:database][:name]
+property :db_host,                  String, default: node[:cli][:mysql][:db_host]
+property :db_user,                  String, default: node[:cli][:mysql][:db_user]
+property :db_password,              String, default: node[:cli][:mysql][:db_password]
+property :db_name,                  String, default: node[:cli][:mysql][:db_name]
 property :configuration,            Hash
 
 action :create_directories do

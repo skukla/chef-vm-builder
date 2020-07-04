@@ -7,11 +7,11 @@ resource_name :nginx
 provides :nginx
 
 property :name,                    String, name_property: true
-property :user,                    String, default: node[:nginx][:user]
-property :group,                   String, default: node[:nginx][:user]
-property :web_root,                String, default: node[:nginx][:web_root]
+property :user,                    String, default: node[:nginx][:init][:user]
+property :group,                   String, default: node[:nginx][:init][:user]
+property :web_root,                String, default: node[:nginx][:init][:web_root]
 property :php_version,             String, default: node[:nginx][:php][:version]
-property :custom_demo_structure,   Hash
+property :demo_structure,          Hash
 property :ssl_configuration,       Hash
 property :configuration,           Hash
 
@@ -92,7 +92,7 @@ action :configure_multisite do
 
     # Collect vhost data
     vhost_data = Array.new
-    new_resource.custom_demo_structure.each do |scope, scope_hash|
+    new_resource.demo_structure.each do |scope, scope_hash|
         scope_hash.each do |code, url|
             demo_data = Hash.new
             if scope == "store_view"
