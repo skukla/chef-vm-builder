@@ -11,4 +11,7 @@ include_attribute "composer::default"
 default[:magento_patches][:composer][:file] = node[:composer][:file]
 
 include_attribute "magento::default"
-default[:magento_patches][:magento_version] = node[:magento][:installation][:options][:version]
+default[:magento_patches][:magento][:version] = node[:magento][:installation][:options][:version]
+
+include_attribute "magento_internal::default"
+default[:magento_patches][:magento_internal][:branch] = node[:magento_internal][:branch]

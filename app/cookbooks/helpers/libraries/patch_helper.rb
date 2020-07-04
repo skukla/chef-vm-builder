@@ -5,7 +5,7 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 module PatchHelper
     def self.build_patch_file(patch_file_directory, patches_file)
-        require 'json'
+        require "json"
         files = Dir["#{patch_file_directory}/*.patch"].sort!
         file_hash = {}
         module_hash = {}

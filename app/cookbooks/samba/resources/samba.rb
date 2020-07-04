@@ -7,16 +7,21 @@ resource_name :samba
 provides :samba
 
 property :name,                    String, name_property: true
+property :hostname,                String, default: node[:hostname]
 property :user,                    String, default: node[:samba][:init][:user]
 property :group,                   String, default: node[:samba][:init][:user]
-property :shares,                  Hash
 property :share_fields,            Array, default: node[:samba][:share_fields]
-property :hostname,                String, default: node[:hostname]
+property :configuration,           Hash
 
 action :uninstall do
     apt_package "samba" do
         action [:remove, :purge]
-    end    
+    end
+
+    execute "Manually remove the Samba sources file" do
+        command "rm -rf /etc/apt/sources.list.d/samba*"
+        only_if "ls /etc/apt/sources.list.d/samba*"
+    end
 end
 
 action :install do
@@ -28,7 +33,7 @@ end
 action :configure do
     # Prepare share data - selected_shares here is an Autovivified hash
     selected_shares = Hash.new {|h, k| h[k] = Hash.new(0) }
-    new_resource.shares.each do |share_name, share_record|
+    new_resource.configuration[:shares].each do |share_name, share_record|
         share_data = Hash.new
         new_resource.share_fields.each do |field|
             case field

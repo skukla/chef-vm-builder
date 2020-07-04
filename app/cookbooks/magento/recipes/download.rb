@@ -109,8 +109,7 @@ composer "Require the B2B modules" do
 end
 
 if apply_patches && ((build_action == "force_install") || (apply_patches && build_action == "install" && !::File.exist?("#{web_root}/var/.first-run-state.flag")))
-    include_recipe "magento_patches::download"
-    include_recipe "magento_patches::apply"
+    include_recipe "magento_patches::default"
 end
 
 unless custom_modules.empty?
