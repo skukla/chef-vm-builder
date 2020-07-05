@@ -8,6 +8,7 @@ default[:magento_demo_builder][:init][:user] = node[:init][:os][:user]
 default[:magento_demo_builder][:init][:web_root] = node[:init][:webserver][:web_root]
 
 include_attribute "mysql::default"
+include_attribute "mysql::override"
 default[:magento_demo_builder][:mysql][:db_user] = node[:mysql][:db_user]
 default[:magento_demo_builder][:mysql][:db_password] = node[:mysql][:db_password]
 default[:magento_demo_builder][:mysql][:db_name] = node[:mysql][:db_name]

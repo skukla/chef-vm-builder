@@ -17,6 +17,7 @@ include_attribute "composer::default"
 default[:magento_configuration][:composer][:file] = node[:composer][:file]
 
 include_attribute "samba::default"
+include_attribute "samba::override"
 default[:magento_configuration][:samba][:share_list] = node[:samba][:share_list]
 
 include_attribute "elasticsearch::default"
@@ -32,3 +33,4 @@ include_attribute "magento::default"
 include_attribute "magento::override"
 default[:magento_configuration][:magento_version] = node[:magento][:installation][:options][:version]
 default[:magento_configuration][:magento_family] = node[:magento][:installation][:options][:family]
+default[:magento_configuration][:magento][:build_action] = node[:magento][:installation][:build][:action]

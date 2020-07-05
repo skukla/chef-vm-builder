@@ -6,16 +6,17 @@
 resource_name :magento_config
 provides :magento_config
 
-property :name,                   String, name_property: true
-property :user,                   String, default: node[:magento_configuration][:init][:user]
-property :group,                  String, default: node[:magento_configuration][:init][:user]
-property :web_root,               String, default: node[:magento_configuration][:init][:web_root]
-property :config_group,           String
-property :config_paths,           Array
-property :config_data,            Hash
-property :admin_users,            Hash,   default: node[:magento_configuration][:admin_users]
-property :share_list,             Hash,   default: node[:magento_configuration][:samba][:share_list]
-property :use_elasticsearch,      String, default: node[:magento_configuration][:elasticsearch][:use].to_s
+property :name,                String,                  name_property: true
+property :user,                String,                  default: node[:magento_configuration][:init][:user]
+property :group,               String,                  default: node[:magento_configuration][:init][:user]
+property :web_root,            String,                  default: node[:magento_configuration][:init][:web_root]
+property :build_action,        String,                  default: node[:magento_configuration][:magento][:build_action]
+property :config_group,        String
+property :config_paths,        Array
+property :config_data,         Hash
+property :admin_users,         Hash,                    default: node[:magento_configuration][:admin_users]
+property :share_list,          Hash,                    default: node[:magento_configuration][:samba][:share_list]
+property :use_elasticsearch,   [TrueClass, FalseClass], default: node[:magento_configuration][:elasticsearch][:use]
 
 action :process_configuration do
     new_resource.config_paths.each do |config_path|
@@ -111,18 +112,17 @@ end
 action :create_media_drops do
     [:product_media_drop, :content_media_drop].each do |drop_directory|
         if new_resource.share_list.has_key?(drop_directory)
-            if new_resource.share_list[drop_directory].is_a? String and !new_resource.share_list[drop_directory].empty?
+            if (new_resource.share_list[drop_directory].is_a? String) && !new_resource.share_list[drop_directory].empty?
                 media_drop_path = new_resource.share_list[drop_directory]
             elsif new_resource.share_list[drop_directory].has_key?(:path) && !new_resource.share_list[drop_directory][:path].empty?
                 media_drop_path = new_resource.share_list[drop_directory][:path]
             end
             directory "Media Drop" do
-                path "#{media_drop_path}"
-                owner "#{new_resource.user}"
-                group "#{new_resource.group}"
+                path media_drop_path
+                owner new_resource.user
+                group new_resource.group
                 mode "777"
                 recursive true
-                not_if { Dir.exist?("#{media_drop_path}") }
             end
         end
     end
