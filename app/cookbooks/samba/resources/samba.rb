@@ -10,8 +10,9 @@ property :name,                    String, name_property: true
 property :hostname,                String, default: node[:hostname]
 property :user,                    String, default: node[:samba][:init][:user]
 property :group,                   String, default: node[:samba][:init][:user]
-property :share_fields,            Array, default: node[:samba][:share_fields]
-property :configuration,           Hash
+property :share_fields,            Array,  default: node[:samba][:share_fields]
+property :share_list,              Hash,   default: node[:samba][:share_list]
+
 
 action :uninstall do
     apt_package "samba" do
@@ -33,7 +34,7 @@ end
 action :configure do
     # Prepare share data - selected_shares here is an Autovivified hash
     selected_shares = Hash.new {|h, k| h[k] = Hash.new(0) }
-    new_resource.configuration[:shares].each do |share_name, share_record|
+    new_resource.share_list.each do |share_name, share_record|
         share_data = Hash.new
         new_resource.share_fields.each do |field|
             case field
@@ -64,12 +65,12 @@ action :configure do
     template "Configure Samba" do
         source "smb.conf.erb"
         path "/etc/samba/smb.conf"
-        owner "#{new_resource.user}"
-        group "#{new_resource.group}"
+        owner new_resource.user
+        group new_resource.group
         mode "644"
         variables({
-            hostname: "#{new_resource.hostname}",
-            shares: selected_shares
+            hostname: new_resource.hostname,
+            share_list: selected_shares
         })
     end
 end

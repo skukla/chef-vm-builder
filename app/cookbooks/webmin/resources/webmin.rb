@@ -6,10 +6,11 @@
 resource_name :webmin
 provides :webmin
 
-property :name,                     String, name_property: true
-property :user,                     String, default: node[:webmin][:init][:user]
-property :group,                    String, default: node[:webmin][:init][:user]
-property :configuration,            Hash
+property :name,            String,            name_property: true
+property :user,            String,            default: node[:webmin][:init][:user]
+property :group,           String,            default: node[:webmin][:init][:user]
+property :use_ssl,         [String, Integer], default: node[:webmin][:use_ssl]
+property :port,            [String, Integer], default: node[:webmin][:port]
 
 action :uninstall do
     apt_package "webmin" do
@@ -31,7 +32,7 @@ action :install do
         action :add
         retries 3
         ignore_failure true
-        not_if { ::File.exist?('/etc/apt/sources.list.d/webmin.list') }
+        not_if { ::File.exist?("/etc/apt/sources.list.d/webmin.list") }
     end
 
     apt_package "webmin" do
@@ -43,12 +44,12 @@ action :configure do
     template "Webmin configuration" do
         source "miniserv.conf.erb"
         path "/etc/webmin/miniserv.conf"
-        owner "#{new_resource.user}"
-        group "#{new_resource.group}"
+        owner new_resource.user
+        group new_resource.group
         mode "644"
         variables({
-            use_ssl: "#{new_resource.configuration[:use_ssl]}",
-            port: "#{new_resource.configuration[:port]}"
+            use_ssl: new_resource.use_ssl,
+            port: new_resource.port
         })
     end
 end

@@ -17,7 +17,7 @@ include_attribute "composer::default"
 default[:magento_configuration][:composer][:file] = node[:composer][:file]
 
 include_attribute "samba::default"
-default[:magento_configuration][:samba_shares] = node[:samba][:shares]
+default[:magento_configuration][:samba][:share_list] = node[:samba][:share_list]
 
 include_attribute "elasticsearch::default"
 default[:magento_configuration][:elasticsearch][:use] = node[:elasticsearch][:use]

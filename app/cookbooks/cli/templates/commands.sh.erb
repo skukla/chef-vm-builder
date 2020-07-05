@@ -185,17 +185,17 @@ function configure-proxy() {
   curl -sS https://raw.githubusercontent.com/PMET-public/magento-cloud-extension/0.0.25/sh-scripts/lib.sh \
     https://raw.githubusercontent.com/PMET-public/magento-cloud-extension/0.0.25/sh-scripts/configure-proxies.sh | env ext_ver=0.0.25 tab_url=https://github.com bash
   sleep 1
-  <% unless @private_keys.empty? %>
+  <% unless @private_keys_list.empty? %>
   add-keys
   <% end %>
 }
 export -f configure-proxy
 
-<% unless @private_keys.empty? %>
+<% unless @private_keys_list.empty? %>
 function add-keys() {
   printf "\nAdding SSH keys...\n"
   eval $(ssh-agent)>
-  <% @private_keys.each do |private_key| %>
+  <% @private_keys_list.each do |private_key| %>
   ssh-add ~/.ssh/<%= private_key %>
   <% end %>
 }

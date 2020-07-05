@@ -17,7 +17,7 @@ default[:cli][:mysql][:db_password] = node[:mysql][:db_password]
 default[:cli][:mysql][:db_name] = node[:mysql][:db_name]
 
 include_attribute "ssh::default"
-default[:cli][:ssh][:private_keys] = node[:ssh][:private_keys][:files]
+default[:cli][:ssh][:private_keys_list] = node[:ssh][:private_keys][:files]
 
 include_attribute "magento::default"
 default[:cli][:magento][:version] = node[:magento][:installation][:options][:version]

@@ -8,7 +8,8 @@ provides :java
 
 property :name,                     String, name_property: true
 property :elasticsearch_version,    String, default: node[:elasticsearch][:version]
-property :configuration,            Hash
+property :java_home,                String, default: node[:elasticsearch][:java][:java_home]
+property :filename,                 String
 
 action :uninstall do
     execute "Uninstall Java" do
@@ -27,7 +28,7 @@ end
 action :set_java_home do
     ruby_block "Set JAVA_HOME for Elasticsearch #{new_resource.elasticsearch_version}" do
         block do
-            StringReplaceHelper.set_java_home("#{new_resource.configuration[:filename]}", "#{new_resource.configuration[:java_home]}")
+            StringReplaceHelper.set_java_home("#{new_resource.filename}", "#{new_resource.java_home}")
         end
     end
 end

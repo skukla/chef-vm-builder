@@ -6,67 +6,71 @@
 resource_name :mysql
 provides :mysql
 
-property :name,                     String, name_property: true
-property :db_host,                  String, default: node[:mysql][:db_host]
-property :db_user,                  String, default: node[:mysql][:db_user]
-property :db_password,              String, default: node[:mysql][:db_password]
-property :db_name,                  String, default: node[:mysql][:db_name]
-property :configuration,            Hash
-property :app_install_settings,     Array, default: node[:mysql][:app_install_settings]
+property :name,                     String,            name_property: true
+property :db_host,                  String,            default: node[:mysql][:db_host]
+property :db_user,                  String,            default: node[:mysql][:db_user]
+property :db_password,              String,            default: node[:mysql][:db_password]
+property :db_name,                  String,            default: node[:mysql][:db_name]
+property :socket,                   String,            default: node[:mysql][:socket]
+property :innodb_buffer_pool_size,  [String, Integer], default: node[:mysql][:innodb_buffer_pool_size]
+property :max_allowed_packet,       [String, Integer], default: node[:mysql][:max_allowed_packet]
+property :tmp_table_size,           [String, Integer], default: node[:mysql][:tmp_table_size]
+property :max_heap_table_size,      [String, Integer], default: node[:mysql][:max_heap_table_size]
+property :app_install_settings,     Array,             default: node[:mysql][:app_install_settings]
 
 action :install do
-    apt_repository 'MariaDB' do
-        uri 'http://mirror.zol.co.zw/mariadb/repo/10.3/ubuntu'
-        arch 'amd64'
-        components ['main']
-        distribution 'bionic'
-        keyserver 'keyserver.ubuntu.com'
-        key 'F1656F24C74CD1D8'
+    apt_repository "MariaDB" do
+        uri "http://mirror.zol.co.zw/mariadb/repo/10.3/ubuntu"
+        arch "amd64"
+        components ["main"]
+        distribution "bionic"
+        keyserver "keyserver.ubuntu.com"
+        key "F1656F24C74CD1D8"
         deb_src true
         trusted true
-        not_if { ::File.directory?('/etc/mysql') }
+        not_if { ::Dir.exist?("/etc/mysql") }
     end
     
-    ['mariadb-server', 'mariadb-client'].each do |package|
+    ["mariadb-server", "mariadb-client"].each do |package|
         apt_package package do
             action :install
-            not_if { ::File.directory?('/etc/mysql') }
+            not_if { ::Dir.exist?("/etc/mysql") }
         end
     end
 end
 
 action :configure do
-    directory 'Create the mysql.conf.d folder' do
-        path '/etc/mysql/mysql.conf.d'
-        owner 'root'
-        group 'root'
-        mode '644'
+    directory "Create the mysql.conf.d folder" do
+        path "/etc/mysql/mysql.conf.d"
+        owner "root"
+        group "root"
+        mode "644"
     end
 
-    template 'Configure MariaDB' do
-        source 'my.cnf.erb'
-        path '/etc/mysql/my.cnf'
-        owner 'root'
-        group 'root'
+    template "Configure MariaDB" do
+        source "my.cnf.erb"
+        path "/etc/mysql/my.cnf"
+        owner "root"
+        group "root"
         mode '644'
         variables({
-            socket: "#{new_resource.configuration[:socket]}",
-            innodb_buffer_pool_size: "#{new_resource.configuration[:innodb_buffer_pool_size]}",
-            max_allowed_packet: "#{new_resource.configuration[:max_allowed_packet]}",
-            tmp_table_size: "#{new_resource.configuration[:tmp_table_size]}",
-            max_heap_table_size: "#{new_resource.configuration[:max_heap_table_size]}"
+            socket: new_resource.socket,
+            innodb_buffer_pool_size: new_resource.innodb_buffer_pool_size,
+            max_allowed_packet: new_resource.max_allowed_packet,
+            tmp_table_size: new_resource.tmp_table_size,
+            max_heap_table_size: new_resource.max_heap_table_size
         })
     end
 end
 
 action :restart do
-    service 'mysql' do
+    service "mysql" do
         action :restart
     end
 end
 
 action :enable do
-    service 'mysql' do
+    service "mysql" do
         action :enable
     end
 end

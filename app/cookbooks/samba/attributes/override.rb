@@ -3,7 +3,7 @@
 # Attribute:: override
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-supported_settings = [:use, :shares]
+supported_settings = [:use, :share_list]
 
 supported_settings.each do |setting|
     if node[:infrastructure][:samba].is_a? Chef::Node::ImmutableMash

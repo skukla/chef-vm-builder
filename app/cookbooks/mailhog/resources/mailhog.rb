@@ -6,14 +6,16 @@
 resource_name :mailhog
 provides :mailhog
 
-property :name,                     String, name_property: true
-property :repository_list,          Array, default: node[:mailhog][:repositories]
-property :configuration,            Hash
+property :name,              String,            name_property: true
+property :repository_list,   Array,             default: node[:mailhog][:repositories]
+property :port,              [String, Integer], default: node[:mailhog][:port]
+property :smtp_port,         [String, Integer], default: node[:mailhog][:smtp_port]
 
 action :uninstall do
     new_resource.repository_list.each do |repository|
         execute "Uninstall #{repository[:name]}" do
             command "rm -rf /usr/local/bin/#{repository[:name].downcase}"
+            only_if { ::Dir.exist?("/root/go") }
         end
     end
 end
@@ -37,8 +39,8 @@ action :configure do
         group 'root'
         mode '0644'
         variables({ 
-            port: "#{new_resource.configuration[:port]}",
-            smtp_port: "#{new_resource.configuration[:smtp_port]}"
+            port: new_resource.port,
+            smtp_port: new_resource.smtp_port
         })
     end
 end
@@ -57,7 +59,7 @@ end
 
 action :reload do
     execute "Reload all daemons" do
-        command "sudo systemctl daemon-reload"
+        command "systemctl daemon-reload"
     end
 end
 

@@ -6,14 +6,15 @@
 resource_name :init
 provides :init
 
-property :name,                     String, name_property: true
-property :hostname,                 String, default: node[:fqdn]
-property :user,                     String, default: node[:init][:os][:user]
-property :ip,                       String, default: node[:init][:vm][:ip]
-property :demo_structure,           Hash,   default: node[:init][:custom_demo][:structure]
-property :use_mailhog,              String, default: node[:init][:use_mailhog].to_s
-property :use_webmin,               String, default: node[:init][:use_webmin].to_s
-property :apache_packages,          Array,  default: node[:init][:webserver][:apache_package_list]
+property :name,              String,                  name_property: true
+property :hostname,          String,                  default: node[:fqdn]
+property :user,              String,                  default: node[:init][:os][:user]
+property :group,             String,                  default: node[:init][:os][:user]
+property :ip,                String,                  default: node[:init][:vm][:ip]
+property :web_root,          String,                  default: node[:init][:webserver][:web_root]
+property :demo_structure,    Hash,                    default: node[:init][:custom_demo][:structure]
+property :use_mailhog,       [TrueClass, FalseClass], default: node[:init][:use_mailhog]
+property :use_webmin,        [TrueClass, FalseClass], default: node[:init][:use_webmin]
 
 action :install_motd do
     execute "Remove MotDs" do
@@ -45,10 +46,18 @@ action :install_motd do
     end
 end
 
-action :remove_apache_packages do
-    new_resource.apache_packages.each do |package|
-        apt_package package do
-            action [:remove, :purge]
-        end
+action :create_web_root do
+    directory "Web root directory" do
+        path new_resource.web_root
+        owner new_resource.user
+        group new_resource.group
+        mode "0770"
+        recursive true
+        not_if { ::Dir.exist?(new_resource.web_root) }
+    end
+    
+    execute "Set setgid on webroot" do
+        command "chmod g+s #{new_resource.web_root}"
+        only_if { ::Dir.exist?(new_resource.web_root) }
     end
 end

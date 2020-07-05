@@ -15,7 +15,7 @@ supported_settings = {
 }
 override[:ssh][:private_keys][:files] = Array.new
 override[:ssh][:public_keys][:files] = Array.new
-override[:ssh][:authorized_keys] = Array.new
+override[:ssh][:authorized_keys][:files] = Array.new
 
 if node[:application][:authentication][:ssh].is_a? Chef::Node::ImmutableMash
     supported_settings.each do |key_type, setting_data|
@@ -36,7 +36,7 @@ if node[:application][:authentication][:ssh].is_a? Chef::Node::ImmutableMash
                 key_file_name = key_file.sub("#{node[:ssh][key_type][:file_path]}/", "")
                 if key_file_name == configured_key
                     override[:ssh][key_type][:files] << configured_key
-                    override[:ssh][:authorized_keys] << key_file_content if key_type == :public_keys
+                    override[:ssh][:authorized_keys][:files] << key_file_content if key_type == :public_keys
                 end
             end
         end

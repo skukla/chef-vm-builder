@@ -6,19 +6,26 @@
 resource_name :php
 provides :php
 
-property :name,                     String, name_property: true
-property :php_user,                 String
-property :vm_user,                  String, default: node[:php][:user]
-property :vm_group,                 String, default: node[:php][:user]
-property :version,                  String, default: node[:php][:version]
-property :extension_list,           Array
-property :sendmail_path,            String
-property :configuration,            Hash
+property :name,                     String,            name_property: true
+property :php_user,                 String,            default: "www-data"
+property :vm_user,                  String,            default: node[:php][:init][:user]
+property :vm_group,                 String,            default: node[:php][:init][:user]
+property :version,                  String,            default: node[:php][:version]
+property :port,                     [String, Integer], default: node[:php][:port]
+property :max_execution_time,       [String, Integer], default: node[:php][:max_execution_time]
+property :memory_limit,             String,            default: node[:php][:memory_limit]
+property :upload_max_filesize,      String,            default: node[:php][:upload_max_filesize]
+property :zlib_output_compression,  String,            default: node[:php][:zlib_output_compression]
+property :backend,                  String,            default: node[:php][:backend]
+property :extension_list,           Array,             default: node[:php][:extension_list]
+property :sendmail_path,            String,            default: node[:php][:sendmail_path]
+property :timezone,                 String,            default: node[:php][:init][:timezone]
+property :apache_package_list,      Array,             default: node[:php][:init][:apache_package_list]
 
 action :install do
     # Add PHP repository
     apt_repository "php-#{new_resource.version}" do
-        uri 'ppa:ondrej/php'
+        uri "ppa:ondrej/php"
         components ['main']
         distribution "bionic"
         action :add
@@ -37,7 +44,7 @@ action :install do
 
     # Remove any package left-overs
     execute "Remove package leftovers" do
-        command 'sudo apt-get autoremove -y'
+        command "apt-get autoremove -y"
     end
 end
 
@@ -50,11 +57,11 @@ action :configure do
             group "root"
             mode "644"
             variables({
-                timezone: "#{new_resource.configuration[:timezone]}",
-                memory_limit: "#{new_resource.configuration[:memory_limit]}",
-                upload_max_filesize: "#{new_resource.configuration[:upload_max_filesize]}",
-                max_execution_time: "#{new_resource.configuration[:max_execution_time]}",
-                zlib_output_compression: "#{new_resource.configuration[:zlib_output_compression]}"
+                timezone: new_resource.timezone,
+                memory_limit: new_resource.memory_limit,
+                upload_max_filesize: new_resource.upload_max_filesize,
+                max_execution_time: new_resource.max_execution_time,
+                zlib_output_compression: new_resource.zlib_output_compression
             })
         end
         if type == "fpm"
@@ -65,11 +72,11 @@ action :configure do
                 group "root"
                 mode "644"
                 variables({
-                    owner: "#{new_resource.vm_user}",
-                    user: "#{new_resource.vm_user}",
-                    group: "#{new_resource.vm_user}",
-                    backend: "#{new_resource.configuration[:backend]}",
-                    port: "#{new_resource.configuration[:port]}"
+                    owner: new_resource.vm_user,
+                    user: new_resource.vm_user,
+                    group: new_resource.vm_user,
+                    backend: new_resource.backend,
+                    port: new_resource.port
                 })
             end
         end
@@ -83,8 +90,8 @@ action :configure do
         group "root"
         mode "644"
         variables({ 
-            user: "#{new_resource.vm_user}",
-            version: "#{new_resource.version}" 
+            user: new_resource.vm_user,
+            version: new_resource.version 
         })
     end
 end
@@ -102,7 +109,7 @@ action :set_user do
         end
         
         execute "Make PHP script executable" do
-            command "sudo chmod +x /bin/php.sh"
+            command "chmod +x /bin/php.sh"
         end
     else
         link "/usr/bin/php" do
@@ -116,7 +123,7 @@ action :set_user do
         end
         
         execute "Make PHP script non-executable" do
-            command "sudo chmod -x /bin/php.sh"
+            command "chmod -x /bin/php.sh"
             only_if { ::File.exist?("/bin/php.sh") }
         end
     end
@@ -129,6 +136,14 @@ action :configure_sendmail do
                 StringReplaceHelper.set_php_sendmail_path("#{php_type}", "#{new_resource.version}", "#{new_resource.sendmail_path}")
             end
             only_if { ::File.exist?("/etc/php/#{new_resource.version}/#{php_type}/php.ini") }
+        end
+    end
+end
+
+action :remove_apache_packages do
+    new_resource.apache_package_list.each do |package|
+        apt_package package do
+            action [:remove, :purge]
         end
     end
 end

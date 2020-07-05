@@ -6,14 +6,21 @@
 resource_name :nginx
 provides :nginx
 
-property :name,                    String, name_property: true
-property :user,                    String, default: node[:nginx][:init][:user]
-property :group,                   String, default: node[:nginx][:init][:user]
-property :web_root,                String, default: node[:nginx][:init][:web_root]
-property :php_version,             String, default: node[:nginx][:php][:version]
-property :demo_structure,          Hash
-property :ssl_configuration,       Hash
-property :configuration,           Hash
+property :name,                    String,            name_property: true
+property :user,                    String,            default: node[:nginx][:init][:user]
+property :group,                   String,            default: node[:nginx][:init][:user]
+property :web_root,                String,            default: node[:nginx][:init][:web_root]
+property :php_version,             String,            default: node[:nginx][:php][:version]
+property :http_port,               [String, Integer], default: node[:nginx][:http_port]
+property :client_max_body_size,    String,            default: node[:nginx][:client_max_body_size]
+property :fpm_backend,             String,            default: node[:nginx][:php][:fpm_backend]
+property :fpm_port,                [String, Integer], default: node[:nginx][:php][:fpm_port]
+property :ssl_port,                [String, Integer], default: node[:nginx][:ssl][:port]
+property :key_directory,           String,            default: node[:nginx][:ssl][:key_directory]
+property :key_file,                String,            default: "#{node[:fqdn]}.key"
+property :cert_directory,          String,            default: node[:nginx][:ssl][:cert_directory]
+property :cert_file,               String,            default: "#{node[:fqdn]}.crt"
+property :demo_structure,          Hash,              default: node[:nginx][:init][:demo_structure]
 
 action :uninstall do
     apt_package "nginx" do
@@ -34,7 +41,8 @@ action :configure do
         owner "root"
         group "root"
         mode "644"
-        variables ({ user: "#{new_resource.user}" })
+        variables ({ user: new_resource.user })
+        not_if { ::File.exist?("/etc/nginx/nginx.conf") }
     end
     
     # Remove the default site
@@ -42,21 +50,6 @@ action :configure do
         to "/etc/nginx/sites-available/default"
         action :delete
         only_if { ::File.exist?("/etc/nginx/sites-available/default") }
-    end
-end
-
-action :create_web_root do
-    directory 'Web root directory' do
-        path "#{new_resource.web_root}"
-        owner "#{new_resource.user}"
-        group "#{new_resource.group}"
-        mode "0770"
-        recursive true
-    end
-    
-    execute "Set setgid on webroot" do
-        command "chmod g+s #{new_resource.web_root}"
-        only_if { ::File.directory?("#{new_resource.web_root}") }
     end
 end
 
@@ -80,6 +73,7 @@ action :configure_multisite do
         owner "root"
         group "root"
         mode "644"
+        only_if { ::Dir.exist?("/etc/nginx/sites-available") }
     end
     
     template "Configure Magento and Nginx" do
@@ -88,6 +82,7 @@ action :configure_multisite do
         owner "root"
         group "root"
         mode "644"
+        only_if { ::Dir.exist?("/etc/nginx/sites-available/conf") }
     end
 
     # Collect vhost data
@@ -112,10 +107,11 @@ action :configure_multisite do
             group "root"
             mode "644"
             variables({ 
-                fpm_backend: "#{new_resource.configuration[:fpm_backend]}",
-                fpm_port: "#{new_resource.configuration[:fpm_port]}",
+                fpm_backend: new_resource.fpm_backend,
+                fpm_port: new_resource.fpm_port,
                 vhost_data: vhost_data
             })
+            only_if { ::Dir.exist?("/etc/nginx/sites-available/conf") }
         end
     end
 
@@ -128,15 +124,15 @@ action :configure_multisite do
             owner "root"
             group "root"
             variables({
-                http_port: "#{new_resource.configuration[:http_port]}",
-                ssl_port: "#{new_resource.ssl_configuration[:ssl_port]}",
-                server_name: "#{vhost[:url]}",
-                client_max_body_size: "#{new_resource.configuration[:client_max_body_size]}",
-                web_root: "#{new_resource.web_root}",
-                key_directory: "#{new_resource.ssl_configuration[:key_directory]}",
-                key_file: "#{new_resource.ssl_configuration[:key_file]}",
-                cert_directory: "#{new_resource.ssl_configuration[:cert_directory]}",
-                cert_file: "#{new_resource.ssl_configuration[:cert_file]}"
+                http_port: new_resource.http_port,
+                ssl_port: new_resource.ssl_port,
+                server_name: vhost[:url],
+                client_max_body_size: new_resource.client_max_body_size,
+                web_root: new_resource.web_root,
+                key_directory: new_resource.key_directory,
+                key_file: new_resource.key_file,
+                cert_directory: new_resource.cert_directory,
+                cert_file: new_resource.cert_file
             })
         end
 
@@ -154,6 +150,7 @@ action :enable_multisite do
         to "/etc/nginx/sites-available/conf/01-multisite.conf"
         owner "root"
         group "root"
+        only_if { ::File.exist?('/etc/nginx/sites-available/conf/01-multisite.conf') }
     end
 end
 

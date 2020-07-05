@@ -32,7 +32,7 @@ printf "\n${BOLD}Welcome to the Kukla VM!${REG}\n\n"
 rulem "[ ${CYAN}Hosts Entry, Mailhog, and Webmin${REG} ]"
 printf '\n%23s : %s %s %s\n' "${BOLD}Host Entry" "${REG}<%= @ip %>" "<%= "#{@urls.join(" ")}" %>"
 
-<% if @use_mailhog == "true" %>
+<% if @use_mailhog %>
 if [ $MAILHOG_PORT != "" ]; then 
     printf '%23s : %s  \n' "${BOLD}Mailhog Inbox" "${REG}http://<%= @hostname %>:$MAILHOG_PORT"
 else 
@@ -40,7 +40,7 @@ else
 fi
 <% end %>
 
-<% if @use_webmin == "true" %>
+<% if @use_webmin %>
 if [ $WEBMIN_PORT != "" ]; then 
     printf '%23s : %s  \n\t\t %7s : %s\n\t %15s : %s\n' "${BOLD}Webmin Console" "${REG}http://<%= @hostname %>:${WEBMIN_PORT}" "User" "<%= @webmin_user %>" "Password" "<%= @webmin_password %>"
 else

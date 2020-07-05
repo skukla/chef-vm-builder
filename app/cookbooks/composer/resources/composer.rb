@@ -6,22 +6,23 @@
 resource_name :composer
 provides :composer
 
-property :name,                 String, name_property: true
-property :install_directory,    String, default: node[:composer][:install_dir]
-property :file,                 String, default: node[:composer][:file]
-property :user,                 String, default: node[:composer][:init][:user]
-property :group,                String, default: node[:composer][:init][:user]
-property :web_root,             String, default: node[:composer][:init][:web_root]
-property :options,              Array
-property :project_name,         String
-property :project_directory,    String
-property :project_stability,    String, default: node[:composer][:magento][:project_stability]
-property :package_name,         String
-property :package_version,      String
-property :module_name,          String
-property :repository_url,       String
-property :extra_content,        String
-property :timeout,              Integer
+property :name,               String,                  name_property: true
+property :install_directory,  String,                  default: node[:composer][:install_dir]
+property :file,               String,                  default: node[:composer][:file]
+property :user,               String,                  default: node[:composer][:init][:user]
+property :group,              String,                  default: node[:composer][:init][:user]
+property :web_root,           String,                  default: node[:composer][:init][:web_root]
+property :options,            Array
+property :project_name,       String
+property :project_directory,  String
+property :project_stability,  String,                  default: node[:composer][:magento][:project_stability]
+property :package_name,       String
+property :package_version,    String
+property :module_name,        String
+property :repository_url,     String
+property :extra_content,      String
+property :clearcache,         [TrueClass, FalseClass], default: node[:composer][:clear_composer_cache]
+property :timeout,            [String, Integer],       default: node[:composer][:timeout]
 
 action :download_app do
     execute "Download composer" do
@@ -43,8 +44,8 @@ action :install_app do
 
     link "/home/#{new_resource.user}/#{new_resource.file}" do
         to "/#{new_resource.install_directory}/#{new_resource.file}"
-        owner "#{new_resource.user}"
-        group "#{new_resource.user}"
+        owner new_resource.user
+        group new_resource.user
         not_if "test -L /#{new_resource.install_directory}/#{new_resource.file}"
     end
 end
@@ -52,34 +53,37 @@ end
 action :configure_app do
     directory "#{new_resource.user} .composer directory" do
         path "/home/#{new_resource.user}/.composer"
-        owner "#{new_resource.user}"
-        group "#{new_resource.group}"
+        owner new_resource.user
+        group new_resource.group
         mode "775"
-        not_if { ::File.directory?("/home/#{new_resource.user}/.composer") }
+        not_if { ::Dir.exist?("/home/#{new_resource.user}/.composer") }
     end
 
     template 'Composer configuration' do
         source 'config.json.erb'
         path "/home/#{new_resource.user}/.composer/config.json"
-        owner "#{new_resource.user}"
-        group "#{new_resource.group}"
+        owner new_resource.user
+        group new_resource.group
         mode "644"
-        variables({ timeout: "#{new_resource.timeout}" })
+        variables({ timeout: new_resource.timeout })
     end
 end
 
 action :create_project do
-    execute "#{new_resource.name}" do
+    execute new_resource.name do
         options_string = "--#{new_resource.options.join(" --")}" if !new_resource.options.nil?
         command "su #{new_resource.user} -c '#{new_resource.install_directory}/#{new_resource.file} create-project #{options_string} --stability #{new_resource.project_stability} --repository-url=#{new_resource.repository_url} #{new_resource.project_name}:#{new_resource.package_version} #{new_resource.web_root}'"
-        cwd "#{new_resource.web_root}"
+        cwd new_resource.web_root
     end
 end
 
 action :set_project_stability do
-    ruby_block "#{new_resource.name}" do
+    ruby_block new_resource.name do
         block do
-            StringReplaceHelper.set_project_stability("#{new_resource.project_stability}", "#{new_resource.web_root}/composer.json")
+            StringReplaceHelper.set_project_stability(
+                new_resource.project_stability, 
+                "#{new_resource.web_root}/composer.json"
+            )
         end
     end
 end
@@ -129,12 +133,16 @@ end
 action :clearcache do
     execute "#{new_resource.name}" do
         command "su #{new_resource.user} -c '#{new_resource.install_directory}/#{new_resource.file} clearcache'"
+        only_if { 
+            ::Dir.exist?("#{new_resource.web_root}") && 
+            new_resource.clearcache
+        }
     end
 end
 
 action :config_extra do
     execute "#{new_resource.name}" do
         command "su #{new_resource.user} -c '#{new_resource.install_directory}/#{new_resource.file} config extra.patches-file #{new_resource.extra_content}'"
-        cwd "#{new_resource.web_root}"
+        cwd new_resource.web_root
     end
 end

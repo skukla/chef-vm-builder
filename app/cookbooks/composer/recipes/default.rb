@@ -3,5 +3,18 @@
 # Recipe:: default
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-include_recipe 'composer::install'
-include_recipe 'composer::configure'
+composer "Download composer application" do
+    action :download_app
+end
+
+composer "Install composer application" do
+    action :install_app
+end
+
+composer "Set composer timeout" do
+    action :configure_app
+end
+
+composer "Clear composer cache" do
+    action :clearcache
+end

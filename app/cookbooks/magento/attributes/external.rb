@@ -5,7 +5,7 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 include_attribute "init::default"
 default[:magento][:init][:user] = node[:init][:os][:user]
-default[:magento][:init][:installation][:settings][:timezone] = node[:init][:os][:timezone]
+default[:magento][:init][:timezone] = node[:init][:os][:timezone]
 default[:magento][:init][:web_root] = node[:init][:webserver][:web_root]
 
 include_attribute "mysql::default"

@@ -25,7 +25,7 @@ property :db_name,                String, default: node[:magento][:mysql][:db_na
 property :install_settings,       Hash
 property :cache_types,            Array
 property :indexers,               Array
-property :remove_generated,       String, default: "true"
+property :remove_generated,       [TrueClass, FalseClass], default: true
 
 action :download do
     composer "#{new_resource.name}" do
@@ -135,11 +135,11 @@ end
 action :set_permissions do
     new_resource.permission_dirs.each do |directory|
         execute "Update #{directory} permissions" do
-            command "sudo chown -R #{new_resource.user}:#{new_resource.group} #{new_resource.web_root}/#{directory} && sudo chmod -R 777 #{new_resource.web_root}/#{directory}"
+            command "chown -R #{new_resource.user}:#{new_resource.group} #{new_resource.web_root}/#{directory} && chmod -R 777 #{new_resource.web_root}/#{directory}"
             only_if { Dir.exist?("#{new_resource.web_root}/#{directory}") }
         end
     end
-    if new_resource.remove_generated == "true"
+    if new_resource.remove_generated == true
         generated_directory = "#{new_resource.web_root}/generated"
         generated_content = Dir.entries(generated_directory) - %w{ . .. }
         generated_content_string = Array.new
@@ -147,7 +147,7 @@ action :set_permissions do
             generated_content_string << "#{generated_directory}/#{entry}"
         end
         execute "Clear the generated directory" do
-            command "sudo rm -rf #{generated_content_string.join(" ")}"
+            command "rm -rf #{generated_content_string.join(" ")}"
             only_if { Dir.exist?("#{generated_directory}") }
         end
     end

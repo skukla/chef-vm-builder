@@ -9,7 +9,7 @@ provides :os
 property :name,                     String, name_property: true
 property :user,                     String, default: node[:init][:os][:user]
 property :timezone,                 String, default: node[:init][:os][:timezone]
-property :packages_to_install,      Array,  default: node[:init][:os][:install_package_list]
+property :install_package_list,     Array,  default: node[:init][:os][:install_package_list]
 
 action :update do
     execute 'Update OS packages' do
@@ -37,7 +37,7 @@ action :configure do
 end
 
 action :add_os_packages do
-    new_resource.packages_to_install.each do |package|
+    new_resource.install_package_list.each do |package|
         apt_package package do
             action :install
         end
