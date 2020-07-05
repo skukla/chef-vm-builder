@@ -42,6 +42,5 @@ default[:magento][:configuration][:flags][:base] = node[:magento_configuration][
 default[:magento][:configuration][:flags][:b2b] = node[:magento_configuration][:flags][:b2b]
 default[:magento][:configuration][:flags][:custom_modules] = node[:magento_configuration][:flags][:custom_modules]
 default[:magento][:configuration][:flags][:admin_users] = node[:magento_configuration][:flags][:admin_users]
-default[:magento][:configuration][:paths] = node[:magento_configuration][:paths]
 default[:magento][:configuration][:settings] = node[:magento_configuration][:settings]
 default[:magento][:configuration][:admin_users] = node[:magento_configuration][:admin_users]

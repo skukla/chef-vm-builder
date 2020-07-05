@@ -9,7 +9,6 @@ family = node[:magento][:installation][:options][:family]
 build_action = node[:magento][:installation][:build][:action]
 use_elasticsearch = node[:magento][:elasticsearch][:use]
 custom_modules = node[:magento][:custom_modules]
-config_paths = node[:magento][:configuration][:paths]
 config_settings = node[:magento][:configuration][:settings]
 admin_users = node[:magento][:configuration][:admin_users]
 configure_base = node[:magento][:configuration][:flags][:base]
@@ -39,7 +38,6 @@ end
 magento_config "Configure base settings" do
     action :process_configuration
     config_group "base"
-    config_paths config_paths
     config_data config_settings
     not_if {
         (build_action == "install" && ::File.exist?("#{web_root}/var/.first-run-state.flag")) ||
@@ -54,7 +52,6 @@ end
 magento_config "Configure b2b settings" do
     action :process_configuration
     config_group "b2b"
-    config_paths config_paths
     config_data config_settings
     not_if {
         (build_action == "install" && ::File.exist?("#{web_root}/var/.first-run-state.flag")) ||
@@ -69,7 +66,6 @@ end
 magento_config "Configure search settings" do
     action :process_configuration
     config_group "search"
-    config_paths config_paths
     config_data config_settings
     not_if {
         (build_action == "install" && ::File.exist?("#{web_root}/var/.first-run-state.flag")) ||

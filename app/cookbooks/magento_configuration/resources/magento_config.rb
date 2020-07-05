@@ -11,14 +11,13 @@ property :user,                String,                  default: node[:magento_c
 property :group,               String,                  default: node[:magento_configuration][:init][:user]
 property :web_root,            String,                  default: node[:magento_configuration][:init][:web_root]
 property :build_action,        String,                  default: node[:magento_configuration][:magento][:build_action]
+property :config_paths,        Array,                   default: node[:magento_configuration][:paths]
 property :config_group,        String
-property :config_paths,        Array
-property :config_data,         Hash
-property :admin_users,         Hash,                    default: node[:magento_configuration][:admin_users]
+property :config_data,         Hash                    
 property :share_list,          Hash,                    default: node[:magento_configuration][:samba][:share_list]
 property :use_elasticsearch,   [TrueClass, FalseClass], default: node[:magento_configuration][:elasticsearch][:use]
 
-action :process_configuration do
+action :process_configuration do  
     new_resource.config_paths.each do |config_path|
         config_setting = new_resource.config_data.dig(*config_path.split("/"))
         # Website/Store-view-scoped settings
@@ -31,30 +30,30 @@ action :process_configuration do
                             if new_resource.config_group == "base" && !config_path.include?("btob") && !config_path.include?("search")
                                 magento_cli "Configuring #{new_resource.config_group} #{config_scope} setting for #{config_scope_code}: #{config_path}" do
                                     action :config_set
-                                    config_path "#{config_path}"
-                                    config_scope "#{config_scope}"
-                                    config_scope_code "#{config_scope_code}"
-                                    config_value "#{config_value}"
+                                    config_path config_path
+                                    config_scope config_scope
+                                    config_scope_code config_scope_code
+                                    config_value config_value
                                 end
                             
                             # B2B Settings
                             elsif new_resource.config_group == "b2b" && config_path.include?("btob")
                                 magento_cli "Configuring #{new_resource.config_group} #{config_scope} setting for #{config_scope_code}: #{config_path}" do
                                     action :config_set
-                                    config_path "#{config_path}"
-                                    config_scope "#{config_scope}"
-                                    config_scope_code "#{config_scope_code}"
-                                    config_value "#{config_value}"
+                                    config_path config_path
+                                    config_scope config_scope
+                                    config_scope_code config_scope_code
+                                    config_value config_value
                                 end
 
                             # Search Settings
                             elsif new_resource.config_group == "search" && config_path.include?("search")
                                 magento_cli "Configuring #{new_resource.config_group} #{config_scope} setting for #{config_scope_code}: #{config_path}" do
                                     action :config_set
-                                    config_path "#{config_path}"
-                                    config_scope "#{config_scope}"
-                                    config_scope_code "#{config_scope_code}"
-                                    config_value "#{config_value}"
+                                    config_path config_path
+                                    config_scope config_scope
+                                    config_scope_code config_scope_code
+                                    config_value config_value
                                 end
                             end
                         end
@@ -69,8 +68,8 @@ action :process_configuration do
                     magento_cli "Configuring default #{new_resource.config_group} setting for: #{config_path}" do
                         action :config_set
                         config_scope "default"
-                        config_path "#{config_path}"
-                        config_value "#{config_setting}"
+                        config_path config_path
+                        config_value config_setting
                     end
 
                 # B2B settings
@@ -78,8 +77,8 @@ action :process_configuration do
                     magento_cli "Configuring default #{new_resource.config_group} setting for: #{config_path}" do
                         action :config_set
                         config_scope "default"
-                        config_path "#{config_path}"
-                        config_value "#{config_setting}"
+                        config_path config_path
+                        config_value config_setting
                     end
 
                 # Search settings
@@ -87,8 +86,8 @@ action :process_configuration do
                     magento_cli "Configuring default #{new_resource.config_group} setting for: #{config_path}" do
                         action :config_set
                         config_scope "default"
-                        config_path "#{config_path}"
-                        config_value "#{config_setting}"
+                        config_path config_path
+                        config_value config_setting
                     end
                 end
             end
@@ -97,14 +96,14 @@ action :process_configuration do
 end
 
 action :process_admin_users do
-    new_resource.admin_users.each do |field, value|
+    new_resource.config_data.each do |field, value|
         magento_cli "Configure admin user : #{value[:first_name]} #{value[:last_name]}" do
             action :create_admin_user
-            admin_username "#{value[:username]}"
-            admin_password "#{value[:password]}"
-            admin_email "#{value[:email]}"
-            admin_firstname "#{value[:first_name]}"
-            admin_lastname "#{value[:last_name]}"
+            admin_username value[:username]
+            admin_password value[:password]
+            admin_email value[:email]
+            admin_firstname value[:first_name]
+            admin_lastname value[:last_name]
         end
     end
 end
