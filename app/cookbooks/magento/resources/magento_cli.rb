@@ -24,93 +24,106 @@ property :admin_firstname,    String
 property :admin_lastname,     String
 
 action :install do
-    execute "#{new_resource.name}" do
-        command "su #{new_resource.user} -c '#{new_resource.web_root}/bin/magento setup:install #{new_resource.install_string}'"
+    execute new_resource.name do
+        command "su #{new_resource.user} -c 'bin/magento setup:install #{new_resource.install_string}'"
+        cwd new_resource.web_root
     end
 end
 
 action :clean_cache do
     cache_types = new_resource.cache_types.join(" ") unless new_resource.cache_types.empty?
-    execute "#{new_resource.name}" do
-        command "su #{new_resource.user} -c '#{new_resource.web_root}/bin/magento cache:clean #{cache_types}'"
+    execute new_resource.name do
+        command "su #{new_resource.user} -c 'bin/magento cache:clean #{cache_types}'"
+        cwd new_resource.web_root
     end
 end
 
 action :reindex do
     indexers = new_resource.indexers.join(" ") unless new_resource.indexers.empty?
-    execute "#{new_resource.name}" do
-        command "su #{new_resource.user} -c '#{new_resource.web_root}/bin/magento indexer:reindex #{indexers}'"
+    execute new_resource.name do
+        command "su #{new_resource.user} -c 'bin/magento indexer:reindex #{indexers}'"
+        cwd new_resource.web_root
     end
 end
 
 action :reset_indexers do
     indexers = new_resource.indexers.join(" ") unless new_resource.indexers.empty?
-    execute "#{new_resource.name}" do
-        command "su #{new_resource.user} -c '#{new_resource.web_root}/bin/magento indexer:reset #{indexers}'"
+    execute new_resource.name do
+        command "su #{new_resource.user} -c 'bin/magento indexer:reset #{indexers}'"
+        cwd new_resource.web_root
     end
 end
 
 action :deploy_sample_data do
-    execute "#{new_resource.name}" do
-        command "su #{new_resource.user} -c '#{new_resource.web_root}/bin/magento sampledata:deploy'"
+    execute new_resource.name do
+        command "su #{new_resource.user} -c 'bin/magento sampledata:deploy'"
+        cwd new_resource.web_root
     end
 end
 
 action :db_upgrade do
-    execute "#{new_resource.name}" do
-        command "su #{new_resource.user} -c '#{new_resource.web_root}/bin/magento setup:upgrade'"
+    execute new_resource.name do
+        command "su #{new_resource.user} -c 'bin/magento setup:upgrade'"
+        cwd new_resource.web_root
     end
 end
 
 action :di_compile do
-    execute "#{new_resource.name}" do
-        command "su #{new_resource.user} -c '#{new_resource.web_root}/bin/magento setup:di:compile'"
+    execute new_resource.name do
+        command "su #{new_resource.user} -c 'bin/magento setup:di:compile'"
+        cwd new_resource.web_root
     end
 end
 
 action :deploy_static_content do
-    execute "#{new_resource.name}" do
-        command "su #{new_resource.user} -c '#{new_resource.web_root}/bin/magento setup:static-content:deploy -f'"
+    execute new_resource.name do
+        command "su #{new_resource.user} -c 'bin/magento setup:static-content:deploy -f'"
+        cwd new_resource.web_root
     end
 end
 
 action :set_application_mode do
-    execute "#{new_resource.name}" do
-        command "su #{new_resource.user} -c '#{new_resource.web_root}/bin/magento deploy:mode:set #{new_resource.deploy_mode}'"
+    execute new_resource.name do
+        command "su #{new_resource.user} -c 'bin/magento deploy:mode:set #{new_resource.deploy_mode}'"
+        cwd new_resource.web_root
     end
 end
 
 action :set_indexer_mode do
     indexers = new_resource.indexers.join(" ") unless new_resource.indexers.empty?
-    execute "#{new_resource.name}" do
-        command "su #{new_resource.user} -c '#{new_resource.web_root}/bin/magento indexer:set-mode schedule #{indexers}'"
+    execute new_resource.name do
+        command "su #{new_resource.user} -c 'bin/magento indexer:set-mode schedule #{indexers}'"
+        cwd new_resource.web_root
     end
 end
 
 action :enable_cron do
-    execute "#{new_resource.name}" do
-        command "su #{new_resource.user} -c '#{new_resource.web_root}/bin/magento cron:install'"
+    execute new_resource.name do
+        command "su #{new_resource.user} -c 'bin/magento cron:install'"
+        cwd new_resource.web_root
     end
 end
 
 action :disable_cron do
-    execute "#{new_resource.name}" do
+    execute new_resource.name do
         command "crontab -r -u #{new_resource.user}"
     end
 end
 
 action :config_set do
-    command_string = "su #{new_resource.user} -c '#{new_resource.web_root}/bin/magento config:set"
+    command_string = "su #{new_resource.user} -c 'bin/magento config:set"
     scope_string = "--scope=\"#{new_resource.config_scope}\""
     scope_string = [scope_string, "--scope-code=\"#{new_resource.config_scope_code}\""].join(" ") unless new_resource.config_scope_code.nil?
     config_string = "\"#{new_resource.config_path}\" \"#{ValueHelper.process_value(new_resource.config_value)}\"'"
-    execute "#{new_resource.name}" do
+    execute new_resource.name do
         command [command_string, scope_string, config_string].join(" ")
+        cwd new_resource.web_root
     end
 end
 
 action :create_admin_user do
-    execute "#{new_resource.name}" do
-        command "su #{new_resource.user} -c '#{new_resource.web_root}/bin/magento admin:user:create --admin-user=#{new_resource.admin_username} --admin-password=#{new_resource.admin_password} --admin-email=#{new_resource.admin_email} --admin-firstname=#{new_resource.admin_firstname} --admin-lastname=#{new_resource.admin_lastname}'"
+    execute new_resource.name do
+        command "su #{new_resource.user} -c 'bin/magento admin:user:create --admin-user=#{new_resource.admin_username} --admin-password=#{new_resource.admin_password} --admin-email=#{new_resource.admin_email} --admin-firstname=#{new_resource.admin_firstname} --admin-lastname=#{new_resource.admin_lastname}'"
+        cwd new_resource.web_root
     end
 end
