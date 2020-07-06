@@ -17,7 +17,7 @@ property :user,                   String, default: node[:magento][:init][:user]
 property :group,                  String, default: node[:magento][:init][:user]
 property :family,                 String, default: node[:magento][:installation][:options][:family]
 property :version,                String, default: node[:magento][:installation][:options][:version]
-property :modules_to_remove,      String
+property :modules_to_remove,      String, default: node[:magento][:installation][:build][:modules_to_remove]
 property :db_host,                String, default: node[:magento][:mysql][:db_host]
 property :db_user,                String, default: node[:magento][:mysql][:db_user]
 property :db_password,            String, default: node[:magento][:mysql][:db_password]
@@ -59,7 +59,7 @@ action :install do
 end
 
 action :update do
-    composer "#{new_resource.name}" do
+    composer new_resource.name do
         action :update
     end
 end
@@ -68,13 +68,13 @@ action :set_auth_credentials do
     template "#{new_resource.name}" do
         source "auth.json.erb"
         path "/home/#{new_resource.user}/.composer/auth.json"
-        owner "#{new_resource.user}"
-        group "#{new_resource.group}"
+        owner new_resource.user
+        group new_resource.group
         mode "664"
         variables({
-            public_key: "#{new_resource.composer_public_key}",
-            private_key: "#{new_resource.composer_private_key}",
-            github_token: "#{new_resource.composer_github_token}"
+            public_key: new_resource.composer_public_key,
+            private_key: new_resource.composer_private_key,
+            github_token: new_resource.composer_github_token
         })
     end
 end
@@ -82,10 +82,10 @@ end
 action :add_sample_data do
     directory "Create composer_home directory" do
         path "#{new_resource.web_root}/var/composer_home"
-        owner "#{new_resource.user}"
-        group "#{new_resource.group}"
+        owner new_resource.user
+        group new_resource.group
         mode "0777"
-        not_if { Dir.exist?("#{new_resource.web_root}/var/composer_home") }
+        not_if { ::Dir.exist?("#{new_resource.web_root}/var/composer_home") }
     end
 
     execute "Copy auth.json into place" do
@@ -95,8 +95,8 @@ action :add_sample_data do
 
     file "Set auth.json permissions" do
         path "#{new_resource.web_root}/var/composer_home/auth.json"
-        owner "#{new_resource.user}"
-        group "#{new_resource.group}"
+        owner new_resource.user
+        group new_resource.group
         mode "0777"
         only_if { ::File.exist?("#{new_resource.web_root}/var/composer_home/auth.json") }
     end
@@ -107,27 +107,33 @@ action :add_sample_data do
 end
 
 action :update_version do
-    ruby_block "#{new_resource.name}" do
+    ruby_block new_resource.name do
         block do
-            StringReplaceHelper.update_app_version("#{new_resource.user}", "#{new_resource.version}", "#{new_resource.family}", "#{new_resource.web_root}", "composer.json")
+            StringReplaceHelper.update_app_version(
+                new_resource.user, 
+                new_resource.version, 
+                new_resource.family, 
+                new_resource.web_root, 
+                "composer.json"
+            )
         end
     end
 end
 
 action :db_upgrade do
-    magento_cli "#{new_resource.name}" do
+    magento_cli new_resource.name do
         action :db_upgrade
     end
 end
 
 action :di_compile do
-    magento_cli "#{new_resource.name}" do
+    magento_cli new_resource.name do
         action :di_compile
     end
 end
 
 action :deploy_static_content do
-    magento_cli "#{new_resource.name}" do
+    magento_cli new_resource.name do
         action :deploy_static_content
     end
 end
@@ -136,19 +142,19 @@ action :set_permissions do
     new_resource.permission_dirs.each do |directory|
         execute "Update #{directory} permissions" do
             command "chown -R #{new_resource.user}:#{new_resource.group} #{new_resource.web_root}/#{directory} && chmod -R 777 #{new_resource.web_root}/#{directory}"
-            only_if { Dir.exist?("#{new_resource.web_root}/#{directory}") }
+            only_if { ::Dir.exist?("#{new_resource.web_root}/#{directory}") }
         end
     end
     if new_resource.remove_generated == true
         generated_directory = "#{new_resource.web_root}/generated"
-        generated_content = Dir.entries(generated_directory) - %w{ . .. }
+        generated_content = ::Dir.entries(generated_directory) - %w{ . .. }
         generated_content_string = Array.new
         generated_content.each do |entry|
             generated_content_string << "#{generated_directory}/#{entry}"
         end
         execute "Clear the generated directory" do
             command "rm -rf #{generated_content_string.join(" ")}"
-            only_if { Dir.exist?("#{generated_directory}") }
+            only_if { ::Dir.exist?(generated_directory) }
         end
     end
 end
@@ -156,51 +162,52 @@ end
 action :remove_modules do
     ruby_block "#{new_resource.name}" do
         block do
-            StringReplaceHelper.remove_modules("#{new_resource.modules_to_remove}", "#{new_resource.web_root}/composer.json")
+            StringReplaceHelper.remove_modules(
+                new_resource.modules_to_remove, 
+                "#{new_resource.web_root}/composer.json"
+            )
         end
     end 
 end
 
 action :set_application_mode do
-    magento_cli "#{new_resource.name}" do
+    magento_cli new_resource.name do
         action :set_application_mode
     end
 end
 
 action :set_indexer_mode do
-    magento_cli "#{new_resource.name}" do
+    magento_cli new_resource.name do
         action :set_indexer_mode
     end
 end
 
 action :reset_indexers do
-    magento_cli "#{new_resource.name}" do
+    magento_cli new_resource.name do
         action :reset_indexers
-        indexers new_resource.indexers
     end
 end
 
 action :reindex do
-    magento_cli "#{new_resource.name}" do
+    magento_cli new_resource.name do
         action :reindex
     end
 end
 
 action :clean_cache do
-    magento_cli "#{new_resource.name}" do
+    magento_cli new_resource.name do
         action :clean_cache
-        cache_types new_resource.cache_types
     end
 end
 
 action :enable_cron do
-    magento_cli "#{new_resource.name}" do
+    magento_cli new_resource.name do
         action :enable_cron
     end
 end
 
 action :disable_cron do
-    magento_cli "#{new_resource.name}" do
+    magento_cli new_resource.name do
         action :disable_cron
     end
 end
@@ -215,22 +222,22 @@ action :clear_cron_schedule do
 end
 
 action :set_first_run do
-    template "#{new_resource.name}" do
+    template new_resource.name do
         source ".first-run-state.flag.erb"
         path "#{new_resource.web_root}/var/.first-run-state.flag"
-        owner "#{new_resource.user}"
-        group "#{new_resource.group}"
+        owner new_resource.user
+        group new_resource.group
         mode "664"
     end
 end
 
 action :uninstall do
-    app_content = Dir.entries("#{new_resource.web_root}") - %w{ . .. }
+    app_content = ::Dir.entries("#{new_resource.web_root}") - %w{ . .. }
     app_content_string = Array.new
     app_content.each do |entry|
         app_content_string << "#{new_resource.web_root}/#{entry}"
     end
     execute "Clear the web root" do
-        command "sudo rm -rf #{app_content_string.join(" ")}"
+        command "rm -rf #{app_content_string.join(" ")}"
     end
 end

@@ -32,7 +32,7 @@ default[:magento][:elasticsearch][:port] = node[:elasticsearch][:port]
 default[:magento][:elasticsearch][:node_name] = node[:elasticsearch][:node_name]
 
 include_attribute "magento_custom_modules::default"
-default[:magento][:custom_modules] = node[:magento_custom_modules][:module_list]
+default[:magento][:custom_module_list] = node[:magento_custom_modules][:module_list]
 
 include_attribute "magento_patches::default"
 default[:magento][:patches][:apply] = node[:magento_patches][:apply]

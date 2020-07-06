@@ -9,14 +9,13 @@ version = node[:magento][:installation][:options][:version]
 family = node[:magento][:installation][:options][:family]
 build_action = node[:magento][:installation][:build][:action]
 sample_data = node[:magento][:installation][:build][:sample_data]
-custom_modules = node[:magento][:custom_modules]
-modules_to_remove = node[:magento][:installation][:build][:modules_to_remove]
+custom_module_list = node[:magento][:custom_module_list]
 apply_patches = node[:magento][:patches][:apply]
 use_elasticsearch = node[:magento][:elasticsearch][:use]
 
 php "Switch PHP user to #{user}" do
     action :set_user
-    php_user "#{user}"
+    php_user user
 end
 
 magento_app "Clear the cron schedule" do
@@ -48,7 +47,7 @@ composer "Create Magento #{family.capitalize} #{version} project" do
     project_name "magento/project-#{family}-edition"
     project_directory "#{web_root}"
     only_if { 
-        Dir.empty?("#{web_root}") && 
+        ::Dir.empty?("#{web_root}") && 
         (build_action == "install" || build_action == "force_install") 
     }
 end
@@ -86,7 +85,6 @@ end
 
 magento_app "Remove outdated modules" do
     action :remove_modules
-    modules_to_remove modules_to_remove
     not_if { 
         ::File.foreach("#{web_root}/composer.json").grep(/replace/).any? || 
         (::File.exist?("#{web_root}/var/.first-run-state.flag") && (build_action == "install" || build_action == "reinstall")) 
@@ -112,8 +110,8 @@ if apply_patches && ((build_action == "force_install") || (apply_patches && buil
     include_recipe "magento_patches::default"
 end
 
-unless custom_modules.empty?
-    custom_modules.each do |custom_module_key, custom_module_data|
+unless custom_module_list.empty?
+    custom_module_list.each do |custom_module_key, custom_module_data|
         custom_module "Add #{custom_module_data[:module_name]}" do
             action :download
             package_name "#{custom_module_data[:package_name]}"
@@ -132,32 +130,27 @@ end
 
 magento_app "Download the codebase" do
     action :download
-    not_if {
-        ::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action != "force_install"
-    }
+    not_if { ::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action != "force_install" }
     only_if { 
-        (!::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == "install") || 
+        !::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == "install" || 
         build_action == "force_install"
     }
 end
 
 magento_app "Update the codebase" do
     action :update
-    only_if { 
-        ::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == "update"  
-    }
+    only_if { ::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == "update" }
 end
 
 magento_app "Add sample data" do
     action :add_sample_data
     not_if { 
-        ::File.exist?("#{web_root}/var/.sample-data-state.flag") || !sample_data 
+        ::File.exist?("#{web_root}/var/.sample-data-state.flag") || 
+        !sample_data 
     }
 end
 
 magento_app "Set permissions after downloading code" do
     action :set_permissions
-    not_if { 
-        ::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == "install" 
-    }
+    not_if { ::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == "install" }
 end

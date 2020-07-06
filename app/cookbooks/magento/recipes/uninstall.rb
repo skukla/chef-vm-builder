@@ -8,10 +8,6 @@ build_action = node[:magento][:installation][:build][:action]
 
 magento_app "Uninstall Magento" do
     action :uninstall
-    not_if {
-        Dir.empty?("#{web_root}")
-    }
-    only_if { 
-        build_action == "force_install" 
-    }
+    not_if { ::Dir.empty?(web_root) }
+    only_if { build_action == "force_install" }
 end
