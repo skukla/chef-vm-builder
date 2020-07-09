@@ -34,6 +34,12 @@ action :remove_from_web_root do
     end
 end
 
+action :set_permissions do
+    directory "/var/www" do
+        mode "775"
+    end
+end
+
 action :clone_custom_repository do
     git "Downlaod custom patches" do
         repository new_resource.patches_repository_url

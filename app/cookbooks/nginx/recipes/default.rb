@@ -3,22 +3,26 @@
 # Recipe:: default
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-nginx "Install nginx" do
-    action :install
-end
+webserver_type = node[:nginx][:init][:webserver_type]
 
-init "Create web root" do
-    action :create_web_root
-end
+if webserver_type == "nginx"
+    nginx "Install Nginx" do
+        action :install
+    end
 
-nginx "Configure and enable Nginx" do
-    action [:configure, :enable]
-end
+    nginx "Create web root and clear existing sites" do
+        action [:create_web_root, :clear_sites]
+    end
 
-nginx "Clear sites, then configure and enable multisite and restart Nginx" do
-    action [:clear_sites, :configure_multisite, :enable_multisite, :restart]
-end
+    nginx "Configure Nginx and enable multisite operation" do
+        action [:configure_nginx, :configure_multisite, :enable_multisite]
+    end
 
-php "Restart PHP" do
-    action :restart
+    nginx "Change user and group, enable, and restart Nginx" do
+        action [:set_permissions, :enable, :restart]
+    end
+
+    php "Restart PHP" do
+        action :restart
+    end
 end

@@ -17,3 +17,11 @@ end
 init "Install MOTD" do
     action :install_motd
 end
+
+apache "Stop and remove Apache" do
+    action [:stop, :uninstall]
+end
+
+nginx "Stop and remove Nginx" do
+    action [:stop, :uninstall]
+end

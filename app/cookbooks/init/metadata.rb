@@ -7,6 +7,8 @@ long_description 'Installs/Configures the OS and initial settings'
 version '0.1.0'
 chef_version '>= 14.0'
 
+depends 'nginx'     # Brings in nginx usage
+depends 'apache'    # Brings in apache usage
 depends 'mailhog'   # Brings in mailhog usage
 depends 'webmin'    # Brings in webmin usage
 

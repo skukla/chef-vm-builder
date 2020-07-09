@@ -9,6 +9,7 @@ provides :cli
 property :name,                     String,    name_property: true
 property :user,                     String,    default: node[:cli][:init][:user]
 property :group,                    String,    default: node[:cli][:init][:user]
+property :webserver_type,           String,    default: node[:cli][:init][:webserver_type]
 property :web_root,                 String,    default: node[:cli][:init][:web_root]
 property :php_version,              String,    default: node[:cli][:php][:version]
 property :magento_version,          String,    default: node[:cli][:magento][:version]
@@ -47,6 +48,7 @@ action :install do
         group new_resource.group
         variables ({
             user: new_resource.user,
+            webserver_type: new_resource.webserver_type,
             web_root: new_resource.web_root,
             php_version: new_resource.php_version,
             magento_version: new_resource.magento_version,

@@ -16,7 +16,7 @@ composer "Download CWeagans Composer Patches module" do
 end
 
 magento_patch "Prepare to install Magento patches" do
-    action [:remove_holding_area, :remove_from_web_root]
+    action [:remove_holding_area, :remove_from_web_root, :set_permissions]
 end
 
 magento_internal_patch "Clone internal repository" do

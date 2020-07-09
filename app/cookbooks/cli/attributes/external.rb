@@ -6,6 +6,7 @@
 include_attribute "init::default"
 default[:cli][:init][:user] = node[:init][:os][:user]
 default[:cli][:init][:web_root] = node[:init][:webserver][:web_root]
+default[:cli][:init][:webserver_type] = node[:init][:webserver][:type]
 
 include_attribute "php::default"
 default[:cli][:php][:version] = node[:php][:version]

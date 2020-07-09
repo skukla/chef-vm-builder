@@ -15,6 +15,11 @@ nginx "Restart Nginx" do
     only_if { webserver_type == "nginx" }
 end
 
+apache "Restart Apache" do
+    action :restart
+    only_if { webserver_type == "apache2" }
+end
+
 elasticsearch "Restart Elasticsearch" do
     action :restart
     only_if { use_elasticsearch }

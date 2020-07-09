@@ -30,10 +30,6 @@ action :configure do
         append true
         action :modify
     end
-    
-    directory "/var/www" do
-        mode "775"
-    end
 end
 
 action :add_os_packages do

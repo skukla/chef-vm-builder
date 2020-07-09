@@ -9,6 +9,7 @@ provides :nginx
 property :name,                    String,            name_property: true
 property :user,                    String,            default: node[:nginx][:init][:user]
 property :group,                   String,            default: node[:nginx][:init][:user]
+property :package_list,            Array,             default: node[:nginx][:package_list]
 property :web_root,                String,            default: node[:nginx][:init][:web_root]
 property :php_version,             String,            default: node[:nginx][:php][:version]
 property :http_port,               [String, Integer], default: node[:nginx][:http_port]
@@ -23,26 +24,27 @@ property :cert_file,               String,            default: "#{node[:fqdn]}.c
 property :demo_structure,          Hash,              default: node[:nginx][:init][:demo_structure]
 
 action :uninstall do
-    apt_package "nginx" do
-        action [:remove, :purge]
+    execute "Remove and purge Nginx" do
+        command "rm -rf /etc/nginx && apt-get --purge autoremove nginx -y"
     end
 end
 
 action :install do
-    apt_package "nginx" do
-        action :install
+    new_resource.package_list.each do |package|
+        apt_package package do
+            action :install
+        end
     end
 end
 
-action :configure do
+action :configure_nginx do
     template "Nginx configuration" do
         source "nginx.conf.erb"
         path "/etc/nginx/nginx.conf"
         owner "root"
         group "root"
-        mode "644"
+        mode "755"
         variables ({ user: new_resource.user })
-        not_if { ::File.exist?("/etc/nginx/nginx.conf") }
     end
     
     # Remove the default site
@@ -50,6 +52,22 @@ action :configure do
         to "/etc/nginx/sites-available/default"
         action :delete
         only_if { ::File.exist?("/etc/nginx/sites-available/default") }
+    end
+end
+
+action :create_web_root do
+    directory "Web root directory" do
+        path new_resource.web_root
+        owner new_resource.user
+        group new_resource.group
+        mode "0770"
+        recursive true
+        not_if { ::Dir.exist?(new_resource.web_root) }
+    end
+    
+    execute "Set setgid on webroot" do
+        command "chmod g+s #{new_resource.web_root}"
+        only_if { ::Dir.exist?(new_resource.web_root) }
     end
 end
 
@@ -72,7 +90,7 @@ action :configure_multisite do
         path "/etc/nginx/sites-available/conf"
         owner "root"
         group "root"
-        mode "644"
+        mode "755"
         only_if { ::Dir.exist?("/etc/nginx/sites-available") }
     end
     
@@ -81,7 +99,7 @@ action :configure_multisite do
         path "/etc/nginx/sites-available/conf/00-nginx-magento.conf"
         owner "root"
         group "root"
-        mode "644"
+        mode "755"
         only_if { ::Dir.exist?("/etc/nginx/sites-available/conf") }
     end
 
@@ -105,7 +123,7 @@ action :configure_multisite do
             path "/etc/nginx/sites-available/conf/01-multisite.conf"
             owner "root"
             group "root"
-            mode "644"
+            mode "755"
             variables({ 
                 fpm_backend: new_resource.fpm_backend,
                 fpm_port: new_resource.fpm_port,
@@ -120,7 +138,7 @@ action :configure_multisite do
         template "#{vhost[:url]}" do
             source "vhost.erb"
             path "/etc/nginx/sites-available/#{vhost[:url]}"
-            mode "644"
+            mode "755"
             owner "root"
             group "root"
             variables({
@@ -154,6 +172,14 @@ action :enable_multisite do
     end
 end
 
+action :set_permissions do
+    ["/etc/nginx", "/var/log/nginx"].each do |directory|
+        execute "Change Apache directory ownership" do
+            command "chown -R #{new_resource.user}:#{new_resource.group} #{directory}"
+        end
+    end
+end
+
 action :enable do
     service "nginx" do
         action :enable
@@ -163,5 +189,11 @@ end
 action :restart do
     service "nginx" do
         action :restart
+    end
+end
+
+action :stop do
+    service "nginx" do
+        action :stop
     end
 end

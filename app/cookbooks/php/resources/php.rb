@@ -20,7 +20,7 @@ property :backend,                  String,            default: node[:php][:back
 property :extension_list,           Array,             default: node[:php][:extension_list]
 property :sendmail_path,            String,            default: node[:php][:sendmail_path]
 property :timezone,                 String,            default: node[:php][:init][:timezone]
-property :apache_package_list,      Array,             default: node[:php][:init][:apache_package_list]
+property :apache_package_list,      Array,             default: node[:php][:apache][:package_list]
 
 action :install do
     # Add PHP repository
