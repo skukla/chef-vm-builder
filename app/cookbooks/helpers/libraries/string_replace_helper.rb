@@ -20,14 +20,19 @@ module StringReplaceHelper
 
     def self.remove_modules(selected_modules, composer_json)
         modules_to_remove = Array.new
-        modules_list = Array.new
-        unless (selected_modules.is_a? Chef::Node::ImmutableArray) && (selected_modules.empty?)
+        
+        if (!selected_modules.is_a? Chef::Node::ImmutableArray) && (!selected_modules.empty?)
             modules_to_remove << selected_modules
+        else
+            selected_modules.each do |selected_module|
+                modules_to_remove << selected_module
+            end
         end
         replace_string_format = "%4s%s:"
         module_format = "%8s\"%s\": \"*\""
-        between_format = ",%4s"
         replace_block_format = "%s{\n%s\n%4s},\n"
+        
+        modules_list = Array.new
         modules_to_remove.each do |value|
             modules_list << sprintf(module_format, "\s", "#{value}")
         end
