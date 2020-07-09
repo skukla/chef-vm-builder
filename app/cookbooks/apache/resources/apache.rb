@@ -29,7 +29,7 @@ property :demo_structure,           Hash,              default: node[:apache][:i
 
 action :uninstall do
     execute "Remove and purge Apache" do
-        command "rm -rf /etc/apache2 && apt-get --purge autoremove apache2 -y"
+        command "rm -rf /etc/apache2 && rm -rf /var/www/html && apt-get --purge autoremove apache2 -y"
     end
 end
 

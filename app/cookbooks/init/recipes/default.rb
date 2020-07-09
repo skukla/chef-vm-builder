@@ -18,6 +18,7 @@ init "Install MOTD" do
     action :install_motd
 end
 
+# We have to do these here because Nginx or Apache won't even install if port 80 is blocked
 apache "Stop and remove Apache" do
     action [:stop, :uninstall]
 end

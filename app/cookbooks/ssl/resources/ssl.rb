@@ -48,7 +48,7 @@ action :generate_certificate do
 end
 
 action :refresh_certificate_list do
-    execute "Refresh the certs list" do
+    execute "Refresh the certifcate list" do
         command "update-ca-certificates --fresh"
         not_if { 
             ::File.exist?("#{new_resource.cert_directory}/#{new_resource.cert_file}") && 
@@ -58,11 +58,10 @@ action :refresh_certificate_list do
 end
 
 action :update_ssl_permissions do
-    execute "Set the VM user as the ssl key owner" do
-        command "chown #{new_resource.user}:#{new_resource.group} /etc/ssl/private /etc/ssl/"
-        only_if { 
-            ::Dir.exist?("#{new_resource.cert_directory}") && 
-            ::Dir.exist?("#{new_resource.key_directory}") 
-        }
+    ["/etc/ssl/", new_resource.cert_directory, new_resource.key_directory].each do |directory|
+        execute "Set the VM user as the ssl owner" do
+            command "chown -R #{new_resource.user}:#{new_resource.group} #{directory}"
+            only_if { ::Dir.exist?(directory) }
+        end
     end
 end

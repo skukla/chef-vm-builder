@@ -1,7 +1,24 @@
 <VirtualHost *:<%= @http_port %>>
     ServerName <%= @server_name %>
     ServerAlias www.<%= @server_name %>
-    DocumentRoot <%= @web_root %>
+    DocumentRoot "<%= @web_root %>"
+    SetEnv MAGE_RUN_TYPE "<%= @vhost_scope %>"
+    SetEnv MAGE_RUN_CODE "<%= @vhost_scope_code %>"
+
+    <Directory <%= @web_root %>>
+        Options -Indexes +FollowSymLinks +MultiViews
+        AllowOverride All
+        Require all granted
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+
+<VirtualHost *:<%= @ssl_port %>>
+    ServerName <%= @server_name %>
+    ServerAlias www.<%= @server_name %>
+    DocumentRoot "<%= @web_root %>"
     SetEnv MAGE_RUN_TYPE "<%= @vhost_scope %>"
     SetEnv MAGE_RUN_CODE "<%= @vhost_scope_code %>"
 
