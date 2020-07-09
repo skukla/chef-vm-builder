@@ -43,7 +43,7 @@ action :install_app do
     end
 
     link "/home/#{new_resource.user}/#{new_resource.file}" do
-        to "/#{new_resource.install_directory}/#{new_resource.file}"
+        to "#{new_resource.install_directory}/#{new_resource.file}"
         owner new_resource.user
         group new_resource.user
         not_if "test -L /#{new_resource.install_directory}/#{new_resource.file}"
