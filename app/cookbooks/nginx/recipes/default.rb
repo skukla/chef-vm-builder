@@ -14,6 +14,10 @@ if webserver_type == "nginx"
         action [:create_web_root, :clear_sites]
     end
 
+    ssl "Update SSL directory permissions" do
+        action :update_ssl_permissions
+    end
+
     nginx "Configure Nginx and enable multisite operation" do
         action [:configure_nginx, :configure_multisite, :enable_multisite]
     end

@@ -26,7 +26,7 @@ action :configure do
     end
     
     group "root" do
-        members "#{new_resource.user}"
+        members new_resource.user
         append true
         action :modify
     end

@@ -29,7 +29,7 @@ property :demo_structure,           Hash,              default: node[:apache][:i
 
 action :uninstall do
     execute "Remove and purge Apache" do
-        command "rm -rf /etc/apache2 && rm -rf /var/www/html && apt-get --purge autoremove apache2 -y"
+        command "apt-get --purge autoremove apache2 -y"
     end
 end
 
@@ -86,8 +86,7 @@ action :configure_apache do
             group: new_resource.group,
         })
     end
-
-    # Disable the default site
+    
     execute "Disabling default site" do
         command "a2dissite 000-default.conf"
         only_if { ::File.exist?("/etc/apache2/sites-available/000-default.conf") }

@@ -21,6 +21,8 @@
     DocumentRoot "<%= @web_root %>"
     SetEnv MAGE_RUN_TYPE "<%= @vhost_scope %>"
     SetEnv MAGE_RUN_CODE "<%= @vhost_scope_code %>"
+    SSLCertificateKeyFile <%= @ssl_key_directory %>/<%= @ssl_key_file %>
+    SSLCertificateFile <%= @ssl_cert_directory %>/<%= @ssl_cert_file %>
 
     <Directory <%= @web_root %>>
         Options -Indexes +FollowSymLinks +MultiViews

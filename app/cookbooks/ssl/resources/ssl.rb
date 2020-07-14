@@ -22,10 +22,9 @@ property :organization,       String, default: node[:ssl][:organization]
 
 action :remove_certificates do
     Dir["#{new_resource.cert_directory}/*"].each do |old_file|
-        if "#{old_file}" != "#{new_resource.cert_directory}/#{new_resource.cert_file}"
-            execute "Remove old ssl certificates" do
-                command "rm -rf #{old_file}"
-            end
+        execute "Remove old ssl certificates" do
+            command "rm -rf #{old_file}"
+            only_if { old_file != "#{new_resource.cert_directory}/#{new_resource.cert_file}" }
         end
     end
 end
@@ -41,8 +40,8 @@ action :generate_certificate do
         }
     end
 
-    execute "Move chainfile to certs directory" do
-        command "mv /etc/ssl/certs/#{new_resource.chainfile} #{new_resource.cert_directory}"
+    execute "Copy chainfile to certs directory" do
+        command "cp /etc/ssl/certs/#{new_resource.chainfile} #{new_resource.cert_directory}"
         only_if { ::File.exist?("/etc/ssl/certs/#{new_resource.chainfile}") }
     end
 end
@@ -50,18 +49,24 @@ end
 action :refresh_certificate_list do
     execute "Refresh the certifcate list" do
         command "update-ca-certificates --fresh"
-        not_if { 
-            ::File.exist?("#{new_resource.cert_directory}/#{new_resource.cert_file}") && 
-            ::File.exist?("#{new_resource.key_directory}/#{new_resource.key_file}") 
-        }
     end
 end
 
 action :update_ssl_permissions do
-    ["/etc/ssl/", new_resource.cert_directory, new_resource.key_directory].each do |directory|
+    [new_resource.cert_directory, new_resource.key_directory].each do |directory|
         execute "Set the VM user as the ssl owner" do
             command "chown -R #{new_resource.user}:#{new_resource.group} #{directory}"
             only_if { ::Dir.exist?(directory) }
         end
+    end
+
+    execute "Update key directory permissions" do
+        command "chmod 775 #{new_resource.key_directory}"
+        only_if { ::File.exist?("#{new_resource.key_directory}/#{new_resource.key_file}")  }
+    end
+
+    execute "Update key file permissions" do
+        command "chmod 640 #{new_resource.key_directory}/#{new_resource.key_file}"
+        only_if { ::File.exist?("#{new_resource.key_directory}/#{new_resource.key_file}")  }
     end
 end

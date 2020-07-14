@@ -25,7 +25,7 @@ property :demo_structure,          Hash,              default: node[:nginx][:ini
 
 action :uninstall do
     execute "Remove and purge Nginx" do
-        command "rm -rf /etc/nginx && apt-get --purge autoremove nginx -y"
+        command "apt-get --purge autoremove nginx -y"
     end
 end
 
@@ -174,7 +174,7 @@ end
 
 action :set_permissions do
     ["/etc/nginx", "/var/log/nginx"].each do |directory|
-        execute "Change Apache directory ownership" do
+        execute "Change Nginx directory ownership" do
             command "chown -R #{new_resource.user}:#{new_resource.group} #{directory}"
         end
     end

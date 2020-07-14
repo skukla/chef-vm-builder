@@ -13,6 +13,7 @@ end
 
 java "Uninstall Java" do
     action :uninstall
+    not_if { use_elasticsearch }
 end
 
 java "Install Java" do
