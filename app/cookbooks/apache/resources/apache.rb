@@ -17,12 +17,11 @@ property :php_version,              String,            default: node[:apache][:p
 property :fpm_backend,              String,            default: node[:apache][:php][:fpm_backend]
 property :fpm_port,                 [String, Integer], default: node[:apache][:php][:fpm_port]
 property :ssl_port,                 [String, Integer], default: node[:apache][:ssl][:port]
-property :ssl_cert_domain,          String,            default: node[:fqdn]
 property :ssl_passphrase_dialog,    String,            default: node[:apache][:ssl_passphrase_dialog]
-property :ssl_key_directory,        String,            default: node[:apache][:ssl][:key_directory]
-property :ssl_key_file,             String,            default: "#{node[:fqdn]}.key"
-property :ssl_cert_directory,       String,            default: node[:apache][:ssl][:cert_directory]
-property :ssl_cert_file,            String,            default: "#{node[:fqdn]}.crt"
+property :ssl_directory,            String,            default: node[:apache][:ssl][:directory]
+property :ssl_private_key_file,     String,            default: node[:apache][:ssl][:server_private_key_file]
+property :ssl_certificate_file,     String,            default: node[:apache][:ssl][:server_certificate_file]
+property :ssl_chainfile_directory,  String,            default: node[:apache][:ssl][:chainfile_directory]
 property :ssl_chainfile,            String,            default: node[:apache][:ssl][:chainfile]
 property :demo_structure,           Hash,              default: node[:apache][:init][:demo_structure]
 
@@ -59,7 +58,6 @@ action :install do
         command "a2enmod #{new_resource.mod_list.join(" ")}"
     end
 
-    # Create necessary logs directory
     directory "Apache logs directory" do
         path "/etc/apache2/logs"
         owner new_resource.user
@@ -67,7 +65,6 @@ action :install do
         mode "755"
     end
 
-    # Unmask apache2 service
     execute "Unmask apache2 service" do
         command "systemctl unmask apache2"
     end
@@ -87,10 +84,10 @@ action :configure_apache do
         })
     end
     
-    execute "Disabling default site" do
-        command "a2dissite 000-default.conf"
-        only_if { ::File.exist?("/etc/apache2/sites-available/000-default.conf") }
-    end
+    # execute "Disabling default site" do
+    #     command "a2dissite 000-default.conf"
+    #     only_if { ::File.exist?("/etc/apache2/sites-available/000-default.conf") }
+    # end
 end
 
 action :configure_ports do
@@ -115,13 +112,13 @@ action :configure_ssl do
         owner "root"
         group "root"
         variables({
-            ssl_cert_domain: new_resource.ssl_cert_domain,
             ssl_port: new_resource.ssl_port,
+            ssl_chainfile_directory: new_resource.ssl_chainfile_directory,
+            ssl_chainfile: new_resource.ssl_chainfile,
             ssl_passphrase_dialog: new_resource.ssl_passphrase_dialog,
-            ssl_key_directory: new_resource.ssl_key_directory,
-            ssl_key_file: new_resource.ssl_key_file,
-            ssl_cert_directory: new_resource.ssl_cert_directory,
-            ssl_cert_file: new_resource.ssl_cert_file,
+            ssl_directory: new_resource.ssl_directory,
+            ssl_private_key_file: new_resource.ssl_private_key_file,
+            ssl_certificate_file: new_resource.ssl_certificate_file
         })
     end
 
@@ -183,23 +180,8 @@ action :clear_sites do
 end
 
 action :configure_multisite do
-    # Collect vhost data
-    vhost_data = Array.new
-    new_resource.demo_structure.each do |scope, scope_hash|
-        scope_hash.each do |code, url|
-            demo_data = Hash.new
-            if scope == "store_view"
-                demo_data[:scope] = scope.gsub("store_view", "store")
-            else
-                demo_data[:scope] = scope
-            end
-            demo_data[:code] = code
-            demo_data[:url] = url
-            vhost_data << demo_data
-        end
-    end
-    
-    # Create vhosts and enable them
+    vhost_data = DemoStructureHelper.get_vhost_data(new_resource.demo_structure)
+
     vhost_data.each do |vhost|
         template "#{vhost[:url]}" do
             source "vhost.erb"
@@ -213,10 +195,9 @@ action :configure_multisite do
                 server_name: vhost[:url],
                 web_root: new_resource.web_root,
                 ssl_port: new_resource.ssl_port,
-                ssl_key_directory: new_resource.ssl_key_directory,
-                ssl_key_file: new_resource.ssl_key_file,
-                ssl_cert_directory: new_resource.ssl_cert_directory,
-                ssl_cert_file: new_resource.ssl_cert_file,
+                ssl_directory: new_resource.ssl_directory,
+                ssl_private_key_file: new_resource.ssl_private_key_file,
+                ssl_certificate_file: new_resource.ssl_certificate_file,
                 vhost_scope: vhost[:scope],
                 vhost_scope_code: vhost[:code]
             })

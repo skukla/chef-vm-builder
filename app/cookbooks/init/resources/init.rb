@@ -20,13 +20,6 @@ action :install_motd do
         command "chmod -x /etc/update-motd.d/*"
     end
 
-    demo_urls = Array.new
-    new_resource.demo_structure.each do |scope, scope_hash|
-        scope_hash.each do |code, url|
-            demo_urls << url
-        end
-    end
-
     template "Custom MoTD" do
         source "custom_motd.erb"
         path "/etc/update-motd.d/01-custom"
@@ -40,7 +33,7 @@ action :install_motd do
             use_webmin: "#{new_resource.use_webmin}",
             webmin_user: "#{new_resource.user}",
             webmin_password: "#{new_resource.user}",
-            urls: demo_urls
+            urls: DemoStructureHelper.get_vhost_urls(new_resource.demo_structure)
         })
     end
 end

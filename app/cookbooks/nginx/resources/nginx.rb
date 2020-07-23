@@ -17,10 +17,9 @@ property :client_max_body_size,    String,            default: node[:nginx][:cli
 property :fpm_backend,             String,            default: node[:nginx][:php][:fpm_backend]
 property :fpm_port,                [String, Integer], default: node[:nginx][:php][:fpm_port]
 property :ssl_port,                [String, Integer], default: node[:nginx][:ssl][:port]
-property :key_directory,           String,            default: node[:nginx][:ssl][:key_directory]
-property :key_file,                String,            default: "#{node[:fqdn]}.key"
-property :cert_directory,          String,            default: node[:nginx][:ssl][:cert_directory]
-property :cert_file,               String,            default: "#{node[:fqdn]}.crt"
+property :ssl_directory,           String,            default: node[:nginx][:ssl][:directory]
+property :ssl_private_key_file,    String,            default: node[:nginx][:ssl][:server_private_key_file]
+property :ssl_certificate_file,    String,            default: node[:nginx][:ssl][:server_certificate_file]
 property :demo_structure,          Hash,              default: node[:nginx][:init][:demo_structure]
 
 action :uninstall do
@@ -103,21 +102,9 @@ action :configure_multisite do
         only_if { ::Dir.exist?("/etc/nginx/sites-available/conf") }
     end
 
-    # Collect vhost data
-    vhost_data = Array.new
-    new_resource.demo_structure.each do |scope, scope_hash|
-        scope_hash.each do |code, url|
-            demo_data = Hash.new
-            if scope == "store_view"
-                demo_data[:scope] = scope.gsub("store_view", "store")
-            else
-                demo_data[:scope] = scope
-            end
-            demo_data[:code] = code
-            demo_data[:url] = url
-            vhost_data << demo_data
-        end
-
+    vhost_data = DemoStructureHelper.get_vhost_data(new_resource.demo_structure)
+    
+    vhost_data.each do |scope, scope_hash|
         template "Configure multisite" do
             source "01-multisite.conf.erb"
             path "/etc/nginx/sites-available/conf/01-multisite.conf"
@@ -133,7 +120,6 @@ action :configure_multisite do
         end
     end
 
-    # Create vhosts and enable them
     vhost_data.each do |vhost|
         template "#{vhost[:url]}" do
             source "vhost.erb"
@@ -147,10 +133,9 @@ action :configure_multisite do
                 server_name: vhost[:url],
                 client_max_body_size: new_resource.client_max_body_size,
                 web_root: new_resource.web_root,
-                key_directory: new_resource.key_directory,
-                key_file: new_resource.key_file,
-                cert_directory: new_resource.cert_directory,
-                cert_file: new_resource.cert_file
+                ssl_directory: new_resource.ssl_directory,
+                ssl_private_key_file: new_resource.ssl_private_key_file,
+                ssl_certificate_file: new_resource.ssl_certificate_file
             })
         end
 

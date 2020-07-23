@@ -8,6 +8,7 @@ version '0.1.0'
 chef_version '>= 14.0'
 
 depends 'init'      # This brings in OS settings
+depends 'helpers'   # Brings in vhost data
 depends 'ssl'       # This brings in SSL settings
 depends 'php'       # This brings in PHP FPM options
 depends 'magento'   # This brings in Magento settings

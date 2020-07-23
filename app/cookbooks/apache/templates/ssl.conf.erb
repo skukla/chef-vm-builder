@@ -97,14 +97,14 @@ SSLCipherSuite HIGH:3DES:!aNULL:!MD5:!SEED:!IDEA
 # the certificate is encrypted, then you will be prompted for a
 # pass phrase.  Note that a kill -HUP will prompt again.  A new
 # certificate can be generated using the genkey(1) command.
-SSLCertificateFile <%= @ssl_cert_directory %>/<%= @ssl_cert_file %>
+SSLCertificateFile <%= @ssl_directory %>/<%= @ssl_certificate_file %>
 
 #   Server Private Key:
 #   If the key is not combined with the certificate, use this
 #   directive to point at the key file.  Keep in mind that if
 #   you've both a RSA and a DSA private key you can configure
 #   both in parallel (to also allow the use of DSA ciphers, etc.)
-SSLCertificateKeyFile <%= @ssl_key_directory %>/<%= @ssl_key_file %>
+SSLCertificateKeyFile <%= @ssl_directory %>/<%= @ssl_private_key_file %>
 
 #   Server Certificate Chain:
 #   Point SSLCertificateChainFile at a file containing the
@@ -113,7 +113,7 @@ SSLCertificateKeyFile <%= @ssl_key_directory %>/<%= @ssl_key_file %>
 #   the referenced file can be the same as SSLCertificateFile
 #   when the CA certificates are directly appended to the server
 #   certificate for convinience.
-SSLCertificateChainFile <%= @ssl_cert_directory %>/ca-certificates.crt
+SSLCertificateChainFile <%= @ssl_chainfile_directory %>/<%= @ssl_chainfile %>
 
 #   Certificate Authority (CA):
 #   Set the CA certificate verification path where to find CA
@@ -204,13 +204,13 @@ SSLCertificateChainFile <%= @ssl_cert_directory %>/ca-certificates.crt
 #   their broken HTTP/1.1 implementation. Use variables "downgrade-1.0" and
 #   "force-response-1.0" for this.
 BrowserMatch "MSIE [2-5]" \
-         nokeepalive ssl-unclean-shutdown \
-         downgrade-1.0 force-response-1.0
+        nokeepalive ssl-unclean-shutdown \
+        downgrade-1.0 force-response-1.0
 
 #   Per-Server Logging:
 #   The home of a custom SSL log file. Use this when you want a
 #   compact non-error SSL logfile on a virtual host basis.
 CustomLog logs/ssl_request_log \
-          "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \"%r\" %b"
+        "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \"%r\" %b"
 
 </VirtualHost>

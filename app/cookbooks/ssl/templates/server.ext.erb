@@ -1,0 +1,9 @@
+authorityKeyIdentifier=keyid,issuer
+basicConstraints=CA:FALSE
+keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
+subjectAltName = @alt_names 
+
+[alt_names]
+<% @demo_urls.each_with_index do |url, index| %>
+DNS.<%= index + 1 %> = <%= url %>
+<% end %>
