@@ -27,12 +27,17 @@
 			"build": {
 				"action": "install",
 				"sample_data": true,
-				"modules_to_remove": "magento/google-shopping-ads"
+				"modules_to_remove": [
+					"magento/google-shopping-ads",
+					"magento/module-csp",
+					"magento/cardinal-commerce"
+				]
 			}
 		}
 	},
 	"infrastructure": {
 		"php": "7.3",
+		"webserver": "nginx",
 		"elasticsearch": true,
 		"mailhog": true,
 		"samba": true
