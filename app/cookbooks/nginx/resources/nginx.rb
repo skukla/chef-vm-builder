@@ -104,20 +104,18 @@ action :configure_multisite do
 
     vhost_data = DemoStructureHelper.get_vhost_data(new_resource.demo_structure)
     
-    vhost_data.each do |scope, scope_hash|
-        template "Configure multisite" do
-            source "01-multisite.conf.erb"
-            path "/etc/nginx/sites-available/conf/01-multisite.conf"
-            owner "root"
-            group "root"
-            mode "755"
-            variables({ 
-                fpm_backend: new_resource.fpm_backend,
-                fpm_port: new_resource.fpm_port,
-                vhost_data: vhost_data
-            })
-            only_if { ::Dir.exist?("/etc/nginx/sites-available/conf") }
-        end
+    template "Configure multisite" do
+        source "01-multisite.conf.erb"
+        path "/etc/nginx/sites-available/conf/01-multisite.conf"
+        owner "root"
+        group "root"
+        mode "755"
+        variables({ 
+            fpm_backend: new_resource.fpm_backend,
+            fpm_port: new_resource.fpm_port,
+            vhost_data: vhost_data
+        })
+        only_if { ::Dir.exist?("/etc/nginx/sites-available/conf") }
     end
 
     vhost_data.each do |vhost|

@@ -17,9 +17,9 @@ module DemoStructureHelper
                 demo_data[:code] = code
                 demo_data[:url] = url
                 vhost_data << demo_data
-                return vhost_data
             end
         end
+        return vhost_data
     end
     def self.get_vhost_urls(custom_demo_structure_data)
         demo_urls = Array.new
