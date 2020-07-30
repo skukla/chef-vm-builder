@@ -11,7 +11,7 @@ property :web_root,           String, default: node[:magento][:init][:web_root]
 property :user,               String, default: node[:magento][:init][:user]
 property :install_string,     String
 property :config_path,        String
-property :config_value,       [String, Integer]
+property :config_value,       [String, Integer, TrueClass, FalseClass]
 property :config_scope,       String
 property :config_scope_code,  String
 property :deploy_mode,        String, default: node[:magento][:installation][:build][:deploy_mode][:mode]
