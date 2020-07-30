@@ -14,6 +14,8 @@ property :web_root,                String,            default: node[:nginx][:ini
 property :php_version,             String,            default: node[:nginx][:php][:version]
 property :http_port,               [String, Integer], default: node[:nginx][:http_port]
 property :client_max_body_size,    String,            default: node[:nginx][:client_max_body_size]
+property :fastcgi_buffers,         String,            default: node[:nginx][:fastcgi_buffers]
+property :fastcgi_buffer_size,     String,            default: node[:nginx][:fastcgi_buffer_size]
 property :fpm_backend,             String,            default: node[:nginx][:php][:fpm_backend]
 property :fpm_port,                [String, Integer], default: node[:nginx][:php][:fpm_port]
 property :ssl_port,                [String, Integer], default: node[:nginx][:ssl][:port]
@@ -43,10 +45,13 @@ action :configure_nginx do
         owner "root"
         group "root"
         mode "755"
-        variables ({ user: new_resource.user })
+        variables ({ 
+            user: new_resource.user,
+            fastcgi_buffers: new_resource.fastcgi_buffers,
+            fastcgi_buffer_size: new_resource.fastcgi_buffer_size
+        })
     end
     
-    # Remove the default site
     link "/etc/nginx/sites-enabled/default" do
         to "/etc/nginx/sites-available/default"
         action :delete

@@ -55,6 +55,13 @@ http {
 	# gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
 
 	##
+	# FastCGI Settings
+	##
+
+	fastcgi_buffers <%= @fastcgi_buffers %>; 
+	fastcgi_buffer_size <%= @fastcgi_buffer_size %>;
+
+	##
 	# Virtual Host Configs
 	##
 
