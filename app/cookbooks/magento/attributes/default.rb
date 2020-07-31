@@ -8,7 +8,11 @@ default[:magento][:installation][:options][:version] = "2.3.4"
 default[:magento][:installation][:options][:minimum_stability] = "stable"
 default[:magento][:installation][:build][:action] = "install"
 default[:magento][:installation][:build][:force_install] = false
-default[:magento][:installation][:build][:modules_to_remove] = []
+default[:magento][:installation][:build][:modules_to_remove] = [
+    "magento/module-csp", 
+    "magento/module-cardinal-commerce", 
+    "magento/module-two-factor-auth"
+]
 default[:magento][:installation][:build][:sample_data] = true
 default[:magento][:installation][:build][:deploy_mode][:apply] = true
 default[:magento][:installation][:build][:deploy_mode][:mode] = "production"

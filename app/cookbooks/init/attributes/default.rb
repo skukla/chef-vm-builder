@@ -12,5 +12,5 @@ default[:init][:os][:install_package_list] = [
     "figlet", 
     "unattended-upgrades"
 ]
-default[:init][:webserver][:type] = "apache2"
+default[:init][:webserver][:type] = "nginx"
 default[:init][:webserver][:web_root] = "/var/www/magento"
