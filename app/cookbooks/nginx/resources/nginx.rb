@@ -18,10 +18,6 @@ property :fastcgi_buffers,         String,            default: node[:nginx][:fas
 property :fastcgi_buffer_size,     String,            default: node[:nginx][:fastcgi_buffer_size]
 property :fpm_backend,             String,            default: node[:nginx][:php][:fpm_backend]
 property :fpm_port,                [String, Integer], default: node[:nginx][:php][:fpm_port]
-property :ssl_port,                [String, Integer], default: node[:nginx][:ssl][:port]
-property :ssl_directory,           String,            default: node[:nginx][:ssl][:directory]
-property :ssl_private_key_file,    String,            default: node[:nginx][:ssl][:server_private_key_file]
-property :ssl_certificate_file,    String,            default: node[:nginx][:ssl][:server_certificate_file]
 property :demo_structure,          Hash,              default: node[:nginx][:init][:demo_structure]
 
 action :uninstall do
@@ -132,13 +128,9 @@ action :configure_multisite do
             group "root"
             variables({
                 http_port: new_resource.http_port,
-                ssl_port: new_resource.ssl_port,
                 server_name: vhost[:url],
                 client_max_body_size: new_resource.client_max_body_size,
-                web_root: new_resource.web_root,
-                ssl_directory: new_resource.ssl_directory,
-                ssl_private_key_file: new_resource.ssl_private_key_file,
-                ssl_certificate_file: new_resource.ssl_certificate_file
+                web_root: new_resource.web_root
             })
         end
 

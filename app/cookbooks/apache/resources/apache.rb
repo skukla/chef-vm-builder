@@ -16,13 +16,6 @@ property :http_port,                [String, Integer], default: node[:apache][:h
 property :php_version,              String,            default: node[:apache][:php][:version]
 property :fpm_backend,              String,            default: node[:apache][:php][:fpm_backend]
 property :fpm_port,                 [String, Integer], default: node[:apache][:php][:fpm_port]
-property :ssl_port,                 [String, Integer], default: node[:apache][:ssl][:port]
-property :ssl_passphrase_dialog,    String,            default: node[:apache][:ssl_passphrase_dialog]
-property :ssl_directory,            String,            default: node[:apache][:ssl][:directory]
-property :ssl_private_key_file,     String,            default: node[:apache][:ssl][:server_private_key_file]
-property :ssl_certificate_file,     String,            default: node[:apache][:ssl][:server_certificate_file]
-property :ssl_chainfile_directory,  String,            default: node[:apache][:ssl][:chainfile_directory]
-property :ssl_chainfile,            String,            default: node[:apache][:ssl][:chainfile]
 property :demo_structure,           Hash,              default: node[:apache][:init][:demo_structure]
 
 
@@ -84,10 +77,10 @@ action :configure_apache do
         })
     end
     
-    # execute "Disabling default site" do
-    #     command "a2dissite 000-default.conf"
-    #     only_if { ::File.exist?("/etc/apache2/sites-available/000-default.conf") }
-    # end
+    execute "Disabling default site" do
+        command "a2dissite 000-default.conf"
+        only_if { ::File.exist?("/etc/apache2/sites-available/000-default.conf") }
+    end
 end
 
 action :configure_ports do
@@ -98,32 +91,8 @@ action :configure_ports do
         owner "root"
         group "root"
         variables({
-            http_port: new_resource.http_port,
-            ssl_port: new_resource.ssl_port
+            http_port: new_resource.http_port
         })
-    end
-end
-
-action :configure_ssl do
-    template "SSL configuration" do
-        source "ssl.conf.erb"
-        path "/etc/apache2/conf-available/ssl.conf"
-        mode "755"
-        owner "root"
-        group "root"
-        variables({
-            ssl_port: new_resource.ssl_port,
-            ssl_chainfile_directory: new_resource.ssl_chainfile_directory,
-            ssl_chainfile: new_resource.ssl_chainfile,
-            ssl_passphrase_dialog: new_resource.ssl_passphrase_dialog,
-            ssl_directory: new_resource.ssl_directory,
-            ssl_private_key_file: new_resource.ssl_private_key_file,
-            ssl_certificate_file: new_resource.ssl_certificate_file
-        })
-    end
-
-    execute "Enable SSL configuration" do
-        command "a2enconf ssl"
     end
 end
 
@@ -194,10 +163,6 @@ action :configure_multisite do
                 fpm_port: new_resource.fpm_port,
                 server_name: vhost[:url],
                 web_root: new_resource.web_root,
-                ssl_port: new_resource.ssl_port,
-                ssl_directory: new_resource.ssl_directory,
-                ssl_private_key_file: new_resource.ssl_private_key_file,
-                ssl_certificate_file: new_resource.ssl_certificate_file,
                 vhost_scope: vhost[:scope],
                 vhost_scope_code: vhost[:code]
             })

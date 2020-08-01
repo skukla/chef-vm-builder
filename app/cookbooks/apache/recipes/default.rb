@@ -14,12 +14,8 @@ if webserver_type == "apache2"
         action [:create_web_root, :clear_sites]
     end
 
-    ssl "Update SSL directory permissions" do
-        action :update_ssl_permissions
-    end
-
     apache "Configure Apache" do
-        action [:configure_apache, :configure_ports, :configure_ssl, :configure_php_fpm, :configure_multisite]
+        action [:configure_apache, :configure_ports, :configure_php_fpm, :configure_multisite]
     end
 
     apache "Change user and group, enable, and restart Apache" do
