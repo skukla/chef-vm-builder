@@ -6,9 +6,6 @@ keys/*
 media/content/*
 media/products/*
 *.code-workspace
-app/cookbooks/magento_demo_builder/files/data/*
-app/cookbooks/magento_demo_builder/files/media/*
-!app/cookbooks/magento_demo_builder/files/
 !keys/.gitkeep
 !data/.gitkeep
 !media/content/.gitkeep
