@@ -6,9 +6,9 @@ keys/*
 media/content/*
 media/products/*
 *.code-workspace
-!keys/.gitkeep
-!data/.gitkeep
-!media/content/.gitkeep
-!media/products/.gitkeep
+!keys/.gitignore
+!data/.gitignore
+!media/content/.gitignore
+!media/products/.gitignore
 !config.json.sample
 
