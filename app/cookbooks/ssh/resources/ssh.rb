@@ -9,7 +9,6 @@ provides :ssh
 property :name,                     String, name_property: true
 property :user,                     String, default: node[:ssh][:init][:user]
 property :group,                    String, default: node[:ssh][:init][:user]
-property :vagrant_key,              String, default: node[:ssh][:vagrant_key]
 property :private_keys_list,        Array,  default: node[:ssh][:private_keys][:files]
 property :authorized_keys_list,     Array,  default: node[:ssh][:authorized_keys][:files]
 
@@ -46,10 +45,7 @@ action :add_public_keys do
             group new_resource.group
             mode "600"
             sensitive true
-            variables ({ 
-                vagrant_key: new_resource.vagrant_key,
-                authorized_keys_list: new_resource.authorized_keys_list 
-            })
+            variables ({ authorized_keys_list: new_resource.authorized_keys_list })
         end
     end
 end
