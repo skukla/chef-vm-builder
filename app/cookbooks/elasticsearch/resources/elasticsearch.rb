@@ -63,12 +63,12 @@ end
 action :configure_jvm_options do
     template "JVM Options" do
         source "jvm.options.erb"
-        path "/etc/elasticsearch/jvm.options.d/jvm.options"
+        path "/etc/elasticsearch/jvm.options"
         user "#{new_resource.user}"
         group "#{new_resource.group}"
         mode "644"
         variables({ memory: new_resource.memory })
-        only_if { ::File.directory?("/etc/elasticsearch/jvm.options.d") }
+        only_if { ::File.directory?("/etc/elasticsearch") }
     end
 end
 
