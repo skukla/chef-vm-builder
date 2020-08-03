@@ -1,0 +1,119 @@
+{
+	"vm": {
+		"ip": "192.168.57.12",
+		"name": "Luma Demo",
+		"provider": "virtualbox"
+	},
+	"custom_demo": {
+		"structure": {
+			"website": {
+				"base": "luma.demo",
+				"luma_b2b": "b2b.luma.demo",
+				"venia_b2c": "venia.demo"
+			}
+		},
+		"custom_modules": {
+			"data-install": {
+				"name": "magentoese/module-data-install",
+				"repository_url": "https://github.com/PMET-public/module-data-install.git"
+			},
+			"custom-demo-shell": {
+				"name": "skukla/module-custom-demo-shell",
+				"repository_url": "git@github.com:skukla/module-custom-demo-shell.git"
+			},
+			"sctools": {
+				"name": "magentoese/module-sctools",
+				"repository_url": "git@github.com:PMET-public/module-sctools.git"
+			},
+			"theme-customizer": {
+				"name": "magentoese/module-themecustomizer",
+				"repository_url": "git@github.com:PMET-public/module-themecustomizer.git"
+			},
+			"autofill": {
+				"name": "magentoese/module-autofill",
+				"repository_url": "git@github.com:PMET-public/module-autofill.git"
+			},
+			"kukla-custom-theme": {
+				"name": "skukla/theme-frontend-custom",
+				"repository_url": "git@github.com:skukla/theme-frontend-custom.git"
+			},
+			"venia-theme": {
+				"name": "magentoese/theme-frontend-venia",
+				"version": "dev-develop",
+				"repository_url": "git@github.com:PMET-public/theme-frontend-venia.git"
+			},
+			"product-recommendations": "magento/product-recommendations"
+		}
+	},
+	"application": {
+		"authentication": {
+			"composer": {
+				"public_key": "",
+				"private_key": "",
+				"github_token": ""
+			}
+		},
+		"installation": {
+			"options": {
+				"family": "Commerce",
+				"version": "2.4.0"
+			},
+			"build": {
+				"action": "install",
+				"sample_data": true,
+				"patches": true
+			},
+			"settings": {
+				"admin_password": "admin123"
+			},
+			"configuration": {
+				"base": false,
+				"b2b": false
+			}
+		}
+	},
+	"infrastructure": {
+		"php": "7.3",
+		"webserver": "nginx",
+		"database": "magento",
+		"elasticsearch": true,
+		"mailhog": true,
+		"samba": true
+	},
+	"provisioner": {
+		"type": "chef_zero",
+		"version": "latest",
+		"nodes_path": "nodes",
+		"environments_path": "environments",
+		"roles_path": "roles",
+		"cookbooks_path": "cookbooks"
+	},
+	"remote_machine": {
+		"name": "Kukla-Machine",
+		"box": "bento/ubuntu-18.04",
+		"cpus": 2,
+		"ram": 4096,
+		"vram": 16,
+		"provider": {
+			"vmware": {
+				"gui": true,
+				"linked_clones": true,
+				"eth0_pcislotnumber": 32,
+				"eth1_pcislotnumber": 33
+			},
+			"virtualbox": {
+				"gui": false,
+				"linked_clones": false,
+				"remote_display": "off",
+				"default_nic_type": "82543GC",
+				"auto_update": false
+			}
+		}
+	},
+	"vagrant": {
+		"plugins": {
+			"all": ["vagrant-multi-hostsupdater"],
+			"vmware": ["vagrant-vmware-desktop"]
+		}
+	}
+}

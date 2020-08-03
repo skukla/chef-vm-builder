@@ -1,0 +1,125 @@
+{
+	"data-install": {
+		"name": "magentoese/module-data-install",
+		"repository_url": "https://github.com/PMET-public/module-data-install.git"
+	},
+	"custom-demo-shell": {
+		"name": "skukla/module-custom-demo-shell",
+		"repository_url": "git@github.com:skukla/module-custom-demo-shell.git"
+	},
+	"sctools": {
+		"name": "magentoese/module-sctools",
+		"repository_url": "git@github.com:PMET-public/module-sctools.git"
+	},
+	"theme-customizer": {
+		"name": "magentoese/module-themecustomizer",
+		"repository_url": "git@github.com:PMET-public/module-themecustomizer.git"
+	},
+	"autofill": {
+		"name": "magentoese/module-autofill",
+		"repository_url": "git@github.com:PMET-public/module-autofill.git",
+		"configuration": {
+			"magentoese_autofill": {
+				"persona_1": {
+					"enable": true,
+					"label": "Steve Kukla (Test User)",
+					"email_value": "steve@example.com",
+					"password_value": "Password1",
+					"firstname_value": "Steve",
+					"lastname_value": "Kukla",
+					"address_value": "3640 Holdrege Ave",
+					"city_value": "Los Angeles",
+					"state_value": "CA",
+					"zip_value": "90016",
+					"country_value": "US",
+					"telephone_value": "310-945-0345",
+					"company_value": "Luma, Inc."
+				},
+				"persona_2": {
+					"enable": false,
+					"label": "Michelle Ortiz (Purchasing Agent)",
+					"email_value": "michelle@example.com",
+					"password_value": "Password1",
+					"firstname_value": "Michelle",
+					"lastname_value": "Ortiz",
+					"address_value": "3640 Holdrege Ave",
+					"city_value": "Los Angeles",
+					"state_value": "CA",
+					"zip_value": "90016",
+					"country_value": "US",
+					"telephone_value": "310-932-0362",
+					"company_value": "Luma, Inc."
+				},
+				"persona_3": {
+					"enable": false,
+					"label": "Casey Kendall (Floor Manager)",
+					"email_value": "casey@example.com",
+					"password_value": "Password1",
+					"firstname_value": "Casey",
+					"lastname_value": "Kendall",
+					"address_value": "3640 Holdrege Ave",
+					"city_value": "Los Angeles",
+					"state_value": "CA",
+					"zip_value": "90016",
+					"country_value": "US",
+					"telephone_value": "310-936-0364",
+					"company_value": "Luma, Inc."
+				},
+				"persona_4": {
+					"enable": false,
+					"label": "Jack Fitz (Buyer)",
+					"email_value": "jack@example.com",
+					"password_value": "Password1",
+					"firstname_value": "Jack",
+					"lastname_value": "Fitz",
+					"address_value": "3640 Holdrege Ave",
+					"city_value": "Los Angeles",
+					"state_value": "CA",
+					"zip_value": "90016",
+					"country_value": "US",
+					"telephone_value": "310-937-0368",
+					"company_value": "Luma, Inc."
+				}
+			}
+		}
+	},
+	"kukla-custom-theme": {
+		"name": "skukla/theme-frontend-custom",
+		"repository_url": "git@github.com:skukla/theme-frontend-custom.git"
+	},
+	"venia-theme": {
+		"name": "magentoese/theme-frontend-venia",
+		"version": "dev-develop",
+		"repository_url": "git@github.com:PMET-public/theme-frontend-venia.git"
+	},
+	"delete-orders": "mageplaza/module-delete-orders",
+	"elasticsuite": {
+		"name": "smile/elasticsuite",
+		"version": "~2.8"
+	},
+	"elasticsuite-shared-catalog": "smile/module-elasticsuite-shared-catalog",
+	"elasticsuite-quick-order": "smile/module-elasticsuite-quick-order",
+	"product-recommendations": "magento/product-recommendations",
+	"attribute-import": {
+		"name": "zt/module-attribute-import",
+		"repository_url": "git@github.com:skukla/zt-attribute-import-final.git"
+	},
+	"product-badges": {
+		"name": "magentoese/module-productbadge",
+		"repository_url": "git@github.com:PMET-public/module-productbadge.git"
+	},
+	"instore-pickup": {
+		"name": "magentoese/module-instorepickup",
+		"repository_url": "git@github.com:PMET-public/module-instorepickup.git"
+	},
+	"paradoxlabs-tokenbase": {
+		"name": "paradoxlabs/tokenbase",
+		"version": "4.2.5.x-dev",
+		"repository_url": "git@gitlab.the1umastory.com:md/paradoxlabs-tokenbase.git"
+	},
+	"paradoxlabs-subscriptions": {
+		"name": "paradoxlabs/subscriptions",
+		"version": "3.1.5.x-dev",
+		"repository_url": "git@gitlab.the1umastory.com:md/paradoxlabs-subscriptions.git"
+	}
+}

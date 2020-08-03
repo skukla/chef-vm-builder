@@ -1,0 +1,32 @@
+{
+	"data-install": {
+		"name": "magentoese/module-data-install",
+		"repository_url": "https://github.com/PMET-public/module-data-install.git"
+	},
+	"custom-demo-shell": {
+		"name": "skukla/module-custom-demo-shell",
+		"repository_url": "git@github.com:skukla/module-custom-demo-shell.git"
+	},
+	"sctools": {
+		"name": "magentoese/module-sctools",
+		"repository_url": "git@github.com:PMET-public/module-sctools.git"
+	},
+	"theme-customizer": {
+		"name": "magentoese/module-themecustomizer",
+		"repository_url": "git@github.com:PMET-public/module-themecustomizer.git"
+	},
+	"autofill": {
+		"name": "magentoese/module-autofill",
+		"repository_url": "git@github.com:PMET-public/module-autofill.git"
+	},
+	"kukla-custom-theme": {
+		"name": "skukla/theme-frontend-custom",
+		"repository_url": "git@github.com:skukla/theme-frontend-custom.git"
+	},
+	"venia-theme": {
+		"name": "magentoese/theme-frontend-venia",
+		"version": "dev-develop",
+		"repository_url": "git@github.com:PMET-public/theme-frontend-venia.git"
+	},
+	"product-recommendations": "magento/product-recommendations"
+}
