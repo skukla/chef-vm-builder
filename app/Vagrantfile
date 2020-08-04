@@ -22,7 +22,6 @@ app_structure = {
   config_file: "config.json",
   environment_file: "environments/vm.rb",
   user_content: {
-    keys: Dir.entries("#{top_dir}/keys") - [".", ".."].delete_if{|filename| filename.include?(".DS_Store") },
     data: Dir.entries("#{top_dir}/data") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") },
     media: {
       content: Dir.entries("#{top_dir}/media/content") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") },
@@ -57,28 +56,6 @@ Vagrant.configure("2") do |config|
         end
       end
       sleep(1)
-    end
-  end
-
-  # Copy keys
-  unless app_structure[:user_content][:keys].empty?
-    config.trigger.before [:up, :reload, :provision] do |trigger|
-      trigger.name = "Preparing key files..."
-      trigger.ruby do
-        if Dir.exist?("#{app_dir}/cookbooks/ssh/files/keys/public") && !Dir.empty?("#{app_dir}/cookbooks/ssh/files/keys/public")
-          FileUtils.rm_f Dir.glob("#{app_dir}/cookbooks/ssh/files/keys/public/*")
-        end
-        if Dir.exist?("#{app_dir}/cookbooks/ssh/files/keys/private") && !Dir.empty?("#{app_dir}/cookbooks/ssh/files/keys/private")
-          FileUtils.rm_f Dir.glob("#{app_dir}/cookbooks/ssh/files/keys/private/*")
-        end
-        app_structure[:user_content][:keys].each do |filename|
-          if filename.include?(".pub")
-            FileUtils.cp("#{top_dir}/keys/#{filename}", "#{app_dir}/cookbooks/ssh/files/keys/public")
-          else
-            FileUtils.cp("#{top_dir}/keys/#{filename}", "#{app_dir}/cookbooks/ssh/files/keys/private")
-          end
-        end
-      end
     end
   end
 

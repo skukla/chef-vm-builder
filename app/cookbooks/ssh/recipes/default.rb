@@ -8,5 +8,5 @@ ssh "Prepare ssh" do
 end
 
 ssh "Manage ssh keys and restart" do
-    action [:add_public_keys, :add_private_keys, :restart]
+    action [:add_public_keys, :restart]
 end
