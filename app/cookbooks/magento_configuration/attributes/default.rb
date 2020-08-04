@@ -3,6 +3,7 @@
 # Attribute:: default
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
+
 community_paths = [
     "admin/security/admin_account_sharing",
     "admin/security/max_number_password_reset_requests",
@@ -179,6 +180,11 @@ enterprise_paths = [
     "yotpo/module_info/yotpo_installation_date",
     "yotpo/sync_settings/orders_sync_start_date"
 ]
+
+include_attribute "elasticsearch::default"
+include_attribute "elasticsearch::override"
+default[:magento_configuration][:elasticsearch][:version] = node[:elasticsearch][:version]
+
 default[:magento_configuration][:settings] =
 {
     admin: {
@@ -215,7 +221,7 @@ default[:magento_configuration][:settings] =
             upsell_rotation_mode: 0
         },
         search: {
-            engine: "elasticsearch6"
+            engine: "elasticsearch#{default[:magento_configuration][:elasticsearch][:version].split(".")[0]}"
         }
     },
     customer: {
