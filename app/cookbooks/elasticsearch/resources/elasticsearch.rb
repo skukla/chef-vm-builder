@@ -20,6 +20,7 @@ property :plugin_list,     Array,              default: node[:elasticsearch][:pl
 action :uninstall do
     execute 'Purge Elasticsearch package and configuration' do
         command "dpkg --purge --force-all elasticsearch"
+        only_if { ::File.directory?("/etc/elasticsearch") }
     end
         
     ['/var/lib/elasticsearch', '/etc/elasticsearch'].each do |folder|

@@ -18,6 +18,9 @@ property :group,                  String,                  default: node[:magent
 property :family,                 String,                  default: node[:magento][:installation][:options][:family]
 property :version,                String,                  default: node[:magento][:installation][:options][:version]
 property :modules_to_remove,      [String, Array],         default: node[:magento][:installation][:build][:modules_to_remove]
+property :use_elasticsearch,      [TrueClass, FalseClass], default: node[:magento][:elasticsearch][:use]
+property :elasticsearch_host,     String,                  default: node[:magento][:elasticsearch][:host]
+property :elasticsearch_port,     [String, Integer],       default: node[:magento][:elasticsearch][:port]
 property :db_host,                String,                  default: node[:magento][:mysql][:db_host]
 property :db_user,                String,                  default: node[:magento][:mysql][:db_user]
 property :db_password,            String,                  default: node[:magento][:mysql][:db_password]
@@ -35,6 +38,7 @@ end
 
 action :install do
     install_string = "--db-host=#{new_resource.db_host} --db-name=#{new_resource.db_name} --db-user=#{new_resource.db_user} --db-password=#{new_resource.db_password} --backend-frontname=#{new_resource.install_settings[:backend_frontname]} --base-url=#{new_resource.install_settings[:unsecure_base_url]} --language=#{new_resource.install_settings[:language]} --timezone=#{new_resource.install_settings[:timezone]} --currency=#{new_resource.install_settings[:currency]} --admin-firstname=#{new_resource.install_settings[:admin_firstname]} --admin-lastname=#{new_resource.install_settings[:admin_lastname]} --admin-email=#{new_resource.install_settings[:admin_email]} --admin-user=#{new_resource.install_settings[:admin_user]} --admin-password=#{new_resource.install_settings[:admin_password]}"
+    elasticsearch_string = "--elasticsearch-host=#{new_resource.elasticsearch_host} --elasticsearch-port=#{new_resource.elasticsearch_port}"
     rewrites_string = "--use-rewrites=#{ValueHelper.process_value(new_resource.install_settings[:use_rewrites])}"
     use_secure_frontend_string = "--use-secure=#{ValueHelper.process_value(new_resource.install_settings[:use_secure_frontend])}"
     use_secure_admin_string = "--use-secure-admin=#{ValueHelper.process_value(new_resource.install_settings[:use_secure_admin])}"
@@ -45,6 +49,7 @@ action :install do
 
     # Create the master install string
     install_string = [install_string, rewrites_string].join(" ") if new_resource.install_settings[:use_rewrites]
+    install_string = [install_string, elasticsearch_string].join(" ") if new_resource.use_elasticsearch
     install_string = [install_string, use_secure_admin_string].join(" ") if new_resource.install_settings[:use_secure_admin]
     install_string = [install_string, use_secure_frontend_string].join(" ") if new_resource.install_settings[:use_secure_frontend]
     install_string = [install_string, secure_url_string].join(" ") if new_resource.install_settings[:use_secure_frontend] || new_resource.install_settings[:use_secure_admin]
