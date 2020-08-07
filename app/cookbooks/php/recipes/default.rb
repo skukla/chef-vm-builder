@@ -11,5 +11,5 @@ end
 
 php "Remove Apache packages" do
     action :remove_apache_packages
-    only_if { webserver_type != "apache2" && "dpkg --get-selections | grep apache" }
+    only_if { webserver_type != "apache2" }
 end

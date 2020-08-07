@@ -15,7 +15,6 @@ end
 java "Uninstall Java" do
     action :uninstall
     not_if { use_elasticsearch }
-    only_if { "which java" }
 end
 
 java "Install Java" do
@@ -23,13 +22,13 @@ java "Install Java" do
     only_if { use_elasticsearch && elasticsearch_host == "127.0.0.1" }
 end
 
-java "Set java_home in environment and elasticsearch app file" do
+java "Set java_home in elasticsearch app file" do
     action :set_java_home
     only_if { use_elasticsearch && elasticsearch_host == "127.0.0.1" }
 end
 
 elasticsearch "Install Elasticsearch and Elasticsearch plugins and restart" do
-    action [:install_app, :install_plugins, :restart, :stop]
+    action [:install_app, :replace_service_file, :restart, :install_plugins, :stop]
     only_if { use_elasticsearch && elasticsearch_host == "127.0.0.1" }
 end
 

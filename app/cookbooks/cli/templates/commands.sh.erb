@@ -277,26 +277,31 @@ export -f status-db
 # Elasticsearch
 function enable-elasticsearch() {
   printf "\nEnabling Elasticsearch...\n"
-  sudo systemctl enable elasticsearch
+  sudo service elasticsearch enable
 }
 export -f enable-elasticsearch
 
 function start-elasticsearch() {
   printf "\nRestarting Elasticsearch...\n"
-  sudo systemctl restart elasticsearch
+  sudo service elasticsearch restart
 }
 export -f start-elasticsearch
 
 function stop-elasticsearch() {
   printf "\nStopping Elasticsearch...\n"
-  sudo systemctl stop elasticsearch
+  sudo service elasticsearch stop
 }
 export -f stop-elasticsearch
 
 function status-elasticsearch() {
-  sudo systemctl status elasticsearch
+  sudo service elasticsearch status
 }
 export -f status-elasticsearch
+
+function log-elasticsearch() {
+  sudo journalctl --unit elasticsearch
+}
+export -f log-elasticsearch
 
 function disable-elasticsearch() {
   printf "\nDisabling Elasticsearch...\n"

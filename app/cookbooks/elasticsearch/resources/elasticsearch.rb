@@ -6,16 +6,21 @@
 resource_name :elasticsearch
 provides :elasticsearch
 
-property :name,            String,             name_property: true
-property :user,            String,             default: node[:elasticsearch][:user]
-property :group,           String,             default: node[:elasticsearch][:user]
-property :version,         String,             default: node[:elasticsearch][:version]
-property :memory,          String,             default: node[:elasticsearch][:memory]
-property :port,            [String, Integer],  default: node[:elasticsearch][:port]
-property :cluster_name,    String,             default: node[:elasticsearch][:cluster_name]
-property :node_name,       String,             default: node[:elasticsearch][:node_name]
-property :log_file_path,   String,             default: node[:elasticsearch][:log_file_path]
-property :plugin_list,     Array,              default: node[:elasticsearch][:plugin_list]
+property :name,             String,             name_property: true
+property :user,             String,             default: node[:elasticsearch][:user]
+property :group,            String,             default: node[:elasticsearch][:group]
+property :java_home,        String,             default: node[:elasticsearch][:java][:java_home]
+property :version,          String,             default: node[:elasticsearch][:version]
+property :memory,           String,             default: node[:elasticsearch][:memory]
+property :port,             [String, Integer],  default: node[:elasticsearch][:port]
+property :cluster_name,     String,             default: node[:elasticsearch][:cluster_name]
+property :node_name,        String,             default: node[:elasticsearch][:node_name]
+property :log_file_path,    String,             default: node[:elasticsearch][:log_file_path]
+property :jvm_options_file, String,             default: node[:elasticsearch][:jvm_options_file]
+property :service_file,     String,             default: node[:elasticsearch][:service_file]
+property :debian_app_file,  String,             default: node[:elasticsearch][:debian_app_file]
+property :app_config_file,  String,             default: node[:elasticsearch][:app_config_file]
+property :plugin_list,      Array,              default: node[:elasticsearch][:plugin_list]
 
 action :uninstall do
     execute 'Purge Elasticsearch package and configuration' do
@@ -50,6 +55,18 @@ action :install_app do
     end
 end
 
+action :replace_service_file do
+    template "elasticsearch.service file" do
+        source "elasticsearch6.service.erb"
+        path new_resource.service_file
+        user new_resource.user
+        group new_resource.group
+        mode "644"
+        variables({ memory: new_resource.memory })
+        only_if { ::File.directory?("/etc/elasticsearch") }
+    end
+end
+
 action :install_plugins do
     unless new_resource.plugin_list.empty?
         new_resource.plugin_list.each do |plugin|
@@ -64,9 +81,9 @@ end
 action :configure_jvm_options do
     template "JVM Options" do
         source "jvm.options.erb"
-        path "/etc/elasticsearch/jvm.options"
-        user "#{new_resource.user}"
-        group "#{new_resource.group}"
+        path new_resource.jvm_options_file
+        user new_resource.user
+        group new_resource.group
         mode "644"
         variables({ memory: new_resource.memory })
         only_if { ::File.directory?("/etc/elasticsearch") }
@@ -76,7 +93,7 @@ end
 action :configure_app do
     template "Elasticsearch Configuration" do
         source "elasticsearch.yml.erb"
-        path "/etc/elasticsearch/elasticsearch.yml"
+        path new_resource.app_config_file
         user new_resource.user
         group new_resource.group
         mode "644"
@@ -89,7 +106,17 @@ action :configure_app do
         only_if { ::File.directory?("/etc/elasticsearch") }
     end
 
-    # Set ownership to Elasticsearch user and group
+    template "Elasticsearch Configuration" do
+        source "elasticsearch.debian.config.erb"
+        path new_resource.debian_app_file
+        user new_resource.user
+        group new_resource.group
+        mode "644"
+        variables({ java_home: new_resource.java_home })
+        only_if { ::File.directory?("/etc/elasticsearch") }
+    end
+
+    # Set ownership
     directory "/etc/elasticsearch" do
         owner new_resource.user
         group new_resource.group
@@ -97,16 +124,16 @@ action :configure_app do
     end
 end
 
-action :restart do
+action :enable do
     service "elasticsearch" do
-        action :restart
+        action :enable
         only_if { ::File.directory?("/etc/elasticsearch") }
     end
 end
 
-action :enable do
+action :restart do
     service "elasticsearch" do
-        action :enable
+        action :restart
         only_if { ::File.directory?("/etc/elasticsearch") }
     end
 end
