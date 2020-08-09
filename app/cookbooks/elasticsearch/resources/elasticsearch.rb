@@ -57,12 +57,12 @@ end
 
 action :replace_service_file do
     template "elasticsearch.service file" do
-        source "elasticsearch6.service.erb"
+        source "elasticsearch#{new_resource.version.split(".")[0]}.service.erb"
         path new_resource.service_file
         user new_resource.user
         group new_resource.group
         mode "644"
-        variables({ memory: new_resource.memory })
+        variables({ java_home: new_resource.java_home })
         only_if { ::File.directory?("/etc/elasticsearch") }
     end
 end
@@ -92,7 +92,7 @@ end
 
 action :configure_app do
     template "Elasticsearch Configuration" do
-        source "elasticsearch.yml.erb"
+        source "elasticsearch#{new_resource.version.split(".")[0]}.yml.erb"
         path new_resource.app_config_file
         user new_resource.user
         group new_resource.group

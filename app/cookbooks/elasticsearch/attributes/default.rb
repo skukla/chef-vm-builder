@@ -5,7 +5,7 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 default[:elasticsearch][:java][:user] = "root"
 default[:elasticsearch][:java][:group] = "root"
-default[:elasticsearch][:java][:java_home] = "/usr/lib/jvm/java-11-openjdk-amd64/"
+default[:elasticsearch][:java][:java_home] = "/usr/lib/jvm/java-8-openjdk-amd64"
 default[:elasticsearch][:java][:environment_file] = "/etc/environment"
 default[:elasticsearch][:user] = "root"
 default[:elasticsearch][:group] = "elasticsearch"
