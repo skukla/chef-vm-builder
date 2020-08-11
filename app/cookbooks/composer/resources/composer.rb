@@ -106,7 +106,7 @@ end
 action :require do
     options_string = "--#{new_resource.options.join(" --")}" if !new_resource.options.nil?
     if !new_resource.package_version.nil? && !new_resource.package_version.empty?
-        package_string = [new_resource.package_name, new_resource.package_version].join(":")
+        package_string = [new_resource.package_name, new_resource.package_version].join(" ")
     else
         package_string = new_resource.package_name
     end
