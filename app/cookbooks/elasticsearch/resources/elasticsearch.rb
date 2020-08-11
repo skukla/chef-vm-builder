@@ -9,7 +9,7 @@ provides :elasticsearch
 property :name,             String,             name_property: true
 property :user,             String,             default: node[:elasticsearch][:user]
 property :group,            String,             default: node[:elasticsearch][:group]
-property :java_home,        String,             default: node[:elasticsearch][:java][:java_home]
+property :java_home,        String,             default: node[:elasticsearch][:java][:home]
 property :version,          String,             default: node[:elasticsearch][:version]
 property :memory,           String,             default: node[:elasticsearch][:memory]
 property :port,             [String, Integer],  default: node[:elasticsearch][:port]
@@ -25,7 +25,7 @@ property :plugin_list,      Array,              default: node[:elasticsearch][:p
 action :uninstall do
     execute 'Purge Elasticsearch package and configuration' do
         command "dpkg --purge --force-all elasticsearch"
-        only_if { ::File.directory?("/etc/elasticsearch") }
+        only_if "ls /etc/apt/sources.list.d/elastic*"
     end
         
     ['/var/lib/elasticsearch', '/etc/elasticsearch'].each do |folder|
@@ -43,8 +43,8 @@ end
 
 action :install_app do
     execute "Add Elasticsearch #{new_resource.version} repository" do
-        command "sudo wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add - && echo \"deb https://artifacts.elastic.co/packages/#{new_resource.version}/apt stable main\" | sudo tee -a /etc/apt/sources.list.d/elastic-#{new_resource.version}.list && sudo apt-get update -y"
-        not_if { ::File.directory?('/etc/elasticsearch') }
+        command "sudo wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add - && echo deb https://artifacts.elastic.co/packages/#{new_resource.version}/apt stable main | sudo tee -a /etc/apt/sources.list.d/elastic-#{new_resource.version}.list && sudo apt-get update -y"
+        not_if "ls /etc/apt/sources.list.d/elastic*"
     end
     
     apt_package "elasticsearch" do
@@ -72,7 +72,7 @@ action :install_plugins do
         new_resource.plugin_list.each do |plugin|
             execute "Install #{plugin} elasticsearch plugin" do
                 command "cd /usr/share/elasticsearch && bin/elasticsearch-plugin install #{plugin}"
-                only_if { ::File.directory?("/etc/elasticsearch") }
+                not_if { ::File.directory?("/usr/share/elasticsearch/plugins/#{plugin}") }
             end
         end
     end
@@ -116,7 +116,6 @@ action :configure_app do
         only_if { ::File.directory?("/etc/elasticsearch") }
     end
 
-    # Set ownership
     directory "/etc/elasticsearch" do
         owner new_resource.user
         group new_resource.group
