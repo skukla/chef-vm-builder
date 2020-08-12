@@ -15,7 +15,7 @@ action :uninstall do
     new_resource.repository_list.each do |repository|
         execute "Uninstall #{repository[:name]}" do
             command "rm -rf /usr/local/bin/#{repository[:name].downcase}"
-            only_if { ::Dir.exist?("/root/go") }
+            only_if { ::File.directory?("/root/go") }
         end
     end
 end

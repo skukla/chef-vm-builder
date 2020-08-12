@@ -8,6 +8,7 @@ sendmail_path = node[:mailhog][:sendmail_path]
 
 golang "Uninstall golang" do
     action :uninstall
+    only_if { !use_mailhog }
 end
 
 golang "Install golang" do
@@ -17,6 +18,7 @@ end
 
 mailhog "Stop and uninstall mailhog" do
     action [:stop, :uninstall]
+    only_if { !use_mailhog }
 end
 
 mailhog "Install, configure, enable, reload, and stop mailhog" do
@@ -27,4 +29,5 @@ end
 php "Configure mailhog sendmail path and restart PHP" do
     action [:configure_sendmail, :restart]
     sendmail_path sendmail_path
+    only_if { use_mailhog }
 end

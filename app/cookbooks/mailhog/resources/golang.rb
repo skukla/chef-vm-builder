@@ -10,7 +10,8 @@ property :name,                     String, name_property: true
 
 action :uninstall do
     execute "Uninstall Golang" do
-        command "sudo apt-get remove golang-go -y && sudo apt-get purge --auto-remove golang-go* -y && rm -rf /usr/local/go/ && rm -rf /root/go"
+        command "sudo apt-get remove golang-go -y && sudo apt-get purge --auto-remove golang-go -y && rm -rf /usr/local/go/ && rm -rf /root/go"
+        only_if { ::File.directory?("/root/go") }
     end
 end
 
