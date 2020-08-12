@@ -23,6 +23,7 @@ property :demo_structure,          Hash,              default: node[:nginx][:ini
 action :uninstall do
     execute "Remove and purge Nginx" do
         command "apt-get --purge autoremove nginx -y"
+        only_if { ::File.directory?("/etc/nginx") }
     end
 end
 

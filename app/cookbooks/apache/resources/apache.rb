@@ -22,6 +22,7 @@ property :demo_structure,           Hash,              default: node[:apache][:i
 action :uninstall do
     execute "Remove and purge Apache" do
         command "apt-get --purge autoremove apache2 -y"
+        only_if { ::File.directory?("/etc/apache2") }
     end
 end
 
