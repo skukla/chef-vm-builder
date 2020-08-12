@@ -7,6 +7,7 @@ use_samba = node[:samba][:use]
 
 samba "Uninstall samba" do
     action :uninstall
+    only_if { !use_samba }
 end
 
 samba "Install and configure samba" do

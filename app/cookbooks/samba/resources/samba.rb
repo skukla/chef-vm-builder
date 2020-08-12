@@ -17,17 +17,14 @@ property :share_list,              Hash,   default: node[:samba][:share_list]
 action :uninstall do
     apt_package "samba" do
         action [:remove, :purge]
-    end
-
-    execute "Manually remove the Samba sources file" do
-        command "rm -rf /etc/apt/sources.list.d/samba*"
-        only_if "ls /etc/apt/sources.list.d/samba*"
+        only_if { ::File.directory?("/etc/samba") }
     end
 end
 
 action :install do
-    apt_package 'samba' do
+    apt_package "samba" do
         action :install
+        not_if { ::File.exist?("/lib/systemd/system/smbd.service") }
     end
 end
 
