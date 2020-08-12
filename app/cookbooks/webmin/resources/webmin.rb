@@ -15,6 +15,7 @@ property :port,            [String, Integer], default: node[:webmin][:port]
 action :uninstall do
     apt_package "webmin" do
         action [:remove, :purge]
+        only_if "ls /etc/apt/sources.list.d/webmin*"
     end
 
     execute "Manually remove the Webmin sources file" do

@@ -11,6 +11,7 @@ end
 
 webmin "Uninstall Webmin" do
     action :uninstall
+    only_if { !use_webmin }
 end
 
 webmin "Install and configure Webmin" do
