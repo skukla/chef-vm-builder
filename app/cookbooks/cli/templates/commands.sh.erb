@@ -277,7 +277,7 @@ export -f status-db
 # Elasticsearch
 function enable-elasticsearch() {
   printf "\nEnabling Elasticsearch...\n"
-  sudo service elasticsearch enable
+  sudo /bin/systemctl enable elasticsearch.service
 }
 export -f enable-elasticsearch
 

@@ -56,8 +56,8 @@ elasticsearch "Configure Elasticsearch JVM options and Elasticsearch application
     }
 end
 
-elasticsearch "Make sure Elasticsearch is stopped" do
-    action :stop
+elasticsearch "Enable Elasticsearch and make sure it's stopped" do
+    action [:enable, :stop]
     only_if { 
         use_elasticsearch && 
         (elasticsearch_host == "127.0.0.1" || elasticsearch_host == "localhost")
