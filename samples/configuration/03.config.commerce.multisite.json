@@ -73,7 +73,7 @@
 		}
 	},
 	"infrastructure": {
-		"php": "7.3",
+		"php": "7.4",
 		"webserver": "nginx",
 		"database": "magento",
 		"elasticsearch": true,
@@ -92,7 +92,7 @@
 		"name": "Kukla-Machine",
 		"box": "bento/ubuntu-18.04",
 		"cpus": 2,
-		"ram": 4096,
+		"ram": 6144,
 		"vram": 16,
 		"provider": {
 			"vmware": {
