@@ -14,14 +14,14 @@ property :repository_url,         String
 property :options,                Array
 
 action :download do
-    composer "Add repository #{new_resource.module_name}" do
+    composer "Add repository #{new_resource.package_name}" do
         action :add_repository
         module_name new_resource.module_name
         repository_url new_resource.repository_url
         not_if { new_resource.repository_url.empty? }
     end
 
-    composer "Add module #{new_resource.module_name}" do
+    composer "Add module #{new_resource.package_name}" do
         action :require
         package_name new_resource.package_name
         package_version new_resource.package_version
