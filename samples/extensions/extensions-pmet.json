@@ -19,16 +19,6 @@
 		"version": "2.9.3.x-dev",
 		"repository_url": "git@github.com:PMET-public/amasty-module-free-gift.git"
 	},
-	"amasty-geoip": {
-		"name": "amasty/geoip",
-		"version": "1.5.1.x-dev",
-		"repository_url": "git@github.com:PMET-public/amasty-module-geoip.git"
-	},
-	"amasty-product-attachment": {
-		"name": "amasty/product-attachment",
-		"version": "1.3.3.x-dev",
-		"repository_url": "git@github.com:PMET-public/amasty-module-product-attachments.git"
-	},
 	"amasty-rgrid": {
 		"name": "amasty/rgrid",
 		"version": "1.0.7.x-dev",
@@ -48,6 +38,16 @@
 		"name": "amasty/module-special-promo-pro",
 		"version": "2.8.4.x-dev",
 		"repository_url": "git@github.com:PMET-public/amasty-module-special-promotions-pro.git"
+	},
+	"amasty-geoip": {
+		"name": "amasty/geoip",
+		"version": "1.5.1.x-dev",
+		"repository_url": "git@github.com:PMET-public/amasty-module-geoip.git"
+	},
+	"amasty-product-attachment": {
+		"name": "amasty/product-attachment",
+		"version": "1.3.3.x-dev",
+		"repository_url": "git@github.com:PMET-public/amasty-module-product-attachments.git"
 	},
 	"amasty-store-locator": {
 		"name": "amasty/module-store-locator",
