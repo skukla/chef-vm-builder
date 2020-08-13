@@ -4,10 +4,9 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 default[:magento][:installation][:options][:family] = "community"
-default[:magento][:installation][:options][:version] = "2.3.4"
+default[:magento][:installation][:options][:version] = "2.4.0"
 default[:magento][:installation][:options][:minimum_stability] = "stable"
 default[:magento][:installation][:build][:action] = "install"
-default[:magento][:installation][:build][:force_install] = false
 default[:magento][:installation][:build][:modules_to_remove] = [
     "magento/module-csp", 
     "magento/module-cardinal-commerce", 
