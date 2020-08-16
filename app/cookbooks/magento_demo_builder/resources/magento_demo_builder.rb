@@ -42,6 +42,12 @@ action :refresh_data do
     data_files = ::Dir["#{new_resource.data_files_directory}/*.csv"].map{|filename| filename.sub("#{new_resource.data_files_directory}/", "") }
     demo_shell_data_path = "#{new_resource.web_root}/#{new_resource.demo_shell_directory}/#{new_resource.demo_shell_fixtures_directory}"
 
+    execute "Remove existing data files" do
+        command "rm -rf #{demo_shell_data_path}/*"
+        not_if { data_files.empty? }
+        only_if { ::Dir.exist?(demo_shell_data_path) }
+    end
+
     ruby_block "Remove existing data patch" do
         block do
             DatabaseHelper.remove_data_patch(
