@@ -185,24 +185,28 @@ end
 action :set_indexer_mode do
     magento_cli new_resource.name do
         action :set_indexer_mode
+        indexers new_resource.indexers
     end
 end
 
 action :reset_indexers do
     magento_cli new_resource.name do
         action :reset_indexers
+        indexers new_resource.indexers
     end
 end
 
 action :reindex do
     magento_cli new_resource.name do
         action :reindex
+        indexers new_resource.indexers
     end
 end
 
 action :clean_cache do
     magento_cli new_resource.name do
         action :clean_cache
+        cache_types new_resource.cache_types
     end
 end
 
