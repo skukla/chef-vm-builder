@@ -114,12 +114,6 @@ community_paths = [
     "general/store_information/street_line1",
     "general/store_information/street_line2",
     "msp_securitysuite_twofactorauth/duo/application_key",
-    "shipping/origin/city",
-    "shipping/origin/country_id",
-    "shipping/origin/postcode",
-    "shipping/origin/region_id",
-    "shipping/origin/street_line1",
-    "shipping/origin/street_line2",
     "payment/authorizenet_acceptjs/cctypes",
     "payment/authorizenet_acceptjs/currency",
     "payment/authorizenet_acceptjs/order_status",
@@ -142,7 +136,14 @@ community_paths = [
     "payment/braintree_paypal_vault/active",
     "payment/checkmo/active",
     "payment/companycredit/active",
+    "shipping/origin/city",
+    "shipping/origin/country_id",
+    "shipping/origin/postcode",
+    "shipping/origin/region_id",
+    "shipping/origin/street_line1",
+    "shipping/origin/street_line2",
     "sync_settings/addressbook/allow_non_subscribers",
+    "system/backup/functionality_enabled",
     "web/default/cms_home_page",
     "web/secure/base_url",
     "web/secure/use_in_frontend",
@@ -241,6 +242,11 @@ default[:magento_configuration][:settings] =
             enabled: 1,
             enabled_on_product: 1,
             use_store_address: 1
+        }
+    },
+    system: {
+        backup: {
+            functionality_enabled: 1
         }
     }
 }
