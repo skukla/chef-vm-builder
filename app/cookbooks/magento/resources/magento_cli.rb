@@ -6,22 +6,23 @@
 resource_name :magento_cli
 provides :magento_cli
 
-property :name,               String, name_property: true
-property :web_root,           String, default: node[:magento][:init][:web_root]
-property :user,               String, default: node[:magento][:init][:user]
-property :install_string,     String
-property :config_path,        String
-property :config_value,       [String, Integer, TrueClass, FalseClass]
-property :config_scope,       String
-property :config_scope_code,  String
-property :deploy_mode,        String, default: node[:magento][:installation][:build][:deploy_mode][:mode]
-property :cache_types,        Array, default: Array.new
-property :indexers,           Array, default: Array.new
-property :admin_username,     String
-property :admin_password,     String
-property :admin_email,        String
-property :admin_firstname,    String
-property :admin_lastname,     String
+property :name,                     String,  name_property: true
+property :web_root,                 String,  default: node[:magento][:init][:web_root]
+property :user,                     String,  default: node[:magento][:init][:user]
+property :install_string,           String
+property :config_path,              String
+property :config_value,             [String, Integer, TrueClass, FalseClass]
+property :config_scope,             String
+property :config_scope_code,        String
+property :deploy_mode,              String,  default: node[:magento][:installation][:build][:deploy_mode][:mode]
+property :cache_types,              Array,   default: Array.new
+property :indexers,                 Array,   default: Array.new
+property :consumer_list,            Array
+property :admin_username,           String
+property :admin_password,           String
+property :admin_email,              String
+property :admin_firstname,          String
+property :admin_lastname,           String
 
 action :install do
     execute new_resource.name do
@@ -107,6 +108,17 @@ end
 action :disable_cron do
     execute new_resource.name do
         command "crontab -r -u #{new_resource.user}"
+    end
+end
+
+action :start_consumers do
+    command_array = Array.new
+    new_resource.consumer_list.each do |consumer|
+        command_array << "su #{new_resource.user} -c 'bin/magento queue:consumers:start #{consumer} &'"
+    end
+    execute new_resource.name do
+        command command_array.join(" && ")
+        cwd new_resource.web_root
     end
 end
 

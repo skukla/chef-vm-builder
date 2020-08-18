@@ -171,7 +171,11 @@ function prod-mode() {
 export -f prod-mode
 
 function start-all-consumers() {
-  CONSUMERS_LIST=(product_action_attribute.update product_action_attribute.website.update codegeneratorProcessor exportProcessor negotiableQuotePriceUpdate sharedCatalogUpdatePrice sharedCatalogUpdateCategoryPermissions quoteItemCleaner inventoryQtyCounter)
+  CONSUMERS_LIST=(
+    <% @consumer_list.each do |consumer| %>
+      <%= consumer %>
+    <% end %>
+  )
   printf "\nStarting all consumers...\n"
   for consumer in "${CONSUMERS_LIST[@]}"
     do bin/magento queue:consumers:start $consumer &

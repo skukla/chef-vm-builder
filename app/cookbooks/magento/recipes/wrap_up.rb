@@ -19,6 +19,14 @@ magento_app "Enable cron" do
     not_if { ::File.exist?("/var/spool/cron/crontabs/#{user}") }
 end
 
+magento_app "Start consumers" do
+    action :start_consumers
+    only_if { 
+        (!::File.exist?("#{web_root}/var/.first-run-state.flag")) && build_action == "install" ||
+        build_action == "force_install"
+    }
+end
+
 magento_app "Set indexers to On Schedule mode" do
     action :set_indexer_mode
     not_if { ::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == "install" }

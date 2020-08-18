@@ -6,29 +6,30 @@
 resource_name :magento_app
 provides :magento_app
 
-property :name,                   String,                  name_property: true
-property :web_root,               String,                  default: node[:magento][:init][:web_root]
-property :composer_file,          String,                  default: node[:magento][:composer][:file]
-property :composer_public_key,    String,                  default: node[:magento][:composer][:public_key]
-property :composer_private_key,   String,                  default: node[:magento][:composer][:private_key]
-property :composer_github_token,  String,                  default: node[:magento][:composer][:github_token]
-property :permission_dirs,        Array,                   default: ["var/", "pub/", "app/etc/", "generated/"]
-property :user,                   String,                  default: node[:magento][:init][:user]
-property :group,                  String,                  default: node[:magento][:init][:user]
-property :family,                 String,                  default: node[:magento][:installation][:options][:family]
-property :version,                String,                  default: node[:magento][:installation][:options][:version]
-property :modules_to_remove,      [String, Array],         default: node[:magento][:installation][:build][:modules_to_remove]
-property :use_elasticsearch,      [TrueClass, FalseClass], default: node[:magento][:elasticsearch][:use]
-property :elasticsearch_host,     String,                  default: node[:magento][:elasticsearch][:host]
-property :elasticsearch_port,     [String, Integer],       default: node[:magento][:elasticsearch][:port]
-property :db_host,                String,                  default: node[:magento][:mysql][:db_host]
-property :db_user,                String,                  default: node[:magento][:mysql][:db_user]
-property :db_password,            String,                  default: node[:magento][:mysql][:db_password]
-property :db_name,                String,                  default: node[:magento][:mysql][:db_name]
-property :install_settings,       Hash
-property :cache_types,            Array
-property :indexers,               Array
-property :remove_generated,       [TrueClass, FalseClass], default: true
+property :name,                     String,                  name_property: true
+property :web_root,                 String,                  default: node[:magento][:init][:web_root]
+property :composer_file,            String,                  default: node[:magento][:composer][:file]
+property :composer_public_key,      String,                  default: node[:magento][:composer][:public_key]
+property :composer_private_key,     String,                  default: node[:magento][:composer][:private_key]
+property :composer_github_token,    String,                  default: node[:magento][:composer][:github_token]
+property :permission_dirs,          Array,                   default: ["var/", "pub/", "app/etc/", "generated/"]
+property :user,                     String,                  default: node[:magento][:init][:user]
+property :group,                    String,                  default: node[:magento][:init][:user]
+property :family,                   String,                  default: node[:magento][:installation][:options][:family]
+property :version,                  String,                  default: node[:magento][:installation][:options][:version]
+property :modules_to_remove,        [String, Array],         default: node[:magento][:installation][:build][:modules_to_remove]
+property :use_elasticsearch,        [TrueClass, FalseClass], default: node[:magento][:elasticsearch][:use]
+property :elasticsearch_host,       String,                  default: node[:magento][:elasticsearch][:host]
+property :elasticsearch_port,       [String, Integer],       default: node[:magento][:elasticsearch][:port]
+property :db_host,                  String,                  default: node[:magento][:mysql][:db_host]
+property :db_user,                  String,                  default: node[:magento][:mysql][:db_user]
+property :db_password,              String,                  default: node[:magento][:mysql][:db_password]
+property :db_name,                  String,                  default: node[:magento][:mysql][:db_name]
+property :install_settings,         Hash
+property :consumer_list,            Array,                   default: node[:magento][:installation][:options][:consumer_list]
+property :cache_types,              Array
+property :indexers,                 Array
+property :remove_generated,         [TrueClass, FalseClass], default: true
 
 action :download do
     composer "#{new_resource.name}" do
@@ -223,6 +224,13 @@ action :clear_cron_schedule do
             %x[mysql -uroot -e "USE #{new_resource.db_name};DELETE FROM cron_schedule;"]
         end
         action :create
+    end
+end
+
+action :start_consumers do
+    magento_cli new_resource.name do
+        action :start_consumers
+        consumer_list new_resource.consumer_list
     end
 end
 

@@ -6,6 +6,42 @@
 default[:magento][:installation][:options][:family] = "community"
 default[:magento][:installation][:options][:version] = "2.4.0"
 default[:magento][:installation][:options][:minimum_stability] = "stable"
+default[:magento][:installation][:options][:community_consumer_list] = [
+    "product_action_attribute.update",
+    "product_action_attribute.website.update",
+    "codegeneratorProcessor",
+    "exportProcessor",
+    "media.storage.catalog.image.resize",
+    "inventory.source.items.cleanup",
+    "inventory.mass.update",
+    "inventory.reservations.cleanup",
+    "inventory.reservations.update",
+    "inventory.reservations.updateSalabilityStatus",
+    "inventory.indexer.sourceItem",
+    "inventory.indexer.stock",
+    "media.content.synchronization",
+    "media.gallery.synchronization"
+]
+default[:magento][:installation][:options][:enterprise_consumer_list] = [
+    "negotiableQuotePriceUpdate",
+    "sharedCatalogUpdatePrice",
+    "sharedCatalogUpdateCategoryPermissions",
+    "quoteItemCleaner",
+    "inventoryQtyCounter",
+    "purchaseorder.toorder",
+    "purchaseorder.transactional.email",
+    "purchaseorder.validation"
+]
+consumer_list = Array.new
+node[:magento][:installation][:options][:community_consumer_list].each do |consumer|
+    consumer_list << consumer
+end
+unless node[:magento][:installation][:options][:enterprise_consumer_list].empty?
+    node[:magento][:installation][:options][:enterprise_consumer_list].each do |consumer|
+        consumer_list << consumer
+    end
+end
+default[:magento][:installation][:options][:consumer_list] = consumer_list
 default[:magento][:installation][:build][:action] = "install"
 default[:magento][:installation][:build][:modules_to_remove] = [
     "magento/module-csp", 

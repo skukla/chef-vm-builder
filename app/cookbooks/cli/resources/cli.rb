@@ -19,6 +19,7 @@ property :db_password,              String,    default: node[:cli][:mysql][:db_p
 property :db_name,                  String,    default: node[:cli][:mysql][:db_name]
 property :cli_directories,          Array,     default: node[:cli][:directories]
 property :cli_files,                Array,     default: node[:cli][:files]
+property :consumer_list,            Array,     default: node[:cli][:magento][:consumer_list]
 
 action :create_directories do
     directory "VM cli path check" do
@@ -54,7 +55,8 @@ action :install do
             db_host: new_resource.db_host,
             db_user: new_resource.db_user,
             db_password: new_resource.db_password,
-            db_name: new_resource.db_name
+            db_name: new_resource.db_name,
+            consumer_list: new_resource.consumer_list
         })
         only_if { ::Dir.exist?("/home/#{new_resource.user}/cli") }
     end
