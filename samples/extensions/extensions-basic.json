@@ -25,8 +25,8 @@
 	},
 	"venia-theme": {
 		"name": "magentoese/theme-frontend-venia",
-		"version": "dev-develop",
 		"repository_url": "git@github.com:PMET-public/theme-frontend-venia.git"
 	},
-	"product-recommendations": "magento/product-recommendations"
+	"product-recommendations": "magento/product-recommendations",
+	"pagebuilder-product-recommendations": "magento/module-page-builder-product-recommendations"
 }

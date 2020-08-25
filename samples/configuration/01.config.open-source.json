@@ -49,7 +49,7 @@
 		"name": "Kukla-Machine",
 		"box": "bento/ubuntu-18.04",
 		"cpus": 2,
-		"ram": 6144,
+		"ram": 8192,
 		"vram": 16,
 		"provider": {
 			"vmware": {

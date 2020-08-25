@@ -42,7 +42,8 @@
 				"version": "dev-develop",
 				"repository_url": "git@github.com:PMET-public/theme-frontend-venia.git"
 			},
-			"product-recommendations": "magento/product-recommendations"
+			"product-recommendations": "magento/product-recommendations",
+			"pagebuilder-product-recommendations": "magento/module-page-builder-product-recommendations"
 		}
 	},
 	"application": {
@@ -92,7 +93,7 @@
 		"name": "Kukla-Machine",
 		"box": "bento/ubuntu-18.04",
 		"cpus": 2,
-		"ram": 6144,
+		"ram": 8192,
 		"vram": 16,
 		"provider": {
 			"vmware": {

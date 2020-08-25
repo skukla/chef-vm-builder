@@ -78,12 +78,12 @@
 	"paradoxlabs-tokenbase": {
 		"name": "paradoxlabs/tokenbase",
 		"version": "4.2.5.x-dev",
-		"repository_url": "git@gitlab.the1umastory.com:md/paradoxlabs-tokenbase.git"
+		"repository_url": "git@github.com:PMET-public/paradoxlabs-tokenbase.git"
 	},
 	"paradoxlabs-subscriptions": {
 		"name": "paradoxlabs/subscriptions",
 		"version": "3.1.5.x-dev",
-		"repository_url": "git@gitlab.the1umastory.com:md/paradoxlabs-subscriptions.git"
+		"repository_url": "git@github.com:PMET-public/paradoxlabs-subscriptions.git"
 	},
 	"paradoxlabs-authnetcim": {
 		"name": "paradoxlabs/authnetcim",
