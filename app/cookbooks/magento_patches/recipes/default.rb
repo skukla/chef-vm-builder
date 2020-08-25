@@ -15,22 +15,15 @@ composer "Download CWeagans Composer Patches module" do
     only_if { !::File.foreach("#{web_root}/composer.json").grep(/cweagans/).any? }
 end
 
-magento_patch "Prepare to install Magento patches" do
-    action [:remove_holding_area, :remove_from_web_root, :set_permissions]
-end
-
-magento_internal_patch "Clone internal repository" do
-    action :clone_internal_repository
-    only_if { patches_repository.include?("PMET-public") }
-end
-    
-magento_patch "Clone custom repository" do
-    action :clone_custom_repository
-    not_if { patches_repository.include?("PMET-public") }
-end
-
-magento_patch "Filter patches directory and move patches into web root" do
-    action [:filter_directory, :move_into_web_root]
+magento_patch "Prepare, clone, and filter Magento patches" do
+    action [
+        :remove_holding_area, 
+        :remove_from_web_root, 
+        :set_permissions,
+        :clone_patches_repository,
+        :filter_directory,
+        :move_into_web_root
+    ]
 end
 
 magento_patch "Build patch file" do

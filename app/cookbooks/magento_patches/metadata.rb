@@ -11,7 +11,6 @@ depends 'init'              # Brings in init attributes
 depends 'helpers'           # Brings in the build_patch_file helper
 depends 'composer'          # Brings in composer attributes
 depends 'magento'           # Brings in Magento resources
-depends 'magento_internal'  # Brings in the internal patch resources
 
 # The `issues_url` points to the location where issues for this cookbook are
 # tracked.  A `View Issues` link will be displayed on this cookbook's page when

@@ -14,7 +14,6 @@ property :magento_version,          String, default: node[:magento_patches][:mag
 property :composer_file,            String, default: node[:magento_patches][:composer][:file]
 property :patches_repository_url,   String, default: node[:magento_patches][:repository_url]
 property :patches_branch,           String, default: node[:magento_patches][:branch]
-property :internal_patches_branch,  String, default: node[:magento_patches][:magento_internal][:branch]
 property :directory_in_repository,  String, default: node[:magento_patches][:repository_directory]
 property :directory_in_codebase,    String, default: node[:magento_patches][:codebase_directory]
 property :patches_holding_area,     String, default: node[:magento_patches][:holding_area]
@@ -40,8 +39,8 @@ action :set_permissions do
     end
 end
 
-action :clone_custom_repository do
-    git "Downlaod custom patches" do
+action :clone_patches_repository do
+    git "Downlaod patches" do
         repository new_resource.patches_repository_url
         revision new_resource.patches_branch
         destination new_resource.patches_holding_area
