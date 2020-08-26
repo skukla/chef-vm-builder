@@ -21,9 +21,16 @@ magento_patch "Prepare, clone, and filter Magento patches" do
         :remove_from_web_root, 
         :set_permissions,
         :clone_patches_repository,
-        :filter_directory,
-        :move_into_web_root
+        :filter_directory
     ]
+end
+
+magento_demo_builder "Copy custom patches into place" do
+    action :add_patches
+end
+
+magento_patch "Move patches into web root" do
+    action :move_into_web_root
 end
 
 magento_patch "Build patch file" do

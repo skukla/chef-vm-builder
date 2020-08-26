@@ -16,14 +16,16 @@ property :db_name,                          String, default: node[:magento_demo_
 property :patch_class,                      String, default: node[:magento_demo_builder][:demo_shell][:patch_class]
 property :demo_shell_directory,             String, default: node[:magento_demo_builder][:demo_shell][:directory]
 property :demo_shell_fixtures_directory,    String, default: node[:magento_demo_builder][:demo_shell][:fixtures_directory]
-property :data_files_directory,             String, default: node[:magento_demo_builder][:data_files][:directory]
+property :chef_data_files_path,             String, default: node[:magento_demo_builder][:data_files][:directory]
+property :chef_patches_path,                String, default: node[:magento_demo_builder][:patches][:directory]
+property :patches_holding_area,             String, default: node[:magento_demo_builder][:magento_patches][:holding_area]
 property :chef_content_media_path,          String, default: node[:magento_demo_builder][:media_files][:content_directory]
 property :chef_product_media_path,          String, default: node[:magento_demo_builder][:media_files][:products_directory]
 property :wysiwyg_directory,                String, default: node[:magento_demo_builder][:samba][:share_list][:content_media_drop]
 property :product_media_import_directory,   String, default: node[:magento_demo_builder][:samba][:share_list][:product_media_drop]
 
 action :install_data do 
-    data_files = ::Dir["#{new_resource.data_files_directory}/*.csv"].map{|filename| filename.sub("#{new_resource.data_files_directory}/", "") }
+    data_files = ::Dir["#{new_resource.chef_data_files_path}/*.csv"].map{|filename| filename.sub("#{new_resource.chef_data_files_path}/", "") }
     demo_shell_data_path = "#{new_resource.web_root}/#{new_resource.demo_shell_directory}/#{new_resource.demo_shell_fixtures_directory}"
     
     data_files.each do |file|
@@ -39,7 +41,7 @@ action :install_data do
 end
 
 action :refresh_data do
-    data_files = ::Dir["#{new_resource.data_files_directory}/*.csv"].map{|filename| filename.sub("#{new_resource.data_files_directory}/", "") }
+    data_files = ::Dir["#{new_resource.chef_data_files_path}/*.csv"].map{|filename| filename.sub("#{new_resource.chef_data_files_path}/", "") }
     demo_shell_data_path = "#{new_resource.web_root}/#{new_resource.demo_shell_directory}/#{new_resource.demo_shell_fixtures_directory}"
 
     execute "Remove existing data files" do
@@ -94,6 +96,14 @@ action :add_media do
         execute "Copy product media into place" do
             command "cp -R #{media} #{new_resource.product_media_import_directory}"
             only_if { ::Dir.exist?(new_resource.product_media_import_directory) }
+        end
+    end
+end
+
+action :add_patches do
+    ::Dir["#{new_resource.chef_patches_path}/*"].each do |patch|
+        execute "Copy #{patch} into patches holding area" do
+            command "cp #{patch} #{new_resource.patches_holding_area}"
         end
     end
 end
