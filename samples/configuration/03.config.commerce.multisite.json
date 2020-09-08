@@ -8,8 +8,7 @@
 		"structure": {
 			"website": {
 				"base": "luma.demo",
-				"luma_b2b": "b2b.luma.demo",
-				"venia_b2c": "venia.demo"
+				"luma_b2b": "b2b.luma.demo"
 			}
 		},
 		"custom_modules": {
@@ -37,11 +36,6 @@
 				"name": "skukla/theme-frontend-custom",
 				"repository_url": "git@github.com:skukla/theme-frontend-custom.git"
 			},
-			"venia-theme": {
-				"name": "magentoese/theme-frontend-venia",
-				"version": "dev-develop",
-				"repository_url": "git@github.com:PMET-public/theme-frontend-venia.git"
-			},
 			"product-recommendations": "magento/product-recommendations",
 			"pagebuilder-product-recommendations": "magento/module-page-builder-product-recommendations"
 		}
@@ -61,15 +55,14 @@
 			},
 			"build": {
 				"action": "install",
-				"sample_data": true,
-				"patches": true
+				"sample_data": false,
+				"patches": {
+					"apply": true,
+					"branch": "pmet-2.4.0-demo"
+				}
 			},
 			"settings": {
 				"admin_password": "admin123"
-			},
-			"configuration": {
-				"base": false,
-				"b2b": false
 			}
 		}
 	},
