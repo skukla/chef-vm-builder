@@ -10,12 +10,6 @@ property :name,                     String, name_property: true
 property :user,                     String, default: node[:ssh][:init][:user]
 property :group,                    String, default: node[:ssh][:init][:user]
 
-action :stop_ssh_agent do
-    execute "Stop ssh-agent and previously-active keys" do
-        command "ssh-add -D"
-    end
-end
-
 action :clear_ssh_directory do
     execute "Clear /home/#{new_resource.user}/.ssh directory" do
         command "rm -rf /home/#{new_resource.user}/.ssh/*"
