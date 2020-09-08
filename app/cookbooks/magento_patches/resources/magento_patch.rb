@@ -40,14 +40,10 @@ action :set_permissions do
 end
 
 action :clone_patches_repository do
-    git "Downlaod patches" do
-        repository new_resource.patches_repository_url
-        revision new_resource.patches_branch
-        destination new_resource.patches_holding_area
-        enable_checkout new_resource.patches_branch == "master" ? false : true
-        action :sync
+    execute "Cloning the #{new_resource.patches_branch} of the #{new_resource.patches_repository_url} repository" do
+        command "git clone --single-branch --branch #{new_resource.patches_branch} #{new_resource.patches_repository_url} #{new_resource.patches_holding_area}"
         user new_resource.user
-        group new_resource.group
+        cwd new_resource.web_root
     end
 end
 
