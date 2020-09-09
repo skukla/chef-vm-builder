@@ -24,31 +24,17 @@ property :chef_product_media_path,          String, default: node[:magento_demo_
 property :wysiwyg_directory,                String, default: node[:magento_demo_builder][:samba][:share_list][:content_media_drop]
 property :product_media_import_directory,   String, default: node[:magento_demo_builder][:samba][:share_list][:product_media_drop]
 
-action :install_data do 
-    data_files = ::Dir["#{new_resource.chef_data_files_path}/*.csv"].map{|filename| filename.sub("#{new_resource.chef_data_files_path}/", "") }
-    demo_shell_data_path = "#{new_resource.web_root}/#{new_resource.demo_shell_directory}/#{new_resource.demo_shell_fixtures_directory}"
-    
-    data_files.each do |file|
-        cookbook_file "#{demo_shell_data_path}/#{file}" do
-            source "data/#{file}"
-            owner new_resource.user
-            group new_resource.group
-            mode "755"
-            not_if { data_files.empty? }
-            only_if { ::Dir.exist?(demo_shell_data_path) }
-        end
-    end
-end
-
-action :refresh_data do
-    data_files = ::Dir["#{new_resource.chef_data_files_path}/*.csv"].map{|filename| filename.sub("#{new_resource.chef_data_files_path}/", "") }
+action :remove_data do
     demo_shell_data_path = "#{new_resource.web_root}/#{new_resource.demo_shell_directory}/#{new_resource.demo_shell_fixtures_directory}"
 
     execute "Remove existing data files" do
         command "rm -rf #{demo_shell_data_path}/*"
-        not_if { data_files.empty? }
         only_if { ::Dir.exist?(demo_shell_data_path) }
     end
+end
+
+action :remove_data_patches do
+    demo_shell_data_path = "#{new_resource.web_root}/#{new_resource.demo_shell_directory}/#{new_resource.demo_shell_fixtures_directory}"
 
     ruby_block "Remove existing data patch" do
         block do
@@ -60,7 +46,6 @@ action :refresh_data do
             )
         end
         only_if {
-            !data_files.empty? ||
             ::Dir.exist?(demo_shell_data_path) ||
             DatabaseHelper.patch_exists(new_resource.patch_class, new_resource.db_user, new_resource.db_password, new_resource.db_name)
         }
@@ -83,9 +68,22 @@ action :remove_media do
     end
 end
 
+action :install_data do 
+    demo_shell_data_path = "#{new_resource.web_root}/#{new_resource.demo_shell_directory}/#{new_resource.demo_shell_fixtures_directory}"
+
+    execute "Copy data files into place" do
+        command "cp -R #{new_resource.chef_data_files_path}/* #{demo_shell_data_path}"
+        only_if { ::Dir.exist?(demo_shell_data_path) }
+    end
+
+    execute "Update data file permissions" do
+        command "chmod -R 777 #{demo_shell_data_path}/* && chown -R #{new_resource.user}:#{new_resource.group} #{demo_shell_data_path}/*"
+        only_if { ::Dir.exist?(demo_shell_data_path) }
+    end
+end
+
 action :add_media do
     ::Dir["#{new_resource.chef_content_media_path}/*"].each do |media|
-        print "Content media path: #{new_resource.chef_content_media_path}"
         execute "Copy content media into place" do
             command "cp -R #{media} #{new_resource.wysiwyg_directory}"
             only_if { ::Dir.exist?(new_resource.wysiwyg_directory) }

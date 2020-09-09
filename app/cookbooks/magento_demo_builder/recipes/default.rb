@@ -12,17 +12,17 @@ magento_config "Create the product and content media drop directories" do
 end
 
 magento_demo_builder "Remove existing data from the database" do
-    action :refresh_data
+    action :remove_data_patches
     only_if { build_action == "update" }
-end
-
-magento_demo_builder "Install custom demo data files" do
-    action :install_data
 end
 
 magento_demo_builder "Remove existing custom demo media" do
     action :remove_media
     not_if { sample_data_flag }
+end
+
+magento_demo_builder "Install custom demo data files" do
+    action [:remove_data, :install_data]
 end
 
 magento_demo_builder "Copy custom demo media" do
