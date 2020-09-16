@@ -33,7 +33,7 @@ action :remove_data do
 
     execute "Remove existing data files" do
         command "rm -rf #{demo_shell_data_path}/*"
-        only_if { ::Dir.exist?(demo_shell_data_path) }
+        only_if { Dir.exist?(demo_shell_data_path) }
     end
 end
 
@@ -50,7 +50,7 @@ action :remove_data_patches do
             )
         end
         only_if {
-            ::Dir.exist?(demo_shell_data_path) ||
+            Dir.exist?(demo_shell_data_path) ||
             DatabaseHelper.patch_exists(new_resource.patch_class, new_resource.db_user, new_resource.db_password, new_resource.db_name)
         }
     end
@@ -72,10 +72,10 @@ action :remove_media do
                 new_resource.logo_directory.empty?
             }
             only_if {
-                ::Dir.exist?(new_resource.wysiwyg_directory) &&
-                ::Dir.exist?(new_resource.product_media_import_directory) &&
-                ::Dir.exist?(new_resource.favicon_directory) &&
-                ::Dir.exist?(new_resource.logo_directory)
+                Dir.exist?(new_resource.wysiwyg_directory) &&
+                Dir.exist?(new_resource.product_media_import_directory) &&
+                Dir.exist?(new_resource.favicon_directory) &&
+                Dir.exist?(new_resource.logo_directory)
             }
         end
     end
@@ -83,52 +83,61 @@ end
 
 action :install_data do 
     demo_shell_data_path = "#{new_resource.web_root}/#{new_resource.demo_shell_directory}/#{new_resource.demo_shell_fixtures_directory}"
-
+    data_entries = Dir.entries(new_resource.chef_data_files_path) - [".DS_Store", ".gitignore", ".", ".."]
+    
     execute "Copy data files into place" do
         command "cp -R #{new_resource.chef_data_files_path}/* #{demo_shell_data_path}"
-        only_if { ::Dir.exist?(demo_shell_data_path) }
+        not_if { data_entries.empty? }
     end
 
     execute "Update data file permissions" do
         command "chmod -R 777 #{demo_shell_data_path}/* && chown -R #{new_resource.user}:#{new_resource.group} #{demo_shell_data_path}/*"
-        only_if { ::Dir.exist?(demo_shell_data_path) }
+        not_if { data_entries.empty? }
     end
 end
 
 action :add_media do
-    ::Dir["#{new_resource.chef_content_media_path}/*"].each do |media|
+    content_media_entries = Dir.entries(new_resource.chef_content_media_path) - [".DS_Store", ".gitignore", ".", ".."]
+    product_media_entries = Dir.entries(new_resource.chef_product_media_path) - [".DS_Store", ".gitignore", ".", ".."]
+    favicon_media_entries = Dir.entries(new_resource.chef_favicon_media_path) - [".DS_Store", ".gitignore", ".", ".."]
+    logo_media_entries = Dir.entries(new_resource.chef_logo_media_path) - [".DS_Store", ".gitignore", ".", ".."]
+
+    content_media_entries.each do |media|
         execute "Copy content media into place" do
-            command "cp -R #{media} #{new_resource.wysiwyg_directory}"
-            only_if { ::Dir.exist?(new_resource.wysiwyg_directory) }
+            command "cp -R #{new_resource.chef_content_media_path}/#{media} #{new_resource.wysiwyg_directory}"
+            not_if { content_media_entries.empty? }
         end
     end
-
-    ::Dir["#{new_resource.chef_product_media_path}/*"].each do |media|
+    
+    product_media_entries.each do |media|
         execute "Copy product media into place" do
-            command "cp -R #{media} #{new_resource.product_media_import_directory}"
-            only_if { ::Dir.exist?(new_resource.product_media_import_directory) }
+            command "cp -R #{new_resource.chef_product_media_path}/#{media} #{new_resource.product_media_import_directory}"
+            not_if { product_media_entries.empty? }
         end
     end
-
-    ::Dir["#{new_resource.chef_favicon_media_path}/*"].each do |media|
+    
+    favicon_media_entries.each do |media|
         execute "Copy favicon into place" do
-            command "cp -R #{media} #{new_resource.web_root}/#{new_resource.favicon_directory}"
-            only_if { ::Dir.exist?("#{new_resource.web_root}/#{new_resource.favicon_directory}") }
+            command "cp -R #{new_resource.chef_favicon_media_path}/#{media} #{new_resource.web_root}/#{new_resource.favicon_directory}"
+            not_if { favicon_media_entries.empty? }
         end
     end
 
-    ::Dir["#{new_resource.chef_logo_media_path}/*"].each do |media|
+    logo_media_entries.each do |media|
         execute "Copy logo into place" do
-            command "cp -R #{media} #{new_resource.web_root}/#{new_resource.logo_directory}"
-            only_if { ::Dir.exist?("#{new_resource.web_root}/#{new_resource.logo_directory}") }
+            command "cp -R #{new_resource.chef_logo_media_path}/#{media} #{new_resource.web_root}/#{new_resource.logo_directory}"
+            not_if { logo_media_entries.empty? }
         end
     end
 end
 
 action :add_patches do
-    ::Dir["#{new_resource.chef_patches_path}/*"].each do |patch|
+    patch_file_entries = Dir.entries(new_resource.chef_patches_path) - [".DS_Store", ".gitignore", ".", ".."]
+    
+    patch_file_entries.each do |patch|
         execute "Copy #{patch} into patches holding area" do
             command "cp #{patch} #{new_resource.patches_holding_area}"
+            not_if { patch_file_entries.empty? }
         end
     end
 end
