@@ -15,6 +15,7 @@ property :config_paths,        Array,                   default: node[:magento_c
 property :config_group,        String
 property :config_data,         Hash                    
 property :share_list,          Hash,                    default: node[:magento_configuration][:samba][:share_list]
+property :media_drops,         Hash,                    default: node[:magento_configuration][:media_drops]
 property :use_elasticsearch,   [TrueClass, FalseClass], default: node[:magento_configuration][:elasticsearch][:use]
 
 action :process_configuration do  
@@ -108,7 +109,7 @@ action :process_admin_users do
     end
 end
 
-action :create_media_drops do
+action :create_samba_drops do
     [:product_media_drop, :content_media_drop].each do |drop_directory|
         if new_resource.share_list.has_key?(drop_directory)
             if (new_resource.share_list[drop_directory].is_a? String) && !new_resource.share_list[drop_directory].empty?
@@ -123,6 +124,18 @@ action :create_media_drops do
                 mode "777"
                 recursive true
             end
+        end
+    end
+end
+
+action :create_non_samba_drops do
+    new_resource.media_drops.each do |drop_name, drop_path|
+        directory "#{drop_name.split('_').map(&:capitalize).join(' ')}" do
+            path "#{new_resource.web_root}/#{drop_path}"
+            owner new_resource.user
+            group new_resource.group
+            mode "777"
+            recursive true
         end
     end
 end

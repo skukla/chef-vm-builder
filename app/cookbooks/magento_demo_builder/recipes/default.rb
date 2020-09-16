@@ -6,8 +6,8 @@
 sample_data_flag = node[:magento_demo_builder][:magento][:build][:sample_data]
 build_action = node[:magento_demo_builder][:magento][:build][:action]
 
-magento_config "Create the product and content media drop directories" do
-    action :create_media_drops
+magento_config "Create drop directories" do
+    action [:create_samba_drops, :create_non_samba_drops]
     not_if { sample_data_flag }
 end
 

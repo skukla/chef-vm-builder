@@ -262,3 +262,8 @@ if node[:magento_configuration][:magento_family] == "enterprise"
 else
     default[:magento_configuration][:paths] = community_paths
 end
+
+default[:magento_configuration][:media_drops] = {
+    favicon_drop: "pub/media/favicon/stores",
+    logo_drop: "pub/media/logo/stores"
+}

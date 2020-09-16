@@ -26,7 +26,9 @@ app_structure = {
     patches: Dir.entries("#{top_dir}/patches") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") },
     media: {
       content: Dir.entries("#{top_dir}/media/content") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") },
-      products: Dir.entries("#{top_dir}/media/products") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") }
+      products: Dir.entries("#{top_dir}/media/products") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") },
+      favicon: Dir.entries("#{top_dir}/media/favicon") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") },
+      logo: Dir.entries("#{top_dir}/media/logo") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") }
     }
   }
 }

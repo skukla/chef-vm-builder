@@ -21,8 +21,12 @@ property :chef_patches_path,                String, default: node[:magento_demo_
 property :patches_holding_area,             String, default: node[:magento_demo_builder][:magento_patches][:holding_area]
 property :chef_content_media_path,          String, default: node[:magento_demo_builder][:media_files][:content_directory]
 property :chef_product_media_path,          String, default: node[:magento_demo_builder][:media_files][:products_directory]
+property :chef_favicon_media_path,          String, default: node[:magento_demo_builder][:media_files][:favicon_directory]
+property :chef_logo_media_path,             String, default: node[:magento_demo_builder][:media_files][:logo_directory]
 property :wysiwyg_directory,                String, default: node[:magento_demo_builder][:samba][:share_list][:content_media_drop]
 property :product_media_import_directory,   String, default: node[:magento_demo_builder][:samba][:share_list][:product_media_drop]
+property :favicon_directory,                String, default: node[:magento_demo_builder][:non_samba][:media_drops][:favicon_drop]
+property :logo_directory,                   String, default: node[:magento_demo_builder][:non_samba][:media_drops][:logo_drop]
 
 action :remove_data do
     demo_shell_data_path = "#{new_resource.web_root}/#{new_resource.demo_shell_directory}/#{new_resource.demo_shell_fixtures_directory}"
@@ -53,16 +57,25 @@ action :remove_data_patches do
 end
 
 action :remove_media do
-    [new_resource.wysiwyg_directory, new_resource.product_media_import_directory].each do |path|
+    [
+        new_resource.wysiwyg_directory, 
+        new_resource.product_media_import_directory,
+        new_resource.favicon_directory,
+        new_resource.logo_directory
+    ].each do |path|
         execute "Remove existing media from #{path}" do
             command "rm -rf #{path}/*"
             not_if {
                 new_resource.wysiwyg_directory.empty? ||
-                new_resource.product_media_import_directory.empty?
+                new_resource.product_media_import_directory.empty? ||
+                new_resource.favicon_directory.empty? ||
+                new_resource.logo_directory.empty?
             }
             only_if {
                 ::Dir.exist?(new_resource.wysiwyg_directory) &&
-                ::Dir.exist?(new_resource.product_media_import_directory)
+                ::Dir.exist?(new_resource.product_media_import_directory) &&
+                ::Dir.exist?(new_resource.favicon_directory) &&
+                ::Dir.exist?(new_resource.logo_directory)
             }
         end
     end
@@ -94,6 +107,20 @@ action :add_media do
         execute "Copy product media into place" do
             command "cp -R #{media} #{new_resource.product_media_import_directory}"
             only_if { ::Dir.exist?(new_resource.product_media_import_directory) }
+        end
+    end
+
+    ::Dir["#{new_resource.chef_favicon_media_path}/*"].each do |media|
+        execute "Copy favicon into place" do
+            command "cp -R #{media} #{new_resource.web_root}/#{new_resource.favicon_directory}"
+            only_if { ::Dir.exist?("#{new_resource.web_root}/#{new_resource.favicon_directory}") }
+        end
+    end
+
+    ::Dir["#{new_resource.chef_logo_media_path}/*"].each do |media|
+        execute "Copy logo into place" do
+            command "cp -R #{media} #{new_resource.web_root}/#{new_resource.logo_directory}"
+            only_if { ::Dir.exist?("#{new_resource.web_root}/#{new_resource.logo_directory}") }
         end
     end
 end

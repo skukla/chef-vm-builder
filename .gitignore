@@ -5,10 +5,14 @@ data/*
 keys/*
 media/content/*
 media/products/*
+media/favicon/*
+media/logo/*
 *.code-workspace
 !keys/.gitignore
 !data/.gitignore
 !media/content/.gitignore
 !media/products/.gitignore
+!media/favicon/.gitignore
+!media/logo/.gitignore
 !config.json.sample
 
