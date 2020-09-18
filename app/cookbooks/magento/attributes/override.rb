@@ -4,6 +4,7 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 supported_settings = {
+    :custom_demo => [:structure],
     :installation_options => [:family, :version, :minimum_stability, :directory, :consumer_list],
     :build_options => [:clear_cache, :action, :force_install, :sample_data, :modules_to_remove, :deploy_mode => [:apply, :mode]],
     :installation_settings => [:backend_frontname, :unsecure_base_url, :secure_base_url, :language, :timezone, :currency, :admin_firstname, :admin_lastname, :admin_email, :admin_user, :admin_password, :use_rewrites, :use_secure_frontend,  :use_secure_admin, :cleanup_database, :session_save, :encryption_key]
@@ -64,6 +65,12 @@ supported_settings.each do |setting_key, setting_data|
         setting_data.each do |option|
             next if node[:application][:installation][:settings][option].nil?
             override[:magento][:installation][:settings][option] = node[:application][:installation][:settings][option]
+        end
+    when :custom_demo
+        setting_data.each do |option|
+            override[:magento][:installation][:settings][:unsecure_base_url] = "http://#{node[setting_key][option][:website][:base]}/"
+            override[:magento][:installation][:settings][:secure_base_url] = "https://#{node[setting_key][option][:website][:base]}/"
+            override[:magento][:installation][:settings][:admin_email] = "admin@#{node[setting_key][option][:website][:base]}"
         end
     end
 end
