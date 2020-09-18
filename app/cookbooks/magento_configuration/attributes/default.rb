@@ -264,6 +264,6 @@ else
 end
 
 default[:magento_configuration][:media_drops] = {
-    favicon_drop: "pub/media/favicon/stores",
-    logo_drop: "pub/media/logo/stores"
+    favicon_drop: "pub/media/favicon",
+    logo_drop: "pub/media/logo"
 }
