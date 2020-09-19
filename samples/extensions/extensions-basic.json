@@ -27,6 +27,10 @@
 		"name": "magentoese/theme-frontend-venia",
 		"repository_url": "git@github.com:PMET-public/theme-frontend-venia.git"
 	},
+	"store-switcher": {
+		"name": "magentoese/module-switcherlogos",
+		"repository_url": "git@github.com:PMET-public/module-switcherlogos.git"
+	},
 	"product-recommendations": "magento/product-recommendations",
 	"pagebuilder-product-recommendations": "magento/module-page-builder-product-recommendations"
 }

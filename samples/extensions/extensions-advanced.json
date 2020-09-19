@@ -108,6 +108,10 @@
 		"name": "magentoese/module-instorepickup",
 		"repository_url": "git@github.com:PMET-public/module-instorepickup.git"
 	},
+	"store-switcher": {
+		"name": "magentoese/module-switcherlogos",
+		"repository_url": "git@github.com:PMET-public/module-switcherlogos.git"
+	},
 	"paradoxlabs-tokenbase": {
 		"name": "paradoxlabs/tokenbase",
 		"version": "4.2.5.x-dev",
