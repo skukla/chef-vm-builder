@@ -136,7 +136,7 @@ action :add_patches do
     
     patch_file_entries.each do |patch|
         execute "Copy #{patch} into patches holding area" do
-            command "cp #{patch} #{new_resource.patches_holding_area}"
+            command "cp #{new_resource.chef_patches_path}/#{patch} #{new_resource.patches_holding_area}"
             not_if { patch_file_entries.empty? }
         end
     end
