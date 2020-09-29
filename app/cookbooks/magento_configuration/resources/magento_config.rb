@@ -123,19 +123,8 @@ action :create_samba_drops do
                 group new_resource.group
                 mode "777"
                 recursive true
+                not_if { Dir.exist?(media_drop_path) }
             end
-        end
-    end
-end
-
-action :create_non_samba_drops do
-    new_resource.media_drops.each do |drop_name, drop_path|
-        directory "#{drop_name.split('_').map(&:capitalize).join(' ')}" do
-            path "#{new_resource.web_root}/#{drop_path}"
-            owner new_resource.user
-            group new_resource.group
-            mode "777"
-            recursive true
         end
     end
 end

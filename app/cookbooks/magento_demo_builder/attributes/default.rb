@@ -3,12 +3,26 @@
 # Attribute:: default
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-default[:magento_demo_builder][:data_files][:directory] = "/var/chef/cache/cookbooks/magento_demo_builder/files/data"
-default[:magento_demo_builder][:media_files][:content_directory] = "/var/chef/cache/cookbooks/magento_demo_builder/files/media/content"
-default[:magento_demo_builder][:media_files][:products_directory] = "/var/chef/cache/cookbooks/magento_demo_builder/files/media/products"
-default[:magento_demo_builder][:media_files][:favicon_directory] = "/var/chef/cache/cookbooks/magento_demo_builder/files/media/favicon"
-default[:magento_demo_builder][:media_files][:logo_directory] = "/var/chef/cache/cookbooks/magento_demo_builder/files/media/logo"
-default[:magento_demo_builder][:patches][:directory] = "/var/chef/cache/cookbooks/magento_demo_builder/files/patches"
+default[:magento_demo_builder][:chef_files][:directory] = "/var/chef/cache/cookbooks/magento_demo_builder/files"
+default[:magento_demo_builder][:patch_files][:directory] = "/var/chef/cache/cookbooks/magento_demo_builder/files/patches"
 default[:magento_demo_builder][:demo_shell][:patch_class] = %q[Skukla\CustomDemoShell\Setup\Patch\Data]
 default[:magento_demo_builder][:demo_shell][:directory] = "vendor/skukla/module-custom-demo-shell"
-default[:magento_demo_builder][:demo_shell][:fixtures_directory] = "fixtures"
+default[:magento_demo_builder][:demo_shell][:fixtures_path] = "fixtures"
+default[:magento_demo_builder][:demo_shell][:media_map] = {
+    wysiwyg: {
+        module: "media/wysiwyg",
+        codebase: "pub/media/wysiwyg"
+    },
+    favicon: {
+        module: "media/favicon",
+        codebase: "pub/media/favicon"
+    },
+    logo: {
+        module: "media/logo",
+        codebase: "pub/media/logo"
+    },
+    theme: {
+        module: "media/theme",
+        codebase: "vendor/magento/theme-frontend-luma"
+    }
+}

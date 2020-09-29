@@ -25,10 +25,11 @@ app_structure = {
     data: Dir.entries("#{top_dir}/data") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") },
     patches: Dir.entries("#{top_dir}/patches") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") },
     media: {
-      content: Dir.entries("#{top_dir}/media/content") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") },
-      products: Dir.entries("#{top_dir}/media/products") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") },
+      wysiwyg: Dir.entries("#{top_dir}/media/wysiwyg") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") },
+      catalog: Dir.entries("#{top_dir}/media/catalog/product") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") },
       favicon: Dir.entries("#{top_dir}/media/favicon") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") },
-      logo: Dir.entries("#{top_dir}/media/logo") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") }
+      logo: Dir.entries("#{top_dir}/media/logo") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") },
+      theme: Dir.entries("#{top_dir}/media/theme") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") }
     }
   }
 }

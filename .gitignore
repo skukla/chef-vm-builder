@@ -3,16 +3,18 @@
 config.json
 data/*
 keys/*
-media/content/*
-media/products/*
+media/wysiwyg/*
+media/catalog/product/*
 media/favicon/*
 media/logo/*
+media/theme/*
 *.code-workspace
 !keys/.gitignore
 !data/.gitignore
-!media/content/.gitignore
-!media/products/.gitignore
+!media/wysiwyg/.gitignore
+!media/catalog/product/.gitignore
 !media/favicon/.gitignore
 !media/logo/.gitignore
+!media/theme/.gitignore
 !config.json.sample
 

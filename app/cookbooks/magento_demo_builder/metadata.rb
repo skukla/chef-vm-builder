@@ -9,7 +9,6 @@ chef_version '>= 14.0'
 
 depends 'helpers'               # Brings in the database helper
 depends 'nginx'                 # Brings in web root
-depends 'samba'                 # Brings in samba shares
 depends 'magento'               # Brings in Magento settings
 depends 'magento_configuration' # Brings Magento Configuration settings
 depends 'magento_patches'       # Brings in Magento patch settings

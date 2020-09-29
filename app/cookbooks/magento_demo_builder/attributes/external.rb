@@ -21,9 +21,6 @@ include_attribute "magento::override"
 default[:magento_demo_builder][:magento][:build][:action] = node[:magento][:installation][:build][:action]
 default[:magento_demo_builder][:magento][:build][:sample_data] = node[:magento][:installation][:build][:sample_data]
 
-include_attribute "magento_configuration::default"
-default[:magento_demo_builder][:non_samba][:media_drops] = default[:magento_configuration][:media_drops]
-
 include_attribute "magento_patches::default"
 include_attribute "magento_patches::override"
 default[:magento_demo_builder][:magento_patches][:holding_area] = node[:magento_patches][:holding_area]
