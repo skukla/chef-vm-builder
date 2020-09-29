@@ -8,6 +8,11 @@ default[:magento_demo_builder][:patch_files][:directory] = "/var/chef/cache/cook
 default[:magento_demo_builder][:demo_shell][:patch_class] = %q[Skukla\CustomDemoShell\Setup\Patch\Data]
 default[:magento_demo_builder][:demo_shell][:directory] = "vendor/skukla/module-custom-demo-shell"
 default[:magento_demo_builder][:demo_shell][:fixtures_path] = "fixtures"
+default[:magento_demo_builder][:demo_shell][:files] = [
+    {source: "composer.json", path: "", mode: "664"}, 
+    {source: "Install.php", path: "Setup/Patch/Data", mode: "664"},
+    {source: "InstallStore.php", path: "Setup/Patch/Data", mode: "644"}
+]
 default[:magento_demo_builder][:demo_shell][:media_map] = {
     wysiwyg: {
         module: "media/wysiwyg",

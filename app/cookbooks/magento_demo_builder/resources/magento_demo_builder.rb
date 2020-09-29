@@ -16,13 +16,14 @@ property :db_name,                          String, default: node[:magento_demo_
 property :chef_files_path,                  String, default: node[:magento_demo_builder][:chef_files][:directory]
 property :patch_class,                      String, default: node[:magento_demo_builder][:demo_shell][:patch_class]
 property :patches_holding_area,             String, default: node[:magento_demo_builder][:magento_patches][:holding_area]
-property :demo_shell_directory,             String, default: node[:magento_demo_builder][:demo_shell][:directory]
+property :demo_shell_path,                  String, default: node[:magento_demo_builder][:demo_shell][:directory]
 property :demo_shell_fixtures_path,         String, default: node[:magento_demo_builder][:demo_shell][:fixtures_path]
+property :demo_shell_module_file_list,      Array,  default: node[:magento_demo_builder][:demo_shell][:files]
 property :demo_shell_media_map,             Hash,   default: node[:magento_demo_builder][:demo_shell][:media_map]
 property :custom_module_list,               Hash,   default: node[:magento_demo_builder][:custom_module_list]
 
 action :remove_data do
-    demo_shell_data_path = "#{new_resource.web_root}/#{new_resource.demo_shell_directory}/#{new_resource.demo_shell_fixtures_path}"
+    demo_shell_data_path = "#{new_resource.web_root}/#{new_resource.demo_shell_path}/#{new_resource.demo_shell_fixtures_path}"
 
     execute "Remove existing data files" do
         command "rm -rf #{demo_shell_data_path}/*"
@@ -31,7 +32,7 @@ action :remove_data do
 end
 
 action :remove_data_patches do
-    demo_shell_data_path = "#{new_resource.web_root}/#{new_resource.demo_shell_directory}/#{new_resource.demo_shell_fixtures_path}"
+    demo_shell_data_path = "#{new_resource.web_root}/#{new_resource.demo_shell_path}/#{new_resource.demo_shell_fixtures_path}"
 
     ruby_block "Remove existing data patch" do
         block do
@@ -51,13 +52,13 @@ end
 
 action :remove_demo_shell_media do
     new_resource.demo_shell_media_map.each do |key, drop_paths|
-        execute "Remove existing #{key} media from demo shell: #{new_resource.demo_shell_directory}/#{drop_paths[:module]}" do
-            command "rm -rf #{new_resource.web_root}/#{new_resource.demo_shell_directory}/#{drop_paths[:module]}/*"
+        execute "Remove existing #{key} media from demo shell: #{new_resource.demo_shell_path}/#{drop_paths[:module]}" do
+            command "rm -rf #{new_resource.web_root}/#{new_resource.demo_shell_path}/#{drop_paths[:module]}/*"
             only_if {
-                Dir.exist?("#{new_resource.web_root}/#{new_resource.demo_shell_directory}/#{drop_paths[:module]}")
+                Dir.exist?("#{new_resource.web_root}/#{new_resource.demo_shell_path}/#{drop_paths[:module]}")
             }
             not_if {
-                Dir.empty?("#{new_resource.web_root}/#{new_resource.demo_shell_directory}/#{drop_paths[:module]}")
+                Dir.empty?("#{new_resource.web_root}/#{new_resource.demo_shell_path}/#{drop_paths[:module]}")
             }
         end
     end
@@ -79,7 +80,7 @@ action :remove_codebase_media do
 end
 
 action :install_data do 
-    demo_shell_data_path = "#{new_resource.web_root}/#{new_resource.demo_shell_directory}/#{new_resource.demo_shell_fixtures_path}"
+    demo_shell_data_path = "#{new_resource.web_root}/#{new_resource.demo_shell_path}/#{new_resource.demo_shell_fixtures_path}"
     data_entries = Dir.entries("#{new_resource.chef_files_path}/data/") - [".DS_Store", ".gitignore", ".", ".."]
     
     execute "Copy data files into demo shell module" do
@@ -90,6 +91,20 @@ action :install_data do
     execute "Update data file permissions" do
         command "chown -R #{new_resource.user}:#{new_resource.group} #{demo_shell_data_path}/*"
         not_if { data_entries.empty? }
+    end
+end
+
+action :build_demo_shell_module do
+    new_resource.demo_shell_module_file_list.each do |file_data|
+        template "Creating #{new_resource.web_root}/#{new_resource.demo_shell_path}/#{file_data[:path]}/#{file_data[:source]}" do
+            source "#{file_data[:source]}.erb"
+            path "#{new_resource.web_root}/#{new_resource.demo_shell_path}/#{file_data[:path]}/#{file_data[:source]}"
+            owner new_resource.user
+            group new_resource.group
+            mode file_data[:mode]
+            variables({})
+            not_if { ::File.exist?("#{new_resource.web_root}/#{new_resource.demo_shell_path}/#{file_data[:path]}") }
+        end
     end
 end
 
@@ -110,7 +125,7 @@ action :add_media_to_demo_shell do
     new_resource.demo_shell_media_map.each do |key, drop_paths|
         files = Dir.entries("#{new_resource.chef_files_path}/#{drop_paths[:module]}") - [".DS_Store", ".gitignore", ".", ".."]
         source = "#{new_resource.chef_files_path}/#{drop_paths[:module]}"
-        destination = "#{new_resource.web_root}/#{new_resource.demo_shell_directory}/#{drop_paths[:module]}"
+        destination = "#{new_resource.web_root}/#{new_resource.demo_shell_path}/#{drop_paths[:module]}"
         
         execute "Copy #{key} media into module location: #{destination}" do
             command "cp -R #{source}/* #{destination}"

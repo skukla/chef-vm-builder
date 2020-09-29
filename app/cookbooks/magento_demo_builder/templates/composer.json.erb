@@ -1,0 +1,41 @@
+{
+	"name": "skukla/sealed-air-data-pack",
+	"version": "1.0.0",
+	"description": "N/A",
+	"type": "magento2-module",
+	"require": {
+		"magento/framework": "*",
+		"magentoese/module-data-install": "*"
+	},
+	"license": [
+		"GNU General Public License (GPL)"
+	],
+	"autoload": {
+		"files": [
+			"registration.php"
+		],
+		"psr-4": {
+			"Skukla\\SealedAirDataPack\\": ""
+		}
+	},
+	"extra": {
+		"map": [
+			[
+				"media/wysiwyg",
+				"../../pub/media/wysiwyg"
+			],
+			[
+				"media/logo/*",
+				"../../pub/media/logo"
+			],
+			[
+				"media/favicon/*",
+				"../../pub/media/favicon"
+			],
+			[
+				"media/theme/*",
+				"../../vendor/magento/theme-frontend-luma/etc"
+			]
+		]
+	}
+}
