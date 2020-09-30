@@ -32,7 +32,7 @@ default[:magento_demo_builder][:demo_shell][:media_map] = {
     },
     theme: {
         module: "media/theme",
-        codebase: "vendor/magento/theme-frontend-luma"
+        codebase: "vendor/magento/theme-frontend-luma/etc"
     },
     template_manager: {
         module: "media/.template-manager",
