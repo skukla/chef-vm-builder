@@ -33,5 +33,9 @@ default[:magento_demo_builder][:demo_shell][:media_map] = {
     theme: {
         module: "media/theme",
         codebase: "vendor/magento/theme-frontend-luma"
+    },
+    downloadable_products: {
+        module: "media/downloadable_products",
+        codebase: "../../pub/media/import"
     }
 }

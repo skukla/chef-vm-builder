@@ -29,7 +29,8 @@ app_structure = {
       catalog: Dir.entries("#{top_dir}/media/catalog/product") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") },
       favicon: Dir.entries("#{top_dir}/media/favicon") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") },
       logo: Dir.entries("#{top_dir}/media/logo") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") },
-      theme: Dir.entries("#{top_dir}/media/theme") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") }
+      theme: Dir.entries("#{top_dir}/media/theme") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") },
+      downloadable_products: Dir.entries("#{top_dir}/media/downloadable_products") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") }
     }
   }
 }
