@@ -45,13 +45,6 @@
 				}
 			}
 		},
-		"default": {
-			"cms_home_page": {
-				"store_view": {
-					"default": "main-home"
-				}
-			}
-		},
 		"magentoese_autofill": {
 			"general": {
 				"enable_autofill": 1
@@ -70,6 +63,11 @@
 				"country_value": "US",
 				"telephone_value": "310-945-0345",
 				"company_value": "Luma, Inc."
+			}
+		},
+		"web": {
+			"default": {
+				"cms_home_page": "custom-home"
 			}
 		}
 	}

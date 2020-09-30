@@ -3,16 +3,16 @@ Custom,cu_product_market,Product Market,multiselect,"Men
 Women",,,,,,1,1,1,1,1,1,1,1,1,0,0,0,0,
 Custom,cu_brand,Brand,select,"Luma
 Venia",,,,,,1,1,1,1,1,1,1,1,1,0,0,0,0,
-Custom,cu_additional_information,Additional Information,texteditor,,,,,,,1,0,0,1,1,1,1,1,1,0,0,0,0,
+Custom,cu_additional_information,Additional Information,texteditor,,,,,,,1,0,0,0,0,0,0,1,1,0,0,0,0,
 Custom,cu_notes,Notes,textarea,,,,,,,1,0,0,1,1,1,1,1,1,0,0,0,0,
 Custom,cu_callout,Call-out,text,,,,,,,1,0,0,1,1,1,1,1,1,0,0,0,0,
-Custom,cu_featured_product,Featured Product,boolean,"","","","","","",1,1,1,0,0,0,1,1,0,0,0,0,0,""
+Custom,cu_featured_product,Featured Product,boolean,,,,,,,1,1,1,0,0,0,1,1,0,0,0,0,0,
 Bags,style_bags,Style,multiselect,"Backpack
 Luggage
 Duffel
 Messenger
 Laptop
 Exercise
-Tote","","","","","",1,1,1,1,1,1,1,1,1,0,0,0,0,""
+Tote",,,,,,1,1,1,1,1,1,1,1,1,0,0,0,0,
 "Bags
-Custom",performance_fabric,Performance Fabric,boolean,"","","","","","",1,1,1,1,1,1,1,1,1,0,0,0,0,""
+Custom",performance_fabric,Performance Fabric,boolean,,,,,,,1,1,1,1,1,1,1,1,1,0,0,0,0,

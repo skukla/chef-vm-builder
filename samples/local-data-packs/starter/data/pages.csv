@@ -1,2 +1,2 @@
 store_view_code,identifier,title,content,page_layout,meta_title,meta_keywords,meta_description,content_heading
-default,main-home,Main Home,,cms-full-width,Main Home,,,
+admin,custom-home,Custom Home,,cms-full-width,Custom Home,,,
