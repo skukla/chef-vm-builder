@@ -1,5 +1,5 @@
 {
-	"name": "skukla/sealed-air-data-pack",
+	"name": "skukla/module-custom-demo-shell",
 	"version": "1.0.0",
 	"description": "N/A",
 	"type": "magento2-module",
@@ -15,27 +15,17 @@
 			"registration.php"
 		],
 		"psr-4": {
-			"Skukla\\SealedAirDataPack\\": ""
+			"Skukla\\CustomDemoShell\\": ""
 		}
 	},
 	"extra": {
 		"map": [
-			[
-				"media/wysiwyg",
-				"../../pub/media/wysiwyg"
-			],
-			[
-				"media/logo/*",
-				"../../pub/media/logo"
-			],
-			[
-				"media/favicon/*",
-				"../../pub/media/favicon"
-			],
-			[
-				"media/theme/*",
-				"../../vendor/magento/theme-frontend-luma/etc"
-			]
+			<% @media_map.each_with_index do |(map_key, map_value), index| %>
+				[
+					"<%= map_value[:module] %>",
+					"../../<%= map_value[:codebase] %>"
+				]<% if @media_map.length - 1 != index -%>,<% end -%>
+			<% end %>
 		]
 	}
 }

@@ -4,7 +4,7 @@
  * See COPYING.txt for license details.
  */
 
-namespace Skukla\SealedAirDataPack\Setup\Patch\Data;
+namespace Skukla\CustomDemoShell\Setup\Patch\Data;
 
 use Magento\Framework\Setup\Patch\DataPatchInterface;
 use MagentoEse\DataInstall\Model\Process;
@@ -26,8 +26,8 @@ class Install implements DataPatchInterface
          *
          * the data files directory can be any directory in the root of the module, or a subdirectory (fixtures/grocery)
          */
-        $this->process->loadFiles('Skukla_SealedAirDataPack', 'fixtures/base');
-        //$this->process->loadFiles('Skukla_SealedAirDataPack', 'fixtures/xxxx');
+        $this->process->loadFiles('Skukla_CustomDemoShell', 'fixtures');
+        //$this->process->loadFiles('Skukla_CustomDemoShell', 'fixtures/xxxx');
     }
 
     public static function getDependencies()

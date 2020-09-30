@@ -39,6 +39,7 @@ end
 
 magento_demo_builder "Build demo shell module" do
     action :build_demo_shell_module
+    only_if { Dir.exist?("#{web_root}/#{demo_shell_path}") }
 end
 
 magento_demo_builder "Copy demo shell media into place" do

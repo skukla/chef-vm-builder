@@ -102,8 +102,7 @@ action :build_demo_shell_module do
             owner new_resource.user
             group new_resource.group
             mode file_data[:mode]
-            variables({})
-            not_if { ::File.exist?("#{new_resource.web_root}/#{new_resource.demo_shell_path}/#{file_data[:path]}") }
+            variables ({ media_map: new_resource.demo_shell_media_map })
         end
     end
 end
