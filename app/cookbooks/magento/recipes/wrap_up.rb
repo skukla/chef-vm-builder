@@ -29,8 +29,10 @@ end
 
 magento_app "Set indexers to On Schedule mode" do
     action :set_indexer_mode
-    not_if { ::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == "install" }
-    only_if { build_action == "reinstall" || build_action == "force_install" }
+    only_if {
+        (!::File.exist?("#{web_root}/var/.first-run-state.flag")) && build_action == "install" ||
+        build_action == "force_install"
+    }
 end
 
 magento_app "Reset indexers" do
