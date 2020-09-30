@@ -64,22 +64,6 @@ action :remove_demo_shell_media do
     end
 end
 
-action :remove_codebase_media do
-    new_resource.demo_shell_media_map.each do |key, drop_paths|
-        execute "Remove existing #{key} media from codebase: #{new_resource.web_root}/#{drop_paths[:codebase]}" do
-            command "rm -rf #{new_resource.web_root}/#{drop_paths[:codebase]}/*"
-            only_if {
-                Dir.exist?("#{new_resource.web_root}/#{drop_paths[:codebase]}")
-            }
-            not_if {
-                Dir.empty?("#{new_resource.web_root}/#{drop_paths[:codebase]}") ||
-                key == "theme" ||
-                key == "content"
-            }
-        end
-    end
-end
-
 action :install_data do 
     demo_shell_data_path = "#{new_resource.web_root}/#{new_resource.demo_shell_path}/#{new_resource.demo_shell_fixtures_path}"
     data_entries = Dir.entries("#{new_resource.chef_files_path}/data/") - [".DS_Store", ".gitignore", ".", ".."]
@@ -97,7 +81,7 @@ end
 
 action :build_demo_shell_module do
     new_resource.demo_shell_module_file_list.each do |file_data|
-        template "Creating #{new_resource.web_root}/#{new_resource.demo_shell_path}/#{file_data[:path]}/#{file_data[:source]}" do
+        template "Creating #{file_data[:source]}" do
             source "#{file_data[:source]}.erb"
             path "#{new_resource.web_root}/#{new_resource.demo_shell_path}/#{file_data[:path]}/#{file_data[:source]}"
             owner new_resource.user
@@ -116,7 +100,6 @@ action :create_codebase_media_drops do
             group new_resource.group
             mode "777"
             recursive true
-            not_if { Dir.exist?("#{new_resource.web_root}/#{drop_paths[:codebase]}") }
         end
     end
 end
@@ -146,11 +129,11 @@ action :map_demo_shell_media_to_codebase do
         destination = "#{new_resource.web_root}/#{drop_paths[:codebase]}"
         execute "Copy #{key} media into codebase location: #{destination}" do
             command "cp -R #{source}/* #{destination}"
-            not_if { files.empty? }
+            not_if { files.empty? || key == "catalog" }
         end
         execute "Update codebase media permissions" do
             command "chown -R #{new_resource.user}:#{new_resource.group} #{destination}/*"
-            not_if { files.empty? }
+            not_if { files.empty? || key == "catalog" }
         end
     end
 end

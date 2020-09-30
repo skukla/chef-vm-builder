@@ -26,8 +26,8 @@ magento_demo_builder "Remove existing data from the database" do
     }
 end
 
-magento_demo_builder "Remove existing custom demo media" do
-    action [:remove_demo_shell_media, :remove_codebase_media]
+magento_demo_builder "Remove existing media from the demo shell" do
+    action :remove_demo_shell_media
     only_if { Dir.exist?("#{web_root}/#{demo_shell_path}") }
     not_if { sample_data_flag }
 end
