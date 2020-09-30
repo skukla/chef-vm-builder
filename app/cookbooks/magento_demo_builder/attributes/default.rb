@@ -14,6 +14,10 @@ default[:magento_demo_builder][:demo_shell][:files] = [
     {source: "InstallStore.php", path: "Setup/Patch/Data", mode: "644"}
 ]
 default[:magento_demo_builder][:demo_shell][:media_map] = {
+    catalog: {
+        module: "media/catalog/product",
+        codebase: "pub/media/catalog/product"
+    },
     wysiwyg: {
         module: "media/wysiwyg",
         codebase: "pub/media/wysiwyg"

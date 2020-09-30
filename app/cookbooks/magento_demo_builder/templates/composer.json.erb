@@ -21,10 +21,11 @@
 	"extra": {
 		"map": [
 			<% @media_map.each_with_index do |(map_key, map_value), index| %>
-				[
-					"<%= map_value[:module] %>",
-					"../../<%= map_value[:codebase] %>"
-				]<% if @media_map.length - 1 != index -%>,<% end -%>
+			<% next if map_key == "catalog" %>
+			[
+				"<%= map_value[:module] %>",
+				"../../<%= map_value[:codebase] %>"
+			]<% if @media_map.length - 1 != index -%>,<% end -%>
 			<% end %>
 		]
 	}

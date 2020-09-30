@@ -73,7 +73,8 @@ action :remove_codebase_media do
             }
             not_if {
                 Dir.empty?("#{new_resource.web_root}/#{drop_paths[:codebase]}") ||
-                key == "theme"
+                key == "theme" ||
+                key == "content"
             }
         end
     end
