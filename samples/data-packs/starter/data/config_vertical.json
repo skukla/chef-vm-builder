@@ -67,7 +67,7 @@
 		},
 		"web": {
 			"default": {
-				"cms_home_page": "custom-home"
+				"cms_home_page": "home"
 			}
 		}
 	}
