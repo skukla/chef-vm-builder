@@ -141,10 +141,10 @@ action :map_demo_shell_media_to_codebase do
     end
 end
 
-action :map_custom_module_media_to_codebase do
+action :map_data_pack_media_to_codebase do
     new_resource.custom_module_list.each do |module_key, module_value|
-        if (module_value.is_a? Hash) && module_value.has_key?("map")
-            module_value[:map].each do |key, drop_paths|
+        if module_key.include?("data-pack")
+            new_resource.demo_shell_media_map.each do |key, drop_paths|
                 files = Dir.entries("#{new_resource.web_root}/vendor/#{module_value["name"]}/#{drop_paths[:module]}") - [".DS_Store", ".gitignore", ".", ".."]
                 source = "#{new_resource.web_root}/vendor/#{module_value["name"]}/#{drop_paths[:module]}"
                 destination = "#{new_resource.web_root}/#{drop_paths[:codebase]}"
@@ -158,10 +158,10 @@ action :map_custom_module_media_to_codebase do
     end
 end
 
-action :map_data_pack_media_to_codebase do
+action :map_custom_module_media_to_codebase do
     new_resource.custom_module_list.each do |module_key, module_value|
-        if module_key.include?("data-pack")
-            new_resource.demo_shell_media_map.each do |key, drop_paths|
+        if (module_value.is_a? Hash) && module_value.has_key?("map")
+            module_value[:map].each do |key, drop_paths|
                 files = Dir.entries("#{new_resource.web_root}/vendor/#{module_value["name"]}/#{drop_paths[:module]}") - [".DS_Store", ".gitignore", ".", ".."]
                 source = "#{new_resource.web_root}/vendor/#{module_value["name"]}/#{drop_paths[:module]}"
                 destination = "#{new_resource.web_root}/#{drop_paths[:codebase]}"
