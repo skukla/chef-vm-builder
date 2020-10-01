@@ -13,10 +13,10 @@ property :web_root,                         String, default: node[:magento_demo_
 property :db_user,                          String, default: node[:magento_demo_builder][:mysql][:db_user]
 property :db_password,                      String, default: node[:magento_demo_builder][:mysql][:db_password]
 property :db_name,                          String, default: node[:magento_demo_builder][:mysql][:db_name]
-property :chef_files_path,                  String, default: node[:magento_demo_builder][:chef_files][:directory]
+property :chef_files_path,                  String, default: node[:magento_demo_builder][:chef_files][:path]
 property :patch_class,                      String, default: node[:magento_demo_builder][:demo_shell][:patch_class]
 property :patches_holding_area,             String, default: node[:magento_demo_builder][:magento_patches][:holding_area]
-property :demo_shell_path,                  String, default: node[:magento_demo_builder][:demo_shell][:directory]
+property :demo_shell_path,                  String, default: node[:magento_demo_builder][:demo_shell][:path]
 property :demo_shell_fixtures_path,         String, default: node[:magento_demo_builder][:demo_shell][:fixtures_path]
 property :demo_shell_module_file_list,      Array,  default: node[:magento_demo_builder][:demo_shell][:files]
 property :demo_shell_media_map,             Hash,   default: node[:magento_demo_builder][:demo_shell][:media_map]
@@ -106,15 +106,16 @@ end
 
 action :add_media_to_demo_shell do
     new_resource.demo_shell_media_map.each do |key, drop_paths|
-        files = Dir.entries("#{new_resource.chef_files_path}/#{drop_paths[:module]}") - [".DS_Store", ".gitignore", ".", ".."]
-        source = "#{new_resource.chef_files_path}/#{drop_paths[:module]}"
+        key.to_s == "template_manager" ? module_path = drop_paths[:module].sub(".", "").sub("-","_") : module_path = drop_paths[:module]
+        files = Dir.entries("#{new_resource.chef_files_path}/#{module_path}") - [".DS_Store", ".gitignore", ".", ".."]
+        source = "#{new_resource.chef_files_path}/#{module_path}"
         destination = "#{new_resource.web_root}/#{new_resource.demo_shell_path}/#{drop_paths[:module]}"
-        
+
         execute "Copy #{key} media into module location: #{destination}" do
             command "cp -R #{source}/* #{destination}"
             not_if { files.empty? }
         end
-
+            
         execute "Update demo shell media permissions" do
             command "chown -R #{new_resource.user}:#{new_resource.group} #{destination}/*"
             not_if { files.empty? }
@@ -124,9 +125,11 @@ end
 
 action :map_demo_shell_media_to_codebase do
     new_resource.demo_shell_media_map.each do |key, drop_paths|
-        files = Dir.entries("#{new_resource.chef_files_path}/#{drop_paths[:module]}") - [".DS_Store", ".gitignore", ".", ".."]
-        source = "#{new_resource.chef_files_path}/#{drop_paths[:module]}"
-        destination = "#{new_resource.web_root}/#{drop_paths[:codebase]}"
+        key.to_s == "template_manager" ? module_path = drop_paths[:module].sub(".", "").sub("-","_") : module_path = drop_paths[:module]
+        files = Dir.entries("#{new_resource.chef_files_path}/#{module_path}") - [".DS_Store", ".gitignore", ".", ".."]
+        source = "#{new_resource.chef_files_path}/#{module_path}"
+        destination = "#{new_resource.web_root}/#{new_resource.demo_shell_path}/#{drop_paths[:module]}"
+        
         execute "Copy #{key} media into codebase location: #{destination}" do
             command "cp -R #{source}/* #{destination}"
             not_if { files.empty? || key == "catalog" }
@@ -174,7 +177,7 @@ end
 
 action :add_patches do
     patch_file_entries = Dir.entries("#{new_resource.chef_files_path}/patches/") - [".DS_Store", ".gitignore", ".", ".."]
-    
+
     patch_file_entries.each do |patch|
         execute "Copy #{patch} into patches holding area" do
             command "cp #{new_resource.chef_files_path}/patches/#{patch} #{new_resource.patches_holding_area}"

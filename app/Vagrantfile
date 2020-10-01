@@ -16,22 +16,24 @@ require "json"
 # Clear the screen
 system ("clear")
 
-top_dir = File.expand_path("..", Dir.pwd)
+top_dir = "#{File.expand_path("..", Dir.pwd)}"
+data_pack_dir = "#{top_dir}/data-pack"
 app_dir = File.dirname(File.expand_path(__FILE__))
+demo_builder_files_path = "cookbooks/magento_demo_builder/files/data-pack"
 app_structure = {
   config_file: "config.json",
   environment_file: "environments/vm.rb",
   user_content: {
-    data: Dir.entries("#{top_dir}/data") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") },
-    patches: Dir.entries("#{top_dir}/patches") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") },
+    data: Dir.entries("#{data_pack_dir}/data") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") },
+    patches: Dir.entries("#{data_pack_dir}/patches") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") },
     media: {
-      wysiwyg: Dir.entries("#{top_dir}/media/wysiwyg") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") },
-      catalog: Dir.entries("#{top_dir}/media/catalog/product") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") },
-      favicon: Dir.entries("#{top_dir}/media/favicon") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") },
-      logo: Dir.entries("#{top_dir}/media/logo") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") },
-      theme: Dir.entries("#{top_dir}/media/theme") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") },
-      template_manager: Dir.entries("#{top_dir}/media/.template-manager") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") },
-      downloadable_products: Dir.entries("#{top_dir}/media/downloadable_products") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") }
+      wysiwyg: Dir.entries("#{data_pack_dir}/media/wysiwyg") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") },
+      catalog: Dir.entries("#{data_pack_dir}/media/catalog/product") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") },
+      favicon: Dir.entries("#{data_pack_dir}/media/favicon") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") },
+      logo: Dir.entries("#{data_pack_dir}/media/logo") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") },
+      theme: Dir.entries("#{data_pack_dir}/media/theme") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") },
+      template_manager: Dir.entries("#{data_pack_dir}/media/template_manager") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") },
+      downloadable_products: Dir.entries("#{data_pack_dir}/media/downloadable_products") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") }
     }
   }
 }
@@ -70,11 +72,11 @@ Vagrant.configure("2") do |config|
     config.trigger.before [:up, :reload, :provision] do |trigger|
       trigger.name = "Preparing data files..."
       trigger.ruby do
-        if Dir.exist?("#{app_dir}/cookbooks/magento_demo_builder/files/data") && !Dir.empty?("#{app_dir}/cookbooks/magento_demo_builder/files/data")
-          FileUtils.remove_entry("#{app_dir}/cookbooks/magento_demo_builder/files/data")
+        if Dir.exist?("#{app_dir}/#{demo_builder_files_path}/data") && !Dir.empty?("#{app_dir}/#{demo_builder_files_path}/data")
+          FileUtils.remove_entry("#{app_dir}/#{demo_builder_files_path}/data")
         end
-        if !Dir.exist?("#{app_dir}/cookbooks/magento_demo_builder/files/data") && !Dir.empty?("#{top_dir}/data")
-          FileUtils.copy_entry("#{top_dir}/data", "#{app_dir}/cookbooks/magento_demo_builder/files/data")
+        if !Dir.exist?("#{app_dir}/#{demo_builder_files_path}/data") && !Dir.empty?("#{data_pack_dir}/data")
+          FileUtils.copy_entry("#{data_pack_dir}/data", "#{app_dir}/#{demo_builder_files_path}/data")
         end
       end
     end
@@ -85,11 +87,11 @@ Vagrant.configure("2") do |config|
     config.trigger.before [:up, :reload, :provision] do |trigger|
       trigger.name = "Preparing patches..."
       trigger.ruby do
-        if Dir.exist?("#{app_dir}/cookbooks/magento_demo_builder/files/patches") && !Dir.empty?("#{app_dir}/cookbooks/magento_demo_builder/files/patches")
-          FileUtils.remove_entry("#{app_dir}/cookbooks/magento_demo_builder/files/patches")
+        if Dir.exist?("#{app_dir}/#{demo_builder_files_path}/patches") && !Dir.empty?("#{app_dir}/#{demo_builder_files_path}/patches")
+          FileUtils.remove_entry("#{app_dir}/#{demo_builder_files_path}/patches")
         end
-        if !Dir.exist?("#{app_dir}/cookbooks/magento_demo_builder/files/patches") && !Dir.empty?("#{top_dir}/patches")
-          FileUtils.copy_entry("#{top_dir}/patches", "#{app_dir}/cookbooks/magento_demo_builder/files/patches")
+        if !Dir.exist?("#{app_dir}/#{demo_builder_files_path}/patches") && !Dir.empty?("#{data_pack_dir}/patches")
+          FileUtils.copy_entry("#{data_pack_dir}/patches", "#{app_dir}/#{demo_builder_files_path}/patches")
         end
       end
     end
@@ -101,12 +103,11 @@ Vagrant.configure("2") do |config|
       trigger.name = "Preparing media files..."
       trigger.ruby do
         app_structure[:user_content][:media].each do |media_type_key, media_type_content|
-          media_type_key = ".template-manager" if media_type_key.to_s == "template_manager"
-          if Dir.exist?("#{app_dir}/cookbooks/magento_demo_builder/files/media/#{media_type_key}") && !Dir.empty?("#{app_dir}/cookbooks/magento_demo_builder/files/media/#{media_type_key}")
-            FileUtils.remove_entry("#{app_dir}/cookbooks/magento_demo_builder/files/media/#{media_type_key}")
+          if Dir.exist?("#{app_dir}/#{demo_builder_files_path}/media/#{media_type_key}") && !Dir.empty?("#{app_dir}/#{demo_builder_files_path}/media/#{media_type_key}")
+            FileUtils.remove_entry("#{app_dir}/#{demo_builder_files_path}/media/#{media_type_key}")
           end
-          if !Dir.exist?("#{app_dir}/cookbooks/magento_demo_builder/files/media/#{media_type_key}") && !Dir.empty?("#{top_dir}/media/#{media_type_key}")
-            FileUtils.copy_entry("#{top_dir}/media/#{media_type_key}", "#{app_dir}/cookbooks/magento_demo_builder/files/media/#{media_type_key}")
+          if !Dir.exist?("#{app_dir}/#{demo_builder_files_path}/media/#{media_type_key}") && !Dir.empty?("#{data_pack_dir}/media/#{media_type_key}")
+            FileUtils.copy_entry("#{data_pack_dir}/media/#{media_type_key}", "#{app_dir}/#{demo_builder_files_path}/media/#{media_type_key}")
           end
         end
       end

@@ -15,7 +15,7 @@
 				"name": "magentoese/module-data-install",
 				"repository_url": "https://github.com/PMET-public/module-data-install.git"
 			},
-			"custom-demo-shell": {
+			"local-data-pack": {
 				"name": "skukla/module-custom-demo-shell",
 				"repository_url": "git@github.com:skukla/module-custom-demo-shell.git"
 			},
