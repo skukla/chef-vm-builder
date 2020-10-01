@@ -1,14 +1,6 @@
 .DS_Store
 .vagrant/
 config.json
-data-pack/*
 *.code-workspace
-!data-pack/.gitignore
-!data-pack/data/.gitignore
-!data-pack/media/wysiwyg/.gitignore
-!data-pack/media/catalog/product/.gitignore
-!data-pack/media/favicon/.gitignore
-!data-pack/media/logo/.gitignore
-!data-pack/media/theme/.gitignore
-!config.json.sample
+!samples/data-packs/starter/config.json
 
