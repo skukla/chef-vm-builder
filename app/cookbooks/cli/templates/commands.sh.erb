@@ -457,6 +457,68 @@ function apply-patches() {
 }
 export -f apply-patches
 
+# Backup / Rollback
+function enable-backups() {
+  printf "\nEnabling backup functionality... \n"
+  www
+  ./bin/magento config:set system/backup/functionality_enabled 1
+}
+export -f enable-backups
+
+function list-backups() {
+  www
+  printf "\nBackup List: \n"
+  ./bin/magento info:backups:list
+}
+export -f list-backups
+
+function backup-code() {
+  enable-backups
+  printf "\nBacking up the codebase...\n"
+  ./bin/magento setup:backup --code
+  printf "done. \n"
+}
+export -f backup-code
+
+function backup-media() {
+  enable-backups
+  printf "\nBacking up media...\n"
+  www
+  ./bin/magento setup:backup --media
+  printf "done. \n"
+}
+export -f backup-media
+
+function backup-db() {
+  enable-backups
+  printf "\nBacking up the database...\n"
+  www
+  ./bin/magento setup:backup --db
+  printf "done. \n"
+}
+export -f backup-db
+
+function backup() {
+  enable-backups
+  list-backups
+  ./bin/magento setup:backup --code --media --db
+  printf "done. \n"
+}
+export -f backup
+
+function remove-backups() {
+  www
+  if [ -d "var/backups" ]; then
+    printf "\nRemoving all backups..."
+    sleep 1
+    rm -rf var/backups/*
+    printf "done. \n"
+  fi
+  list-backups
+}
+export -f remove-backups
+
+# Help
 function show-help() {
   bash ~/cli/scripts/show_help.sh 
 }
