@@ -4,7 +4,7 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 update_os = node[:init][:os][:update]
-webserver_type = node[:init][:webserver_type]
+webserver_type = node[:init][:webserver][:type]
 
 os "Update OS" do
     action :update

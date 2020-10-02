@@ -9,6 +9,7 @@ chef_version '>= 14.0'
 
 depends 'init'      # Brings in OS settings
 depends 'helpers'   # Brings in vhost data
+depends 'php'       # Brings in php resources
 
 # The `issues_url` points to the location where issues for this cookbook are
 # tracked.  A `View Issues` link will be displayed on this cookbook's page when

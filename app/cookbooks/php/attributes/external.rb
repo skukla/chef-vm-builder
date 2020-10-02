@@ -4,6 +4,7 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 include_attribute "init::default"
+include_attribute "init::override"
 default[:php][:init][:user] = node[:init][:os][:user]
 default[:php][:init][:timezone] = node[:init][:os][:timezone]
 default[:php][:init][:webserver_type] = node[:init][:webserver][:type]

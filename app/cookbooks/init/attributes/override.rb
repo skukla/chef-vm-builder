@@ -29,7 +29,7 @@ supported_settings.each do |setting_key, setting_data|
         if node[:infrastructure][setting_key].is_a? Chef::Node::ImmutableMash
             setting_data.each do |option|
                 next if node[:infrastructure][setting_key][option].nil?
-                if node[:infrastructure][setting_key][option].downcase == "apache"
+                if node[:infrastructure][setting_key][option].downcase == "apache" || node[:infrastructure][setting_key][option].downcase == "apache2"
                     override[:init][setting_key][option] = "apache2"
                 else
                     override[:init][setting_key][option] = node[:infrastructure][setting_key][option].downcase

@@ -9,8 +9,9 @@ provides :apache
 property :name,                     String,            name_property: true
 property :user,                     String,            default: node[:apache][:init][:user]
 property :group,                    String,            default: node[:apache][:init][:user]
+property :directory_list,           Array,             default: node[:apache][:directory_list]
 property :package_list,             Array,             default: node[:apache][:package_list]
-property :mod_list,                 Array,             default: node[:apache][:mod_list]            
+property :mod_list,                 Array,             default: node[:apache][:mod_list]
 property :web_root,                 String,            default: node[:apache][:init][:web_root]
 property :http_port,                [String, Integer], default: node[:apache][:http_port]
 property :php_version,              String,            default: node[:apache][:php][:version]
@@ -97,7 +98,7 @@ action :configure_ports do
     end
 end
 
-action :configure_php_fpm do
+action :configure_fpm_conf do
     template "PHP-FPM configuration" do
         source "php-fpm.conf.erb"
         path "/etc/apache2/conf-available/php#{new_resource.php_version}-fpm.conf"
@@ -176,7 +177,7 @@ action :configure_multisite do
     end
 end
 
-action :set_permissions do
+action :configure_envvars do
     template "Envvars configuration" do
         source "envvars.erb"
         path "/etc/apache2/envvars"
@@ -188,8 +189,10 @@ action :set_permissions do
             group: new_resource.group
         })
     end
+end
 
-    ["/etc/apache2", "/var/lib/apache2/fastcgi", "/var/lock/apache2", "/var/log/apache2"].each do |directory|
+action :set_permissions do
+    new_resource.directory_list.each do |directory|
         execute "Change Apache directory permissions" do
             command "chown -R #{new_resource.user}:#{new_resource.group} #{directory}"
         end

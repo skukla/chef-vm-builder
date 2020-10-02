@@ -11,7 +11,6 @@ property :user,                    String,            default: node[:nginx][:ini
 property :group,                   String,            default: node[:nginx][:init][:user]
 property :package_list,            Array,             default: node[:nginx][:package_list]
 property :web_root,                String,            default: node[:nginx][:init][:web_root]
-property :php_version,             String,            default: node[:nginx][:php][:version]
 property :http_port,               [String, Integer], default: node[:nginx][:http_port]
 property :client_max_body_size,    String,            default: node[:nginx][:client_max_body_size]
 property :fastcgi_buffers,         String,            default: node[:nginx][:fastcgi_buffers]
@@ -23,7 +22,7 @@ property :demo_structure,          Hash,              default: node[:nginx][:ini
 action :uninstall do
     execute "Remove and purge Nginx" do
         command "apt-get --purge autoremove nginx -y"
-        only_if { ::File.directory?("/etc/nginx") }
+        only_if { Dir.exist?("/etc/nginx") }
     end
 end
 

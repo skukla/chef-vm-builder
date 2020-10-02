@@ -15,7 +15,13 @@ if webserver_type == "apache2"
     end
 
     apache "Configure Apache" do
-        action [:configure_apache, :configure_ports, :configure_php_fpm, :configure_multisite]
+        action [
+            :configure_apache,
+            :configure_ports,
+            :configure_fpm_conf,
+            :configure_multisite,
+            :configure_envvars
+        ]
     end
 
     apache "Change user and group, enable, and restart Apache" do
