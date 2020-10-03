@@ -503,8 +503,22 @@ function backup() {
   list-backups
   ./bin/magento setup:backup --code --media --db
   printf "done. \n"
+  list-backups
 }
 export -f backup
+
+function export-backups() {
+  list-backups
+  if [ -d "var/backups" ]; then
+    printf "\nExporting all backups to the VM app/backups directory..."
+    if [ ! -d "/vagrant/backups" ]; then
+      mkdir -p /vagrant/backups
+    fi
+    cp -R var/backups/* /vagrant/backups
+    printf "done. \n"
+  fi
+}
+export -f export-backups
 
 function remove-backups() {
   www
@@ -518,8 +532,10 @@ function remove-backups() {
 }
 export -f remove-backups
 
-# Help
-function show-help() {
-  bash ~/cli/scripts/show_help.sh 
+function restore() {
+  list-backups
+  printf "\nRestoring backup..."
+  ./bin/magento setup:rollback --code-file=$1 --media-file=$2 --db-file=$3
+  printf "done. \n"
 }
-export -f show-help
+export -f restore
