@@ -1,14 +1,6 @@
 #
 # Vagrantfile
 #
-# This file:
-#   1. Reads VM settings from config/vm.json for use in VM setup
-#   2. Reads demo settings from config/demo.json for use as Chef attributes
-#   3. Converts demo settings to a ruby hash and writes out /environments/vb.rb for Chef
-#   4. Checks for particular Vagrant plugins based on provider
-#   5. Configures VM settings based on provider
-#   6. Runs the Chef provisioner
-#   7. Updates permissions and clears cache
 #
 # Copyright 2020, Steve Kukla, All Rights Reserved.
 require "json"
@@ -17,29 +9,12 @@ require "json"
 system ("clear")
 
 top_dir = "#{File.expand_path("..", Dir.pwd)}"
-data_pack_dir = "#{top_dir}/data-pack"
+data_pack_dir = "#{top_dir}/demo"
 app_dir = File.dirname(File.expand_path(__FILE__))
-demo_builder_files_path = "cookbooks/magento_demo_builder/files/data-pack"
-app_structure = {
-  config_file: "config.json",
-  environment_file: "environments/vm.rb",
-  user_content: {
-    data: Dir.entries("#{data_pack_dir}/data") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") },
-    patches: Dir.entries("#{data_pack_dir}/patches") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") },
-    media: {
-      wysiwyg: Dir.entries("#{data_pack_dir}/media/wysiwyg") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") },
-      catalog: Dir.entries("#{data_pack_dir}/media/catalog/product") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") },
-      favicon: Dir.entries("#{data_pack_dir}/media/favicon") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") },
-      logo: Dir.entries("#{data_pack_dir}/media/logo") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") },
-      theme: Dir.entries("#{data_pack_dir}/media/theme") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") },
-      template_manager: Dir.entries("#{data_pack_dir}/media/template_manager") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") },
-      downloadable_products: Dir.entries("#{data_pack_dir}/media/downloadable_products") - [".DS_Store", ".", ".."].delete_if{|filename| filename.include?(".DS_Store") }
-    }
-  }
-}
-config_file = "#{top_dir}/#{app_structure[:config_file]}"
-infra_settings_file = "#{app_dir}/#{app_structure[:infra_settings_file]}"
-environment_file = "#{app_dir}/#{app_structure[:environment_file]}"
+demo_builder_files_path = "#{app_dir}/cookbooks/magento_demo_builder/files/demo"
+app_structure = ["data", "media", "patches"]
+environment_file = "#{app_dir}/environments/vm.rb"
+config_file = "#{data_pack_dir}/config.json"
 
 # Read the configuration json file
 config_file_content = File.read(config_file)
@@ -67,48 +42,16 @@ Vagrant.configure("2") do |config|
     end
   end
 
-  # Copy data files
-  unless app_structure[:user_content][:data].empty?
-    config.trigger.before [:up, :reload, :provision] do |trigger|
-      trigger.name = "Preparing data files..."
-      trigger.ruby do
-        if Dir.exist?("#{app_dir}/#{demo_builder_files_path}/data") && !Dir.empty?("#{app_dir}/#{demo_builder_files_path}/data")
-          FileUtils.remove_entry("#{app_dir}/#{demo_builder_files_path}/data")
-        end
-        if !Dir.exist?("#{app_dir}/#{demo_builder_files_path}/data") && !Dir.empty?("#{data_pack_dir}/data")
-          FileUtils.copy_entry("#{data_pack_dir}/data", "#{app_dir}/#{demo_builder_files_path}/data")
-        end
-      end
-    end
-  end
-
-  # Copy patches
-  unless app_structure[:user_content][:patches].empty?
-    config.trigger.before [:up, :reload, :provision] do |trigger|
-      trigger.name = "Preparing patches..."
-      trigger.ruby do
-        if Dir.exist?("#{app_dir}/#{demo_builder_files_path}/patches") && !Dir.empty?("#{app_dir}/#{demo_builder_files_path}/patches")
-          FileUtils.remove_entry("#{app_dir}/#{demo_builder_files_path}/patches")
-        end
-        if !Dir.exist?("#{app_dir}/#{demo_builder_files_path}/patches") && !Dir.empty?("#{data_pack_dir}/patches")
-          FileUtils.copy_entry("#{data_pack_dir}/patches", "#{app_dir}/#{demo_builder_files_path}/patches")
-        end
-      end
-    end
-  end
-
-  # Copy media files
-  unless app_structure[:user_content][:media].empty?
-    config.trigger.before [:up, :reload, :provision] do |trigger|
-      trigger.name = "Preparing media files..."
-      trigger.ruby do
-        app_structure[:user_content][:media].each do |media_type_key, media_type_content|
-          if Dir.exist?("#{app_dir}/#{demo_builder_files_path}/media/#{media_type_key}") && !Dir.empty?("#{app_dir}/#{demo_builder_files_path}/media/#{media_type_key}")
-            FileUtils.remove_entry("#{app_dir}/#{demo_builder_files_path}/media/#{media_type_key}")
+  
+  app_structure.each do |media_type|
+    if Dir.exist?("#{data_pack_dir}/#{media_type}")
+      config.trigger.before [:up, :reload, :provision] do |trigger|
+        trigger.name = "Preparing #{media_type}..."
+        trigger.ruby do
+          if Dir.exist?("#{demo_builder_files_path}/#{media_type}") && !Dir.empty?("#{demo_builder_files_path}/#{media_type}")
+            FileUtils.remove_entry("#{demo_builder_files_path}/#{media_type}")
           end
-          if !Dir.exist?("#{app_dir}/#{demo_builder_files_path}/media/#{media_type_key}") && !Dir.empty?("#{data_pack_dir}/media/#{media_type_key}")
-            FileUtils.copy_entry("#{data_pack_dir}/media/#{media_type_key}", "#{app_dir}/#{demo_builder_files_path}/media/#{media_type_key}")
-          end
+          FileUtils.copy_entry("#{data_pack_dir}/#{media_type}", "#{demo_builder_files_path}/#{media_type}")
         end
       end
     end

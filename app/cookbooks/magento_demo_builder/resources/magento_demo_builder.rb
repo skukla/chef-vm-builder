@@ -23,16 +23,16 @@ property :demo_shell_media_map,             Hash,   default: node[:magento_demo_
 property :custom_module_list,               Hash,   default: node[:magento_demo_builder][:custom_module_list]
 
 action :remove_data do
-    demo_shell_data_path = "#{new_resource.web_root}/#{new_resource.demo_shell_path}/#{new_resource.demo_shell_fixtures_path}"
+    source = "#{new_resource.web_root}/#{new_resource.demo_shell_path}/#{new_resource.demo_shell_fixtures_path}"
 
     execute "Remove existing data files" do
-        command "rm -rf #{demo_shell_data_path}/*"
-        only_if { Dir.exist?(demo_shell_data_path) }
+        command "rm -rf #{source}/*"
+        only_if { Dir.exist?(source) }
     end
 end
 
 action :remove_data_patches do
-    demo_shell_data_path = "#{new_resource.web_root}/#{new_resource.demo_shell_path}/#{new_resource.demo_shell_fixtures_path}"
+    source = "#{new_resource.web_root}/#{new_resource.demo_shell_path}/#{new_resource.demo_shell_fixtures_path}"
 
     ruby_block "Remove existing data patch" do
         block do
@@ -44,7 +44,7 @@ action :remove_data_patches do
             )
         end
         only_if {
-            Dir.exist?(demo_shell_data_path) ||
+            Dir.exist?(source) ||
             DatabaseHelper.patch_exists(new_resource.patch_class, new_resource.db_user, new_resource.db_password, new_resource.db_name)
         }
     end
@@ -52,30 +52,30 @@ end
 
 action :remove_demo_shell_media do
     new_resource.demo_shell_media_map.each do |key, drop_paths|
+        source = "#{new_resource.web_root}/#{new_resource.demo_shell_path}/#{drop_paths[:module]}"
+        
         execute "Remove existing #{key} media from demo shell: #{new_resource.demo_shell_path}/#{drop_paths[:module]}" do
-            command "rm -rf #{new_resource.web_root}/#{new_resource.demo_shell_path}/#{drop_paths[:module]}/*"
-            only_if {
-                Dir.exist?("#{new_resource.web_root}/#{new_resource.demo_shell_path}/#{drop_paths[:module]}")
-            }
-            not_if {
-                Dir.empty?("#{new_resource.web_root}/#{new_resource.demo_shell_path}/#{drop_paths[:module]}")
-            }
+            command "rm -rf #{source}/*"
+            not_if { Dir.empty?(source) }
+            only_if { Dir.exist?(source) }
         end
     end
 end
 
-action :install_data do 
-    demo_shell_data_path = "#{new_resource.web_root}/#{new_resource.demo_shell_path}/#{new_resource.demo_shell_fixtures_path}"
-    data_entries = Dir.entries("#{new_resource.chef_files_path}/data/") - [".DS_Store", ".gitignore", ".", ".."]
-    
+action :install_data do  
+    source = "#{new_resource.chef_files_path}/data"
+    destination = "#{new_resource.web_root}/#{new_resource.demo_shell_path}/#{new_resource.demo_shell_fixtures_path}"
+
     execute "Copy data files into demo shell module" do
-        command "cp -R #{new_resource.chef_files_path}/data/* #{demo_shell_data_path}"
-        not_if { data_entries.empty? }
+        command "cp -R #{source}/* #{destination}"
+        not_if { Dir.empty?(source) }
+        only_if { Dir.exist?(source) && Dir.exist?(destination) }
     end
 
     execute "Update data file permissions" do
-        command "chown -R #{new_resource.user}:#{new_resource.group} #{demo_shell_data_path}/*"
-        not_if { data_entries.empty? }
+        command "chown -R #{new_resource.user}:#{new_resource.group} #{destination}/*"
+        not_if { Dir.empty?(destination)
+        }
     end
 end
 
@@ -107,68 +107,70 @@ end
 action :add_media_to_demo_shell do
     new_resource.demo_shell_media_map.each do |key, drop_paths|
         key.to_s == "template_manager" ? module_path = drop_paths[:module].sub(".", "").sub("-","_") : module_path = drop_paths[:module]
-        files = Dir.entries("#{new_resource.chef_files_path}/#{module_path}") - [".DS_Store", ".gitignore", ".", ".."]
-        source = "#{new_resource.chef_files_path}/#{module_path}"
+        source = "#{new_resource.chef_files_path}/#{module_path.to_s}"
         destination = "#{new_resource.web_root}/#{new_resource.demo_shell_path}/#{drop_paths[:module]}"
 
         execute "Copy #{key} media into module location: #{destination}" do
             command "cp -R #{source}/* #{destination}"
-            not_if { files.empty? }
+            not_if { Dir.empty?(source) }
+            only_if { Dir.exist?(source) && Dir.exist?(destination) }
         end
             
         execute "Update demo shell media permissions" do
             command "chown -R #{new_resource.user}:#{new_resource.group} #{destination}/*"
-            not_if { files.empty? }
+            not_if { Dir.empty?(destination) }
         end
     end
 end
 
-action :map_demo_shell_media_to_codebase do
-    new_resource.demo_shell_media_map.each do |key, drop_paths|
-        key.to_s == "template_manager" ? module_path = drop_paths[:module].sub(".", "").sub("-","_") : module_path = drop_paths[:module]
-        files = Dir.entries("#{new_resource.chef_files_path}/#{module_path}") - [".DS_Store", ".gitignore", ".", ".."]
-        source = "#{new_resource.chef_files_path}/#{module_path}"
-        destination = "#{new_resource.web_root}/#{new_resource.demo_shell_path}/#{drop_paths[:module]}"
+# action :map_demo_shell_media_to_codebase do
+#     new_resource.demo_shell_media_map.each do |key, drop_paths|
+#         key.to_s == "template_manager" ? module_path = drop_paths[:module].sub(".", "").sub("-","_") : module_path = drop_paths[:module]
+#         source = "#{new_resource.chef_files_path}/#{module_path.to_s}"
+#         destination = "#{new_resource.web_root}/#{new_resource.demo_shell_path}/#{drop_paths[:module]}"
+
+#         execute "Copy #{key} media into demo shell location: #{destination}" do
+#             command "cp -R #{source}/* #{destination}"
+#             not_if { Dir.empty?(source) || Dir.empty?(destination) || key == "catalog" }
+#             only_if { Dir.exist?(source) && Dir.exist?(destination) }
+#         end
         
-        execute "Copy #{key} media into codebase location: #{destination}" do
-            command "cp -R #{source}/* #{destination}"
-            not_if { files.empty? || key == "catalog" }
-        end
-        execute "Update codebase media permissions" do
-            command "chown -R #{new_resource.user}:#{new_resource.group} #{destination}/*"
-            not_if { files.empty? || key == "catalog" }
-        end
-    end
-end
+#         execute "Update demo shell media permissions" do
+#             command "chown -R #{new_resource.user}:#{new_resource.group} #{destination}/*"
+#             not_if { Dir.empty?(source) || Dir.empty?(destination) || key == "catalog" }
+#         end
+#     end
+# end
 
 action :map_data_pack_media_to_codebase do
     new_resource.custom_module_list.each do |module_key, module_value|
         if module_key.include?("data-pack")
             new_resource.demo_shell_media_map.each do |key, drop_paths|
-                files = Dir.entries("#{new_resource.web_root}/vendor/#{module_value["name"]}/#{drop_paths[:module]}") - [".DS_Store", ".gitignore", ".", ".."]
+                key.to_s == "template_manager" ? module_path = drop_paths[:module].sub(".", "").sub("-","_") : module_path = drop_paths[:module]
                 source = "#{new_resource.web_root}/vendor/#{module_value["name"]}/#{drop_paths[:module]}"
                 destination = "#{new_resource.web_root}/#{drop_paths[:codebase]}"
 
                 execute "Copy #{module_value["name"].split("/")[1]} #{key} media into codebase location: #{destination}" do
                     command "cp -R #{source}/* #{destination}"
-                    not_if { files.empty? }
+                    not_if { Dir.empty?(source) }
+                    only_if { Dir.exist?(source) && Dir.exist?(destination) }
                 end
             end
         end
     end
 end
 
-action :map_custom_module_media_to_codebase do
+action :handle_user_custom_module_data_mapping do
     new_resource.custom_module_list.each do |module_key, module_value|
         if (module_value.is_a? Hash) && module_value.has_key?("map")
             module_value[:map].each do |key, drop_paths|
-                files = Dir.entries("#{new_resource.web_root}/vendor/#{module_value["name"]}/#{drop_paths[:module]}") - [".DS_Store", ".gitignore", ".", ".."]
                 source = "#{new_resource.web_root}/vendor/#{module_value["name"]}/#{drop_paths[:module]}"
                 destination = "#{new_resource.web_root}/#{drop_paths[:codebase]}"
-
+                
                 execute "Copy #{module_value["name"].split("/")[1]} #{key} media into codebase location: #{destination}" do
                     command "cp -R #{source}/* #{destination}"
-                    not_if { files.empty? }
+                    not_if { Dir.empty?(source) || Dir.empty?(destination) }
+                    only_if { Dir.exist?(source) && Dir.exist?(destination) }
                 end
             end
         end
@@ -176,12 +178,17 @@ action :map_custom_module_media_to_codebase do
 end
 
 action :add_patches do
-    patch_file_entries = Dir.entries("#{new_resource.chef_files_path}/patches/") - [".DS_Store", ".gitignore", ".", ".."]
+    if Dir.exist?("#{new_resource.chef_files_path}/patches")
+        source = Dir.entries("#{new_resource.chef_files_path}/patches")
+        destination = new_resource.patches_holding_area
 
-    patch_file_entries.each do |patch|
-        execute "Copy #{patch} into patches holding area" do
-            command "cp #{new_resource.chef_files_path}/patches/#{patch} #{new_resource.patches_holding_area}"
-            not_if { patch_file_entries.empty? }
+        patch_file_entries = (source - [".DS_Store", ".gitignore", ".", ".."])
+        patch_file_entries.each do |patch|
+            execute "Copy #{patch} into patches holding area" do
+                command "cp #{source}/patches/#{patch} #{destination}"
+                not_if { Dir.empty?(source) }
+                only_if { Dir.exist?(source) && Dir.exist?(destination) }
+            end
         end
     end
 end

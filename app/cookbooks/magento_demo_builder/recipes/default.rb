@@ -43,12 +43,12 @@ magento_demo_builder "Build demo shell module" do
 end
 
 magento_demo_builder "Copy demo shell media into place" do
-    action [:add_media_to_demo_shell, :map_demo_shell_media_to_codebase]
+    action :add_media_to_demo_shell
     only_if { Dir.exist?("#{web_root}/#{demo_shell_path}") }
 end
 
 magento_demo_builder "Copy custom module media into place" do
-    action [:map_custom_module_media_to_codebase, :map_data_pack_media_to_codebase]
+    action [:map_data_pack_media_to_codebase, :handle_user_custom_module_data_mapping]
 end
 
 magento_app "Set permissions on media directories and files" do
