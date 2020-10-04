@@ -3,7 +3,7 @@
 # Attribute:: default
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-default[:magento_demo_builder][:chef_files][:path] = "/var/chef/cache/cookbooks/magento_demo_builder/files/demo"
+default[:magento_demo_builder][:chef_files][:path] = "/var/chef/cache/cookbooks/magento_demo_builder/files/default"
 default[:magento_demo_builder][:demo_shell][:path] = "vendor/skukla/module-custom-demo-shell"
 default[:magento_demo_builder][:demo_shell][:patch_class] = %q[Skukla\CustomDemoShell\Setup\Patch\Data]
 default[:magento_demo_builder][:demo_shell][:fixtures_path] = "fixtures"

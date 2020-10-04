@@ -11,7 +11,7 @@ system ("clear")
 top_dir = "#{File.expand_path("..", Dir.pwd)}"
 data_pack_dir = "#{top_dir}/demo"
 app_dir = File.dirname(File.expand_path(__FILE__))
-demo_builder_files_path = "#{app_dir}/cookbooks/magento_demo_builder/files/demo"
+demo_builder_files_path = "#{app_dir}/cookbooks/magento_demo_builder/files/default"
 app_structure = ["data", "media", "patches"]
 environment_file = "#{app_dir}/environments/vm.rb"
 config_file = "#{data_pack_dir}/config.json"

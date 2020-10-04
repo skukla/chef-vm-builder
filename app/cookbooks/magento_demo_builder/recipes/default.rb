@@ -14,10 +14,6 @@ magento_config "Create samba drop directories" do
     action :create_samba_drops
 end
 
-magento_demo_builder "Create codebase media directories" do
-    action :create_codebase_media_drops
-end
-
 magento_demo_builder "Remove existing data from the database" do
     action :remove_data_patches
     only_if { 
@@ -26,29 +22,23 @@ magento_demo_builder "Remove existing data from the database" do
     }
 end
 
-magento_demo_builder "Remove existing media from the demo shell" do
-    action :remove_demo_shell_media
-    only_if { Dir.exist?("#{web_root}/#{demo_shell_path}") }
-    not_if { sample_data_flag }
-end
-
-magento_demo_builder "Install custom demo data files into demo shell module" do
-    action [:remove_data, :install_data]
-    only_if { Dir.exist?("#{web_root}/#{demo_shell_path}/#{fixtures_directory}") }
-end
-
 magento_demo_builder "Build demo shell module" do
     action :build_demo_shell_module
     only_if { Dir.exist?("#{web_root}/#{demo_shell_path}") }
 end
 
-magento_demo_builder "Copy demo shell media into place" do
-    action :add_media_to_demo_shell
+magento_demo_builder "Install custom demo data files into demo shell module" do
+    action :install_local_content
+    only_if { Dir.exist?("#{web_root}/#{demo_shell_path}/#{fixtures_directory}") }
+end
+
+magento_demo_builder "Copy local data pack media to codebase" do
+    action :map_data_pack_media_to_codebase
     only_if { Dir.exist?("#{web_root}/#{demo_shell_path}") }
 end
 
-magento_demo_builder "Copy custom module media into place" do
-    action [:map_data_pack_media_to_codebase, :handle_user_custom_module_data_mapping]
+magento_demo_builder "Copy custom module data pack media to codebase" do
+    action :handle_user_custom_module_data_mapping
 end
 
 magento_app "Set permissions on media directories and files" do
