@@ -35,6 +35,19 @@ action :build_demo_shell_module do
     end
 end
 
+action :create_codebase_media_drops do
+    new_resource.demo_shell_media_map.each do |drop_name, drop_path|
+        directory "#{drop_name} Codebase Media Drop" do
+            path "#{new_resource.web_root}/#{drop_path[:codebase]}"
+            owner new_resource.user
+            group new_resource.group
+            mode "777"
+            recursive true
+            not_if { Dir.exist?("#{new_resource.web_root}/#{drop_path[:codebase]}") }
+        end
+    end
+end
+
 action :remove_data_patches do
     source = "#{new_resource.web_root}/#{new_resource.demo_shell_path}/#{new_resource.demo_shell_fixtures_path}"
 
@@ -102,45 +115,39 @@ action :install_local_content do
     end
 end
 
-action :map_data_pack_media_to_codebase do
-    unless new_resource.custom_module_list.empty?
-        new_resource.custom_module_list.each do |module_key, module_value|
-            if module_key.include?("data-pack")
-                new_resource.demo_shell_media_map.each do |media_key, entry_path|
-                    remote_directory "Adding demo shell media to codebase" do
-                        source "#{entry_path[:module].include?(".template-manager") ? entry_path[:module].sub(".","").sub("-","_") : entry_path[:module]}"
-                        path "#{new_resource.web_root}/#{entry_path[:codebase]}"
-                        owner new_resource.user
-                        group new_resource.group
-                        files_owner new_resource.user
-                        files_group new_resource.group
-                        action :create_if_missing
-                        recursive true
-                        overwrite true
-                    end
+action :add_local_content_to_codebase do
+    new_resource.custom_module_list.each do |module_key, module_value|
+        if module_key.include?("local-data-pack")
+            new_resource.demo_shell_media_map.each do |media_key, entry_path|
+                remote_directory "Adding demo shell media to codebase" do
+                    source "#{entry_path[:module].include?(".template-manager") ? entry_path[:module].sub(".","").sub("-","_") : entry_path[:module]}"
+                    path "#{new_resource.web_root}/#{entry_path[:codebase]}"
+                    owner new_resource.user
+                    group new_resource.group
+                    files_owner new_resource.user
+                    files_group new_resource.group
+                    action :create_if_missing
+                    recursive true
+                    overwrite true
                 end
             end
         end
     end
 end
 
-action :handle_user_custom_module_data_mapping do
-    unless new_resource.custom_module_list.empty?
-        new_resource.custom_module_list.each do |module_key, module_value|
-            if ((module_value.is_a? Hash) && module_value.has_key?("map"))
-                ruby_block "Copy files from module data pack to the codebase" do
+action :add_module_content_to_codebase do
+    new_resource.custom_module_list.each do |module_key, module_value|
+        new_resource.demo_shell_media_map.each do |media_key, entry_path|
+            if module_key != "local-data-pack" && module_key.include?("data-pack")
+                src = "#{new_resource.web_root}/vendor/#{module_value[:name]}/#{entry_path[:module]}"
+                dest = "#{new_resource.web_root}/#{entry_path[:codebase]}"
+                ruby_block "Copying files from #{src} to #{dest}" do
                     block do
-                        module_value[:map].each do |key, drop_paths|
-                            Dir["#{new_resource.web_root}/vendor/#{module_value["name"]}/#{drop_paths[:module]}/*"].each do |file|
-                                FileUtils.cp(file, "#{new_resource.web_root}/#{drop_paths[:codebase]}")
-                            end
+                        Dir["#{src}/*"].each do |entry|
+                            FileUtils.cp_r(entry, dest)
                         end
+                        only_if { Dir.exist?(src) && Dir.exist?(dest) }
                     end
-                    only_if { 
-                        Dir.exist?("#{new_resource.web_root}/vendor/#{module_value["name"]}/#{drop_paths[:module]}") && 
-                        !Dir.empty?("#{new_resource.web_root}/vendor/#{module_value["name"]}/#{drop_paths[:module]}") &&
-                        Dir.exist?("#{new_resource.web_root}/#{drop_paths[:codebase]}") 
-                    }
                 end
             end
         end
