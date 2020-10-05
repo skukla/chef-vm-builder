@@ -2,5 +2,5 @@
 .vagrant/
 config.json
 *.code-workspace
-!samples/data-packs/starter/config.json
+!samples/data-pack-library/starter/config.json
 
