@@ -117,7 +117,7 @@ end
 
 action :add_local_content_to_codebase do
     new_resource.custom_module_list.each do |module_key, module_value|
-        if module_key.include?("local-data-pack")
+        if module_key == "local-data-pack"
             new_resource.demo_shell_media_map.each do |media_key, entry_path|
                 remote_directory "Adding demo shell media to codebase" do
                     source "#{entry_path[:module].include?(".template-manager") ? entry_path[:module].sub(".","").sub("-","_") : entry_path[:module]}"
