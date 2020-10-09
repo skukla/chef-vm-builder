@@ -1,10 +1,15 @@
 {
-	"starter-data-pack": {
-		"name": "skukla/module-custom-demo-shell",
-		"repository_url": "git@github.com:skukla/module-custom-demo-shell.git"
+	"custom-data-pack": {
+		"name": "custom-demo",
+		"repository_url": "starter"
 	},
 	"sealed-air-data-pack": {
 		"name": "skukla/sealed-air-data-pack",
 		"repository_url": "git@github.com:skukla/sealed-air-data-pack.git"
+	},
+	"grocery-data-pack": {
+		"name": "story-store/grocery",
+		"version": "dev-develop",
+		"repository_url": "git@github.com:PMET-public/module-storystore-grocery.git"
 	}
 }
