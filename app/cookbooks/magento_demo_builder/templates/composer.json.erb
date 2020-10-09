@@ -1,5 +1,5 @@
 {
-	"name": "skukla/module-custom-demo-shell",
+	"name": "<%= @package_name %>",
 	"version": "1.0.0",
 	"description": "N/A",
 	"type": "magento2-module",
@@ -15,18 +15,7 @@
 			"registration.php"
 		],
 		"psr-4": {
-			"Skukla\\CustomDemoShell\\": ""
+			"<%= @vendor %>\\<%= @module_name %>\\": ""
 		}
-	},
-	"extra": {
-		"map": [
-			<% @media_map.each_with_index do |(map_key, map_value), index| %>
-			<% next if map_key == "catalog" %>
-			[
-				"<%= map_value[:module] %>",
-				"../../<%= map_value[:codebase] %>"
-			]<% if @media_map.length - 1 != index -%>,<% end -%>
-			<% end %>
-		]
 	}
 }

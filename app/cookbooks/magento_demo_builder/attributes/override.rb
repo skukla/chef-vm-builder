@@ -14,11 +14,7 @@ supported_settings.each do |top_key, top_array|
             if node[top_key][setting].is_a? Chef::Node::ImmutableMash
                 unless node[top_key][setting].nil?
                     node[top_key][setting].each do |custom_module_key, custom_module_value|
-                        if custom_module_key.to_s.include?("data-pack") && custom_module_value.has_key?(:map)
-                            override[:magento_demo_builder][:demo_shell][:media_map] = custom_module_value[:map]
-                        else
                             override[:magento_demo_builder][:custom_module_list] = node[top_key][setting]
-                        end
                     end
                 end
             end

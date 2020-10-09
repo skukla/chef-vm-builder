@@ -19,7 +19,7 @@ property :project_stability,  String,                  default: node[:composer][
 property :package_name,       String
 property :package_version,    String
 property :module_name,        String
-property :repository_url,     String
+property :repository_url,     String,                  default: ""
 property :extra_content,      String
 property :clearcache,         [TrueClass, FalseClass], default: node[:composer][:clear_composer_cache]
 property :timeout,            [String, Integer],       default: node[:composer][:timeout]
@@ -100,6 +100,10 @@ action :add_repository do
     execute "#{new_resource.name}" do
         command "su #{new_resource.user} -c '#{new_resource.install_directory}/#{new_resource.file} config repositories.#{new_resource.module_name} git #{new_resource.repository_url}'"
         cwd "#{new_resource.web_root}"
+        only_if { 
+            new_resource.repository_url.include?("https://github.com/") || 
+            new_resource.repository_url.include?("git@github.com:")
+        }
     end
 end
 

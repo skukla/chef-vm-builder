@@ -70,4 +70,30 @@ module StringReplaceHelper
         FileUtils.chmod(0664, "#{web_root}/#{composer_json}")
         FileUtils.chown("vagrant", "vagrant", "#{web_root}/#{composer_json}")
     end
+
+    def self.prepare_module_names(package_name, vendor)
+        unless package_name.nil?
+            if !package_name.include?("module-")
+                package_name = "module-#{package_name}"
+            end
+            if package_name.include?("/")
+                vendor_name = package_name.split("/")[0]
+                module_name = package_name.split("/")[1]
+            else
+                module_name = package_name
+                vendor_name = vendor
+            end
+            if module_name.include?("-")
+                module_name = module_name.split("-").map{ |value| value.capitalize }.join
+            end
+            if vendor_name.include?("-")
+                vendor_name = vendor_name.split("-").map{ |value| value.capitalize }.join
+            end
+            return {
+                package_name: package_name,
+                vendor: vendor_name,
+                module_name: module_name.sub("Module", "")
+            }
+        end
+    end
 end

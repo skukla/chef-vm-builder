@@ -19,6 +19,7 @@ action :download do
         module_name new_resource.module_name
         repository_url new_resource.repository_url
         not_if { new_resource.repository_url.empty? }
+        only_if { new_resource.repository_url.include?("github.com") }
     end
 
     composer "Add module #{new_resource.package_name}" do
@@ -26,5 +27,6 @@ action :download do
         package_name new_resource.package_name
         package_version new_resource.package_version
         options new_resource.options
+        only_if { new_resource.package_name.include?("/") }
     end
 end
