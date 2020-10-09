@@ -48,21 +48,6 @@
 		"magentoese_autofill": {
 			"general": {
 				"enable_autofill": 1
-			},
-			"persona_1": {
-				"enable": 1,
-				"label": "Tester McTesterton (Test User)",
-				"email_value": "test@luma.demo",
-				"password_value": "Password1",
-				"firstname_value": "Tester",
-				"lastname_value": "McTesterton",
-				"address_value": "3640 Holdrege Ave",
-				"city_value": "Los Angeles",
-				"state_value": "12",
-				"zip_value": "90016",
-				"country_value": "US",
-				"telephone_value": "310-945-0345",
-				"company_value": "Luma, Inc."
 			}
 		},
 		"web": {

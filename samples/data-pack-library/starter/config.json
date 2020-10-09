@@ -15,9 +15,9 @@
 				"name": "magentoese/module-data-install",
 				"repository_url": "https://github.com/PMET-public/module-data-install.git"
 			},
-			"local-data-pack": {
-				"name": "skukla/module-custom-demo-shell",
-				"repository_url": "git@github.com:skukla/module-custom-demo-shell.git"
+			"custom-data-pack": {
+				"name": "custom-demo",
+				"repository_url": "starter"
 			},
 			"sctools": {
 				"name": "magentoese/module-sctools",
@@ -37,6 +37,15 @@
 			},
 			"product-recommendations": "magento/product-recommendations",
 			"pagebuilder-product-recommendations": "magento/module-page-builder-product-recommendations"
+		},
+		"admin_users": {
+			"Phil": {
+				"first_name": "Phil",
+				"last_name": "Baker",
+				"username": "phil",
+				"password": "Password1",
+				"email": "phil@luma.demo"
+			}
 		}
 	},
 	"application": {
