@@ -2,5 +2,7 @@
 .vagrant/
 config.json
 *.code-workspace
+app/cookbooks/magento_demo_builder/files/default/demo/*
+!app/cookbooks/magento_demo_builder/files/default/demo/.gitignore
 !samples/data-pack-library/starter/config.json
 
