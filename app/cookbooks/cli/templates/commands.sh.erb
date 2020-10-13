@@ -37,13 +37,6 @@ function flush-cache() {
 }
 export -f flush-cache
 
-function cache-trigger() {
-  printf "Cleaning cache..."
-  www
-  ./bin/magento cache:clean full_page
-}
-export -f cache-trigger
-
 function enable-cache() {
   printf "\nEnabling cache...\n"
   www
@@ -182,15 +175,6 @@ function start-all-consumers() {
   done
 } 
 export -f start-all-consumers
-
-function configure-proxy() {
-  printf "\nProxying through gitlab firewall...\n"
-  export GIT_SSH_COMMAND='ssh -o ProxyCommand="nc -x 127.0.0.1:8889 %h %p"' HTTP_PROXY=http://127.0.0.1:8888
-  curl -sS https://raw.githubusercontent.com/PMET-public/magento-cloud-extension/0.0.25/sh-scripts/lib.sh \
-    https://raw.githubusercontent.com/PMET-public/magento-cloud-extension/0.0.25/sh-scripts/configure-proxies.sh | env ext_ver=0.0.25 tab_url=https://github.com bash
-  sleep 1
-}
-export -f configure-proxy
 
 function add-modules() {
   www
@@ -404,12 +388,19 @@ function disable-webmin() {
 export -f disable-webmin
 
 # Tools
+URL=<%= @unsecure_base_url %>
 function warm-cache() {
-  CLI_DIRECTORY=~/cli
-  SCRIPTS_DIRECTORY=scripts
-  bash ${CLI_DIRECTORY}/${SCRIPTS_DIRECTORY}/cache_warmer.sh
+  clear
+  printf "Warming the cache...\n";
+  sleep 1;
+  curl -s ${URL} -H 'Cache-Control: no-cache' >&1 | egrep -o "${URL}[^<]+" | cut -d'"' -f 1 | while read line;
+  do 
+    time curl -A 'Cache Warmer' -s -L $line > /dev/null 2>&1;
+    echo $line; 
+  done; 
+  printf "done."; 
+  sleep 1; 
 }
-export -f warm-cache
 
 function motd() {
   cat /var/run/motd.dynamic

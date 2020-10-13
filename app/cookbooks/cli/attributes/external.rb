@@ -20,5 +20,6 @@ default[:cli][:mysql][:db_name] = node[:mysql][:db_name]
 include_attribute "magento::default"
 include_attribute "magento::override"
 default[:cli][:magento][:version] = node[:magento][:installation][:options][:version]
+default[:cli][:magento][:unsecure_base_url] = node[:magento][:installation][:settings][:unsecure_base_url]
 default[:cli][:magento][:consumer_list] = node[:magento][:installation][:options][:consumer_list]
 

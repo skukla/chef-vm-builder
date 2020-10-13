@@ -13,6 +13,7 @@ property :webserver_type,           String,    default: node[:cli][:init][:webse
 property :web_root,                 String,    default: node[:cli][:init][:web_root]
 property :php_version,              String,    default: node[:cli][:php][:version]
 property :magento_version,          String,    default: node[:cli][:magento][:version]
+property :unsecure_base_url,        String,    default: node[:cli][:magento][:unsecure_base_url]
 property :db_host,                  String,    default: node[:cli][:mysql][:db_host]
 property :db_user,                  String,    default: node[:cli][:mysql][:db_user]
 property :db_password,              String,    default: node[:cli][:mysql][:db_password]
@@ -48,6 +49,7 @@ action :install do
         group new_resource.group
         variables ({
             user: new_resource.user,
+            unsecure_base_url: new_resource.unsecure_base_url,
             webserver_type: new_resource.webserver_type,
             web_root: new_resource.web_root,
             php_version: new_resource.php_version,
