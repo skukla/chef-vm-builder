@@ -6,21 +6,22 @@
 resource_name :cli
 provides :cli
 
-property :name,                     String,    name_property: true
-property :user,                     String,    default: node[:cli][:init][:user]
-property :group,                    String,    default: node[:cli][:init][:user]
-property :webserver_type,           String,    default: node[:cli][:init][:webserver_type]
-property :web_root,                 String,    default: node[:cli][:init][:web_root]
-property :php_version,              String,    default: node[:cli][:php][:version]
-property :magento_version,          String,    default: node[:cli][:magento][:version]
-property :unsecure_base_url,        String,    default: node[:cli][:magento][:unsecure_base_url]
-property :db_host,                  String,    default: node[:cli][:mysql][:db_host]
-property :db_user,                  String,    default: node[:cli][:mysql][:db_user]
-property :db_password,              String,    default: node[:cli][:mysql][:db_password]
-property :db_name,                  String,    default: node[:cli][:mysql][:db_name]
-property :cli_directories,          Array,     default: node[:cli][:directories]
-property :cli_files,                Array,     default: node[:cli][:files]
-property :consumer_list,            Array,     default: node[:cli][:magento][:consumer_list]
+property :name,                     String,                                    name_property: true
+property :user,                     String,                                    default: node[:cli][:init][:user]
+property :group,                    String,                                    default: node[:cli][:init][:user]
+property :webserver_type,           String,                                    default: node[:cli][:init][:webserver_type]
+property :web_root,                 String,                                    default: node[:cli][:init][:web_root]
+property :demo_structure,           Hash,                                      default: node[:cli][:init][:demo_structure]
+property :php_version,              String,                                    default: node[:cli][:php][:version]
+property :magento_version,          String,                                    default: node[:cli][:magento][:version]
+property :use_secure_frontend,      [Integer, TrueClass, FalseClass, String],  default: node[:cli][:magento][:use_secure_frontend]
+property :db_host,                  String,                                    default: node[:cli][:mysql][:db_host]
+property :db_user,                  String,                                    default: node[:cli][:mysql][:db_user]
+property :db_password,              String,                                    default: node[:cli][:mysql][:db_password]
+property :db_name,                  String,                                    default: node[:cli][:mysql][:db_name]
+property :cli_directories,          Array,                                     default: node[:cli][:directories]
+property :cli_files,                Array,                                     default: node[:cli][:files]
+property :consumer_list,            Array,                                     default: node[:cli][:magento][:consumer_list]
 
 action :create_directories do
     directory "VM cli path check" do
@@ -41,6 +42,7 @@ action :create_directories do
 end
 
 action :install do
+    new_resource.use_secure_frontend ? protocol = "http" : protocol = "https"
     template "VM CLI" do
         source "commands.sh.erb"
         path "/home/#{new_resource.user}/cli/commands.sh"
@@ -49,7 +51,7 @@ action :install do
         group new_resource.group
         variables ({
             user: new_resource.user,
-            unsecure_base_url: new_resource.unsecure_base_url,
+            urls: DemoStructureHelper.get_vhost_urls(new_resource.demo_structure).map{ |url| "\"#{protocol}://#{url}/\"" }.join(" "),
             webserver_type: new_resource.webserver_type,
             web_root: new_resource.web_root,
             php_version: new_resource.php_version,

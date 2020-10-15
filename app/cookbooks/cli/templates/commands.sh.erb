@@ -388,18 +388,20 @@ function disable-webmin() {
 export -f disable-webmin
 
 # Tools
-URL=<%= @unsecure_base_url %>
 function warm-cache() {
   clear
-  printf "Warming the cache...\n";
-  sleep 1;
-  curl -s ${URL} -H 'Cache-Control: no-cache' >&1 | egrep -o "${URL}[^<]+" | cut -d'"' -f 1 | while read line;
-  do 
-    time curl -A 'Cache Warmer' -s -L $line > /dev/null 2>&1;
-    echo $line; 
-  done; 
-  printf "done."; 
-  sleep 1; 
+  URLS=(<%= @urls %>);
+  for URL in ${URLS[@]}; do
+    printf "Warming the cache for ${URL}...\n";
+    sleep 1;
+    curl -s ${URL} -H 'Cache-Control: no-cache' >&1 | egrep -o "${URL}[^<]+" | cut -d'"' -f 1 | while read line;
+    do 
+      time curl -A 'Cache Warmer' -s -L $line > /dev/null 2>&1;
+      echo $line; 
+    done; 
+    printf "done.\n\n"; 
+    sleep 1;
+  done
 }
 
 function motd() {
