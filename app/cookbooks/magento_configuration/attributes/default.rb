@@ -251,8 +251,8 @@ default[:magento_configuration][:settings] =
     }
 }
 default[:magento_configuration][:admin_users] = Hash.new
-default[:magento_configuration][:flags][:base] = true
-default[:magento_configuration][:flags][:b2b] = true
+default[:magento_configuration][:flags][:base] = false
+default[:magento_configuration][:flags][:b2b] = false
 default[:magento_configuration][:flags][:custom_modules] = true
 default[:magento_configuration][:flags][:admin_users] = true
 
@@ -262,11 +262,3 @@ if node[:magento_configuration][:magento_family] == "enterprise"
 else
     default[:magento_configuration][:paths] = community_paths
 end
-
-default[:magento_configuration][:media_drops] = {
-    content: "pub/media/wysiwyg",
-    product: "pub/media/catalog/product",
-    favicon: "pub/media/favicon",
-    logo: "pub/media/logo",
-    theme: "vendor/magento/theme-frontend-luma"
-}

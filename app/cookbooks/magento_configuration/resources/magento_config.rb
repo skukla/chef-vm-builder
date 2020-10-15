@@ -15,7 +15,6 @@ property :config_paths,        Array,                   default: node[:magento_c
 property :config_group,        String
 property :config_data,         Hash                    
 property :share_list,          Hash,                    default: node[:magento_configuration][:samba][:share_list]
-property :media_drops,         Hash,                    default: node[:magento_configuration][:media_drops]
 property :use_elasticsearch,   [TrueClass, FalseClass], default: node[:magento_configuration][:elasticsearch][:use]
 
 action :process_configuration do  
@@ -28,7 +27,7 @@ action :process_configuration do
                     config_setting[config_scope].each do |config_scope_code, config_value|
                         unless config_value.nil? || ((config_value.is_a? String) && config_value.empty?)
                             # Base Settings
-                            if new_resource.config_group == "base" && !config_path.include?("btob") && !config_path.include?("search")
+                            if new_resource.config_group == "base" && !config_path.include?("btob")
                                 magento_cli "Configuring #{new_resource.config_group} #{config_scope} setting for #{config_scope_code}: #{config_path}" do
                                     action :config_set
                                     config_path config_path
@@ -39,16 +38,6 @@ action :process_configuration do
                             
                             # B2B Settings
                             elsif new_resource.config_group == "b2b" && config_path.include?("btob")
-                                magento_cli "Configuring #{new_resource.config_group} #{config_scope} setting for #{config_scope_code}: #{config_path}" do
-                                    action :config_set
-                                    config_path config_path
-                                    config_scope config_scope
-                                    config_scope_code config_scope_code
-                                    config_value config_value
-                                end
-
-                            # Search Settings
-                            elsif new_resource.config_group == "search" && config_path.include?("search")
                                 magento_cli "Configuring #{new_resource.config_group} #{config_scope} setting for #{config_scope_code}: #{config_path}" do
                                     action :config_set
                                     config_path config_path

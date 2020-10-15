@@ -56,20 +56,6 @@ magento_config "Configure b2b settings" do
     }
 end
 
-magento_config "Configure search settings" do
-    action :process_configuration
-    config_group "search"
-    config_data config_settings
-    not_if {
-        (build_action == "install" && ::File.exist?("#{web_root}/var/.first-run-state.flag")) ||
-        (!use_elasticsearch)
-    }
-    only_if { 
-        ::File.exist?("#{web_root}/app/etc/config.php") && 
-        (use_elasticsearch)
-    }
-end
-
 magento_config "Configure admin users" do
     action :process_admin_users
     config_group "admin_users"
