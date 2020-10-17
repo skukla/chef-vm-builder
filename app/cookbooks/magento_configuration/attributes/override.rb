@@ -20,9 +20,9 @@ supported_settings.each do |top_key, top_array|
         end
     when :configuration_flags
         top_array.each do |setting|
-            if node[:application][:installation][:build][:configuration].is_a? Chef::Node::ImmutableMash
-                unless node[:application][:installation][:build][:configuration][setting].nil?
-                    override[:magento_configuration][:flags][setting] = node[:application][:installation][:build][:configuration][setting]
+            if node[:application][:build][:configuration].is_a? Chef::Node::ImmutableMash
+                unless node[:application][:build][:configuration][setting].nil?
+                    override[:magento_configuration][:flags][setting] = node[:application][:build][:configuration][setting]
                 end
             end
         end

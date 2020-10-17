@@ -18,8 +18,8 @@ default[:magento_demo_builder][:samba][:share_list] = node[:samba][:share_list]
 
 include_attribute "magento::default"
 include_attribute "magento::override"
-default[:magento_demo_builder][:magento][:build][:action] = node[:magento][:installation][:build][:action]
-default[:magento_demo_builder][:magento][:build][:sample_data] = node[:magento][:installation][:build][:sample_data]
+default[:magento_demo_builder][:magento][:build][:action] = node[:magento][:build][:action]
+default[:magento_demo_builder][:magento][:build][:sample_data] = node[:magento][:build][:sample_data]
 
 include_attribute "magento_patches::default"
 include_attribute "magento_patches::override"

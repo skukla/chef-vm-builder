@@ -4,7 +4,7 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 web_root = node[:magento][:init][:web_root]
-build_action = node[:magento][:installation][:build][:action]
+build_action = node[:magento][:build][:action]
 
 magento_app "Uninstall Magento" do
     action :uninstall

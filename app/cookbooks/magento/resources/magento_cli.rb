@@ -14,7 +14,7 @@ property :config_path,              String
 property :config_value,             [String, Integer, TrueClass, FalseClass]
 property :config_scope,             String
 property :config_scope_code,        String
-property :deploy_mode,              String,                                   default: node[:magento][:installation][:build][:deploy_mode][:mode]
+property :deploy_mode,              String,                                   default: node[:magento][:build][:deploy_mode][:mode]
 property :cache_types,              Array,                                    default: Array.new
 property :indexers,                 Array,                                    default: Array.new
 property :consumer_list,            Array

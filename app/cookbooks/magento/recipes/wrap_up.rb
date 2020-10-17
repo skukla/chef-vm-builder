@@ -5,8 +5,8 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 user = node[:magento][:init][:user]
 web_root = node[:magento][:init][:web_root]
-build_action = node[:magento][:installation][:build][:action]
-apply_deploy_mode = node[:magento][:installation][:build][:deploy_mode][:apply]
+build_action = node[:magento][:build][:action]
+apply_deploy_mode = node[:magento][:build][:deploy_mode][:apply]
 
 magento_app "Set application mode" do
     action :set_application_mode

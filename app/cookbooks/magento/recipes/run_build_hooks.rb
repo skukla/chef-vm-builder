@@ -3,9 +3,9 @@
 # Recipe:: run_build_hooks
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-warm_cache = node[:magento][:installation][:build][:hooks][:warm_cache]
-enable_media_gallery = node[:magento][:installation][:build][:hooks][:enable_media_gallery]
-commands = node[:magento][:installation][:build][:hooks][:commands]
+warm_cache = node[:magento][:build][:hooks][:warm_cache]
+enable_media_gallery = node[:magento][:build][:hooks][:enable_media_gallery]
+commands = node[:magento][:build][:hooks][:commands]
 media_gallery_commands = ["config:set system/media_gallery/enabled 1", "media-gallery:sync"]
 vm_cli_commands = commands.select{ |command| !command.include?(":") }
 magento_cli_commands = commands.select{ |command| command.include?(":") }

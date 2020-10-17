@@ -11,10 +11,10 @@ supported_settings = {
 supported_settings.each do |setting_key, setting_data|
     case setting_key
     when :magento_build
-        next unless node[:application][:installation][:build].is_a? Chef::Node::ImmutableMash
+        next unless node[:application][:build].is_a? Chef::Node::ImmutableMash
         setting_data.each do |option|
-            unless node[:application][:installation][:build][option].nil?
-                override[:composer][option] = node[:application][:installation][:build][option]
+            unless node[:application][:build][option].nil?
+                override[:composer][option] = node[:application][:build][option]
             end
         end
     when :credentials

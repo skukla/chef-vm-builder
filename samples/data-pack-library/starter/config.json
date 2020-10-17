@@ -56,27 +56,25 @@
 				"github_token": ""
 			}
 		},
-		"installation": {
-			"options": {
-				"family": "Commerce",
-				"version": "2.4.1"
+		"options": {
+			"family": "Commerce",
+			"version": "2.4.1"
+		},
+		"build": {
+			"action": "install",
+			"sample_data": false,
+			"patches": {
+				"apply": true,
+				"branch": "pmet-2.4.1-ref"
 			},
-			"build": {
-				"action": "install",
-				"sample_data": false,
-				"patches": {
-					"apply": true,
-					"branch": "pmet-2.4.1-ref"
-				},
-				"hooks": {
-					"warm_cache": true,
-					"enable_media_gallery": true,
-					"commands": []
-				}
-			},
-			"settings": {
-				"admin_password": "admin4tls"
+			"hooks": {
+				"warm_cache": true,
+				"enable_media_gallery": true,
+				"commands": []
 			}
+		},
+		"settings": {
+			"admin_password": "admin4tls"
 		}
 	},
 	"infrastructure": {

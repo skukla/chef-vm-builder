@@ -6,7 +6,7 @@
 user = node[:magento][:init][:user]
 web_root = node[:magento][:init][:web_root]
 use_elasticsearch = node[:magento][:elasticsearch][:use]
-build_action = node[:magento][:installation][:build][:action]
+build_action = node[:magento][:build][:action]
 custom_module_list = node[:magento][:custom_module_list]
 config_settings = node[:magento][:configuration][:settings]
 admin_users = node[:magento][:configuration][:admin_users]

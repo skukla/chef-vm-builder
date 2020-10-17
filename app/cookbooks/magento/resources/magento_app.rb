@@ -15,9 +15,9 @@ property :composer_github_token,    String,                  default: node[:mage
 property :permission_dirs,          Array,                   default: ["var/", "pub/", "app/etc/", "generated/"]
 property :user,                     String,                  default: node[:magento][:init][:user]
 property :group,                    String,                  default: node[:magento][:init][:user]
-property :family,                   String,                  default: node[:magento][:installation][:options][:family]
-property :version,                  String,                  default: node[:magento][:installation][:options][:version]
-property :modules_to_remove,        [String, Array],         default: node[:magento][:installation][:build][:modules_to_remove]
+property :family,                   String,                  default: node[:magento][:options][:family]
+property :version,                  String,                  default: node[:magento][:options][:version]
+property :modules_to_remove,        [String, Array],         default: node[:magento][:build][:modules_to_remove]
 property :use_elasticsearch,        [TrueClass, FalseClass], default: node[:magento][:elasticsearch][:use]
 property :elasticsearch_host,       String,                  default: node[:magento][:elasticsearch][:host]
 property :elasticsearch_port,       [String, Integer],       default: node[:magento][:elasticsearch][:port]
@@ -26,7 +26,7 @@ property :db_user,                  String,                  default: node[:mage
 property :db_password,              String,                  default: node[:magento][:mysql][:db_password]
 property :db_name,                  String,                  default: node[:magento][:mysql][:db_name]
 property :install_settings,         Hash
-property :consumer_list,            Array,                   default: node[:magento][:installation][:options][:consumer_list]
+property :consumer_list,            Array,                   default: node[:magento][:options][:consumer_list]
 property :cache_types,              Array
 property :indexers,                 Array
 property :remove_generated,         [TrueClass, FalseClass], default: true

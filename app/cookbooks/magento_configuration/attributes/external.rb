@@ -31,6 +31,6 @@ default[:magento_configuration][:custom_modules] = node[:magento_custom_modules]
 # We need both of these to ensure overrides are included for some reason
 include_attribute "magento::default"
 include_attribute "magento::override"
-default[:magento_configuration][:magento_version] = node[:magento][:installation][:options][:version]
-default[:magento_configuration][:magento_family] = node[:magento][:installation][:options][:family]
-default[:magento_configuration][:magento][:build_action] = node[:magento][:installation][:build][:action]
+default[:magento_configuration][:magento_version] = node[:magento][:options][:version]
+default[:magento_configuration][:magento_family] = node[:magento][:options][:family]
+default[:magento_configuration][:magento][:build_action] = node[:magento][:build][:action]
