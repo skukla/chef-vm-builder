@@ -72,6 +72,26 @@ action :configure do
     end
 end
 
+action :create_magento_shares do
+    [:product_media_share, :content_media_share, :backups_share].each do |drop_directory|
+        if new_resource.share_list.has_key?(drop_directory)
+            if (new_resource.share_list[drop_directory].is_a? String) && !new_resource.share_list[drop_directory].empty?
+                media_drop_path = new_resource.share_list[drop_directory]
+            elsif new_resource.share_list[drop_directory].has_key?(:path) && !new_resource.share_list[drop_directory][:path].empty?
+                media_drop_path = new_resource.share_list[drop_directory][:path]
+            end
+            directory "Media Drop" do
+                path media_drop_path
+                owner new_resource.user
+                group new_resource.group
+                mode "777"
+                recursive true
+                not_if { Dir.exist?(media_drop_path) }
+            end
+        end
+    end
+end
+
 action :restart do
     service 'smbd' do
         action :restart

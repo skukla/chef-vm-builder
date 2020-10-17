@@ -150,6 +150,10 @@ magento_app "Add sample data" do
     }
 end
 
+samba "Create Magento samba shares" do
+    action :create_magento_shares
+end
+
 magento_app "Set permissions after downloading code" do
     action :set_permissions
     not_if { ::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == "install" }
