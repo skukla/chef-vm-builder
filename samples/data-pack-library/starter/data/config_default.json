@@ -95,6 +95,9 @@
 				"capture_action": "invoice",
 				"order_status": "processing",
 				"merchant_account_id": "magento",
+				"sandbox_merchant_id": "3thxv4w4xhnkxzt5",
+				"sandbox_public_key": "encrypt(n2bt4844t6xrt56x)",
+				"sandbox_private_key": "encrypt(e6c98fd99fe699d4169475fef026d5b9)",
 				"merchant_id": "3thxv4w4xhnkxzt5",
 				"public_key": "encrypt(n2bt4844t6xrt56x)",
 				"private_key": "encrypt(e6c98fd99fe699d4169475fef026d5b9)",
@@ -144,6 +147,9 @@
 		"system": {
 			"backup": {
 				"functionality_enabled": "1"
+			},
+			"media_gallery": {
+				"enabled": "0"
 			}
 		},
 		"web": {
