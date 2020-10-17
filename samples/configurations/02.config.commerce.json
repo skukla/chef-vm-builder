@@ -22,11 +22,16 @@
 		"installation": {
 			"options": {
 				"family": "Commerce",
-				"version": "2.4.0"
+				"version": "2.4.1"
 			},
 			"build": {
 				"action": "install",
-				"sample_data": true
+				"sample_data": true,
+				"hooks": {
+					"warm_cache": true,
+					"enable_media_gallery": true,
+					"commands": []
+				}
 			}
 		}
 	},
