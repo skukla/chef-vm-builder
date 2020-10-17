@@ -1,11 +1,11 @@
 #
-# Cookbook:: cli
+# Cookbook:: vm_cli
 # Attribute:: default
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-default[:cli][:directories] = [
+default[:vm_cli][:directories] = [
     {path: "cli", mode: "770"}
 ]
-default[:cli][:files] = [
+default[:vm_cli][:files] = [
     {source: ".bashrc", path: "", mode: "644"}
 ]

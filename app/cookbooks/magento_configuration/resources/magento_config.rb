@@ -6,16 +6,17 @@
 resource_name :magento_config
 provides :magento_config
 
-property :name,                String,                  name_property: true
-property :user,                String,                  default: node[:magento_configuration][:init][:user]
-property :group,               String,                  default: node[:magento_configuration][:init][:user]
-property :web_root,            String,                  default: node[:magento_configuration][:init][:web_root]
-property :build_action,        String,                  default: node[:magento_configuration][:magento][:build_action]
-property :config_paths,        Array,                   default: node[:magento_configuration][:paths]
+property :name,                String,                     name_property: true
+property :user,                String,                     default: node[:magento_configuration][:init][:user]
+property :group,               String,                     default: node[:magento_configuration][:init][:user]
+property :web_root,            String,                     default: node[:magento_configuration][:init][:web_root]
+property :build_action,        String,                     default: node[:magento_configuration][:magento][:build_action]
+property :config_paths,        Array,                      default: node[:magento_configuration][:paths]
 property :config_group,        String
 property :config_data,         Hash                    
-property :share_list,          Hash,                    default: node[:magento_configuration][:samba][:share_list]
-property :use_elasticsearch,   [TrueClass, FalseClass], default: node[:magento_configuration][:elasticsearch][:use]
+property :share_list,          Hash,                       default: node[:magento_configuration][:samba][:share_list]
+property :use_elasticsearch,   [TrueClass, FalseClass],    default: node[:magento_configuration][:elasticsearch][:use]
+
 
 action :process_configuration do  
     new_resource.config_paths.each do |config_path|

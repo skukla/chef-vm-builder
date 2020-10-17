@@ -1,4 +1,4 @@
-name 'cli'
+name 'vm_cli'
 maintainer 'Steve Kukla'
 maintainer_email 'kukla@adobe.com'
 license 'All Rights Reserved'

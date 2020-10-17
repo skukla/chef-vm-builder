@@ -7,7 +7,8 @@ supported_settings = {
     :custom_demo => [:structure],
     :installation_options => [:family, :version, :minimum_stability, :directory, :consumer_list],
     :build_options => [:clear_cache, :action, :force_install, :sample_data, :modules_to_remove, :deploy_mode => [:apply, :mode]],
-    :installation_settings => [:backend_frontname, :language, :timezone, :currency, :admin_firstname, :admin_lastname, :admin_email, :admin_user, :admin_password, :use_rewrites, :use_secure_frontend,  :use_secure_admin, :cleanup_database, :session_save, :encryption_key]
+    :build_hooks => [:warm_cache, :enable_media_gallery, :commands],
+    :installation_settings => [:backend_frontname, :language, :timezone, :currency, :admin_firstname, :admin_lastname, :admin_email, :admin_user, :admin_password, :use_rewrites, :use_secure_frontend,  :use_secure_admin, :cleanup_database, :session_save, :encryption_key],
 }
 
 supported_settings.each do |setting_key, setting_data|
@@ -65,6 +66,12 @@ supported_settings.each do |setting_key, setting_data|
         setting_data.each do |option|
             next if node[:application][:installation][:settings][option].nil?
             override[:magento][:installation][:settings][option] = node[:application][:installation][:settings][option]
+        end
+    when :build_hooks
+        next unless node[:application][:installation][:build][:hooks].is_a? Chef::Node::ImmutableMash
+        setting_data.each do |option|
+            next if node[:application][:installation][:build][:hooks][option].nil?
+            override[:magento][:installation][:build][:hooks][option] = node[:application][:installation][:build][:hooks][option]
         end
     when :custom_demo
         setting_data.each do |option|

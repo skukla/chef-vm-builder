@@ -516,7 +516,7 @@ export -f export-backups
 function remove-backups() {
   www
   if [ -d "var/backups" ]; then
-    printf "\nRemoving all backups..."
+    printf "\nRemoving all backups on the VM (Local backups will not be affected)..."
     sleep 1
     rm -rf var/backups/*
     printf "done. \n"

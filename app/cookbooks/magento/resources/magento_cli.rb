@@ -6,23 +6,24 @@
 resource_name :magento_cli
 provides :magento_cli
 
-property :name,                     String,  name_property: true
-property :web_root,                 String,  default: node[:magento][:init][:web_root]
-property :user,                     String,  default: node[:magento][:init][:user]
+property :name,                     String,                                   name_property: true
+property :web_root,                 String,                                   default: node[:magento][:init][:web_root]
+property :user,                     String,                                   default: node[:magento][:init][:user]
 property :install_string,           String
 property :config_path,              String
 property :config_value,             [String, Integer, TrueClass, FalseClass]
 property :config_scope,             String
 property :config_scope_code,        String
-property :deploy_mode,              String,  default: node[:magento][:installation][:build][:deploy_mode][:mode]
-property :cache_types,              Array,   default: Array.new
-property :indexers,                 Array,   default: Array.new
+property :deploy_mode,              String,                                   default: node[:magento][:installation][:build][:deploy_mode][:mode]
+property :cache_types,              Array,                                    default: Array.new
+property :indexers,                 Array,                                    default: Array.new
 property :consumer_list,            Array
 property :admin_username,           String
 property :admin_password,           String
 property :admin_email,              String
 property :admin_firstname,          String
 property :admin_lastname,           String
+property :command_list,             [String, Array]
 
 action :install do
     execute new_resource.name do
@@ -137,5 +138,16 @@ action :create_admin_user do
     execute new_resource.name do
         command "su #{new_resource.user} -c 'bin/magento admin:user:create --admin-user=#{new_resource.admin_username} --admin-password=#{new_resource.admin_password} --admin-email=#{new_resource.admin_email} --admin-firstname=#{new_resource.admin_firstname} --admin-lastname=#{new_resource.admin_lastname}'"
         cwd new_resource.web_root
+    end
+end
+
+action :run do
+    command_list = Array.new
+    (new_resource.command_list.is_a? String) ? command_list << new_resource.command_list : command_list = new_resource.command_list
+    command_list.each do |command|
+        execute "Running the #{command} Magento CLI command" do
+            command "su #{new_resource.user} -c './bin/magento #{command}'"
+            cwd new_resource.web_root
+        end
     end
 end
