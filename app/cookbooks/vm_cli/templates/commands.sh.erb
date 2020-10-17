@@ -494,6 +494,7 @@ export -f backup-db
 function backup() {
   enable-backups
   list-backups
+  printf "\n"
   ./bin/magento setup:backup --code --media --db
   printf "done. \n"
   list-backups
