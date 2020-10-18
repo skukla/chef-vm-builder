@@ -35,16 +35,12 @@ printf '\n%23s : %s %s %s\n' "${BOLD}Host Entry" "${REG}<%= @ip %>" "<%= "#{@url
 <% if @use_mailhog %>
 if [ $MAILHOG_PORT != "" ]; then 
     printf '%23s : %s  \n' "${BOLD}Mailhog Inbox" "${REG}http://<%= @hostname %>:$MAILHOG_PORT"
-else 
-    printf '%23s : %s  \n' "${BOLD}Mailhog Inbox" "${REG}Not running"
 fi
 <% end %>
 
 <% if @use_webmin %>
 if [ $WEBMIN_PORT != "" ]; then 
     printf '%23s : %s  \n\t\t %7s : %s\n\t %15s : %s\n' "${BOLD}Webmin Console" "${REG}http://<%= @hostname %>:${WEBMIN_PORT}" "User" "<%= @webmin_user %>" "Password" "<%= @webmin_password %>"
-else
-    printf '%23s : %s  \n' "${BOLD}Webmin Console" "${REG}Not running"
 fi
 <% end %>
 
@@ -59,9 +55,9 @@ printf '\n%23s : %s' "${BOLD}reindex" "${REG}Reindexes all indexes."
 printf '\n%23s : %s' "${BOLD}dev-mode" "${REG}Puts application into developer mode."
 printf '\n%23s : %s' "${BOLD}prod-mode" "${REG}Puts application into production mode."
 printf '\n%23s : %s' "${BOLD}process-catalogs" "${REG}Processes B2B Shared Catalogs (Runs \"clean\" and a single cron trigger)."
-printf '\n%23s : %s' "${BOLD}upgrade" "${REG}Upgrade the codebase after adding a new module to your composer.json file."
-printf '\n%23s : %s' "${BOLD}start-web" "${REG}Starts/restarts the web server."
-printf "\n\n"
-printf "${REG}Use ${BOLD}show-help${REG} to see a full list of CLI commands."
+printf '\n%23s : %s' "${BOLD}backup" "${REG}Take a backup of your build. Stores backup in <webroot>/var/backups."
+printf '\n%23s : %s' "${BOLD}restore" "${REG}Restore a backup. Files must be present in <webroot>/var/backups."
+printf '\n%23s : %s' "${BOLD}export-backups" "${REG}Exports backup files to your local system in <project>/app/backups."
+printf '\n%23s : %s' "${BOLD}remove-backups" "${REG}Removes all backup files from the VM but does not affect local backups."
 printf "\n\n"
 rule
