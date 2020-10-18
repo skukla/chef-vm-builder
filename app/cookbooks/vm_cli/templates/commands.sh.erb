@@ -1,15 +1,14 @@
 # VM Navigation
 function www() {
-  MAGENTO_DIRECTORY=<%= @web_root %>
+  MAGENTO_DIRECTORY="<%= @web_root %>"
   cd ${MAGENTO_DIRECTORY}
 }
 export -f www
 
 # CLI
 function own() {
-  USER=<%= @user %>
-  GROUP=<%= @user %>
-  
+  USER="<%= @user %>"
+  GROUP="<%= @user %>"
   printf "\nUpdating permissions..."
   clear
   www
@@ -159,7 +158,6 @@ function prod-mode() {
   printf "\nSwitching to Production mode...\n"
   www
   ./bin/magento deploy:mode:set production
-  cache
 }
 export -f prod-mode
 
@@ -241,7 +239,11 @@ export -f status-web
 
 # Database
 function db() {
-  mysql <%= @db_name %> -sN -h <%= @db_host %> -u <%= @db_user %> -p<%= @db_password %>
+  DB_HOST="<%= @db_host %>"
+  DB_USER="<%= @db_user %>"
+  DB_PASSWORD="<%= @db_password %>"
+  DB_NAME="<%= @db_name %>"
+  mysql ${DB_NAME} -sN -h ${DB_HOST} -u ${DB_USER} -p${DB_PASSWORD}
 }
 export -f db
 
@@ -420,16 +422,19 @@ function cloud-logout() {
 export -f cloud-logout
 
 function clear-cron-schedule() {
+  DB_USER="<%= @db_user %>"
+  DB_PASSWORD="<%= @db_password %>"
+  DB_NAME="<%= @db_name %>"
   printf "\nClearing the cron schedule database table..."
-  mysql --user=<%= @db_user %> --password=<%= @db_password %> --database=<%= @db_name %> -e "DELETE FROM cron_schedule;"
+  mysql --user=${DB_USER} --password=${DB_PASSWORD} --database=${DB_NAME} -e "DELETE FROM cron_schedule;"
   sleep 1
   printf "done.\n"
 }
 export -f clear-cron-schedule
 
 function apply-patches() {
-  MAGENTO_DIRECTORY=<%= @web_root %>
-  VERSION=<%= @magento_version %>
+  MAGENTO_DIRECTORY="<%= @web_root %>"
+  VERSION="<%= @magento_version %>"
   printf "\nGetting patch list...\n"
   www
   cd ../cloud
@@ -494,9 +499,7 @@ export -f backup-db
 function backup() {
   enable-backups
   list-backups
-  printf "\n"
-  ./bin/magento setup:backup --code --media --db
-  printf "done. \n"
+  printf "\n"; ./bin/magento setup:backup --code --media --db; printf "done. \n"
   list-backups
 }
 export -f backup
@@ -527,9 +530,34 @@ function remove-backups() {
 export -f remove-backups
 
 function restore() {
-  list-backups
-  printf "\nRestoring backup..."
-  ./bin/magento setup:rollback --code-file=$1 --media-file=$2 --db-file=$3
-  printf "done. \n"
+  USER="<%= @user %>"
+  GROUP="<%= @user %>"
+  DB_USER="<%= @db_user %>"
+  DB_PASSWORD="<%= @db_password %>"
+  DB_NAME="<%= @db_name %>"
+  if [[ $# -eq 0 ]] ; then
+    list-backups; printf "\n"
+    printf "Codebase File: "; read CODEBASE_FILENAME
+    printf "Database File: "; read DATABASE_FILENAME
+    printf "Media File: "; read MEDIA_FILENAME
+  else
+    CODEBASE_FILENAME=$1; DATABASE_FILENAME=$2; MEDIA_FILENAME=$3
+  fi
+  www
+  if [ -d "../backups" ] && [ -d "./var/backups" ]; then 
+    sudo rm -rf ../backups;
+  fi
+  if [ ! -d "../backups" ] && [ -d "./var/backups" ]; then 
+    printf "\nMoving backups folder..."; sudo mv ./var/backups ../; sleep 1; printf "done. \n"; 
+  fi
+  printf "Clearing the web root..."; sudo rm -rf ./{*,.*} 2>/dev/null; printf "done. \n"
+  printf "Restoring the codebase..."; tar -xf ../backups/${CODEBASE_FILENAME}; printf "\n"; composer install; printf "done. \n"
+  printf "Restoring media..."; tar -xf ../backups/${MEDIA_FILENAME}; printf "done. \n"
+  printf "Restoring and rebuilding the database (this might take a bit)..."; mysql -u ${DB_USER} -p${DB_PASSWORD} ${DB_NAME} < ../backups/${DATABASE_FILENAME}; printf "done.";
+  db-upgrade
+  printf "\nReplacing backups folder..."; mv ../backups ./var; printf "done. \n"
+  printf "Updating permissions..."; sudo chown -R ${USER}:${GROUP} var/ pub/ generated/ app/etc; sudo chmod -R 777 var/ pub/ app/etc/ generated/; printf "done.\n"
+  printf "Cleaning up generated and cache folders..."; sudo rm -rf ./generated/ var/cache/*;
+  di-compile; prod-mode; ./bin/magento cache:clean
 }
 export -f restore
