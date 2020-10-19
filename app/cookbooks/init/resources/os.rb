@@ -8,6 +8,7 @@ provides :os
 
 property :name,                     String, name_property: true
 property :user,                     String, default: node[:init][:os][:user]
+property :group,                     String, default: node[:init][:os][:user]
 property :timezone,                 String, default: node[:init][:os][:timezone]
 property :install_package_list,     Array,  default: node[:init][:os][:install_package_list]
 
@@ -37,5 +38,14 @@ action :add_os_packages do
         apt_package package do
             action :install
         end
+    end
+end
+
+action :create_backups_directory do
+    directory "Create backups holding tank" do
+        path "/var/www/backups"
+        owner new_resource.user
+        group new_resource.user
+        not_if { Dir.exist?("/var/www/backups") }
     end
 end

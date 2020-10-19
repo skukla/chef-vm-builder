@@ -86,7 +86,6 @@ action :create_magento_shares do
                 group new_resource.group
                 mode "777"
                 recursive true
-                not_if { Dir.exist?(media_drop_path) }
             end
         end
     end

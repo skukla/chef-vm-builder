@@ -27,7 +27,6 @@ action :uninstall do
     end
 end
 
-
 action :install do
     new_resource.package_list.each do |package|
         apt_package package do

@@ -530,11 +530,16 @@ function remove-backups() {
 export -f remove-backups
 
 function restore() {
+  START=`date +%s`
   USER="<%= @user %>"
   GROUP="<%= @user %>"
   DB_USER="<%= @db_user %>"
   DB_PASSWORD="<%= @db_password %>"
   DB_NAME="<%= @db_name %>"
+  www
+  if [ -z "$(ls -A ./var/backups)" ]; then
+    printf "\nThere are no backup files in the VM. Use Samba to copy them into place.\n"; sleep 3; clear; return
+  fi 
   if [[ $# -eq 0 ]] ; then
     list-backups; printf "\n"
     printf "Codebase File: "; read CODEBASE_FILENAME
@@ -543,21 +548,28 @@ function restore() {
   else
     CODEBASE_FILENAME=$1; DATABASE_FILENAME=$2; MEDIA_FILENAME=$3
   fi
-  www
   if [ -d "../backups" ] && [ -d "./var/backups" ]; then 
-    sudo rm -rf ../backups;
+    printf "\nCopying backups..."; sudo cp ./var/backups/* ../backups/; sleep 1; printf "done. \n"; 
   fi
-  if [ ! -d "../backups" ] && [ -d "./var/backups" ]; then 
-    printf "\nMoving backups folder..."; sudo mv ./var/backups ../; sleep 1; printf "done. \n"; 
-  fi
-  printf "Clearing the web root..."; sudo rm -rf ./{*,.*} 2>/dev/null; printf "done. \n"
-  printf "Restoring the codebase..."; tar -xf ../backups/${CODEBASE_FILENAME}; printf "\n"; composer install; printf "done. \n"
-  printf "Restoring media..."; tar -xf ../backups/${MEDIA_FILENAME}; printf "done. \n"
-  printf "Restoring and rebuilding the database (this might take a bit)..."; mysql -u ${DB_USER} -p${DB_PASSWORD} ${DB_NAME} < ../backups/${DATABASE_FILENAME}; printf "done.";
-  db-upgrade
-  printf "\nReplacing backups folder..."; mv ../backups ./var; printf "done. \n"
-  printf "Updating permissions..."; sudo chown -R ${USER}:${GROUP} var/ pub/ generated/ app/etc; sudo chmod -R 777 var/ pub/ app/etc/ generated/; printf "done.\n"
-  printf "Cleaning up generated and cache folders..."; sudo rm -rf ./generated/ var/cache/*;
-  di-compile; prod-mode; ./bin/magento cache:clean
+  if [ ! -f ../backups/${CODEBASE_FILENAME} ]; then printf "\nOh snap, the codebase file you specified doesn't exist. Please try again. Exiting..."; sleep 3; clear; return; fi
+  if [ ! -f ../backups/${DATABASE_FILENAME} ]; then printf "\nOh snap, the database file you specified doesn't exist. Please try again. Exiting..."; sleep 3; clear; return; fi
+  if [ ! -f ../backups/${MEDIA_FILENAME} ]; then printf "\nOh snap, the media file you specified doesn't exist. Please try again. Exiting..."; sleep 3; clear; return; fi
+  disable-cron
+  printf "\nClearing the web root..."; sudo rm -rf ./generated/; sudo rm -rf {..?,.[!.],}*; printf "done. \n"
+  printf "\nRestoring the codebase..."; tar -xf ../backups/${CODEBASE_FILENAME}; printf "\n"; composer install; printf "done. \n"
+  printf "\nRestoring media..."; tar -xf ../backups/${MEDIA_FILENAME}; printf "done. \n"
+  printf "\nRestoring the database (this might take a bit)..."; mysql -u ${DB_USER} -p${DB_PASSWORD} ${DB_NAME} < ../backups/${DATABASE_FILENAME}; printf "done.";
+  printf "\n"; db-upgrade
+  printf "\nReplacing backups..."; 
+  if [ ! -d "./var/backups" ]; then mkdir -p "./var/backups"; fi
+  cp ../backups/* ./var/backups/; rm -rf ../backups/*; printf "done. \n"
+  printf "\nUpdating permissions..."; sudo chown -R ${USER}:${GROUP} ./*; sudo chmod -R 777 var/ pub/ app/etc/ generated/; printf "done.\n"
+  printf "\nCleaning up generated and cache folders..."; sudo rm -rf ./generated/ var/cache/*; printf "done. \n"
+  prod-mode; ./bin/magento cache:clean
+  enable-cron
+  END=`date +%s`
+  RUNTIME=$((${END}-${START}))
+  MINUTES=$(( (${RUNTIME} % 3600) / 60 )); SECONDS=$(( (${RUNTIME} % 3600) % 60 ))
+  printf "\nBackup restored in ${MINUTES} minutes, ${SECONDS} seconds.\n"
 }
 export -f restore
