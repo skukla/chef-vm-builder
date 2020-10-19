@@ -657,6 +657,7 @@ function restore() {
   printf "done. \n"
 
   prod-mode
+  ./bin/magento indexer:reindex
   ./bin/magento cache:clean
   enable-cron
 
