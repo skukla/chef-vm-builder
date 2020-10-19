@@ -532,7 +532,7 @@ export -f remove-backups
 
 function import-backups() {
   USER="vagrant"
-  SYNCED=false
+  IMPORTED=false
   www
   if [ ! -d "/${USER}/backups" ]; then
     print "\nLooks like there isn't a folder called 'backups' inside of your app directory.  Please create it and try again.\n"
@@ -544,21 +544,21 @@ function import-backups() {
   fi
   for FILENAME in /${USER}/backups/*; do
     if [ "${FILENAME}" = "/vagrant/backups/*" ]; then
-      printf "\nThere are no backup files to sync in your app/backups directory. Exiting...\n"
+      printf "\nThere are no backup files to import in your app/backups directory. Exiting...\n"
       sleep 3
       return
     else
       if [ ! -e ./var/backups/$(basename "${FILENAME}") ]; then
-        printf "Syncing ${FILENAME}..."
+        printf "Importing ${FILENAME}..."
         cp "${FILENAME}" ./var/backups/$(basename "${FILENAME}")
         printf "done.\n"
       else
-        SYNCED=true
+        IMPORTED=true
       fi
     fi
   done
-  if [ $SYNCED = true ]; then
-    printf "\nAll files are in sync on the VM.\n\n"
+  if [ $IMPORTED = true ]; then
+    printf "\nAll files are ready to import on the VM.\n\n"
   fi
 }
 export -f import-backups
