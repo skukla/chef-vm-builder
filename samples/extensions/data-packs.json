@@ -5,7 +5,7 @@
 	},
 	"sealed-air-data-pack": {
 		"name": "skukla/sealed-air-data-pack",
-		"repository_url": "git@github.com:skukla/sealed-air-data-pack.git"
+		"repository_url": "git@github.com:skukla/module-sealed-air-data-pack.git"
 	},
 	"grocery-data-pack": {
 		"name": "story-store/grocery",
