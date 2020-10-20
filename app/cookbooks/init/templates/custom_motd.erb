@@ -34,7 +34,7 @@ printf '\n%23s : %s %s %s\n' "${BOLD}Host Entry" "${REG}<%= @ip %>" "<%= "#{@url
 
 <% if @use_mailhog %>
 if [ $MAILHOG_PORT != "" ]; then 
-    printf '%23s : %s  \n' "${BOLD}Mailhog Inbox" "${REG}http://<%= @hostname %>:$MAILHOG_PORT"
+    printf '%23s : %s  \n' "${BOLD}Mailhog Inbox" "${REG}http://<%= @urls[0] %>:$MAILHOG_PORT"
 fi
 <% end %>
 
