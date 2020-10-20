@@ -560,6 +560,8 @@ function import-backups() {
   if [ $IMPORTED = true ]; then
     printf "\nAll files are ready to import on the VM.\n\n"
   fi
+  chown ${USER}:${USER} -R ./var/*
+  chmod -R 777 ./var/*
 }
 export -f import-backups
 
