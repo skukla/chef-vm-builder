@@ -11,6 +11,7 @@ depends 'nginx'     # Brings in nginx usage
 depends 'apache'    # Brings in apache usage
 depends 'mailhog'   # Brings in mailhog usage
 depends 'webmin'    # Brings in webmin usage
+depends 'magento'   # Brings in Magento usage
 
 # The `issues_url` points to the location where issues for this cookbook are
 # tracked.  A `View Issues` link will be displayed on this cookbook's page when

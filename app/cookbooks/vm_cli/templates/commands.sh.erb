@@ -19,6 +19,15 @@ function own() {
 }
 export -f own
 
+function clear-web-root() {
+  printf "\nClearing the web root..."
+  www
+  sudo rm -rf ./generated/
+  sudo rm -rf {..?,.[!.],}*
+  printf "done. \n"
+}
+export -f clear-web-root
+
 function cache() {
   clear
   www
@@ -619,11 +628,7 @@ function restore() {
   fi
 
   disable-cron
-
-  printf "\nClearing the web root..."
-  sudo rm -rf ./generated/
-  sudo rm -rf {..?,.[!.],}*
-  printf "done. \n"
+  clear-web-root
 
   printf "\nRestoring the codebase..."
   tar -xf ../backups/${CODEBASE_FILENAME}

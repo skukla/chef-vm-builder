@@ -15,8 +15,12 @@ os "Configure OS" do
     action [:configure, :add_os_packages]
 end
 
-init "Install MOTD" do
-    action :install_motd
+init "Install MOTD and update hosts file" do
+    action [:install_motd, :update_hosts]
+end
+
+magento_app "Disable cron" do
+    action :disable_cron
 end
 
 # We have to do these here because Nginx or Apache won't even install if port 80 is blocked
