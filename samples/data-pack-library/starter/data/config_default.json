@@ -20,9 +20,6 @@
 			}
 		},
 		"catalog": {
-			"product_video": {
-				"youtube_api_key": "AIzaSyAIqr8akHR1G3qh9Z8vvJI34iITe59G3h0"
-			},
 			"magento_targetrule": {
 				"crosssell_position_limit": "6",
 				"related_position_limit": "5"
@@ -36,11 +33,6 @@
 		"design": {
 			"header": {
 				"welcome": ""
-			}
-		},
-		"cataloginventory": {
-			"source_selection_distance_based_google": {
-				"api_key": "AIzaSyCUpro8_IIHqsD1WKzadd2U0BJKsJDCrqk"
 			}
 		},
 		"dev": {
@@ -94,13 +86,6 @@
 				"debug": "0",
 				"capture_action": "invoice",
 				"order_status": "processing",
-				"merchant_account_id": "magento",
-				"sandbox_merchant_id": "3thxv4w4xhnkxzt5",
-				"sandbox_public_key": "encrypt(n2bt4844t6xrt56x)",
-				"sandbox_private_key": "encrypt(e6c98fd99fe699d4169475fef026d5b9)",
-				"merchant_id": "3thxv4w4xhnkxzt5",
-				"public_key": "encrypt(n2bt4844t6xrt56x)",
-				"private_key": "encrypt(e6c98fd99fe699d4169475fef026d5b9)",
 				"use_vault": "1",
 				"duplicate_card": "0",
 				"cctypes": "VI,MC",

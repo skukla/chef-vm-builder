@@ -61,7 +61,7 @@
 			"version": "2.4.1"
 		},
 		"build": {
-			"action": "install",
+			"action": "force_install",
 			"sample_data": false,
 			"patches": {
 				"apply": true,

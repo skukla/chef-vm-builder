@@ -47,7 +47,7 @@
 		},
 		"magentoese_autofill": {
 			"general": {
-				"enable_autofill": 1
+				"enable_autofill": "1"
 			}
 		},
 		"web": {
