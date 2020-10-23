@@ -21,6 +21,10 @@ end
 
 magento_app "Disable cron" do
     action :disable_cron
+    only_if {
+        ::File.exist?("/var/spool/cron/crontabs/#{user}") && 
+        build_action != "install" 
+    }
 end
 
 # We have to do these here because Nginx or Apache won't even install if port 80 is blocked
