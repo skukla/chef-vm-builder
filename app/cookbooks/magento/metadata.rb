@@ -20,6 +20,7 @@ depends 'magento_custom_modules'  # This brings in Custom Module configuration o
 depends 'magento_patches'         # This brings in Magento Patches configuration options
 depends 'magento_configuration'   # This brings in Magento Configuration configuration options
 depends 'magento_demo_builder'    # This brings in the Demo Builder resource
+depends 'vm_cli'                  # This brings in VM CLI commands
 
 # The `issues_url` points to the location where issues for this cookbook are
 # tracked.  A `View Issues` link will be displayed on this cookbook's page when

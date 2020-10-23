@@ -249,12 +249,8 @@ action :set_first_run do
 end
 
 action :uninstall do
-    app_content = ::Dir.entries("#{new_resource.web_root}") - %w{ . .. }
-    app_content_string = Array.new
-    app_content.each do |entry|
-        app_content_string << "#{new_resource.web_root}/#{entry}"
-    end
-    execute "Clear the web root" do
-        command "rm -rf #{app_content_string.join(" ")}"
+    vm_cli "Clearing the web root" do
+        action :run
+        command_list "clear-web-root"
     end
 end

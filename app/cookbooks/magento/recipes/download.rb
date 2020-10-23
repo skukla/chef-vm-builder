@@ -27,14 +27,6 @@ magento_app "Clear the cron schedule" do
     }
 end
 
-magento_app "Disable cron" do
-    action :disable_cron
-    only_if {
-        ::File.exist?("/var/spool/cron/crontabs/#{user}") && 
-        build_action != "install" 
-    }
-end
-
 magento_app "Set auth.json credentials" do
     action :set_auth_credentials
 end
