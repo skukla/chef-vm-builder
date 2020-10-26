@@ -6,7 +6,7 @@
 supported_settings = {
     :custom_demo => [:admin_users],
     :configuration_settings => [:configuration],
-    :configuration_flags => [:base, :b2b, :custom_modules, :admin_users]
+    :configuration_flags => [:base, :b2b, :search, :custom_modules, :admin_users]
 }
 supported_settings.each do |top_key, top_array|
     case top_key

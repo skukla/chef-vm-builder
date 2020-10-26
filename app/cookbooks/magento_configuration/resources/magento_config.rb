@@ -27,22 +27,31 @@ action :process_configuration do
                 if config_setting.has_key?(config_scope)
                     config_setting[config_scope].each do |config_scope_code, config_value|
                         unless config_value.nil? || ((config_value.is_a? String) && config_value.empty?)
+                            config_scope.sub("_", "-") if config_scope.include?("_")
                             # Base Settings
                             if new_resource.config_group == "base" && !config_path.include?("btob")
                                 magento_cli "Configuring #{new_resource.config_group} #{config_scope} setting for #{config_scope_code}: #{config_path}" do
                                     action :config_set
                                     config_path config_path
-                                    config_scope config_scope
+                                    config_scope (config_scope.include?("_")) ? config_scope.sub("_","-") : config_scope
                                     config_scope_code config_scope_code
                                     config_value config_value
                                 end
-                            
                             # B2B Settings
                             elsif new_resource.config_group == "b2b" && config_path.include?("btob")
                                 magento_cli "Configuring #{new_resource.config_group} #{config_scope} setting for #{config_scope_code}: #{config_path}" do
                                     action :config_set
                                     config_path config_path
-                                    config_scope config_scope
+                                    config_scope (config_scope.include?("_")) ? config_scope.sub("_view","") : config_scope
+                                    config_scope_code config_scope_code
+                                    config_value config_value
+                                end
+                            # Search settings
+                            elsif new_resource.config_group == "search" && config_path.include?("search")
+                                magento_cli "Configuring #{new_resource.config_group} #{config_scope} setting for: #{config_scope_code}: #{config_path}" do
+                                    action :config_set
+                                    config_path config_path
+                                    config_scope (config_scope.include?("_")) ? config_scope.sub("_view","") : config_scope
                                     config_scope_code config_scope_code
                                     config_value config_value
                                 end
@@ -62,7 +71,6 @@ action :process_configuration do
                         config_path config_path
                         config_value config_setting
                     end
-
                 # B2B settings
                 elsif new_resource.config_group == "b2b" && config_path.include?("btob")
                     magento_cli "Configuring default #{new_resource.config_group} setting for: #{config_path}" do
@@ -71,7 +79,6 @@ action :process_configuration do
                         config_path config_path
                         config_value config_setting
                     end
-
                 # Search settings
                 elsif new_resource.config_group == "search" && config_path.include?("search")
                     magento_cli "Configuring default #{new_resource.config_group} setting for: #{config_path}" do

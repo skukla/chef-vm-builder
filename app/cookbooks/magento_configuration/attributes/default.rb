@@ -253,6 +253,7 @@ default[:magento_configuration][:settings] =
 default[:magento_configuration][:admin_users] = Hash.new
 default[:magento_configuration][:flags][:base] = false
 default[:magento_configuration][:flags][:b2b] = false
+default[:magento_configuration][:flags][:search] = false
 default[:magento_configuration][:flags][:custom_modules] = true
 default[:magento_configuration][:flags][:admin_users] = true
 
