@@ -14,3 +14,7 @@ default[:init][:use_mailhog] = node[:mailhog][:use]
 
 include_attribute "webmin::default"
 default[:init][:use_webmin] = node[:webmin][:use]
+
+include_attribute "magento::default"
+include_attribute "magento::override"
+default[:init][:magento][:build_action] = node[:magento][:build][:action]
