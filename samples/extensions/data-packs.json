@@ -3,13 +3,18 @@
 		"name": "custom-demo",
 		"repository_url": "starter"
 	},
+	"grocery-data-pack-demo": {
+		"name": "story-store/grocery",
+		"version": "dev-demo",
+		"repository_url": "git@github.com:PMET-public/module-storystore-grocery.git"
+	},
+	"grocery-data-pack-standalone": {
+		"name": "story-store/grocery",
+		"version": "dev-standalone",
+		"repository_url": "git@github.com:PMET-public/module-storystore-grocery.git"
+	},
 	"sealed-air-data-pack": {
 		"name": "skukla/sealed-air-data-pack",
 		"repository_url": "git@github.com:skukla/module-sealed-air-data-pack.git"
-	},
-	"grocery-data-pack": {
-		"name": "story-store/grocery",
-		"version": "dev-develop",
-		"repository_url": "git@github.com:PMET-public/module-storystore-grocery.git"
 	}
 }
