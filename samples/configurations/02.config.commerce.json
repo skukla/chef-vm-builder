@@ -35,6 +35,7 @@
 	},
 	"infrastructure": {
 		"php": "7.4",
+		"composer": "1.10.16",
 		"webserver": "nginx",
 		"elasticsearch": true,
 		"mailhog": true,

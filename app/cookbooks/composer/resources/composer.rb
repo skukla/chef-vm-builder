@@ -9,6 +9,7 @@ provides :composer
 property :name,               String,                  name_property: true
 property :install_directory,  String,                  default: node[:composer][:install_dir]
 property :file,               String,                  default: node[:composer][:file]
+property :version,            String,                  default: node[:composer][:version]
 property :user,               String,                  default: node[:composer][:init][:user]
 property :group,              String,                  default: node[:composer][:init][:user]
 property :web_root,           String,                  default: node[:composer][:init][:web_root]
@@ -24,29 +25,27 @@ property :extra_content,      String
 property :clearcache,         [TrueClass, FalseClass], default: node[:composer][:clear_composer_cache]
 property :timeout,            [String, Integer],       default: node[:composer][:timeout]
 
-action :download_app do
-    execute "Download composer" do
-        command "curl -sS https://getcomposer.org/installer | php"
-        not_if { ::File.exist?("#{new_resource.install_directory}/#{new_resource.file}") }
-    end
-end
-
 action :install_app do
-    execute "Install composer application" do
-        command "mv #{new_resource.file}.phar #{new_resource.install_directory}/#{new_resource.file} && chmod +x #{new_resource.install_directory}/#{new_resource.file}"
-        not_if { ::File.exist?("#{new_resource.install_directory}/#{new_resource.file}") }
-    end
+    install_string = "--install-dir=#{new_resource.install_directory} --filename=#{new_resource.file}"
+    version_string = "--version=#{new_resource.version}" if new_resource.version != "latest"
+    install_string = [install_string, version_string].join(" ")
     
-    execute "Switch composer owner to #{new_resource.user}" do
-        command "sudo chown #{new_resource.user}:#{new_resource.user} #{new_resource.install_directory}/#{new_resource.file}"
-        only_if { ::File.exist?("#{new_resource.install_directory}/#{new_resource.file}") }
-    end
-
-    link "/home/#{new_resource.user}/#{new_resource.file}" do
-        to "#{new_resource.install_directory}/#{new_resource.file}"
-        owner new_resource.user
-        group new_resource.user
-        not_if "test -L /#{new_resource.install_directory}/#{new_resource.file}"
+    bash "Download composer version #{new_resource.version}" do
+        code <<-EOH
+            EXPECTED_CHECKSUM="$(wget -q -O - https://composer.github.io/installer.sig)"
+            php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+            ACTUAL_CHECKSUM="$(php -r "echo hash_file('sha384', 'composer-setup.php');")"
+            if [ "$EXPECTED_CHECKSUM" != "$ACTUAL_CHECKSUM" ]
+            then
+                >&2 echo 'ERROR: Invalid installer checksum'
+                rm composer-setup.php
+                exit 1
+            fi
+            php composer-setup.php --quiet #{install_string}
+            RESULT=$?
+            rm composer-setup.php
+            exit $RESULT
+        EOH
     end
 end
 
