@@ -4,7 +4,7 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 supported_settings = {
-    :credentials => [:github_token, :public_key, :private_key]
+    :credentials => [:github_token, :public_key, :private_key],
     :composer => [:version, :clear_composer_cache],
 }
 
