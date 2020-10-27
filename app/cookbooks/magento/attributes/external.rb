@@ -4,9 +4,11 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 include_attribute "init::default"
+include_attribute "init::override"
 default[:magento][:init][:user] = node[:init][:os][:user]
 default[:magento][:init][:timezone] = node[:init][:os][:timezone]
 default[:magento][:init][:web_root] = node[:init][:webserver][:web_root]
+default[:magento][:init][:demo_structure] = node[:init][:custom_demo][:structure]
 
 include_attribute "mysql::default"
 default[:magento][:mysql][:db_host] = node[:mysql][:db_host]

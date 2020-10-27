@@ -6,6 +6,8 @@
 user = node[:magento][:init][:user]
 web_root = node[:magento][:init][:web_root]
 use_elasticsearch = node[:magento][:elasticsearch][:use]
+use_secure_frontend = node[:magento][:settings][:use_secure_frontend]
+demo_structure = node[:magento][:init][:demo_structure]
 build_action = node[:magento][:build][:action]
 custom_module_list = node[:magento][:custom_module_list]
 config_settings = node[:magento][:configuration][:settings]
@@ -99,6 +101,32 @@ custom_module_config "Configure custom modules" do
         !custom_module_list.empty? &&
         configuration_flags[:custom_modules]
     }
+end
+
+DemoStructureHelper.get_vhost_data(demo_structure).each do |vhost|    
+    unless vhost[:code] == "base"
+        magento_cli "Configure additional unsecure URLs" do
+            action :config_set
+            config_path "web/unsecure/base_url"
+            config_value "http://#{vhost[:url]}/"
+            config_scope vhost[:scope]
+            config_scope_code vhost[:code]
+            not_if { use_secure_frontend.to_s == "1" }
+        end
+        magento_cli "Configure additional secure URLs" do
+            action :config_set
+            config_path "web/secure/base_url"
+            config_value "https://#{vhost[:url]}/"
+            config_scope vhost[:scope]
+            config_scope_code vhost[:code]
+            only_if { use_secure_frontend.to_s == "1" }
+        end
+    end
+end
+
+mysql "Configure default store" do
+    action :run_query
+    db_query "UPDATE store_website SET default_group_id = '1' WHERE code = 'base'"
 end
 
 php "Switch PHP user to #{user}" do
