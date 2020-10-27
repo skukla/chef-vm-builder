@@ -4,6 +4,12 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 module DatabaseHelper
+    def self.execute_query(db_user, db_password, db_name, query)
+        connection_string = "mysql --user=#{db_user} --password=#{db_password} --database=#{db_name}"
+        query_string = "\"#{query};\""
+        %x[#{[connection_string, query_string].join(" -e ")}]
+    end
+    
     def self.patch_exists(patch_class, db_user, db_password, db_name)
         connection_string = "mysql --user=#{db_user} --password=#{db_password} --database=#{db_name}"
         query_string = "\"SELECT * FROM patch_list WHERE patch_name = '#{patch_class}';\""

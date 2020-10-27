@@ -11,6 +11,7 @@ property :db_host,                  String,            default: node[:mysql][:db
 property :db_user,                  String,            default: node[:mysql][:db_user]
 property :db_password,              String,            default: node[:mysql][:db_password]
 property :db_name,                  String,            default: node[:mysql][:db_name]
+property :db_query,                 String
 property :socket,                   String,            default: node[:mysql][:socket]
 property :innodb_buffer_pool_size,  [String, Integer], default: node[:mysql][:innodb_buffer_pool_size]
 property :max_allowed_packet,       [String, Integer], default: node[:mysql][:max_allowed_packet]
@@ -106,6 +107,19 @@ action :configure_post_app_install do
                 "%x[mysql --user=root -e \"SET GLOBAL #{setting} = 1;\"]"
             end
             action :create
+        end
+    end
+end
+
+action :run_query do
+    ruby_block "Executing MySQL query" do
+        block do
+            DatabaseHelper.execute_query(
+                new_resource.db_user,
+                new_resource.db_password,
+                new_resource.db_name,
+                new_resource.db_query
+            )
         end
     end
 end
