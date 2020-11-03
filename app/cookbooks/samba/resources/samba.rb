@@ -41,7 +41,7 @@ action :configure do
                 else
                     share_data[field] = ValueHelper.process_value(share_record[field])
                 end
-            when :public, :browsable, :writeable
+            when :public, :browseable, :writeable
                 share_data[field] = "Yes" if share_record[field.to_s].nil?
             when :force_user, :force_group
                 if share_record[field.to_s].nil?
