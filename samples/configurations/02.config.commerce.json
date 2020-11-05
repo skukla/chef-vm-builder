@@ -56,15 +56,13 @@
 		"ram": 8192,
 		"vram": 16,
 		"provider": {
+			"gui": false,
+			"linked_clones": false,
 			"vmware": {
-				"gui": true,
-				"linked_clones": true,
 				"eth0_pcislotnumber": 32,
 				"eth1_pcislotnumber": 33
 			},
 			"virtualbox": {
-				"gui": false,
-				"linked_clones": false,
 				"remote_display": "off",
 				"default_nic_type": "82543GC",
 				"auto_update": false
