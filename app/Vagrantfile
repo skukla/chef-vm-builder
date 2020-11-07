@@ -1,7 +1,6 @@
 #
 # Vagrantfile
 #
-#
 # Copyright 2020, Steve Kukla, All Rights Reserved.
 require "json"
 
@@ -27,7 +26,7 @@ Vagrant.configure("2") do |config|
     trigger.name = "Checking for required plugins..."
     trigger.ruby do
       plugins = settings["vagrant"]["plugins"]["all"]
-      if settings["vm"]["provider"] == "virtualbox"
+      if settings["vm"]["hypervisor"] == "virtualbox"
         plugins.push(*settings["vagrant"]["plugins"]["virtualbox"])
       else
         plugins.push(*settings["vagrant"]["plugins"]["vmware"])
@@ -101,28 +100,28 @@ Vagrant.configure("2") do |config|
     config.multihostsupdater.aliases = demo_urls
   end
 
-  # Configure VM machine based on provider
-  config.vm.provider "#{settings["vm"]["provider"]}" do |machine|
-    machine.gui = settings["remote_machine"]["provider"]["gui"]
-    machine.linked_clone = settings["remote_machine"]["provider"]["linked_clones"]
+  # Configure VM machine based on hypervisor
+  config.vm.provider "#{settings["vm"]["hypervisor"]}" do |machine|
+    machine.gui = settings["hypervisor"]["all"]["gui"]
+    machine.linked_clone = settings["hypervisor"]["all"]["linked_clones"]
     
-    if settings["vm"]["provider"] == "virtualbox"  
-      machine.default_nic_type = settings["remote_machine"]["provider"]["virtualbox"]["default_nic_type"]
+    if settings["vm"]["hypervisor"] == "virtualbox"  
+      machine.default_nic_type = settings["hypervisor"]["virtualbox"]["default_nic_type"]
       machine.customize [
         "modifyvm", :id,
           "--name", settings["vm"]["name"],
           "--memory", settings["remote_machine"]["memory"],
           "--cpus", settings["remote_machine"]["cpus"],
           "--vram", settings["remote_machine"]["vram"],
-          "--vrde", settings["remote_machine"]["provider"]["virtualbox"]["remote_display"]
+          "--vrde", settings["hypervisor"]["virtualbox"]["remote_display"]
           
       ]
     # VMWare-specific settings
-    elsif settings["vm"]["provider"].include?("vmware")
+    elsif settings["vm"]["hypervisor"].include?("vmware")
       machine.vmx["memsize"] = settings["remote_machine"]["memory"]
       machine.vmx["numvcpus"] = settings["remote_machine"]["cpus"]
-      machine.vmx["ethernet0.pcislotnumber"] = settings["remote_machine"]["provider"]["vmware"]["eth0_pcislotnumber"]
-      machine.vmx["ethernet1.pcislotnumber"] = settings["remote_machine"]["provider"]["vmware"]["eth1_pcislotnumber"]
+      machine.vmx["ethernet0.pcislotnumber"] = settings["hypervisor"]["vmware"]["eth0_pcislotnumber"]
+      machine.vmx["ethernet1.pcislotnumber"] = settings["hypervisor"]["vmware"]["eth1_pcislotnumber"]
     end
   end
 

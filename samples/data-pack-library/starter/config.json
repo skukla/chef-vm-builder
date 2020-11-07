@@ -98,26 +98,28 @@
 		"name": "Kukla-Machine",
 		"box": "bento/ubuntu-18.04",
 		"cpus": 2,
-		"ram": 8192,
-		"vram": 16,
-		"provider": {
+		"memory": 8192,
+		"vram": 16
+	},
+	"hypervisor": {
+		"all": {
 			"gui": false,
-			"linked_clones": false,
-			"vmware": {
-				"eth0_pcislotnumber": 32,
-				"eth1_pcislotnumber": 33
-			},
-			"virtualbox": {
-				"remote_display": "off",
-				"default_nic_type": "82543GC",
-				"auto_update": false
-			}
+			"linked_clones": false
+		},
+		"vmware": {
+			"eth0_pcislotnumber": 32,
+			"eth1_pcislotnumber": 33
+		},
+		"virtualbox": {
+			"remote_display": "off",
+			"default_nic_type": "82543GC"
 		}
 	},
 	"vagrant": {
 		"plugins": {
 			"all": ["vagrant-multi-hostsupdater"],
-			"vmware": ["vagrant-vmware-desktop"]
+			"vmware": ["vagrant-vmware-desktop"],
+			"virtualbox": []
 		}
 	}
 }
