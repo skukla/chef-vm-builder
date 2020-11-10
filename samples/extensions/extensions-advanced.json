@@ -114,13 +114,28 @@
 	},
 	"paradoxlabs-tokenbase": {
 		"name": "paradoxlabs/tokenbase",
-		"version": "4.2.5.x-dev",
+		"version": "4.3.1",
 		"repository_url": "git@github.com:PMET-public/paradoxlabs-tokenbase.git"
 	},
 	"paradoxlabs-subscriptions": {
 		"name": "paradoxlabs/subscriptions",
-		"version": "3.1.5.x-dev",
+		"version": "3.2.3",
 		"repository_url": "git@github.com:PMET-public/paradoxlabs-subscriptions.git"
+	},
+	"paradoxlabs-authnetcim": {
+		"name": "paradoxlabs/authnetcim",
+		"version": "4.3.2",
+		"repository_url": "git@github.com:PMET-public/paradoxlabs-authnetcim.git"
+	},
+	"paradoxlabs-firstdata": {
+		"name": "paradoxlabs/firstdata",
+		"version": "2.3.4",
+		"repository_url": "git@github.com:PMET-public/paradoxlabs-firstdata.git"
+	},
+	"paradoxlabs-stripe": {
+		"name": "paradoxlabs/stripe",
+		"version": "2.3.7",
+		"repository_url": "git@github.com:PMET-public/paradoxlabs-stripe.git"
 	},
 	"bounteous-aem": {
 		"name": "bounteous/dam",
