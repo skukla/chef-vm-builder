@@ -4,14 +4,14 @@
 			"header": {
 				"logo_src": {
 					"store_view": {
-						"default": "logo.png"
+						"default": "stores/logo.png"
 					}
 				}
 			},
 			"head": {
 				"shortcut_icon": {
 					"store_view": {
-						"default": "favicon.png"
+						"default": "stores/favicon.png"
 					}
 				},
 				"includes": {

@@ -30,18 +30,18 @@
 			"venia": {
 				"venia-data-pack-standalone": {
 					"name": "skukla/venia-data-pack",
-					"version": "standalone",
-					"repository_url":"git@github.com:skukla/module-venia-data-pack.git"
+					"version": "dev-standalone",
+					"repository_url": "git@github.com:skukla/module-venia-data-pack.git"
 				},
 				"venia-data-pack-store": {
 					"name": "skukla/venia-data-pack",
-					"version": "store",
-					"repository_url":"git@github.com:skukla/module-venia-data-pack.git"
+					"version": "dev-store",
+					"repository_url": "git@github.com:skukla/module-venia-data-pack.git"
 				},
 				"venia-data-pack-website": {
 					"name": "skukla/venia-data-pack",
-					"version": "website",
-					"repository_url":"git@github.com:skukla/module-venia-data-pack.git"
+					"version": "dev-website",
+					"repository_url": "git@github.com:skukla/module-venia-data-pack.git"
 				}
 			}
 		}
