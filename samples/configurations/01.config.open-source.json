@@ -2,7 +2,7 @@
 	"vm": {
 		"ip": "192.168.57.12",
 		"name": "Luma Demo",
-		"provider": "virtualbox"
+		"hypervisor": "virtualbox"
 	},
 	"custom_demo": {
 		"structure": {
