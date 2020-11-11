@@ -7,7 +7,7 @@ resource_name :php
 provides :php
 
 property :name,                     String,            name_property: true
-property :php_user,                 String,            default: "www-data"
+property :php_user,                 String,            default: node[:php][:user]
 property :vm_user,                  String,            default: node[:php][:init][:user]
 property :vm_group,                 String,            default: node[:php][:init][:user]
 property :version,                  String,            default: node[:php][:version]
