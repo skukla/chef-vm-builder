@@ -11,7 +11,6 @@ depends 'init'          # Brings in OS settings and webserver type
 depends 'php'           # Brings in PHP settings
 depends 'mysql'         # Brings in MySQL settings
 depends 'nginx'         # Brings in Nginx settings
-# depends 'apache'      # Brings in Apache settings
 depends 'elasticsearch' # Brings in Elasticsearch settings
 depends 'mailhog'       # Brings in Mailhog settings
 depends 'samba'         # Brings in Samba settings

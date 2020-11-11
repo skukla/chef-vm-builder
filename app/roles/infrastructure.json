@@ -6,7 +6,6 @@
 	"run_list": [
 		"recipe[php::default]",
 		"recipe[composer::default]",
-		"recipe[apache::default]",
 		"recipe[nginx::default]",
 		"recipe[mysql::default]",
 		"recipe[elasticsearch::default]",

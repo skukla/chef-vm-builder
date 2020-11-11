@@ -11,7 +11,6 @@ end
 
 php "Remove Apache packages" do
     action :remove_apache_packages
-    only_if { webserver_type != "apache2" }
 end
 
 # We do this here because it's the earliest point that /var/www is available
