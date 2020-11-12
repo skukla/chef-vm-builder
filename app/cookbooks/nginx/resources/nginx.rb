@@ -22,6 +22,8 @@ property :ssl_directory,           String,            default: node[:nginx][:ssl
 property :ssl_private_key_file,    String,            default: node[:nginx][:ssl][:server_private_key_file]
 property :ssl_certificate_file,    String,            default: node[:nginx][:ssl][:server_certificate_file]
 property :demo_structure,          Hash,              default: node[:nginx][:init][:demo_structure]
+property :use_secure_frontend,     [String, Integer], default: node[:nginx][:magento][:settings][:use_secure_frontend]
+property :use_secure_admin,        [String, Integer], default: node[:nginx][:magento][:settings][:use_secure_admin]
 
 action :uninstall do
     execute "Remove and purge Nginx" do
@@ -136,6 +138,8 @@ action :configure_multisite do
                 server_name: vhost[:url],
                 client_max_body_size: new_resource.client_max_body_size,
                 web_root: new_resource.web_root,
+                use_secure_frontend: new_resource.use_secure_frontend,
+                use_secure_admin: new_resource.use_secure_admin,
                 ssl_directory: new_resource.ssl_directory,
                 ssl_private_key_file: new_resource.ssl_private_key_file,
                 ssl_certificate_file: new_resource.ssl_certificate_file

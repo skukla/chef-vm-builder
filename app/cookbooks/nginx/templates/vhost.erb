@@ -1,12 +1,16 @@
 server {
      listen <%= @http_port %>;
+     <% if @use_secure_frontend.to_s == "1" || @use_secure_admin.to_s == "1" %>
      listen <%= @ssl_port %> ssl http2;
      listen [::]:<%= @ssl_port %> ssl http2;
+     <% end %>
      server_name <%= @server_name %>;
      client_max_body_size <%= @client_max_body_size %>;
      set $MAGE_ROOT <%= @web_root %>;
+     <% if @use_secure_frontend.to_s == "1" || @use_secure_admin.to_s == "1" %>
      ssl_certificate_key <%= @ssl_directory %>/<%= @ssl_private_key_file %>;
      ssl_certificate <%= @ssl_directory %>/<%= @ssl_certificate_file %>;
      ssl_protocols TLSv1.2 TLSv1.1 TLSv1;
+     <% end %>
      include /etc/nginx/sites-available/conf/00-nginx-magento.conf;
 }

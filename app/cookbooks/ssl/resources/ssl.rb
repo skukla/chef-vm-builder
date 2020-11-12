@@ -29,6 +29,13 @@ property :organization,                      String,            default: node[:s
 property :organizational_unit,               String,            default: node[:ssl][:organizational_unit]
 property :common_name,                       String,            default: node[:fqdn]
 
+action :remove_local_ssl_certificates do
+    execute "Remove local server certificates" do
+        command "rm -rf /vagrant/certificate/*.crt"
+        only_if { ::Dir.exist?("/vagrant/certificate") }
+    end
+end
+
 action :remove_ssl_files do
     execute "Remove existing private key files" do
         command "rm -rf #{new_resource.ssl_directory}/#{new_resource.ca_private_key_file}"

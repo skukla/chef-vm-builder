@@ -19,3 +19,8 @@ include_attribute "php::default"
 default[:nginx][:php][:version] = node[:php][:version]
 default[:nginx][:php][:fpm_backend] =  node[:php][:backend]
 default[:nginx][:php][:fpm_port] = node[:php][:port]
+
+include_attribute "magento::default"
+include_attribute "magento::override"
+default[:nginx][:magento][:settings][:use_secure_frontend] = node[:magento][:settings][:use_secure_frontend]
+default[:nginx][:magento][:settings][:use_secure_admin] = node[:magento][:settings][:use_secure_admin]
