@@ -140,5 +140,9 @@
 	"bounteous-aem": {
 		"name": "bounteous/dam",
 		"repository_url": "git@github.com:skukla/module-bounteous-aem-assets.git"
+	},
+	"dependent-options": {
+		"name": "pektsekye/module-option-dependent",
+		"repository_url": "git@github.com:skukla/module-dependent-custom-options.git"
 	}
 }
