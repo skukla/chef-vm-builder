@@ -144,4 +144,26 @@ Vagrant.configure("2") do |config|
     # Accept Chef License
     chef.arguments = "--chef-license accept"
   end
+
+  # Manage SSL certificates trigger
+  if settings["application"].has_key?("settings")
+    if settings["application"]["settings"].has_key?("use_secure_frontend") || settings["application"]["settings"].has_key?("use_secure_backend")
+      unless settings["application"]["settings"]["use_secure_frontend"].nil? || settings["application"]["settings"]["use_secure_admin"].nil?
+        if settings["application"]["settings"]["use_secure_frontend"].to_s == "1" || settings["application"]["settings"]["use_secure_admin"].to_s == "1"
+          config.trigger.after [:up, :reload, :provision] do |trigger|
+            trigger.name = "Setting up ssl certificate..."
+            trigger.ruby do
+              if File.exist?("#{app_dir}/certificate/#{settings["custom_demo"]["structure"]["website"]["base"]}.crt")
+                system("sudo security find-certificate -c #{settings["custom_demo"]["structure"]["website"]["base"].to_s.chomp} > /dev/null 2>&1")
+                if $?.exitstatus == 0
+                  system("sudo security delete-certificate -c #{settings["custom_demo"]["structure"]["website"]["base"].to_s.chomp} /Library/Keychains/System.keychain")
+                end
+                system("sudo security add-trusted-cert -d -r trustAsRoot -k /Library/Keychains/System.keychain #{app_dir}/certificate/#{settings["custom_demo"]["structure"]["website"]["base"]}.crt")
+              end
+            end
+          end
+        end
+      end
+    end
+  end
 end
