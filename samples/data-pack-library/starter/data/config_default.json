@@ -70,10 +70,6 @@
 			},
 			"ups": {
 				"active": "1",
-				"username": "magento",
-				"access_license_number": "ECAB751ABF189ECA",
-				"password": "magento200",
-				"shipper_number": "207W88",
 				"allowed_methods": ["UPS Ground", "UPS Next Day Air"]
 			}
 		},
