@@ -581,9 +581,11 @@ function restore() {
   DB_USER="<%= @db_user %>"
   DB_PASSWORD="<%= @db_password %>"
   DB_NAME="<%= @db_name %>"
+  BOLD=$(tput bold)
+  REG=$(tput sgr0)
   www
   if [ -z "$(ls -A ./var/backups)" ]; then
-    printf "\nThere are no backup files in the VM.\nUse the import-backups command or Samba to copy them into place.\n"
+    printf "\nThere are no backup files in the VM.\nUse the ${BOLD}import-backups ${REG}command or Samba to copy them into place.\n"
     sleep 3
     printf "\nExiting..."
     sleep 3
@@ -647,6 +649,7 @@ function restore() {
   mysql -u ${DB_USER} -p${DB_PASSWORD} ${DB_NAME} < ../backups/${DATABASE_FILENAME}
   printf "done.\n"
   
+  start-elasticsearch
   db-upgrade
   
   printf "\nReplacing backups..." 
