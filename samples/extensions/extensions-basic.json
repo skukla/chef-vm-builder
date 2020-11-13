@@ -3,10 +3,6 @@
 		"name": "magentoese/module-data-install",
 		"repository_url": "https://github.com/PMET-public/module-data-install.git"
 	},
-	"custom-demo-shell": {
-		"name": "skukla/module-custom-demo-shell",
-		"repository_url": "git@github.com:skukla/module-custom-demo-shell.git"
-	},
 	"sctools": {
 		"name": "magentoese/module-sctools",
 		"repository_url": "git@github.com:PMET-public/module-sctools.git"
@@ -19,17 +15,13 @@
 		"name": "magentoese/module-autofill",
 		"repository_url": "git@github.com:PMET-public/module-autofill.git"
 	},
-	"kukla-custom-theme": {
-		"name": "skukla/theme-frontend-custom",
-		"repository_url": "git@github.com:skukla/theme-frontend-custom.git"
+	"blank-theme": {
+		"name": "magentoese/theme-frontend-custom",
+		"repository_url": "git@github.com:PMET-public/theme-frontend-custom.git"
 	},
 	"venia-theme": {
 		"name": "magentoese/theme-frontend-venia",
 		"repository_url": "git@github.com:PMET-public/theme-frontend-venia.git"
-	},
-	"store-switcher": {
-		"name": "magentoese/module-switcherlogos",
-		"repository_url": "git@github.com:PMET-public/module-switcherlogos.git"
 	},
 	"product-recommendations": "magento/product-recommendations",
 	"pagebuilder-product-recommendations": "magento/module-page-builder-product-recommendations"

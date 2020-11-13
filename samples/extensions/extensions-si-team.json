@@ -1,0 +1,78 @@
+{
+	"product-badges": {
+		"name": "magentoese/module-productbadge",
+		"repository_url": "git@github.com:PMET-public/module-productbadge.git"
+	},
+	"instore-pickup": {
+		"name": "magentoese/module-instorepickup",
+		"repository_url": "git@github.com:PMET-public/module-instorepickup.git"
+	},
+	"switcher-logos": {
+		"name": "magentoese/module-switcherlogos",
+		"repository_url": "git@github.com:PMET-public/module-switcherlogos.git"
+	},
+	"lookbook": {
+		"name": "magentoese/module-lookbook",
+		"repository_url": "git@github.com:PMET-public/module-lookbook.git"
+	},
+	"megamenu": {
+		"name": "magentoese/module-megamenu",
+		"repository_url": "git@github.com:PMET-public/module-megamenu.git"
+	},
+	"owl-carousel": "classyllama/module-owlcarousel",
+	"amasty-base": {
+		"name": "amasty/base",
+		"version": "1.10.10.x-dev",
+		"repository_url": "git@github.com:PMET-public/amasty-module-base.git"
+	},
+	"amasty-advanced-conditions": {
+		"name": "amasty/module-advanced-conditions",
+		"version": "1.5.1.x-dev",
+		"repository_url": "git@github.com:PMET-public/amasty-module-advanced-conditions.git"
+	},
+	"amasty-banners-lite": {
+		"name": "amasty/module-banners-lite",
+		"version": "1.0.18.x-dev",
+		"repository_url": "git@github.com:PMET-public/amasty-module-banners-lite.git"
+	},
+	"amasty-free-gift": {
+		"name": "amasty/promo",
+		"version": "2.9.6.x-dev",
+		"repository_url": "git@github.com:PMET-public/amasty-module-free-gift.git"
+	},
+	"amasty-rules-grid": {
+		"name": "amasty/rgrid",
+		"version": "1.0.7.x-dev",
+		"repository_url": "git@github.com:PMET-public/amasty-module-rules-grid.git"
+	},
+	"amasty-sales-rule-wizard": {
+		"name": "amasty/module-salesrulewizard",
+		"version": "1.0.1.x-dev",
+		"repository_url": "git@github.com:PMET-public/amasty-module-salesrulewizard.git"
+	},
+	"amasty-special-promotions": {
+		"name": "amasty/module-special-promo",
+		"version": "2.7.17.x-dev",
+		"repository_url": "git@github.com:PMET-public/amasty-module-special-promotions.git"
+	},
+	"amasty-special-promotions-pro": {
+		"name": "amasty/module-special-promo-pro",
+		"version": "2.8.4.x-dev",
+		"repository_url": "git@github.com:PMET-public/amasty-module-special-promotions-pro.git"
+	},
+	"amasty-geoip": {
+		"name": "amasty/geoip",
+		"version": "1.5.3.x-dev",
+		"repository_url": "git@github.com:PMET-public/amasty-module-geoip.git"
+	},
+	"amasty-product-attachment": {
+		"name": "amasty/product-attachment",
+		"version": "2.3.10.x-dev",
+		"repository_url": "git@github.com:PMET-public/amasty-module-product-attachments.git"
+	},
+	"amasty-store-locator": {
+		"name": "amasty/module-store-locator",
+		"version": "2.4.3.x-dev",
+		"repository_url": "git@github.com:PMET-public/amasty-module-store-locator.git"
+	}
+}

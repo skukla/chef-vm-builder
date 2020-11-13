@@ -1,0 +1,149 @@
+{
+	"si-team": {
+		"data-install": {
+			"name": "magentoese/module-data-install",
+			"repository_url": "https://github.com/PMET-public/module-data-install.git"
+		},
+		"sctools": {
+			"name": "magentoese/module-sctools",
+			"repository_url": "git@github.com:PMET-public/module-sctools.git"
+		},
+		"theme-customizer": {
+			"name": "magentoese/module-themecustomizer",
+			"repository_url": "git@github.com:PMET-public/module-themecustomizer.git"
+		},
+		"autofill": {
+			"name": "magentoese/module-autofill",
+			"repository_url": "git@github.com:PMET-public/module-autofill.git"
+		},
+		"blank-theme": {
+			"name": "magentoese/theme-frontend-custom",
+			"repository_url": "git@github.com:PMET-public/theme-frontend-custom.git"
+		},
+		"venia-theme": {
+			"name": "magentoese/theme-frontend-venia",
+			"repository_url": "git@github.com:PMET-public/theme-frontend-venia.git"
+		},
+		"instore-pickup": {
+			"name": "magentoese/module-instorepickup",
+			"repository_url": "git@github.com:PMET-public/module-instorepickup.git"
+		},
+		"store-switcher": {
+			"name": "magentoese/module-switcherlogos",
+			"repository_url": "git@github.com:PMET-public/module-switcherlogos.git"
+		},
+		"product-badges": {
+			"name": "magentoese/module-productbadge",
+			"repository_url": "git@github.com:PMET-public/module-productbadge.git"
+		}
+	},
+	"magento": {
+		"product-recommendations": "magento/product-recommendations",
+		"pagebuilder-product-recommendations": "magento/module-page-builder-product-recommendations"
+	},
+	"smile": {
+		"elasticsuite": {
+			"name": "smile/elasticsuite",
+			"version": "~2.8"
+		},
+		"elasticsuite-shared-catalog": "smile/module-elasticsuite-shared-catalog",
+		"elasticsuite-quick-order": "smile/module-elasticsuite-quick-order"
+	},
+	"adobe-connectors": {
+		"bounteous-aem": {
+			"name": "bounteous/dam",
+			"repository_url": "git@github.com:skukla/module-bounteous-aem-assets.git"
+		}
+	},
+	"third-party": {
+		"dependent-options": {
+			"name": "pektsekye/module-option-dependent",
+			"repository_url": "git@github.com:skukla/module-dependent-custom-options.git"
+		},
+		"delete-orders": "mageplaza/module-delete-orders"
+	},
+	"paradox-labs": {
+		"paradoxlabs-tokenbase": {
+			"name": "paradoxlabs/tokenbase",
+			"version": "4.3.2.x-dev",
+			"repository_url": "git@github.com:PMET-public/paradoxlabs-tokenbase.git"
+		},
+		"paradoxlabs-subscriptions": {
+			"name": "paradoxlabs/subscriptions",
+			"version": "3.2.4.x-dev",
+			"repository_url": "git@github.com:PMET-public/paradoxlabs-subscriptions.git"
+		},
+		"paradoxlabs-authnetcim": {
+			"name": "paradoxlabs/authnetcim",
+			"version": "4.3.2.x-dev",
+			"repository_url": "git@github.com:PMET-public/paradoxlabs-authnetcim.git"
+		},
+		"paradoxlabs-firstdata": {
+			"name": "paradoxlabs/firstdata",
+			"version": "2.3.4.x-dev",
+			"repository_url": "git@github.com:PMET-public/paradoxlabs-firstdata.git"
+		},
+		"paradoxlabs-stripe": {
+			"name": "paradoxlabs/stripe",
+			"version": "2.3.7.x-dev",
+			"repository_url": "git@github.com:PMET-public/paradoxlabs-stripe.git"
+		}
+	},
+	"amasty": {
+		"amasty-base": {
+			"name": "amasty/base",
+			"version": "1.10.10.x-dev",
+			"repository_url": "git@github.com:PMET-public/amasty-module-base.git"
+		},
+		"amasty-advanced-conditions": {
+			"name": "amasty/module-advanced-conditions",
+			"version": "1.5.1.x-dev",
+			"repository_url": "git@github.com:PMET-public/amasty-module-advanced-conditions.git"
+		},
+		"amasty-banners-lite": {
+			"name": "amasty/module-banners-lite",
+			"version": "1.0.18.x-dev",
+			"repository_url": "git@github.com:PMET-public/amasty-module-banners-lite.git"
+		},
+		"amasty-free-gift": {
+			"name": "amasty/promo",
+			"version": "2.9.6.x-dev",
+			"repository_url": "git@github.com:PMET-public/amasty-module-free-gift.git"
+		},
+		"amasty-rules-grid": {
+			"name": "amasty/rgrid",
+			"version": "1.0.7.x-dev",
+			"repository_url": "git@github.com:PMET-public/amasty-module-rules-grid.git"
+		},
+		"amasty-sales-rule-wizard": {
+			"name": "amasty/module-salesrulewizard",
+			"version": "1.0.1.x-dev",
+			"repository_url": "git@github.com:PMET-public/amasty-module-salesrulewizard.git"
+		},
+		"amasty-special-promotions": {
+			"name": "amasty/module-special-promo",
+			"version": "2.7.17.x-dev",
+			"repository_url": "git@github.com:PMET-public/amasty-module-special-promotions.git"
+		},
+		"amasty-special-promotions-pro": {
+			"name": "amasty/module-special-promo-pro",
+			"version": "2.8.4.x-dev",
+			"repository_url": "git@github.com:PMET-public/amasty-module-special-promotions-pro.git"
+		},
+		"amasty-geoip": {
+			"name": "amasty/geoip",
+			"version": "1.5.3.x-dev",
+			"repository_url": "git@github.com:PMET-public/amasty-module-geoip.git"
+		},
+		"amasty-product-attachment": {
+			"name": "amasty/product-attachment",
+			"version": "2.3.10.x-dev",
+			"repository_url": "git@github.com:PMET-public/amasty-module-product-attachments.git"
+		},
+		"amasty-store-locator": {
+			"name": "amasty/module-store-locator",
+			"version": "2.4.3.x-dev",
+			"repository_url": "git@github.com:PMET-public/amasty-module-store-locator.git"
+		}
+	}
+}
