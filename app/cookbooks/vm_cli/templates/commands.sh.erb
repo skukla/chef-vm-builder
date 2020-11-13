@@ -583,7 +583,9 @@ function restore() {
   DB_NAME="<%= @db_name %>"
   www
   if [ -z "$(ls -A ./var/backups)" ]; then
-    printf "\nThere are no backup files in the VM. Use Samba to copy them into place.\n"
+    printf "\nThere are no backup files in the VM.\nUse the import-backups command or Samba to copy them into place.\n"
+    sleep 3
+    printf "\nExiting..."
     sleep 3
     clear
     return
@@ -605,24 +607,25 @@ function restore() {
   if [ -d "../backups" ] && [ -d "./var/backups" ]; then 
     printf "\nCopying backups..."
     sudo cp ./var/backups/* ../backups/
+    sudo cp ./var/.first-run-state.flag ../backups
     sleep 1
     printf "done. \n"; 
   fi
   if [ ! -f ../backups/${CODEBASE_FILENAME} ]; then 
     printf "\nOh snap, the codebase file you specified doesn't exist. Please try again. Exiting..."
-    sleep 3
+    sleep 5
     clear
     return
   fi
   if [ ! -f ../backups/${DATABASE_FILENAME} ]; then 
     printf "\nOh snap, the database file you specified doesn't exist. Please try again. Exiting..."
-    sleep 3
+    sleep 5
     clear
     return
   fi
   if [ ! -f ../backups/${MEDIA_FILENAME} ]; then 
     printf "\nOh snap, the media file you specified doesn't exist. Please try again. Exiting..."
-    sleep 3
+    sleep 5
     clear
     return
   fi
@@ -650,7 +653,8 @@ function restore() {
   if [ ! -d "./var/backups" ]; then 
     mkdir -p "./var/backups"
   fi
-  cp ../backups/* ./var/backups/
+  sudo cp ../backups/* ./var/backups/
+  sudo cp ../backups/.first-run-state.flag ./var/
   rm -rf ../backups/*
   printf "done. \n"
 
