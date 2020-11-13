@@ -44,4 +44,5 @@ end
 magento_app "Set permissions on media directories and files" do
     action :set_permissions
     permission_dirs ["var/", "pub/"]
+    not_if { ::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == "install" }
 end

@@ -148,7 +148,7 @@ end
 magento_app "Set permissions" do
     action :set_permissions
     not_if {
-        build_action == "install" && ::File.exist?("#{web_root}/var/.first-run-state.flag")
+        ::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == "install"
     }
     only_if { 
         ::File.exist?("#{web_root}/app/etc/config.php") && 

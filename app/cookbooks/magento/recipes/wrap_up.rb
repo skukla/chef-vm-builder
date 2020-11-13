@@ -16,7 +16,10 @@ end
 
 magento_app "Enable cron" do
     action :enable_cron
-    not_if { ::File.exist?("/var/spool/cron/crontabs/#{user}") }
+    not_if { 
+        ::File.exist?("/var/spool/cron/crontabs/#{user}") ||
+        (::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == "install")
+    }
 end
 
 magento_app "Start consumers" do

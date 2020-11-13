@@ -4,7 +4,6 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 update_os = node[:init][:os][:update]
-webserver_type = node[:init][:webserver][:type]
 build_action = node[:init][:magento][:build_action]
 
 os "Update OS" do
