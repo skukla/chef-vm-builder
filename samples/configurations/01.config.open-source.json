@@ -13,11 +13,9 @@
 	},
 	"application": {
 		"authentication": {
-			"composer": {
-				"public_key": "",
-				"private_key": "",
-				"github_token": ""
-			}
+			"public_key": "",
+			"private_key": "",
+			"github_token": ""
 		},
 		"options": {
 			"family": "Open Source",
