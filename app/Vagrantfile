@@ -46,13 +46,15 @@ Vagrant.configure("2") do |config|
     trigger.name = "Copying local data packs"
     trigger.ruby do
       Dir["#{demo_builder_files_path}/*"].each { |entry| FileUtils.rm_r(entry) }
-      settings["custom_demo"]["custom_modules"].each do |custom_module_key, custom_module_value|
-        Dir["#{data_pack_dir}/*"].each do |entry|
-          entry_path = [File.dirname(entry), File.basename(entry)].join("/").split("/").pop(1).join("/")
-          if entry_path == custom_module_value["repository_url"]
-            Dir["#{data_pack_dir}/*"].each do |entry|
-              if Dir.exist?(entry)
-                FileUtils.cp_r(entry, "#{demo_builder_files_path}/")
+      if settings["custom_demo"].has_key?("custom_modules")
+        settings["custom_demo"]["custom_modules"].each do |custom_module_key, custom_module_value|
+          Dir["#{data_pack_dir}/*"].each do |entry|
+            entry_path = [File.dirname(entry), File.basename(entry)].join("/").split("/").pop(1).join("/")
+            if entry_path == custom_module_value["repository_url"]
+              Dir["#{data_pack_dir}/*"].each do |entry|
+                if Dir.exist?(entry)
+                  FileUtils.cp_r(entry, "#{demo_builder_files_path}/")
+                end
               end
             end
           end
@@ -69,7 +71,7 @@ Vagrant.configure("2") do |config|
         Dir["#{backup_files_path}/*"].each { |entry| FileUtils.rm_r(entry) }
         Dir["#{data_pack_dir}/*"].each do |entry|
           if entry.include?(".zip")
-            system("unzip -d #{backup_files_path} #{entry} > /dev/null 2>&1")
+            system("unzip -d #{backup_files_path} \"#{entry}\" > /dev/null 2>&1")
           else
             [".tgz", ".sql"].any? do |extension| 
               if entry.include?(extension)
