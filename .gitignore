@@ -3,8 +3,10 @@
 config.json
 *.code-workspace
 app/backups/*
-!app/backups/.gitignore
+app/cookbooks/magento_restore/files/default/*
 app/cookbooks/magento_demo_builder/files/default/demo/*
+!app/backups/.gitignore
 !app/cookbooks/magento_demo_builder/files/default/demo/.gitignore
+!app/cookbooks/magento_restore/files/default/.gitignore
 !samples/data-pack-library/starter/config.json
 

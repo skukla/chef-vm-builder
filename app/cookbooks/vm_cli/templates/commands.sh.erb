@@ -515,24 +515,29 @@ export -f backup
 
 function export-backups() {
   USER=<%= @user %>
+  EXPORT_DIR="/${USER}/backups"
+  BACKUP_DIR="/var/www/magento/var/backups"
+
   list-backups
-  if [ -d "var/backups" ]; then
-    printf "\nExporting all backups to the VM app/backups directory..."
-    if [ ! -d "/${USER}/backups" ]; then
-      mkdir -p /${USER}/backups
+  if [ -d "${BACKUP_DIR}" ]; then
+    printf "\nExporting all backups to the VM app/backups/export directory..."
+    if [ ! -d "${EXPORT_DIR}" ]; then
+      mkdir -p ${EXPORT_DIR}
     fi
-    cp -R var/backups/* /${USER}/backups
+    cp -R ${BACKUP_DIR}/* ${EXPORT_DIR}
     printf "done. \n"
   fi
 }
 export -f export-backups
 
 function remove-backups() {
+  BACKUP_DIR="/var/www/magento/var/backups"
+  
   www
-  if [ -d "var/backups" ]; then
+  if [ -d "${BACKUP_DIR}" ]; then
     printf "\nRemoving all backups on the VM (Local backups will not be affected)..."
     sleep 1
-    rm -rf var/backups/*
+    rm -rf ${BACKUP_DIR}/*
     printf "done. \n"
   fi
   list-backups
@@ -541,26 +546,36 @@ export -f remove-backups
 
 function import-backups() {
   USER="vagrant"
+  IMPORT_DIR="/${USER}/backups"
+  BACKUP_DIR="/var/www/magento/var/backups"
   IMPORTED=false
+
   www
-  if [ ! -d "/${USER}/backups" ]; then
-    print "\nLooks like there isn't a folder called 'backups' inside of your app directory.  Please create it and try again.\n"
+  if [ ! -d "${IMPORT_DIR}" ]; then
+    printf "\nLooks like there isn't a folder called 'backups' inside of your app directory.  Please create it and try again.\n"
     return
   fi
-  if [ ! -d "./var/backups" ]; then
-    print "\nImport failed because there isn't a backups directory in the web root at var/backups.\n"
+  if [ ! -d "${BACKUP_DIR}" ]; then
+    printf "\nImport failed because there isn't a backups directory in the web root at var/backups.\n"
     return
   fi
-  for FILENAME in /${USER}/backups/*; do
-    if [ "${FILENAME}" = "/vagrant/backups/*" ]; then
+  for FILENAME in ${IMPORT_DIR}/*; do
+    if [ "${FILENAME}" = "${IMPORT_DIR}/*" ]; then
       printf "\nThere are no backup files to import in your app/backups directory. Exiting...\n"
       sleep 3
       return
     else
-      if [ ! -e ./var/backups/$(basename "${FILENAME}") ]; then
+      if [ ! -e ${BACKUP_DIR}/$(basename "${FILENAME}") ]; then
         printf "Importing ${FILENAME}..."
-        cp "${FILENAME}" ./var/backups/$(basename "${FILENAME}")
+        cp "${FILENAME}" ${BACKUP_DIR}/$(basename "${FILENAME}")
         printf "done.\n"
+
+        if [ ${FILENAME##*.} == "zip" ]; then
+          printf "\nUzipping ${FILENAME} in ${BACKUP_DIR}...\n\n"
+          unzip -d ${BACKUP_DIR} ${FILENAME}
+          rm -rf ${BACKUP_DIR}/__MACOSX 
+          rm -rf ${BACKUP_DIR}/*.zip
+        fi
       else
         IMPORTED=true
       fi
@@ -581,21 +596,19 @@ function restore() {
   DB_USER="<%= @db_user %>"
   DB_PASSWORD="<%= @db_password %>"
   DB_NAME="<%= @db_name %>"
-  BOLD=$(tput bold)
-  REG=$(tput sgr0)
+  BACKUP_HOLDING_AREA="/var/www/backups"
+  VAR_DIR="/var/www/magento/var"
+  BACKUP_DIR="/var/www/magento/var/backups"
+
   www
   if [ -z "$(ls -A ./var/backups)" ]; then
-    printf "\nThere are no backup files in the VM.\nUse the ${BOLD}import-backups ${REG}command or Samba to copy them into place.\n"
+    printf "\nThere are no backup files in the VM. Trying to import them now...\n\n"
     sleep 3
-    printf "\nExiting..."
-    sleep 3
-    clear
-    return
+    import-backups
   fi 
   if [[ $# -eq 0 ]] ; then
     list-backups
-    printf "\n"
-    printf "Codebase File: "
+    printf "\nCodebase File: "
     read CODEBASE_FILENAME
     printf "Database File: "
     read DATABASE_FILENAME
@@ -606,26 +619,26 @@ function restore() {
     DATABASE_FILENAME=$2
     MEDIA_FILENAME=$3
   fi
-  if [ -d "../backups" ] && [ -d "./var/backups" ]; then 
-    printf "\nCopying backups..."
-    sudo cp ./var/backups/* ../backups/
-    sudo cp ./var/.first-run-state.flag ../backups
+  if [ -d "${BACKUP_HOLDING_AREA}" ] && [ -d "${BACKUP_DIR}" ]; then 
+    printf "\nCopying backups to ${BACKUP_HOLDING_AREA}..."
+    sudo cp ${BACKUP_DIR}/* ${BACKUP_HOLDING_AREA}
+    sudo cp ./var/.first-run-state.flag ${BACKUP_HOLDING_AREA}
     sleep 1
     printf "done. \n"; 
   fi
-  if [ ! -f ../backups/${CODEBASE_FILENAME} ]; then 
+  if [ ! -f ${BACKUP_HOLDING_AREA}/${CODEBASE_FILENAME} ]; then 
     printf "\nOh snap, the codebase file you specified doesn't exist. Please try again. Exiting..."
     sleep 5
     clear
     return
   fi
-  if [ ! -f ../backups/${DATABASE_FILENAME} ]; then 
+  if [ ! -f ${BACKUP_HOLDING_AREA}/${DATABASE_FILENAME} ]; then 
     printf "\nOh snap, the database file you specified doesn't exist. Please try again. Exiting..."
     sleep 5
     clear
     return
   fi
-  if [ ! -f ../backups/${MEDIA_FILENAME} ]; then 
+  if [ ! -f ${BACKUP_HOLDING_AREA}/${MEDIA_FILENAME} ]; then 
     printf "\nOh snap, the media file you specified doesn't exist. Please try again. Exiting..."
     sleep 5
     clear
@@ -636,30 +649,37 @@ function restore() {
   clear-web-root
 
   printf "\nRestoring the codebase..."
-  tar -xf ../backups/${CODEBASE_FILENAME}
+  tar -xf ${BACKUP_HOLDING_AREA}/${CODEBASE_FILENAME}
   printf "\n"
   composer install
   printf "done. \n"
 
   printf "\nRestoring media..."
-  tar -xf ../backups/${MEDIA_FILENAME}
+  tar -xf ${BACKUP_HOLDING_AREA}/${MEDIA_FILENAME}
   printf "done. \n"
 
   printf "\nRestoring the database (this might take a bit)..."
-  mysql -u ${DB_USER} -p${DB_PASSWORD} ${DB_NAME} < ../backups/${DATABASE_FILENAME}
+  mysql -u ${DB_USER} -p${DB_PASSWORD} ${DB_NAME} < ${BACKUP_HOLDING_AREA}/${DATABASE_FILENAME}
   printf "done.\n"
   
   start-elasticsearch
   db-upgrade
   
   printf "\nReplacing backups..." 
-  if [ ! -d "./var/backups" ]; then 
-    mkdir -p "./var/backups"
+  if [ ! -d "${BACKUP_DIR}" ]; then 
+    mkdir -p "${BACKUP_DIR}"
   fi
-  sudo cp ../backups/* ./var/backups/
-  sudo cp ../backups/.first-run-state.flag ./var/
-  rm -rf ../backups/*
-  printf "done. \n"
+  sudo cp ${BACKUP_HOLDING_AREA}/* ${BACKUP_DIR}
+  if [ -d "${BACKUP_HOLDING_AREA}" ] && [ -d "${VAR_DIR}" ] && [ -f "${BACKUP_HOLDING_AREA}/.first-run-state.flag" ]; then 
+    sudo cp ${BACKUP_HOLDING_AREA}/.first-run-state.flag ./var/
+    rm -rf ${BACKUP_HOLDING_AREA}/*
+    printf "done. \n"
+  else
+    printf "\nOh snap, one of the folders we need doesn't exist. Exiting..."
+    sleep 5
+    clear
+    return
+  fi
 
   printf "\nUpdating permissions..."
   sudo chown -R ${USER}:${GROUP} ./*

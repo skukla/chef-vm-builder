@@ -12,8 +12,3 @@ end
 php "Remove Apache packages" do
     action :remove_apache_packages
 end
-
-# We do this here because it's the earliest point that /var/www is available
-os "Create the backups holding tank" do
-    action :create_backups_directory
-end

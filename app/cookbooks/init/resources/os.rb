@@ -40,12 +40,3 @@ action :add_os_packages do
         end
     end
 end
-
-action :create_backups_directory do
-    directory "Create backups holding tank" do
-        path "/var/www/backups"
-        owner new_resource.user
-        group new_resource.user
-        not_if { Dir.exist?("/var/www/backups") }
-    end
-end

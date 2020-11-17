@@ -1,17 +1,14 @@
-name 'init'
+name 'magento_restore'
 maintainer 'Steve Kukla'
 maintainer_email 'kukla@adobe.com'
 license 'All Rights Reserved'
-description 'Installs/Configures the OS and initial settings'
-long_description 'Installs/Configures the OS and initial settings'
+description 'Backs up and restores the Magento application'
+long_description 'Backs up and restores the Magento application'
 version '0.1.0'
 chef_version '>= 14.0'
 
-depends 'nginx'            # Brings in nginx usage
-depends 'mailhog'          # Brings in mailhog usage
-depends 'webmin'           # Brings in webmin usage
-depends 'magento'          # Brings in Magento usage
-depends 'magento_restore'  # Brings in the backup holding area
+depends 'init'                  # Brings in init attributes
+depends 'magento'               # Brings in Magento resources
 
 # The `issues_url` points to the location where issues for this cookbook are
 # tracked.  A `View Issues` link will be displayed on this cookbook's page when

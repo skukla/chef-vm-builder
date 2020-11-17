@@ -6,7 +6,7 @@
 supported_settings = {
     :custom_demo => [:structure],
     :installation_options => [:family, :version, :minimum_stability, :directory, :consumer_list],
-    :build_options => [:clear_cache, :action, :force_install, :sample_data, :modules_to_remove, :deploy_mode => [:apply, :mode]],
+    :build_options => [:action, :force_install, :sample_data, :modules_to_remove, :deploy_mode => [:apply, :mode]],
     :build_hooks => [:warm_cache, :enable_media_gallery, :commands],
     :installation_settings => [:backend_frontname, :language, :timezone, :currency, :admin_firstname, :admin_lastname, :admin_email, :admin_user, :admin_password, :use_rewrites, :use_secure_frontend,  :use_secure_admin, :cleanup_database, :session_save, :encryption_key],
 }
@@ -40,13 +40,6 @@ supported_settings.each do |setting_key, setting_data|
                         elsif (node[:application][:build][option_key].is_a? TrueClass) || (node[:application][:build][option_key].is_a? FalseClass)
                             override[:magento][:build][option_key][:apply] = node[:application][:build][option_key]
                         end
-                    else
-                        if field.is_a? Array
-                            field.each do |value|
-                                next if node[:application][:build][option_key][value].nil?
-                                override[:magento][:build][option_key][value] = node[:application][:build][option_key][value]
-                            end
-                        end
                     end
                 end
             else
@@ -74,10 +67,13 @@ supported_settings.each do |setting_key, setting_data|
             override[:magento][:build][:hooks][option] = node[:application][:build][:hooks][option]
         end
     when :custom_demo
-        setting_data.each do |option|
-            override[:magento][:settings][:unsecure_base_url] = "http://#{node[setting_key][option][:website][:base]}/"
-            override[:magento][:settings][:secure_base_url] = "https://#{node[setting_key][option][:website][:base]}/"
-            override[:magento][:settings][:admin_email] = "admin@#{node[setting_key][option][:website][:base]}"
+        setting_data.each do |field|
+            case field
+            when :structure
+                override[:magento][:settings][:unsecure_base_url] = "http://#{node[setting_key][field][:website][:base]}/"
+                override[:magento][:settings][:secure_base_url] = "https://#{node[setting_key][field][:website][:base]}/"
+                override[:magento][:settings][:admin_email] = "admin@#{node[setting_key][field][:website][:base]}"
+            end
         end
     end
 end

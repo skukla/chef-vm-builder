@@ -10,6 +10,7 @@ system ("clear")
 top_dir = "#{File.expand_path("..", Dir.pwd)}"
 data_pack_dir = "#{top_dir}/demo"
 app_dir = File.dirname(File.expand_path(__FILE__))
+backup_files_path = "#{app_dir}/cookbooks/magento_restore/files/default"
 demo_builder_files_path = "#{app_dir}/cookbooks/magento_demo_builder/files/default/demo"
 environment_file = "#{app_dir}/environments/vm.rb"
 config_file = "#{top_dir}/config.json"
@@ -60,6 +61,27 @@ Vagrant.configure("2") do |config|
     end
   end
 
+  # Copy backups
+  if settings["application"]["build"]["action"] == "restore"
+    config.trigger.before [:up, :reload, :provision] do |trigger|
+      trigger.name = "Copying backups"
+      trigger.ruby do
+        Dir["#{backup_files_path}/*"].each { |entry| FileUtils.rm_r(entry) }
+        Dir["#{data_pack_dir}/*"].each do |entry|
+          if entry.include?(".zip")
+            system("unzip -d #{backup_files_path} #{entry} > /dev/null 2>&1")
+          else
+            [".tgz", ".sql"].any? do |extension| 
+              if entry.include?(extension)
+                FileUtils.cp_r(entry, "#{backup_files_path}/")
+              end
+            end
+          end
+        end
+      end
+    end
+  end
+  
   # Write out chef environment file from configuration
   config.trigger.before [:up, :reload, :provision] do |trigger|
     trigger.name = "Creating environment file"

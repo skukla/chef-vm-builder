@@ -16,6 +16,7 @@ depends 'elasticsearch'           # This brings in Elasticsearch configuration o
 depends 'webmin'                  # This brings in Webmin configuration options
 depends 'samba'                   # This brings in Samba configuration options
 depends 'composer'                # This brings in Composer configuration options
+depends 'magento_restore'         # This brings in the ability to restore a Magento backup
 depends 'magento_custom_modules'  # This brings in Custom Module configuration options
 depends 'magento_patches'         # This brings in Magento Patches configuration options
 depends 'magento_configuration'   # This brings in Magento Configuration configuration options

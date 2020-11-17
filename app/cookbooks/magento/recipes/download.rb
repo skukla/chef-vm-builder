@@ -13,23 +13,7 @@ custom_module_list = node[:magento][:custom_module_list]
 apply_patches = node[:magento][:patches][:apply]
 use_elasticsearch = node[:magento][:elasticsearch][:use]
 
-php "Switch PHP user to #{user}" do
-    action :set_user
-    php_user user
-end
 
-magento_app "Clear the cron schedule" do
-    action :clear_cron_schedule
-    only_if { 
-        ::File.exist?("#{web_root}/var/.first-run-state.flag") && 
-        ::File.exist?("/var/spool/cron/crontabs/#{user}") && 
-        build_action != "install"  
-    }
-end
-
-magento_app "Set auth.json credentials" do
-    action :set_auth_credentials
-end
 
 composer "Create Magento #{family.capitalize} #{version} project" do
     action :create_project
@@ -140,10 +124,6 @@ magento_app "Add sample data" do
         ::File.exist?("#{web_root}/var/.sample-data-state.flag") || 
         !sample_data 
     }
-end
-
-samba "Create Magento samba shares" do
-    action :create_magento_shares
 end
 
 magento_app "Set permissions after downloading code" do

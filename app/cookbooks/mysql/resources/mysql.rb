@@ -11,6 +11,7 @@ property :db_host,                  String,            default: node[:mysql][:db
 property :db_user,                  String,            default: node[:mysql][:db_user]
 property :db_password,              String,            default: node[:mysql][:db_password]
 property :db_name,                  String,            default: node[:mysql][:db_name]
+property :db_dump,                  String
 property :db_query,                 String
 property :socket,                   String,            default: node[:mysql][:socket]
 property :innodb_buffer_pool_size,  [String, Integer], default: node[:mysql][:innodb_buffer_pool_size]
@@ -121,5 +122,11 @@ action :run_query do
                 new_resource.db_query
             )
         end
+    end
+end
+
+action :restore_dump do
+    execute "Restoring the #{new_resource.db_name} database from #{new_resource.db_dump}" do
+        command "mysql -u #{new_resource.db_user} -p#{new_resource.db_password} #{new_resource.db_name} < #{new_resource.db_dump}"
     end
 end
