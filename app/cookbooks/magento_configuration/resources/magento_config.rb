@@ -14,7 +14,6 @@ property :build_action,        String,                     default: node[:magent
 property :config_paths,        Array,                      default: node[:magento_configuration][:paths]
 property :config_group,        String
 property :config_data,         Hash                    
-property :share_list,          Hash,                       default: node[:magento_configuration][:samba][:share_list]
 property :use_elasticsearch,   [TrueClass, FalseClass],    default: node[:magento_configuration][:elasticsearch][:use]
 
 
@@ -102,26 +101,6 @@ action :process_admin_users do
             admin_email value[:email]
             admin_firstname value[:first_name]
             admin_lastname value[:last_name]
-        end
-    end
-end
-
-action :create_samba_drops do
-    [:product_media_drop, :content_media_drop].each do |drop_directory|
-        if new_resource.share_list.has_key?(drop_directory)
-            if (new_resource.share_list[drop_directory].is_a? String) && !new_resource.share_list[drop_directory].empty?
-                media_drop_path = new_resource.share_list[drop_directory]
-            elsif new_resource.share_list[drop_directory].has_key?(:path) && !new_resource.share_list[drop_directory][:path].empty?
-                media_drop_path = new_resource.share_list[drop_directory][:path]
-            end
-            directory "Media Drop" do
-                path media_drop_path
-                owner new_resource.user
-                group new_resource.group
-                mode "777"
-                recursive true
-                not_if { Dir.exist?(media_drop_path) }
-            end
         end
     end
 end

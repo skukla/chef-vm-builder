@@ -48,10 +48,6 @@ magento_app "Clean config and full page cache" do
     not_if { ::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action != "update" }
 end
 
-samba "Create Magento samba shares" do
-    action :create_magento_shares
-end
-
 magento_app "Set final permissions" do
     action :set_permissions
     remove_generated false

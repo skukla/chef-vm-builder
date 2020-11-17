@@ -9,7 +9,7 @@ version = node[:magento][:options][:version]
 family = node[:magento][:options][:family]
 build_action = node[:magento][:build][:action]
 sample_data = node[:magento][:build][:sample_data]
-custom_module_list = node[:magento][:custom_module_list]
+custom_module_list = node[:magento][:custom_modules]
 apply_patches = node[:magento][:patches][:apply]
 use_elasticsearch = node[:magento][:elasticsearch][:use]
 
@@ -124,6 +124,10 @@ magento_app "Add sample data" do
         ::File.exist?("#{web_root}/var/.sample-data-state.flag") || 
         !sample_data 
     }
+end
+
+samba "Create samba drop directories" do
+    action :create_magento_shares
 end
 
 magento_app "Set permissions after downloading code" do
