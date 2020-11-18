@@ -11,7 +11,7 @@ top_dir = "#{File.expand_path("..", Dir.pwd)}"
 data_pack_dir = "#{top_dir}/demo"
 app_dir = File.dirname(File.expand_path(__FILE__))
 backup_files_path = "#{app_dir}/cookbooks/magento_restore/files/default"
-demo_builder_files_path = "#{app_dir}/cookbooks/magento_demo_builder/files/default/demo"
+demo_builder_files_path = "#{app_dir}/cookbooks/magento_demo_builder/files/default"
 environment_file = "#{app_dir}/environments/vm.rb"
 config_file = "#{top_dir}/config.json"
 
@@ -51,8 +51,8 @@ Vagrant.configure("2") do |config|
     trigger.name = "Copying local data packs"
     trigger.ruby do
       Dir["#{demo_builder_files_path}/*"].each { |entry| FileUtils.rm_r(entry) }
-      if settings["custom_demo"].has_key?("custom_modules")
-        settings["custom_demo"]["custom_modules"].each do |custom_module_key, custom_module_value|
+      if settings["custom_demo"].has_key?("data_packs")
+        settings["custom_demo"]["data_packs"].each do |custom_module_key, custom_module_value|
           Dir["#{data_pack_dir}/*"].each do |entry|
             entry_path = [File.dirname(entry), File.basename(entry)].join("/").split("/").pop(1).join("/")
             if entry_path == custom_module_value["repository_url"]
