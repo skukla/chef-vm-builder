@@ -26,6 +26,7 @@ Vagrant.configure("2") do |config|
   config.trigger.before :up do |trigger|
     trigger.name = "Checking for required plugins"
     trigger.ruby do
+      completed = Array.new
       plugins = settings["vagrant"]["plugins"]["all"]
       if settings["vm"]["hypervisor"] == "virtualbox"
         plugins.push(*settings["vagrant"]["plugins"]["virtualbox"])
@@ -35,7 +36,11 @@ Vagrant.configure("2") do |config|
       plugins.each do |plugin|
         unless Vagrant.has_plugin?("#{plugin}")
           system("vagrant plugin install #{plugin}", :chdir=>"/tmp") || exit!
+          completed << plugin
         end
+      end
+      unless plugins.difference(completed).any?
+        abort("Plugins have been installed. Please run the \e[1mvagrant up\e[0m command again to continue.\n")
       end
       sleep(1)
     end
