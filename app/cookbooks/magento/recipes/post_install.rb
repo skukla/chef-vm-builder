@@ -34,24 +34,24 @@ end
 
 magento_app "Reset indexers" do
     action :reset_indexers
-    not_if { ::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action != "update" }
+    not_if { ::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == "install" }
 end
 
 magento_app "Reindex" do
     action :reindex
-    not_if { ::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action != "update" }
+    not_if { ::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == "install" }
 end
 
 magento_app "Clean config and full page cache" do
     action :clean_cache
     cache_types ["config", "full_page"]
-    not_if { ::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action != "update" }
+    not_if { ::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == "install" }
 end
 
 magento_app "Set final permissions" do
     action :set_permissions
     remove_generated false
-    not_if { ::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action != "update" }
+    not_if { ::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == "install" }
 end
 
 magento_app "Set first run flag" do
