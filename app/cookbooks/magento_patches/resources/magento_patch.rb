@@ -40,7 +40,7 @@ action :set_permissions do
 end
 
 action :clone_patches_repository do
-    execute "Cloning the #{new_resource.patches_branch} of the #{new_resource.patches_repository_url} repository" do
+    execute "Cloning the #{new_resource.patches_branch} branch from the #{new_resource.patches_repository_url} repository" do
         command "git clone --single-branch --branch #{new_resource.patches_branch} #{new_resource.patches_repository_url} #{new_resource.patches_holding_area}"
         user new_resource.user
         cwd new_resource.web_root
