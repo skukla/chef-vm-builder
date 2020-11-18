@@ -10,10 +10,9 @@ family = node[:magento][:options][:family]
 build_action = node[:magento][:build][:action]
 sample_data = node[:magento][:build][:sample_data]
 custom_module_list = node[:magento][:custom_modules]
+data_packs_list = node[:magento][:data_packs]
 apply_patches = node[:magento][:patches][:apply]
 use_elasticsearch = node[:magento][:elasticsearch][:use]
-
-
 
 composer "Create Magento #{family.capitalize} #{version} project" do
     action :create_project
@@ -84,6 +83,23 @@ end
 
 if apply_patches && ((build_action == "force_install") || (apply_patches && build_action == "install" && !::File.exist?("#{web_root}/var/.first-run-state.flag")))
     include_recipe "magento_patches::default"
+end
+
+unless data_packs_list.empty?
+    data_packs_list.each do |data_pack_key, data_pack_data|
+        custom_module "Add #{data_pack_data[:module_name]}" do
+            action :download
+            package_name "#{data_pack_data[:package_name]}"
+            module_name "#{data_pack_data[:module_name]}"
+            package_version "#{data_pack_data[:package_version]}"
+            repository_url "#{data_pack_data[:repository_url]}"
+            options ["no-update"]
+            not_if { 
+                build_action == "reinstall" || 
+                (::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == "install")
+            }
+        end
+    end
 end
 
 unless custom_module_list.empty?

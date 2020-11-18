@@ -30,8 +30,8 @@ unless data_packs_list.empty?
         magento_demo_builder "Install data files into the #{data_pack_value["name"]} data pack" do
             action :install_local_data_pack_content
             data_pack_data ({
-                key: module_key,
-                value: module_value
+                key: data_pack_key,
+                value: data_pack_value
             })
         end
     end

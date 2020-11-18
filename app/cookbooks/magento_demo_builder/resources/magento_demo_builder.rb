@@ -17,21 +17,21 @@ property :chef_files_path,                  String, default: node[:magento_demo_
 property :patches_holding_area,             String, default: node[:magento_demo_builder][:magento_patches][:holding_area]
 property :demo_shell_vendor,                String, default: node[:magento_demo_builder][:demo_shell][:vendor]
 property :demo_shell_module_file_list,      Array,  default: node[:magento_demo_builder][:demo_shell][:files]
-property :custom_module_list,               Hash,   default: node[:magento_demo_builder][:custom_module_list]
-property :custom_module_data,               Hash
+property :custom_module_list,               Hash,   default: node[:magento_demo_builder][:custom_modules]
+property :data_pack_data,                   Hash
 
 action :remove_data_patches do
     Dir["#{new_resource.chef_files_path}/demo/*"].each do |entry|
         entry_path = [::File.dirname(entry), ::File.basename(entry)].join("/").split("/").pop(1).join
-        if new_resource.custom_module_data[:value]["repository_url"] == entry_path
-            module_name_data = StringReplaceHelper.prepare_module_names(new_resource.custom_module_data[:value]["name"], new_resource.demo_shell_vendor)
+        if new_resource.data_pack_data[:value]["repository_url"] == entry_path
+            module_name_data = StringReplaceHelper.prepare_module_names(new_resource.data_pack_data[:value]["name"], new_resource.demo_shell_vendor)
             package_name = module_name_data[:package_name]
             vendor = module_name_data[:vendor]
             module_name = module_name_data[:module_name]
             patch_class = "#{vendor}\\#{module_name}\\Setup\\Patch\\Data"
             source = "#{new_resource.web_root}/app/code/#{vendor}/#{module_name}/fixtures"
             
-            ruby_block "Remove existing data patch for #{new_resource.custom_module_data[:value]["name"]}" do
+            ruby_block "Remove existing data patch for #{new_resource.data_pack_data[:value]["name"]}" do
                 block do
                     DatabaseHelper.remove_data_patch(
                         patch_class, 
@@ -54,12 +54,12 @@ action :remove_data_patches do
     end
 end
 
-action :build_local_data_pack_modules do
-    unless new_resource.custom_module_data[:value]["repository_url"].nil? 
+action :build_local_data_packs do
+    unless new_resource.data_pack_data[:value]["repository_url"].nil? 
         Dir["#{new_resource.chef_files_path}/demo/*"].each do |entry|
             entry_path = [::File.dirname(entry), ::File.basename(entry)].join("/").split("/").pop(1).join
-            if new_resource.custom_module_data[:value]["repository_url"] == entry_path
-                module_name_data = StringReplaceHelper.prepare_module_names(new_resource.custom_module_data[:value]["name"], new_resource.demo_shell_vendor)
+            if new_resource.data_pack_data[:value]["repository_url"] == entry_path
+                module_name_data = StringReplaceHelper.prepare_module_names(new_resource.data_pack_data[:value]["name"], new_resource.demo_shell_vendor)
                 package_name = module_name_data[:package_name]
                 vendor = module_name_data[:vendor]
                 module_name = module_name_data[:module_name]
@@ -79,7 +79,7 @@ action :build_local_data_pack_modules do
                         path "#{new_resource.web_root}/#{dir}"
                         owner new_resource.user
                         group new_resource.group
-                        only_if { Dir.exist?("#{new_resource.chef_files_path}/demo/#{new_resource.custom_module_data[:value]["repository_url"]}") }
+                        only_if { Dir.exist?("#{new_resource.chef_files_path}/demo/#{new_resource.data_pack_data[:value]["repository_url"]}") }
                     end
                 end
                 new_resource.demo_shell_module_file_list.each do |file_data|
@@ -95,7 +95,7 @@ action :build_local_data_pack_modules do
                             module_name: module_name
                         })
                         only_if { 
-                            Dir.exist?("#{new_resource.chef_files_path}/demo/#{new_resource.custom_module_data[:value]["repository_url"]}") &&
+                            Dir.exist?("#{new_resource.chef_files_path}/demo/#{new_resource.data_pack_data[:value]["repository_url"]}") &&
                             Dir.exist?("#{new_resource.web_root}/app/code/#{vendor}/#{module_name}")
                         }
                     end
@@ -108,17 +108,17 @@ end
 action :install_local_data_pack_content do  
     Dir["#{new_resource.chef_files_path}/demo/*"].each do |entry|
         entry_path = [::File.dirname(entry), ::File.basename(entry)].join("/").split("/").pop(1).join        
-        if new_resource.custom_module_data[:value]["repository_url"] == entry_path
-            module_name_data = StringReplaceHelper.prepare_module_names(new_resource.custom_module_data[:value]["name"], new_resource.demo_shell_vendor)
+        if new_resource.data_pack_data[:value]["repository_url"] == entry_path
+            module_name_data = StringReplaceHelper.prepare_module_names(new_resource.data_pack_data[:value]["name"], new_resource.demo_shell_vendor)
             package_name = module_name_data[:package_name]
             vendor = module_name_data[:vendor]
             module_name = module_name_data[:module_name]
             
             ["data", "media"].each do |media_type|
-                if Dir.exist?("#{new_resource.chef_files_path}/demo/#{new_resource.custom_module_data[:value]["repository_url"]}/#{media_type}")
+                if Dir.exist?("#{new_resource.chef_files_path}/demo/#{new_resource.data_pack_data[:value]["repository_url"]}/#{media_type}")
                     media_type == "data" ? dest_path = "fixtures" : dest_path = media_type
                     remote_directory "Adding #{media_type} files to #{vendor}/#{module_name}" do
-                        source "demo/#{new_resource.custom_module_data[:value]["repository_url"]}/#{media_type}"
+                        source "demo/#{new_resource.data_pack_data[:value]["repository_url"]}/#{media_type}"
                         path "#{new_resource.web_root}/app/code/#{vendor}/#{module_name}/#{dest_path}"
                         owner new_resource.user
                         group new_resource.group
@@ -130,7 +130,7 @@ action :install_local_data_pack_content do
                     end
                     if media_type == "media"
                         remote_directory "#{module_name.downcase} media" do
-                            source "demo/#{new_resource.custom_module_data[:value]["repository_url"]}/#{media_type}"
+                            source "demo/#{new_resource.data_pack_data[:value]["repository_url"]}/#{media_type}"
                             path "#{new_resource.web_root}/app/code/#{vendor}/#{module_name}/#{media_type}"
                             owner new_resource.user
                             group new_resource.group

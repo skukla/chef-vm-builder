@@ -12,4 +12,5 @@ default[:magento_demo_builder][:demo_shell][:files] = [
     {source: "InstallStore.php", path: "Setup/Patch/Data", mode: "644"},
     {source: "module.xml", path: "etc", mode: "664"}
 ]
-default[:magento_demo_builder][:custom_module_list] = Hash.new
+default[:magento_demo_builder][:custom_modules] = Hash.new
+default[:magento_demo_builder][:data_packs] = Hash.new

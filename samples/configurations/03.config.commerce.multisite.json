@@ -11,14 +11,11 @@
 				"luma_b2b": "b2b.luma.demo"
 			}
 		},
+		"data_packs": {},
 		"custom_modules": {
 			"data-install": {
 				"name": "magentoese/module-data-install",
 				"repository_url": "https://github.com/PMET-public/module-data-install.git"
-			},
-			"custom-demo-shell": {
-				"name": "skukla/module-custom-demo-shell",
-				"repository_url": "git@github.com:skukla/module-custom-demo-shell.git"
 			},
 			"sctools": {
 				"name": "magentoese/module-sctools",

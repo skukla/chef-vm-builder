@@ -4,7 +4,7 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 supported_settings = {
-    :custom_demo => [:custom_modules]
+    :custom_demo => [:custom_modules, :data_packs]
 }
 
 supported_settings.each do |top_key, top_array|
@@ -14,7 +14,7 @@ supported_settings.each do |top_key, top_array|
             if node[top_key][setting].is_a? Chef::Node::ImmutableMash
                 unless node[top_key][setting].nil?
                     node[top_key][setting].each do |custom_module_key, custom_module_value|
-                            override[:magento_demo_builder][:custom_module_list] = node[top_key][setting]
+                        override[:magento_demo_builder][setting] = node[top_key][setting]
                     end
                 end
             end

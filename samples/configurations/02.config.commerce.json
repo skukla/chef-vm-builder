@@ -9,7 +9,9 @@
 			"website": {
 				"base": "luma.demo"
 			}
-		}
+		},
+		"data_packs": {},
+		"custom_modules": {}
 	},
 	"application": {
 		"authentication": {

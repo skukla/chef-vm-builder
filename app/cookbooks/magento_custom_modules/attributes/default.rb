@@ -72,3 +72,4 @@ unless configured_modules.nil?
 end
 # If none of the OOB-supported modules are in use, set module_list to an empty hash
 default[:magento_custom_modules][:module_list] = Hash.new if node[:magento_custom_modules].nil?
+default[:magento_custom_modules][:data_pack_list] = Hash.new if node[:magento_custom_modules].nil?

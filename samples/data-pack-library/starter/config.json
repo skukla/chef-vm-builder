@@ -10,14 +10,16 @@
 				"base": "luma.demo"
 			}
 		},
+		"data_packs": {
+			"custom-data-pack": {
+				"name": "custom-demo",
+				"repository_url": "starter"
+			}
+		},
 		"custom_modules": {
 			"data-install": {
 				"name": "magentoese/module-data-install",
 				"repository_url": "https://github.com/PMET-public/module-data-install.git"
-			},
-			"custom-data-pack": {
-				"name": "custom-demo",
-				"repository_url": "starter"
 			},
 			"sctools": {
 				"name": "magentoese/module-sctools",

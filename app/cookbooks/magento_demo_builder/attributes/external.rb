@@ -13,9 +13,6 @@ default[:magento_demo_builder][:mysql][:db_user] = node[:mysql][:db_user]
 default[:magento_demo_builder][:mysql][:db_password] = node[:mysql][:db_password]
 default[:magento_demo_builder][:mysql][:db_name] = node[:mysql][:db_name]
 
-include_attribute "samba::default"
-default[:magento_demo_builder][:samba][:share_list] = node[:samba][:share_list]
-
 include_attribute "magento::default"
 include_attribute "magento::override"
 default[:magento_demo_builder][:magento][:build][:action] = node[:magento][:build][:action]
