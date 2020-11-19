@@ -20,11 +20,6 @@ init "Install MOTD and update hosts file" do
     action [:install_motd, :update_hosts]
 end
 
-magento_restore "Clean up backup files" do
-    action :remove_backup_files
-    source backup_holding_area
-end
-
 magento_app "Disable cron" do
     action :disable_cron
     only_if {

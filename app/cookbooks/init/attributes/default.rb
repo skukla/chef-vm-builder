@@ -10,7 +10,8 @@ default[:init][:os][:install_package_list] = [
     "zip", 
     "silversearcher-ag", 
     "figlet", 
-    "unattended-upgrades"
+    "unattended-upgrades",
+    "zlibc"
 ]
 default[:init][:webserver][:type] = "nginx"
 default[:init][:webserver][:web_root] = "/var/www/magento"

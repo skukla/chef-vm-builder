@@ -8,6 +8,7 @@ version '0.1.0'
 chef_version '>= 14.0'
 
 depends 'init'                  # Brings in init attributes
+depends 'mysql'                 # Brings in mysql attributes
 depends 'magento'               # Brings in Magento resources
 
 # The `issues_url` points to the location where issues for this cookbook are

@@ -10,6 +10,7 @@ system ("clear")
 top_dir = "#{File.expand_path("..", Dir.pwd)}"
 data_pack_dir = "#{top_dir}/demo"
 app_dir = File.dirname(File.expand_path(__FILE__))
+local_backup_holding_area = "#{data_pack_dir}/backup"
 backup_files_path = "#{app_dir}/cookbooks/magento_restore/files/default"
 demo_builder_files_path = "#{app_dir}/cookbooks/magento_demo_builder/files/default"
 environment_file = "#{app_dir}/environments/vm.rb"
@@ -48,7 +49,7 @@ Vagrant.configure("2") do |config|
 
   # Copy selected demo packs
   config.trigger.before [:up, :reload, :provision] do |trigger|
-    trigger.name = "Copying local data packs"
+    trigger.name = "Copying local data packs to VM"
     trigger.ruby do
       Dir["#{demo_builder_files_path}/*"].each { |entry| FileUtils.rm_r(entry) }
       if settings["custom_demo"].has_key?("data_packs")
@@ -68,16 +69,19 @@ Vagrant.configure("2") do |config|
     end
   end
 
-  # Copy backups
+  # Handle local backups
   if settings["application"]["build"]["action"] == "restore"
-    config.trigger.before [:up, :reload, :provision] do |trigger|
-      trigger.name = "Copying backups"
+    config.trigger.before [:up, :provision] do |trigger|
+      trigger.name = "Copying local backup files"
       trigger.ruby do
-        Dir["#{backup_files_path}/*"].each { |entry| FileUtils.rm_r(entry) }
-        Dir["#{data_pack_dir}/*"].each do |entry|
-          if entry.include?(".zip")
-            system("unzip -d #{backup_files_path} \"#{entry}\" > /dev/null 2>&1")
-          else
+        demo_files = Dir["#{data_pack_dir}/*"]
+        backup_files = Dir["#{backup_files_path}/*"]
+        backup_files.each { |entry| FileUtils.rm_r(entry) }
+        zip_file = demo_files.find{ |file| file.include?(".zip") }
+        if !zip_file.nil?
+          FileUtils.cp_r(zip_file, "#{backup_files_path}/")
+        else
+          demo_files.each do |entry|
             [".tgz", ".sql"].any? do |extension| 
               if entry.include?(extension)
                 FileUtils.cp_r(entry, "#{backup_files_path}/")

@@ -6,7 +6,6 @@
 user = node[:magento][:init][:user]
 group = node[:magento][:init][:user]
 web_root = node[:magento][:init][:web_root]
-backup_holding_area = node[:magento_restore][:holding_area]
 restore_path = node[:magento_restore][:restore_path]
 backup_holding_area = node[:magento_restore][:holding_area]
 apply_deploy_mode = node[:magento][:build][:deploy_mode][:apply]
@@ -22,23 +21,16 @@ directory "Backup holding area" do
     not_if { ::Dir.exist?(backup_holding_area) }
 end
 
-backup_files = Hash.new
-["code", "media", "db"].each do |type|
-    backup_files[type.to_sym] = Dir["#{restore_path}/*"].find{ |file| file.include?(type) }
+magento_restore "Extract backup zip file" do
+    action :extract_backup_archive
+    source restore_path
+    destination restore_path
 end
 
-unless backup_files[:code].nil? || backup_files[:media].nil? || backup_files[:db].nil?
-    backup_files.slice(:code, :media).each do |key, file|
-        magento_restore "Restore the #{key} backup from #{file}" do
-            action :restore_backup
-            source file
-            destination web_root
-        end
-    end
-    mysql "Restore the database" do
-        action :restore_dump
-        db_dump backup_files[:db]
-    end
+magento_restore "Restore backup" do
+    action :restore_backups
+    source restore_path
+    destination web_root
 end
 
 composer "Install the codebase" do
