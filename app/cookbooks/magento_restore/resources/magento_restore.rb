@@ -74,23 +74,6 @@ action :restore_backups do
     end
 end
 
-# action :restore_backups do
-#     types = {code: "codebase", media: "media", db: "database"}
-#     types.each do |key, value|
-#         ruby_block "Restoring the #{value} backup" do
-#             block do
-#                 Dir.entries(new_resource.source).each do |file|
-#                     if "#{new_resource.source}/#{file}".include?(key.to_s) && key.to_s != "db"
-#                         system("tar -xzf #{new_resource.source}/#{file} -C #{new_resource.web_root}")    
-#                     elsif "#{new_resource.source}/#{file}".include?(key.to_s)
-#                         system("mysql -u #{new_resource.db_user} -p#{new_resource.db_password} #{new_resource.db_name} < #{new_resource.source}/#{file}")
-#                     end
-#                 end
-#             end
-#         end
-#     end
-# end
-
 action :remove_backup_files do
     execute "Remove backup files from #{new_resource.source}" do
         command "rm -rf ..?* .[!.]* *"

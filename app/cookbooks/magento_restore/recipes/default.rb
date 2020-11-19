@@ -35,13 +35,15 @@ end
 
 composer "Install the codebase" do
     action :install
+    only_if { ::File.exist?("#{web_root}/composer.json") }
 end
 
 magento_app "Upgrade Magento database" do
     action :db_upgrade
+    not_if { ::Dir.empty?(restore_path) || ::Dir.empty?(web_root) }
 end
 
 magento_app "Re-compile dependency injections and deploy static content" do
     action [:di_compile, :deploy_static_content]
-    not_if { apply_deploy_mode }
+    not_if { apply_deploy_mode || ::Dir.empty?(restore_path) || ::Dir.empty?(web_root) }
 end
