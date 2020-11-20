@@ -6,7 +6,7 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 supported_settings = {
-    :backup => [:version, :repository_url]
+    :backup => [:version, :download_url]
 }
 
 supported_settings.each do |top_key, top_array|
@@ -18,6 +18,11 @@ supported_settings.each do |top_key, top_array|
                     node[:custom_demo][top_key].each do |key, value|
                         override[:magento_restore][:remote_backup_data][key] = node[:custom_demo][:backup][key]
                     end
+                end
+            elsif node[:custom_demo][top_key].is_a? String
+                case setting
+                when :version
+                    override[:magento_restore][:remote_backup_data][setting] = node[:custom_demo][:backup]
                 end
             end
         end

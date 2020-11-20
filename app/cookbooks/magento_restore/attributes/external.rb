@@ -12,3 +12,8 @@ include_attribute "mysql::override"
 default[:magento_restore][:mysql][:db_user] = node[:mysql][:db_user]
 default[:magento_restore][:mysql][:db_password] = node[:mysql][:db_password]
 default[:magento_restore][:mysql][:db_name] = node[:mysql][:db_name]
+
+include_attribute "magento::default"
+include_attribute "magento::override"
+default[:magento_restore][:magento][:settings][:use_secure_frontend] = node[:magento][:settings][:use_secure_frontend]
+default[:magento_restore][:magento][:settings][:use_secure_admin] = node[:magento][:settings][:use_secure_admin]

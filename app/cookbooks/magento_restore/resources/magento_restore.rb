@@ -13,8 +13,7 @@ property :web_root,                 String, default: node[:magento_restore][:ini
 property :restore_path,             String, default: node[:magento_restore][:restore_path]
 property :source,                   [String, Array]
 property :destination,              String
-property :backup_version,           String
-property :backup_repository_url,    String
+property :backup_version,           String, default: node[:magento_restore][:remote_backup_data][:version]
 property :db_user,                  String, default: node[:magento_restore][:mysql][:db_user]
 property :db_password,              String, default: node[:magento_restore][:mysql][:db_password]
 property :db_name,                  String, default: node[:magento_restore][:mysql][:db_name]
@@ -31,10 +30,26 @@ action :transfer_backup_files do
     end
 end
 
-action :retrieve_remote_backup do
-    execute "Cloning the #{new_resource.backup_version} from the #{new_resource.backup_repository_url} repository" do
-        command "su #{new_resource.user} -c 'git clone --single-branch --branch #{new_resource.backup_version} #{new_resource.backup_repository_url} #{new_resource.destination}'"
-        cwd new_resource.web_root
+action :download_remote_backup do
+    if new_resource.source.include?("dropbox")
+        execute "Downloading the #{new_resource.backup_version} backup from #{new_resource.source}" do
+            command "curl #{new_resource.source} -location --progress-bar --output #{new_resource.destination}/#{new_resource.backup_version}.zip"
+        end
+    elsif new_resource.source.include?("google")
+        id = new_resource.source.sub("https://drive.google.com/file/d/","").sub("/view?usp=sharing", "")
+        bash "Downloading the #{new_resource.backup_version} backup from #{new_resource.source}" do
+            code <<-EOH
+                function download-google() {
+                    echo "https://drive.google.com/uc?export=download&id=$1"
+                    mkdir -p .tmp
+                    curl -c .tmp/$1cookies "https://drive.google.com/uc?export=download&id=$1" > .tmp/$1intermezzo.html;
+                    code=$(egrep -o "confirm=(.+)&amp;id=" .tmp/$1intermezzo.html | cut -d"=" -f2 | cut -d"&" -f1)
+                    curl --location --cookie .tmp/$1cookies --progress-bar "https://drive.google.com/uc?export=download&confirm=$code&id=$1" > $2;
+                }
+                download-google #{id} #{new_resource.destination}/#{new_resource.backup_version}.zip
+            EOH
+            cwd new_resource.web_root
+        end
     end
 end
 
