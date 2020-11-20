@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"terminal.integrated.cwd": "./app",
+		"editor.formatOnPaste": true,
+		"editor.formatOnSave": true
+	}
+}

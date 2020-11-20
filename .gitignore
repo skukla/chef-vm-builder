@@ -9,4 +9,5 @@ app/cookbooks/magento_demo_builder/files/default/*
 !app/cookbooks/magento_demo_builder/files/default/.gitignore
 !app/cookbooks/magento_restore/files/default/.gitignore
 !samples/data-packs/starter/config.json
+!workspace.code-workspace
 
