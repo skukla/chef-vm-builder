@@ -75,17 +75,17 @@ Vagrant.configure("2") do |config|
   
   # Handle backups
   if settings["application"]["build"]["action"] == "restore"
-    if (settings["custom_demo"]["backup"].nil? || settings["custom_demo"]["backup"].empty?)
-      abort("You specified a restore build action using a remote backup, but you didn't add a version or download url.")
-    else
-      if settings["custom_demo"]["backup"].is_a? Hash
-        if settings["custom_demo"]["backup"]["version"].nil? || settings["custom_demo"]["backup"]["version"].empty?
-          abort("You specified a restore build action using a remote backup, but you didn't specify a version to download.")
+    if settings["custom_demo"].has_key?("backup")
+      if (settings["custom_demo"]["backup"].nil? || settings["custom_demo"]["backup"].empty?)
+        abort("You specified a restore build action using a remote backup, but you didn't add a version or download url.")
+      else
+        if settings["custom_demo"]["backup"].is_a? Hash
+          if settings["custom_demo"]["backup"]["version"].nil? || settings["custom_demo"]["backup"]["version"].empty?
+            abort("You specified a restore build action using a remote backup, but you didn't specify a version to download.")
+          end
         end
       end
-    end
-  
-    unless settings["custom_demo"].has_key?("backup")
+    else
       demo_files = Dir["#{data_pack_dir}/*"]
       backup_files = Dir["#{backup_files_path}/*"]
       unless [".zip", ".tgz", ".sql"].any? { |type| demo_files.find{ |file| file.include?(type) } }

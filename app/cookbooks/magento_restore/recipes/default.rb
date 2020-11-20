@@ -11,7 +11,8 @@ secure_base_url = node[:magento][:settings][:secure_base_url]
 restore_path = node[:magento_restore][:restore_path]
 backup_holding_area = node[:magento_restore][:holding_area]
 apply_deploy_mode = node[:magento][:build][:deploy_mode][:apply]
-backup_url = node[:magento_restore][:remote_backup_data][:download_url]
+repository_url = node[:magento_restore][:remote_backup_data][:repository_url]
+backup_version = node[:magento_restore][:remote_backup_data][:version]
 use_secure_frontend = node[:magento_restore][:magento][:settings][:use_secure_frontend]
 use_secure_admin = node[:magento_restore][:magento][:settings][:use_secure_admin]
 
@@ -26,14 +27,19 @@ directory "Backup holding area" do
     not_if { ::Dir.exist?(backup_holding_area) }
 end
 
-magento_restore "Download the backup zip file" do
-    action :download_remote_backup
-    source backup_url
-    destination restore_path
-    not_if { backup_url.empty? || backup_url.nil? }
+magento_restore "Remove cached backup files" do
+    action :remove_backup_files
+    source restore_path
+    not_if { backup_version.nil? || backup_version.empty? }
 end
 
-magento_restore "Extract backup zip file" do
+magento_restore "Download the remote backup" do
+    action :download_remote_backup
+    destination restore_path
+    not_if { backup_version.nil? || backup_version.empty? }
+end
+
+magento_restore "Extract backup archive" do
     action :extract_backup_archive
     source restore_path
     destination restore_path

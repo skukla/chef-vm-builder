@@ -6,7 +6,7 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 supported_settings = {
-    :backup => [:version, :download_url]
+    :backup => [:version, :repository_url]
 }
 
 supported_settings.each do |top_key, top_array|

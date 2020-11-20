@@ -13,6 +13,10 @@ default[:magento_restore][:mysql][:db_user] = node[:mysql][:db_user]
 default[:magento_restore][:mysql][:db_password] = node[:mysql][:db_password]
 default[:magento_restore][:mysql][:db_name] = node[:mysql][:db_name]
 
+include_attribute "composer::default"
+include_attribute "composer::override"
+default[:magento_restore][:composer][:github_token] = node[:composer][:github_token]
+
 include_attribute "magento::default"
 include_attribute "magento::override"
 default[:magento_restore][:magento][:settings][:use_secure_frontend] = node[:magento][:settings][:use_secure_frontend]
