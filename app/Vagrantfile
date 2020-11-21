@@ -15,10 +15,18 @@ backup_files_path = "#{app_dir}/cookbooks/magento_restore/files/default"
 demo_builder_files_path = "#{app_dir}/cookbooks/magento_demo_builder/files/default"
 environment_file = "#{app_dir}/environments/vm.rb"
 config_file = "#{top_dir}/config.json"
-
-# Read the configuration json file
+demo_builder_files = (Dir["#{demo_builder_files_path}/*"] - [".DS_Store", ".gitignore"])
+demo_files = (Dir["#{data_pack_dir}/*"]  - [".DS_Store", ".gitignore"])
+backup_files = (Dir["#{backup_files_path}/*"] - [".DS_Store", ".gitignore"])
+file_types = [".zip", ".tgz", ".sql"]
+has_local_files = file_types.any? { |type| demo_files.find{ |file| file.include?(type) } }
 config_file_content = File.read(config_file)
 settings = JSON.parse(config_file_content)
+bold = `tput bold`
+reg = `tput sgr0`
+green = `tput setaf 2`
+magenta = `tput setaf 5`
+cyan = `tput setaf 6`
 
 # Start VM Setup
 Vagrant.configure("2") do |config|
@@ -41,7 +49,7 @@ Vagrant.configure("2") do |config|
         end
       end
       unless plugins.difference(completed).any?
-        abort("Plugins have been installed. Please run the \e[1mvagrant up\e[0m command again to continue.\n")
+        abort("#{green}[SUCCESS]: #{reg}Plugins have been installed. Please run the #{bold}#{cyan}vagrant up #{reg}command again to continue.\n")
       end
       sleep(1)
     end
@@ -50,23 +58,26 @@ Vagrant.configure("2") do |config|
   # Copy selected demo packs
   if settings["custom_demo"].has_key?("data_packs")
     unless settings["custom_demo"]["data_packs"].nil? || settings["custom_demo"]["data_packs"].empty?
+      settings["custom_demo"]["data_packs"].each do |key, data_pack|
+        if data_pack["name"].nil? || data_pack["name"].empty?
+          abort("#{magenta}[OOPS]: #{reg}It looks like you're missing one of your data pack names in your config.json file.\n\n")
+        end
+        if data_pack["repository_url"].nil? || data_pack["repository_url"].empty?
+          abort("#{magenta}[OOPS]: #{reg}It looks like you're missing one of your data pack repository urls in your config.json file.\n\n")
+        end
+        demo_files.each do |entry|
+          entry_path = [File.dirname(entry), File.basename(entry)].join("/").split("/").pop(1).join("/")
+          if File.directory?(entry) && entry_path != data_pack["repository_url"]
+            abort("#{magenta}[OOPS]: #{reg}Make sure your #{bold}#{cyan}#{data_pack["repository_url"]} #{reg}data pack folder is in your demo workspace or check the repository url for the #{bold}#{cyan}#{key} #{reg}data pack in config.json.\n\n")
+          end
+        end
+      end  
       config.trigger.before [:up, :reload, :provision] do |trigger|
         trigger.name = "Copying local data packs to VM"
         trigger.ruby do
-          Dir["#{demo_builder_files_path}/*"].each { |entry| FileUtils.rm_r(entry) }
-          if settings["custom_demo"].has_key?("data_packs")
-            settings["custom_demo"]["data_packs"].each do |custom_module_key, custom_module_value|
-              Dir["#{data_pack_dir}/*"].each do |entry|
-                entry_path = [File.dirname(entry), File.basename(entry)].join("/").split("/").pop(1).join("/")
-                if entry_path == custom_module_value["repository_url"]
-                  Dir["#{data_pack_dir}/*"].each do |entry|
-                    if Dir.exist?(entry)
-                      FileUtils.cp_r(entry, "#{demo_builder_files_path}/")
-                    end
-                  end
-                end
-              end
-            end
+          demo_builder_files.each { |entry| FileUtils.rm_r(entry) }
+          demo_files.each do |entry|
+            FileUtils.cp_r(entry, "#{demo_builder_files_path}/")
           end
         end
       end
@@ -75,44 +86,32 @@ Vagrant.configure("2") do |config|
   
   # Handle backups
   if settings["application"]["build"]["action"] == "restore"
-    if settings["custom_demo"].has_key?("backup")
-      if (settings["custom_demo"]["backup"].nil? || settings["custom_demo"]["backup"].empty?)
-        abort("You specified a restore build action using a remote backup, but you didn't add a version or download url.")
-      else
-        if settings["custom_demo"]["backup"].is_a? Hash
-          if settings["custom_demo"]["backup"]["version"].nil? || settings["custom_demo"]["backup"]["version"].empty?
-            abort("You specified a restore build action using a remote backup, but you didn't specify a version to download.")
-          end
-        end
-      end
-    else
-      demo_files = Dir["#{data_pack_dir}/*"]
-      backup_files = Dir["#{backup_files_path}/*"]
-      unless [".zip", ".tgz", ".sql"].any? { |type| demo_files.find{ |file| file.include?(type) } }
-        abort("You specified a restore build action using a local backup, but you didn't add any backup files.")
-      end
-      config.trigger.before [:up, :provision] do |trigger|
-        trigger.name = "Copying local backup files"
-        trigger.ruby do
-          backup_files.each { |entry| FileUtils.rm_r(entry) }
-          zip_file = demo_files.find{ |file| file.include?(".zip") }
-          
-          if !zip_file.nil?
-            FileUtils.cp_r(zip_file, "#{backup_files_path}/")
-          else
-            demo_files.each do |entry|
-              [".tgz", ".sql"].any? do |extension| 
-                if entry.include?(extension)
-                  FileUtils.cp_r(entry, "#{backup_files_path}/")
+    if settings["custom_demo"].has_key?("backup") || has_local_files
+      if settings["custom_demo"]["backup"].nil? || settings["custom_demo"]["backup"].empty?
+        config.trigger.before [:up, :provision] do |trigger|
+          trigger.name = "Copying local backup files"
+          trigger.ruby do
+            backup_files.each { |entry| FileUtils.rm_r(entry) }
+            zip_file = demo_files.find{ |file| file.include?(".zip") }
+            if !zip_file.nil?
+              FileUtils.cp_r(zip_file, "#{backup_files_path}/")
+            else
+              demo_files.each do |entry|
+                [".tgz", ".sql"].any? do |extension| 
+                  if entry.include?(extension)
+                    FileUtils.cp_r(entry, "#{backup_files_path}/")
+                  end
                 end
               end
             end
           end
         end
       end
+    else
+      abort("#{magenta}[OOPS]: #{reg}You have a build action of #{bold}#{cyan}restore#{reg}, but you haven't added any local backup files or specified a remote backup to download. You silly goose, you.\n\n")
     end
   end
-
+  
   # Write out chef environment file from configuration
   config.trigger.before [:up, :reload, :provision] do |trigger|
     trigger.name = "Creating environment file"
@@ -198,6 +197,16 @@ Vagrant.configure("2") do |config|
     chef.arguments = "--chef-license accept"
   end
 
+  # Clean up backup files
+  unless (backup_files).empty?
+    config.trigger.after [:up, :provision, :halt, :reload] do |trigger|
+      trigger.name = "Cleaning up backups"
+      trigger.ruby do
+        backup_files.each { |entry| FileUtils.rm_r(entry) }
+      end
+    end
+  end
+  
   # SSL certificates triggers
   config.trigger.after [:halt, :destroy] do |trigger|
     trigger.name = "Cleaning up ssl certificate"
