@@ -20,54 +20,54 @@ property :patches_holding_area,     String, default: node[:magento_patches][:hol
 property :patches_file,             String, default: node[:magento_patches][:patches_file]
 
 action :remove_holding_area do
-    execute "Remove patches holding area" do
-        command "rm -rf #{new_resource.patches_holding_area}"
-        only_if { ::Dir.exist?(new_resource.patches_holding_area) }
-    end
+  execute 'Remove patches holding area' do
+    command "rm -rf #{new_resource.patches_holding_area}"
+    only_if { ::Dir.exist?(new_resource.patches_holding_area) }
+  end
 end
 
 action :remove_from_web_root do
-    execute "Remove patches from web root" do
-        command "rm -rf #{new_resource.web_root}/#{new_resource.directory_in_codebase}"
-        only_if { ::Dir.exist?("#{new_resource.web_root}/#{new_resource.directory_in_codebase}") }
-    end
+  execute 'Remove patches from web root' do
+    command "rm -rf #{new_resource.web_root}/#{new_resource.directory_in_codebase}"
+    only_if { ::Dir.exist?("#{new_resource.web_root}/#{new_resource.directory_in_codebase}") }
+  end
 end
 
 action :set_permissions do
-    directory "/var/www" do
-        mode "775"
-    end
+  directory '/var/www' do
+    mode '775'
+  end
 end
 
 action :clone_patches_repository do
-    execute "Cloning the #{new_resource.patches_branch} branch from the #{new_resource.patches_repository_url} repository" do
-        command "git clone --single-branch --branch #{new_resource.patches_branch} #{new_resource.patches_repository_url} #{new_resource.patches_holding_area}"
-        user new_resource.user
-        cwd new_resource.web_root
-    end
+  execute "Cloning the #{new_resource.patches_branch} branch from the #{new_resource.patches_repository_url} repository" do
+    command "git clone --single-branch --branch #{new_resource.patches_branch} #{new_resource.patches_repository_url} #{new_resource.patches_holding_area}"
+    user new_resource.user
+    cwd new_resource.web_root
+  end
 end
 
 action :filter_directory do
-    execute "Pull out patches from repository" do
-        command "cd #{new_resource.patches_holding_area} && 
+  execute 'Pull out patches from repository' do
+    command "cd #{new_resource.patches_holding_area} &&
         git filter-branch --subdirectory-filter #{new_resource.directory_in_repository}"
-    end
+  end
 end
 
 action :move_into_web_root do
-    execute "Move patches into web root" do
-        command "mv #{new_resource.patches_holding_area} #{new_resource.web_root}/#{new_resource.directory_in_codebase}"
-        only_if { ::Dir.exist?(new_resource.patches_holding_area) }
-    end
+  execute 'Move patches into web root' do
+    command "mv #{new_resource.patches_holding_area} #{new_resource.web_root}/#{new_resource.directory_in_codebase}"
+    only_if { ::Dir.exist?(new_resource.patches_holding_area) }
+  end
 end
 
 action :build_patch_file do
-    ruby_block "Build patch file" do
-        block do
-            PatchHelper.build_patch_file(
-                "#{new_resource.web_root}/#{new_resource.directory_in_codebase}", 
-                "#{new_resource.web_root}/#{new_resource.directory_in_codebase}/#{new_resource.patches_file}"
-            )
-        end
+  ruby_block 'Build patch file' do
+    block do
+      PatchHelper.build_patch_file(
+        "#{new_resource.web_root}/#{new_resource.directory_in_codebase}",
+        "#{new_resource.web_root}/#{new_resource.directory_in_codebase}/#{new_resource.patches_file}"
+      )
     end
+  end
 end

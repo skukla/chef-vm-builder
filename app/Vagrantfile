@@ -2,24 +2,23 @@
 # Vagrantfile
 #
 # Copyright 2020, Steve Kukla, All Rights Reserved.
-require "json"
+require 'json'
 
 # Clear the screen
-system ("clear")
+system('clear')
 
-top_dir = "#{File.expand_path("..", Dir.pwd)}"
+top_dir = File.expand_path('..', Dir.pwd).to_s
 data_pack_dir = "#{top_dir}/demo"
 app_dir = File.dirname(File.expand_path(__FILE__))
-local_backup_holding_area = "#{data_pack_dir}/backup"
 backup_files_path = "#{app_dir}/cookbooks/magento_restore/files/default"
 demo_builder_files_path = "#{app_dir}/cookbooks/magento_demo_builder/files/default"
 environment_file = "#{app_dir}/environments/vm.rb"
 config_file = "#{top_dir}/config.json"
-demo_builder_files = (Dir["#{demo_builder_files_path}/*"] - [".DS_Store", ".gitignore"])
-demo_files = (Dir["#{data_pack_dir}/*"]  - [".DS_Store", ".gitignore"])
-backup_files = (Dir["#{backup_files_path}/*"] - [".DS_Store", ".gitignore"])
-file_types = [".zip", ".tgz", ".sql"]
-has_local_files = file_types.any? { |type| demo_files.find{ |file| file.include?(type) } }
+demo_builder_files = (Dir["#{demo_builder_files_path}/*"] - ['.DS_Store', '.gitignore'])
+demo_files = (Dir["#{data_pack_dir}/*"] - ['.DS_Store', '.gitignore'])
+backup_files = (Dir["#{backup_files_path}/*"] - ['.DS_Store', '.gitignore'])
+file_types = ['.zip', '.tgz', '.sql']
+has_local_files = file_types.any? { |type| demo_files.find { |file| file.include?(type) } }
 config_file_content = File.read(config_file)
 settings = JSON.parse(config_file_content)
 bold = `tput bold`
@@ -29,22 +28,21 @@ magenta = `tput setaf 5`
 cyan = `tput setaf 6`
 
 # Start VM Setup
-Vagrant.configure("2") do |config|
-  
+Vagrant.configure('2') do |config|
   # Plugin check (VMWare Fusion and Virtualbox will want different Vagrant plugins)
   config.trigger.before :up do |trigger|
-    trigger.name = "Checking for required plugins"
+    trigger.name = 'Checking for required plugins'
     trigger.ruby do
-      completed = Array.new
-      plugins = settings["vagrant"]["plugins"]["all"]
-      if settings["vm"]["hypervisor"] == "virtualbox"
-        plugins.push(*settings["vagrant"]["plugins"]["virtualbox"])
+      completed = []
+      plugins = settings['vagrant']['plugins']['all']
+      if settings['vm']['hypervisor'] == 'virtualbox'
+        plugins.push(*settings['vagrant']['plugins']['virtualbox'])
       else
-        plugins.push(*settings["vagrant"]["plugins"]["vmware"])
+        plugins.push(*settings['vagrant']['plugins']['vmware'])
       end
       plugins.each do |plugin|
-        unless Vagrant.has_plugin?("#{plugin}")
-          system("vagrant plugin install #{plugin}", :chdir=>"/tmp") || exit!
+        unless Vagrant.has_plugin?(plugin.to_s)
+          system("vagrant plugin install #{plugin}", chdir: '/tmp') || exit!
           completed << plugin
         end
       end
@@ -56,51 +54,48 @@ Vagrant.configure("2") do |config|
   end
 
   # Copy selected demo packs
-  if settings["custom_demo"].has_key?("data_packs")
-    unless settings["custom_demo"]["data_packs"].nil? || settings["custom_demo"]["data_packs"].empty?
-      settings["custom_demo"]["data_packs"].each do |key, data_pack|
-        if data_pack["name"].nil? || data_pack["name"].empty?
-          abort("#{magenta}[OOPS]: #{reg}It looks like you're missing one of your data pack names in your config.json file.\n\n")
+  if settings['custom_demo'].key?('data_packs') &&
+     (!settings['custom_demo']['data_packs'].nil? || settings['custom_demo']['data_packs'].empty?)
+    settings['custom_demo']['data_packs'].each do |key, data_pack|
+      if data_pack['name'].nil? || data_pack['name'].empty?
+        abort("#{magenta}[OOPS]: #{reg}It looks like you're missing one of your data pack names in your config.json file.\n\n")
+      end
+      if data_pack['repository_url'].nil? || data_pack['repository_url'].empty?
+        abort("#{magenta}[OOPS]: #{reg}It looks like you're missing one of your data pack repository urls in your config.json file.\n\n")
+      end
+      demo_files.each do |entry|
+        entry_path = [File.dirname(entry), File.basename(entry)].join('/').split('/').pop(1).join('/')
+        if File.directory?(entry) && entry_path != data_pack['repository_url']
+          abort("#{magenta}[OOPS]: #{reg}Make sure your #{bold}#{cyan}#{data_pack['repository_url']} #{reg}data pack folder is in your demo workspace or check the repository url for the #{bold}#{cyan}#{key} #{reg}data pack in config.json.\n\n")
         end
-        if data_pack["repository_url"].nil? || data_pack["repository_url"].empty?
-          abort("#{magenta}[OOPS]: #{reg}It looks like you're missing one of your data pack repository urls in your config.json file.\n\n")
-        end
+      end
+    end
+    config.trigger.before [:up, :reload, :provision] do |trigger|
+      trigger.name = 'Copying local data packs to VM'
+      trigger.ruby do
+        demo_builder_files.each { |entry| FileUtils.rm_r(entry) }
         demo_files.each do |entry|
-          entry_path = [File.dirname(entry), File.basename(entry)].join("/").split("/").pop(1).join("/")
-          if File.directory?(entry) && entry_path != data_pack["repository_url"]
-            abort("#{magenta}[OOPS]: #{reg}Make sure your #{bold}#{cyan}#{data_pack["repository_url"]} #{reg}data pack folder is in your demo workspace or check the repository url for the #{bold}#{cyan}#{key} #{reg}data pack in config.json.\n\n")
-          end
-        end
-      end  
-      config.trigger.before [:up, :reload, :provision] do |trigger|
-        trigger.name = "Copying local data packs to VM"
-        trigger.ruby do
-          demo_builder_files.each { |entry| FileUtils.rm_r(entry) }
-          demo_files.each do |entry|
-            FileUtils.cp_r(entry, "#{demo_builder_files_path}/")
-          end
+          FileUtils.cp_r(entry, "#{demo_builder_files_path}/")
         end
       end
     end
   end
-  
+
   # Handle backups
-  if settings["application"]["build"]["action"] == "restore"
-    if settings["custom_demo"].has_key?("backup") || has_local_files
-      if settings["custom_demo"]["backup"].nil? || settings["custom_demo"]["backup"].empty?
+  if settings['application']['build']['action'] == 'restore'
+    if settings['custom_demo'].key?('backup') || has_local_files
+      if settings['custom_demo']['backup'].nil? || settings['custom_demo']['backup'].empty?
         config.trigger.before [:up, :provision] do |trigger|
-          trigger.name = "Copying local backup files"
+          trigger.name = 'Copying local backup files'
           trigger.ruby do
             backup_files.each { |entry| FileUtils.rm_r(entry) }
-            zip_file = demo_files.find{ |file| file.include?(".zip") }
+            zip_file = demo_files.find { |file| file.include?('.zip') }
             if !zip_file.nil?
               FileUtils.cp_r(zip_file, "#{backup_files_path}/")
             else
               demo_files.each do |entry|
-                [".tgz", ".sql"].any? do |extension| 
-                  if entry.include?(extension)
-                    FileUtils.cp_r(entry, "#{backup_files_path}/")
-                  end
+                ['.tgz', '.sql'].any? do |extension|
+                  FileUtils.cp_r(entry, "#{backup_files_path}/") if entry.include?(extension)
                 end
               end
             end
@@ -111,39 +106,39 @@ Vagrant.configure("2") do |config|
       abort("#{magenta}[OOPS]: #{reg}You have a build action of #{bold}#{cyan}restore#{reg}, but you haven't added any local backup files or specified a remote backup to download. You silly goose, you.\n\n")
     end
   end
-  
+
   # Write out chef environment file from configuration
   config.trigger.before [:up, :reload, :provision] do |trigger|
-    trigger.name = "Creating environment file"
+    trigger.name = 'Creating environment file'
     trigger.ruby do
       environment_file_content = [
-          'name "vm"',
-          'description "Configuration file for the Kukla Demo VM"',
-          "default_attributes(#{settings})"
-      ]  
-      File.open(environment_file, "w+") do |file|
-          file.puts(environment_file_content)
+        'name "vm"',
+        'description "Configuration file for the Kukla Demo VM"',
+        "default_attributes(#{settings})"
+      ]
+      File.open(environment_file, 'w+') do |file|
+        file.puts(environment_file_content)
       end
       sleep(1)
     end
   end
-  
+
   # SSH/Password access and VM Box
   config.ssh.insert_key = false
   config.ssh.forward_agent = true
-  
-  config.vm.box = settings["remote_machine"]["box"]
+
+  config.vm.box = settings['remote_machine']['box']
 
   # Set the hostname and configure networking
-  config.vm.define settings["remote_machine"]["name"] do |machine|
-    machine.vm.network "private_network", ip: settings["vm"]["ip"]
-    
+  config.vm.define settings['remote_machine']['name'] do |machine|
+    machine.vm.network 'private_network', ip: settings['vm']['ip']
+
     # Get urls for custom demo and create hostname and aliases
-    demo_urls = Array.new
-    settings["custom_demo"]["structure"].each do |scope, scope_hash|
+    demo_urls = []
+    settings['custom_demo']['structure'].each do |_scope, scope_hash|
       scope_hash.each do |code, url|
-        if code == "base"
-          machine.vm.hostname = settings["custom_demo"]["structure"]["website"]["base"]
+        if code == 'base'
+          machine.vm.hostname = settings['custom_demo']['structure']['website']['base']
         else
           demo_urls << url
         end
@@ -153,96 +148,93 @@ Vagrant.configure("2") do |config|
   end
 
   # Configure VM machine based on hypervisor
-  config.vm.provider "#{settings["vm"]["hypervisor"]}" do |machine|
-    machine.gui = settings["hypervisor"]["all"]["gui"]
-    machine.linked_clone = settings["hypervisor"]["all"]["linked_clones"]
-    
-    if settings["vm"]["hypervisor"] == "virtualbox"  
-      machine.default_nic_type = settings["hypervisor"]["virtualbox"]["default_nic_type"]
+  config.vm.provider (settings['vm']['hypervisor']).to_s do |machine|
+    machine.gui = settings['hypervisor']['all']['gui']
+    machine.linked_clone = settings['hypervisor']['all']['linked_clones']
+
+    if settings['vm']['hypervisor'] == 'virtualbox'
+      machine.default_nic_type = settings['hypervisor']['virtualbox']['default_nic_type']
       machine.customize [
-        "modifyvm", :id,
-          "--name", settings["vm"]["name"],
-          "--memory", settings["remote_machine"]["memory"],
-          "--cpus", settings["remote_machine"]["cpus"],
-          "--vram", settings["remote_machine"]["vram"],
-          "--vrde", settings["hypervisor"]["virtualbox"]["remote_display"]
-          
+        'modifyvm', :id,
+        '--name', settings['vm']['name'],
+        '--memory', settings['remote_machine']['memory'],
+        '--cpus', settings['remote_machine']['cpus'],
+        '--vram', settings['remote_machine']['vram'],
+        '--vrde', settings['hypervisor']['virtualbox']['remote_display']
+
       ]
     # VMWare-specific settings
-    elsif settings["vm"]["hypervisor"].include?("vmware")
-      machine.vmx["memsize"] = settings["remote_machine"]["memory"]
-      machine.vmx["numvcpus"] = settings["remote_machine"]["cpus"]
-      machine.vmx["ethernet0.pcislotnumber"] = settings["hypervisor"]["vmware"]["eth0_pcislotnumber"]
-      machine.vmx["ethernet1.pcislotnumber"] = settings["hypervisor"]["vmware"]["eth1_pcislotnumber"]
+    elsif settings['vm']['hypervisor'].include?('vmware')
+      machine.vmx['memsize'] = settings['remote_machine']['memory']
+      machine.vmx['numvcpus'] = settings['remote_machine']['cpus']
+      machine.vmx['ethernet0.pcislotnumber'] = settings['hypervisor']['vmware']['eth0_pcislotnumber']
+      machine.vmx['ethernet1.pcislotnumber'] = settings['hypervisor']['vmware']['eth1_pcislotnumber']
     end
   end
 
   # Run Chef check provisioner
-  config.vm.provision "#{settings["provisioner"]["type"]}" do |chef|
-    chef.version = "#{settings["provisioner"]["version"].chomp}"
-    chef.nodes_path = "#{settings["provisioner"]["nodes_path"]}"
-    chef.environments_path = "#{settings["provisioner"]["environments_path"]}"
-    chef.roles_path = "#{settings["provisioner"]["roles_path"]}"
-    chef.cookbooks_path = "#{settings["provisioner"]["cookbooks_path"]}"
+  config.vm.provision (settings['provisioner']['type']).to_s do |chef|
+    chef.version = settings['provisioner']['version'].chomp.to_s
+    chef.nodes_path = (settings['provisioner']['nodes_path']).to_s
+    chef.environments_path = (settings['provisioner']['environments_path']).to_s
+    chef.roles_path = (settings['provisioner']['roles_path']).to_s
+    chef.cookbooks_path = (settings['provisioner']['cookbooks_path']).to_s
 
     # Environment
-    chef.environment = "vm"
+    chef.environment = 'vm'
 
     # Roles
-    chef.add_role "base"
-    chef.add_role "infrastructure"
-    chef.add_role "application"
+    chef.add_role 'base'
+    chef.add_role 'infrastructure'
+    chef.add_role 'application'
 
     # Accept Chef License
-    chef.arguments = "--chef-license accept"
+    chef.arguments = '--chef-license accept'
   end
 
   # Clean up backup files
-  unless (backup_files).empty?
+  unless backup_files.empty?
     config.trigger.after [:up, :provision, :halt, :reload] do |trigger|
-      trigger.name = "Cleaning up backups"
+      trigger.name = 'Cleaning up backups'
       trigger.ruby do
         backup_files.each { |entry| FileUtils.rm_r(entry) }
       end
     end
   end
-  
+
   # SSL certificates triggers
   config.trigger.after [:halt, :destroy] do |trigger|
-    trigger.name = "Cleaning up ssl certificate"
+    trigger.name = 'Cleaning up ssl certificate'
     trigger.ruby do
-      system("sudo security find-certificate -c #{settings["custom_demo"]["structure"]["website"]["base"].to_s.chomp} > /dev/null 2>&1")
+      system("sudo security find-certificate -c #{settings['custom_demo']['structure']['website']['base'].to_s.chomp} > /dev/null 2>&1")
       if $?.exitstatus == 0
-        system("sudo security delete-certificate -c #{settings["custom_demo"]["structure"]["website"]["base"].to_s.chomp} /Library/Keychains/System.keychain")
+        system("sudo security delete-certificate -c #{settings['custom_demo']['structure']['website']['base'].to_s.chomp} /Library/Keychains/System.keychain")
       end
     end
   end
 
   config.trigger.after :destroy do |trigger|
-    trigger.name = "Removing ssl certificate from system"
+    trigger.name = 'Removing ssl certificate from system'
     trigger.ruby do
-      if File.exist?("#{app_dir}/certificate/#{settings["custom_demo"]["structure"]["website"]["base"]}.crt")
-        FileUtils.rm_rf("#{app_dir}/certificate/#{settings["custom_demo"]["structure"]["website"]["base"]}.crt")
+      if File.exist?("#{app_dir}/certificate/#{settings['custom_demo']['structure']['website']['base']}.crt")
+        FileUtils.rm_rf("#{app_dir}/certificate/#{settings['custom_demo']['structure']['website']['base']}.crt")
       end
     end
   end
 
-  if settings["application"].has_key?("settings")
-    if settings["application"]["settings"].has_key?("use_secure_frontend") || settings["application"]["settings"].has_key?("use_secure_backend")
-      unless settings["application"]["settings"]["use_secure_frontend"].nil? || settings["application"]["settings"]["use_secure_admin"].nil?
-        if settings["application"]["settings"]["use_secure_frontend"].to_s == "1" || settings["application"]["settings"]["use_secure_admin"].to_s == "1"
-          config.trigger.after [:up, :reload, :provision] do |trigger|
-            trigger.name = "Setting up ssl certificate"
-            trigger.ruby do
-              if File.exist?("#{app_dir}/certificate/#{settings["custom_demo"]["structure"]["website"]["base"]}.crt")
-                system("sudo security find-certificate -c #{settings["custom_demo"]["structure"]["website"]["base"].to_s.chomp} > /dev/null 2>&1")
-                if $?.exitstatus == 0
-                  system("sudo security delete-certificate -c #{settings["custom_demo"]["structure"]["website"]["base"].to_s.chomp} /Library/Keychains/System.keychain")
-                end
-                system("sudo security add-trusted-cert -d -r trustAsRoot -k /Library/Keychains/System.keychain '#{app_dir}/certificate/#{settings["custom_demo"]["structure"]["website"]["base"]}.crt'")
-              end
-            end
+  if settings['application'].key?('settings') &&
+     (settings['application']['settings'].key?('use_secure_frontend') || settings['application']['settings'].key?('use_secure_backend')) &&
+     (settings['application']['settings']['use_secure_frontend'].nil? || settings['application']['settings']['use_secure_admin'].nil?) &&
+     (settings['application']['settings']['use_secure_frontend'].to_s == '1' || settings['application']['settings']['use_secure_admin'].to_s == '1')
+    config.trigger.after [:up, :reload, :provision] do |trigger|
+      trigger.name = 'Setting up ssl certificate'
+      trigger.ruby do
+        if File.exist?("#{app_dir}/certificate/#{settings['custom_demo']['structure']['website']['base']}.crt")
+          system("sudo security find-certificate -c #{settings['custom_demo']['structure']['website']['base'].to_s.chomp} > /dev/null 2>&1")
+          if $?.exitstatus == 0
+            system("sudo security delete-certificate -c #{settings['custom_demo']['structure']['website']['base'].to_s.chomp} /Library/Keychains/System.keychain")
           end
+          system("sudo security add-trusted-cert -d -r trustAsRoot -k /Library/Keychains/System.keychain '#{app_dir}/certificate/#{settings['custom_demo']['structure']['website']['base']}.crt'")
         end
       end
     end

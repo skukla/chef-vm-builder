@@ -3,18 +3,18 @@
 # Attribute:: external
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-include_attribute "nginx::default"
+include_attribute 'nginx::default'
 default[:init][:webserver][:nginx_package_list] = node[:nginx][:package_list]
 
-include_attribute "mailhog::default"
+include_attribute 'mailhog::default'
 default[:init][:use_mailhog] = node[:mailhog][:use]
 
-include_attribute "webmin::default"
+include_attribute 'webmin::default'
 default[:init][:use_webmin] = node[:webmin][:use]
 
-include_attribute "magento::default"
-include_attribute "magento::override"
+include_attribute 'magento::default'
+include_attribute 'magento::override'
 default[:init][:magento][:build_action] = node[:magento][:build][:action]
 
-include_attribute "magento_restore::default"
+include_attribute 'magento_restore::default'
 default[:init][:magento_restore][:holding_area] = node[:magento_restore][:holding_area]

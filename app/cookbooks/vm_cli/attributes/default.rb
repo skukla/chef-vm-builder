@@ -4,8 +4,8 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 default[:vm_cli][:directories] = [
-    {path: "cli", mode: "770"}
+  { path: 'cli', mode: '770' }
 ]
 default[:vm_cli][:files] = [
-    {source: ".bashrc", path: "", mode: "644"}
+  { source: '.bashrc', path: '', mode: '644' }
 ]

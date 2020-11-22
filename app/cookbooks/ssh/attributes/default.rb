@@ -3,5 +3,5 @@
 # Attribute:: default
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-default[:ssh][:private_keys][:file_path] = "/var/chef/cache/cookbooks/ssh/files/keys/private"
-default[:ssh][:public_keys][:file_path] = "/var/chef/cache/cookbooks/ssh/files/keys/public"
+default[:ssh][:private_keys][:file_path] = '/var/chef/cache/cookbooks/ssh/files/keys/private'
+default[:ssh][:public_keys][:file_path] = '/var/chef/cache/cookbooks/ssh/files/keys/public'

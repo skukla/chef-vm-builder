@@ -1,6 +1,6 @@
 #
 # Cookbook:: init
-# Resource:: init 
+# Resource:: init
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 resource_name :init
@@ -16,35 +16,35 @@ property :use_mailhog,          [TrueClass, FalseClass], default: node[:init][:u
 property :use_webmin,           [TrueClass, FalseClass], default: node[:init][:use_webmin]
 
 action :install_motd do
-    execute "Remove MotDs" do
-        command "chmod -x /etc/update-motd.d/*"
-    end
+  execute 'Remove MotDs' do
+    command 'chmod -x /etc/update-motd.d/*'
+  end
 
-    template "Custom MoTD" do
-        source "custom_motd.erb"
-        path "/etc/update-motd.d/01-custom"
-        mode "755"
-        owner "root"
-        group "root"
-        variables ({
-            ip: new_resource.ip,
-            hostname: new_resource.hostname,
-            use_mailhog: new_resource.use_mailhog,
-            use_webmin: new_resource.use_webmin,
-            webmin_user: new_resource.user,
-            webmin_password: new_resource.user,
-            urls: DemoStructureHelper.get_vhost_urls(new_resource.demo_structure)
-        })
-    end
+  template 'Custom MoTD' do
+    source 'custom_motd.erb'
+    path '/etc/update-motd.d/01-custom'
+    mode '755'
+    owner 'root'
+    group 'root'
+    variables({
+                ip: new_resource.ip,
+                hostname: new_resource.hostname,
+                use_mailhog: new_resource.use_mailhog,
+                use_webmin: new_resource.use_webmin,
+                webmin_user: new_resource.user,
+                webmin_password: new_resource.user,
+                urls: DemoStructureHelper.get_vhost_urls(new_resource.demo_structure)
+              })
+  end
 end
 
 action :update_hosts do
-    template "Hosts File" do
-        source "hosts.erb"
-        path "/etc/hosts"
-        variables ({
-            hostname: new_resource.hostname,
-            urls: DemoStructureHelper.get_vhost_urls(new_resource.demo_structure)
-        })
-    end
+  template 'Hosts File' do
+    source 'hosts.erb'
+    path '/etc/hosts'
+    variables({
+                hostname: new_resource.hostname,
+                urls: DemoStructureHelper.get_vhost_urls(new_resource.demo_structure)
+              })
+  end
 end
