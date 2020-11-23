@@ -7,8 +7,7 @@ use_elasticsearch = node[:elasticsearch][:use]
 elasticsearch_host = node[:elasticsearch][:host]
 
 elasticsearch 'Stop and uninstall Elasticsearch' do
-  action %i[stop uninstall]
-  only_if { !use_elasticsearch }
+  action :uninstall
 end
 
 java 'Uninstall Java' do

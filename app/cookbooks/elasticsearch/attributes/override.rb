@@ -14,11 +14,9 @@ supported_settings.each do |setting|
                                         else
                                           node[:infrastructure][:elasticsearch][setting]
                                         end
-  else
-    unless (node[:infrastructure][:elasticsearch].is_a? TrueClass) || (node[:infrastructure][:elasticsearch].is_a? FalseClass)
-      next
-    end
-
+  elsif node[:infrastructure][:elasticsearch].is_a?(String)
+    override[:elasticsearch][:version] = node[:infrastructure][:elasticsearch]
+  elsif node[:infrastructure][:elasticsearch].is_a?(TrueClass) || node[:infrastructure][:elasticsearch].is_a?(FalseClass)
     override[:elasticsearch][:use] = node[:infrastructure][:elasticsearch]
   end
 end

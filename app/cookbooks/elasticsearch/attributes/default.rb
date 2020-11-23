@@ -5,10 +5,10 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 default[:elasticsearch][:java][:user] = 'root'
 default[:elasticsearch][:java][:group] = 'root'
+default[:elasticsearch][:user] = 'root'
 default[:elasticsearch][:java][:package] = 'openjdk-11-jdk'
 default[:elasticsearch][:java][:home] = '/usr/lib/jvm/java-11-openjdk-amd64'
 default[:elasticsearch][:java][:environment_file] = '/etc/environment'
-default[:elasticsearch][:user] = 'root'
 default[:elasticsearch][:group] = 'elasticsearch'
 default[:elasticsearch][:cluster_name] = 'Magento'
 default[:elasticsearch][:service_file] = '/usr/lib/systemd/system/elasticsearch.service'
