@@ -159,3 +159,42 @@ action :restart do
     action :restart
   end
 end
+
+action :stop do
+  service "php#{new_resource.version}-fpm" do
+    action :stop
+  end
+end
+
+action :uninstall do
+  old_versions = Dir.entries('/etc/php') - ['.', '..']
+  unless old_versions.empty?
+    old_versions.each do |old_version|
+      next unless old_version != new_resource.version
+
+      package "php-#{old_version}" do
+        action %i[purge remove]
+      end
+
+      new_resource.extension_list.each do |raw_extension|
+        extension = format(raw_extension, { version: old_version })
+        package extension do
+          action %i[purge remove]
+        end
+      end
+
+      apt_repository "php-#{old_version}" do
+        uri 'ppa:ondrej/php'
+        components ['main']
+        distribution 'bionic'
+        action :remove
+      end
+
+      directory "Old PHP #{old_version} files" do
+        path "/etc/php/#{old_version}"
+        action :delete
+        recursive true
+      end
+    end
+  end
+end
