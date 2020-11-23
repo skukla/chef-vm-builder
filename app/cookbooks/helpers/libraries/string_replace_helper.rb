@@ -5,9 +5,11 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 module StringReplaceHelper
   def self.set_php_sendmail_path(php_type, php_version, sendmail_path)
+    line_to_insert = sendmail_path.empty? ? ';sendmail_path =' : "sendmail_path = #{sendmail_path}"
+
     file = Chef::Util::FileEdit.new("/etc/php/#{php_version}/#{php_type}/php.ini")
     file.insert_line_if_no_match(/^sendmail_path =/, sendmail_path.to_s)
-    file.search_file_replace_line(/^sendmail_path =/, "sendmail_path =#{sendmail_path}")
+    file.search_file_replace_line(/^sendmail_path =/, line_to_insert)
     file.write_file
   end
 

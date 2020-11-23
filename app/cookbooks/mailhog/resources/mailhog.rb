@@ -6,19 +6,14 @@
 resource_name :mailhog
 provides :mailhog
 
-property :name,              String,            name_property: true
-property :repository_list,   Array,             default: node[:mailhog][:repositories]
-property :port,              [String, Integer], default: node[:mailhog][:port]
-property :smtp_port,         [String, Integer], default: node[:mailhog][:smtp_port]
-
-action :uninstall do
-  new_resource.repository_list.each do |repository|
-    execute "Uninstall #{repository[:name]}" do
-      command "rm -rf /usr/local/bin/#{repository[:name].downcase}"
-      only_if { ::File.directory?('/root/go') }
-    end
-  end
-end
+property :name,             String,                          name_property: true
+property :use,              [TrueClass, FalseClass],         default: node[:mailhog][:use]
+property :repository_list,  Array,                           default: node[:mailhog][:repositories]
+property :go_install_path,  String,                          default: node[:mailhog][:go_install_path]
+property :install_path,     String,                          default: node[:mailhog][:install_path]
+property :service_file,     String,                          default: node[:mailhog][:service_file]
+property :port,             [String, Integer],               default: node[:mailhog][:port]
+property :smtp_port,        [String, Integer],               default: node[:mailhog][:smtp_port]
 
 action :install do
   new_resource.repository_list.each do |repository|
@@ -26,7 +21,7 @@ action :install do
       command "go get #{repository[:url]}"
     end
     execute "Copy #{repository[:name]} into /usr/local/bin" do
-      command "cp /root/go/bin/#{repository[:name]} /usr/local/bin/#{repository[:name].downcase}"
+      command "cp #{new_resource.go_install_path}/bin/#{repository[:name]} #{new_resource.install_path}/#{repository[:name].downcase}"
     end
   end
 end
@@ -66,5 +61,19 @@ end
 action :stop do
   service 'mailhog' do
     action :stop
+  end
+end
+
+action :uninstall do
+  new_resource.repository_list.each do |repository|
+    execute "Uninstall #{repository[:name]}" do
+      command "rm -rf #{new_resource.install_path}/#{repository[:name].downcase}"
+      only_if { ::Dir.exist?("#{new_resource.install_path}/#{repository[:name].downcase}") }
+    end
+
+    execute 'Uninstall mailhog service' do
+      command "rm -rf #{new_resource.service_file}"
+      only_if { ::File.exist?(new_resource.service_file) }
+    end
   end
 end

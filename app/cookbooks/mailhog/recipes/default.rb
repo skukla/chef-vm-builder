@@ -4,7 +4,11 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 use_mailhog = node[:mailhog][:use]
-sendmail_path = node[:mailhog][:sendmail_path]
+sendmail_path = if use_mailhog
+                  node[:mailhog][:sendmail_path]
+                else
+                  ''
+                end
 
 golang 'Uninstall golang' do
   action :uninstall
@@ -29,5 +33,4 @@ end
 php 'Configure mailhog sendmail path and restart PHP' do
   action %i[configure_sendmail restart]
   sendmail_path sendmail_path
-  only_if { use_mailhog }
 end
