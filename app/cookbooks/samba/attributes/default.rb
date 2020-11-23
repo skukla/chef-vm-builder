@@ -5,6 +5,8 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 default[:samba][:use] = false
 default[:samba][:share_fields] = %i[path public browseable writeable force_user force_group comment]
+default[:samba][:configuration_directory] = '/etc/samba'
+default[:samba][:service_file] = '/lib/systemd/system/smbd.service'
 
 include_attribute 'samba::external'
 default[:samba][:share_list][:web_root] = node[:samba][:init][:web_root]

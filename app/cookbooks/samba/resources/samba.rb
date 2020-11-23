@@ -10,20 +10,20 @@ property :name,                    String, name_property: true
 property :hostname,                String, default: node[:hostname]
 property :user,                    String, default: node[:samba][:init][:user]
 property :group,                   String, default: node[:samba][:init][:user]
+property :service_file,            String, default: node[:samba][:service_file]
+property :configuration_directory, String, default: node[:samba][:configuration_directory]
 property :share_fields,            Array,  default: node[:samba][:share_fields]
 property :share_list,              Hash,   default: node[:samba][:share_list]
-
-action :uninstall do
-  apt_package 'samba' do
-    action %i[remove purge]
-    only_if { ::File.directory?('/etc/samba') }
-  end
-end
 
 action :install do
   apt_package 'samba' do
     action :install
-    not_if { ::File.exist?('/lib/systemd/system/smbd.service') }
+    not_if { ::File.exist?(new_resource.service_file) }
+  end
+
+  directory 'Samba configuration' do
+    path new_resource.configuration_directory
+    not_if { ::Dir.exist?(new_resource.configuration_directory) }
   end
 end
 
@@ -66,6 +66,7 @@ action :configure do
                 hostname: new_resource.hostname,
                 share_list: selected_shares
               })
+    only_if { ::Dir.exist?(new_resource.configuration_directory) }
   end
 end
 
@@ -97,5 +98,26 @@ end
 action :enable do
   service 'smbd' do
     action :enable
+  end
+end
+
+action :uninstall do
+  package 'samba' do
+    action %i[purge remove]
+    only_if { ::File.exist?(new_resource.service_file) }
+  end
+
+  execute 'Remove Samba service' do
+    command lazy {
+      "rm -rf #{service_file}"
+    }
+    only_if { ::File.exist?(new_resource.service_file) }
+  end
+
+  execute 'Remove Samba configuration' do
+    command lazy {
+      "rm -rf #{configuration_directory}"
+    }
+    only_if { ::Dir.exist?(new_resource.configuration_directory) }
   end
 end
