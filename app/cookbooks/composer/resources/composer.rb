@@ -47,6 +47,12 @@ action :install_app do
             exit $RESULT
     CONTENT
   end
+
+  file 'Composer version flag' do
+    content new_resource.version
+    path "#{new_resource.install_directory}/.composer-version"
+    action :create
+  end
 end
 
 action :configure_app do
@@ -147,5 +153,17 @@ action :config_extra do
   execute new_resource.name.to_s do
     command "su #{new_resource.user} -c '#{new_resource.install_directory}/#{new_resource.file} config extra.patches-file #{new_resource.extra_content}'"
     cwd new_resource.web_root
+  end
+end
+
+action :uninstall do
+  ruby_block 'Remove composer' do
+    block do
+      version = IO.read("#{new_resource.install_directory}/.composer-version").strip
+      unless version.match(/#{new_resource.version}/)
+        FileUtils.remove_file("#{new_resource.install_directory}/#{new_resource.file}")
+        FileUtils.remove_dir("/home/#{new_resource.user}/.composer")
+      end
+    end
   end
 end
