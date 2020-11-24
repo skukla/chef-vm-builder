@@ -6,23 +6,11 @@
 resource_name :webmin
 provides :webmin
 
-property :name,            String,            name_property: true
-property :user,            String,            default: node[:webmin][:init][:user]
-property :group,           String,            default: node[:webmin][:init][:user]
-property :use_ssl,         [String, Integer], default: node[:webmin][:use_ssl]
-property :port,            [String, Integer], default: node[:webmin][:port]
-
-action :uninstall do
-  apt_package 'webmin' do
-    action %i[remove purge]
-    only_if 'ls /etc/apt/sources.list.d/webmin*'
-  end
-
-  execute 'Manually remove the Webmin sources file' do
-    command 'rm -rf /etc/apt/sources.list.d/webmin*'
-    only_if 'ls /etc/apt/sources.list.d/webmin*'
-  end
-end
+property :name,                     String,            name_property: true
+property :user,                     String,            default: node[:webmin][:init][:user]
+property :group,                    String,            default: node[:webmin][:init][:user]
+property :use_ssl,                  [String, Integer], default: node[:webmin][:use_ssl]
+property :port,                     [String, Integer], default: node[:webmin][:port]
 
 action :install do
   apt_repository 'webmin' do
@@ -70,5 +58,17 @@ end
 action :stop do
   service 'webmin' do
     action :stop
+  end
+end
+
+action :uninstall do
+  package 'webmin' do
+    action %i[purge remove]
+    only_if { ::File.exist?('/etc/apt/sources.list.d/webmin.list') }
+  end
+
+  execute 'Manually remove the Webmin sources file' do
+    command 'rm -rf /etc/apt/sources.list.d/webmin.list'
+    only_if { ::File.exist?('/etc/apt/sources.list.d/webmin.list') }
   end
 end
