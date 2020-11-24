@@ -56,7 +56,7 @@ DemoStructureHelper.get_vhost_data(demo_structure).each do |vhost|
     config_value "http://#{vhost[:url]}/"
     config_scope vhost[:scope]
     config_scope_code vhost[:code]
-    not_if { use_secure_frontend.to_s == '1' || use_secure_admin.to_s == '1' }
+    not_if { use_secure_frontend == 1 || use_secure_admin == 1 }
   end
   magento_cli 'Configure additional secure URLs' do
     action :config_set
@@ -64,7 +64,7 @@ DemoStructureHelper.get_vhost_data(demo_structure).each do |vhost|
     config_value "https://#{vhost[:url]}/"
     config_scope vhost[:scope]
     config_scope_code vhost[:code]
-    only_if { use_secure_frontend.to_s == '1' || use_secure_admin.to_s == '1' }
+    only_if { use_secure_frontend == 1 || use_secure_admin == 1 }
   end
 end
 

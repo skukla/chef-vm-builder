@@ -70,7 +70,7 @@ Vagrant.configure('2') do |config|
         end
       end
     end
-    config.trigger.before [:up, :reload, :provision] do |trigger|
+    config.trigger.before %i[up reload provision] do |trigger|
       trigger.name = 'Copying local data packs to VM'
       trigger.ruby do
         demo_builder_files.each { |entry| FileUtils.rm_r(entry) }
@@ -85,7 +85,7 @@ Vagrant.configure('2') do |config|
   if settings['application']['build']['action'] == 'restore'
     if settings['custom_demo'].key?('backup') || has_local_files
       if settings['custom_demo']['backup'].nil? || settings['custom_demo']['backup'].empty?
-        config.trigger.before [:up, :provision] do |trigger|
+        config.trigger.before %i[up provision] do |trigger|
           trigger.name = 'Copying local backup files'
           trigger.ruby do
             backup_files.each { |entry| FileUtils.rm_r(entry) }
@@ -108,7 +108,7 @@ Vagrant.configure('2') do |config|
   end
 
   # Write out chef environment file from configuration
-  config.trigger.before [:up, :reload, :provision] do |trigger|
+  config.trigger.before %i[up reload provision] do |trigger|
     trigger.name = 'Creating environment file'
     trigger.ruby do
       environment_file_content = [
@@ -192,18 +192,8 @@ Vagrant.configure('2') do |config|
     chef.arguments = '--chef-license accept'
   end
 
-  # Clean up backup files
-  unless backup_files.empty?
-    config.trigger.after [:up, :provision, :halt, :reload] do |trigger|
-      trigger.name = 'Cleaning up backups'
-      trigger.ruby do
-        backup_files.each { |entry| FileUtils.rm_r(entry) }
-      end
-    end
-  end
-
   # SSL certificates triggers
-  config.trigger.after [:halt, :destroy] do |trigger|
+  config.trigger.after %i[reload destroy] do |trigger|
     trigger.name = 'Cleaning up ssl certificate'
     trigger.ruby do
       system("sudo security find-certificate -c #{settings['custom_demo']['structure']['website']['base'].to_s.chomp} > /dev/null 2>&1")
@@ -224,18 +214,18 @@ Vagrant.configure('2') do |config|
 
   if settings['application'].key?('settings') &&
      (settings['application']['settings'].key?('use_secure_frontend') || settings['application']['settings'].key?('use_secure_backend')) &&
-     (settings['application']['settings']['use_secure_frontend'].nil? || settings['application']['settings']['use_secure_admin'].nil?) &&
-     (settings['application']['settings']['use_secure_frontend'].to_s == '1' || settings['application']['settings']['use_secure_admin'].to_s == '1')
-    config.trigger.after [:up, :reload, :provision] do |trigger|
+     (!settings['application']['settings']['use_secure_frontend'].nil? || !settings['application']['settings']['use_secure_admin'].nil?) &&
+     (settings['application']['settings']['use_secure_frontend'] == true || settings['application']['settings']['use_secure_admin'] == true) &&
+     File.exist?("#{app_dir}/certificate/#{settings['custom_demo']['structure']['website']['base']}.crt")
+
+    config.trigger.after %i[up reload provision] do |trigger|
       trigger.name = 'Setting up ssl certificate'
       trigger.ruby do
-        if File.exist?("#{app_dir}/certificate/#{settings['custom_demo']['structure']['website']['base']}.crt")
-          system("sudo security find-certificate -c #{settings['custom_demo']['structure']['website']['base'].to_s.chomp} > /dev/null 2>&1")
-          if $?.exitstatus == 0
-            system("sudo security delete-certificate -c #{settings['custom_demo']['structure']['website']['base'].to_s.chomp} /Library/Keychains/System.keychain")
-          end
-          system("sudo security add-trusted-cert -d -r trustAsRoot -k /Library/Keychains/System.keychain '#{app_dir}/certificate/#{settings['custom_demo']['structure']['website']['base']}.crt'")
+        system("sudo security find-certificate -c #{settings['custom_demo']['structure']['website']['base'].to_s.chomp} > /dev/null 2>&1")
+        if $?.exitstatus == 0
+          system("sudo security delete-certificate -c #{settings['custom_demo']['structure']['website']['base'].to_s.chomp} /Library/Keychains/System.keychain")
         end
+        system("sudo security add-trusted-cert -d -r trustAsRoot -k /Library/Keychains/System.keychain '#{app_dir}/certificate/#{settings['custom_demo']['structure']['website']['base']}.crt'")
       end
     end
   end

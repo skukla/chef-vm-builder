@@ -64,7 +64,7 @@ supported_settings.each do |setting_key, setting_data|
     setting_data.each do |option|
       next if node[:application][:settings][option].nil?
 
-      override[:magento][:settings][option] = node[:application][:settings][option]
+      override[:magento][:settings][option] = ValueHelper.process_value(node[:application][:settings][option])
     end
   when :build_hooks
     next unless node[:application][:build][:hooks].is_a? Chef::Node::ImmutableMash

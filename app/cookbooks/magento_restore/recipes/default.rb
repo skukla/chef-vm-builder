@@ -69,12 +69,12 @@ magento_cli 'Configure unsecure base URL' do
   action :config_set
   config_path 'web/unsecure/base_url'
   config_value unsecure_base_url
-  not_if { use_secure_frontend.to_s == '1' || use_secure_admin.to_s == '1' }
+  not_if { use_secure_frontend == 1 || use_secure_admin == 1 }
 end
 
 magento_cli 'Configure secure base URL' do
   action :config_set
   config_path 'web/secure/base_url'
   config_value secure_base_url
-  only_if { use_secure_frontend.to_s == '1' || use_secure_admin.to_s == '1' }
+  only_if { use_secure_frontend == 1 || use_secure_admin == 1 }
 end
