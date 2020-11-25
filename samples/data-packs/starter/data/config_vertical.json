@@ -8,6 +8,13 @@
 					}
 				}
 			},
+			"email": {
+				"logo": {
+					"store_view": {
+						"default": "stores/logo.png"
+					}
+				}
+			},
 			"head": {
 				"shortcut_icon": {
 					"store_view": {
