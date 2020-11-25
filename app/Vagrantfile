@@ -83,26 +83,24 @@ Vagrant.configure('2') do |config|
 
   # Handle backups
   if settings['application']['build']['action'] == 'restore'
-    if settings['custom_demo'].key?('backup') || has_local_files
-      if settings['custom_demo']['backup'].nil? || settings['custom_demo']['backup'].empty?
-        config.trigger.before %i[up provision] do |trigger|
-          trigger.name = 'Copying local backup files'
-          trigger.ruby do
-            backup_files.each { |entry| FileUtils.rm_r(entry) }
-            zip_file = demo_files.find { |file| file.include?('.zip') }
-            if !zip_file.nil?
-              FileUtils.cp_r(zip_file, "#{backup_files_path}/")
-            else
-              demo_files.each do |entry|
-                ['.tgz', '.sql'].any? do |extension|
-                  FileUtils.cp_r(entry, "#{backup_files_path}/") if entry.include?(extension)
-                end
+    if has_local_files
+      config.trigger.before %i[up provision] do |trigger|
+        trigger.name = 'Copying local backup files'
+        trigger.ruby do
+          backup_files.each { |entry| FileUtils.rm_r(entry) }
+          zip_file = demo_files.find { |file| file.include?('.zip') }
+          if !zip_file.nil?
+            FileUtils.cp_r(zip_file, "#{backup_files_path}/")
+          else
+            demo_files.each do |entry|
+              ['.tgz', '.sql'].any? do |extension|
+                FileUtils.cp_r(entry, "#{backup_files_path}/") if entry.include?(extension)
               end
             end
           end
         end
       end
-    else
+    elsif !settings['custom_demo'].key?('backup') || (settings['custom_demo'].key?('backup') && settings['custom_demo']['backup'].empty?)
       abort("#{magenta}[OOPS]: #{reg}You have a build action of #{bold}#{cyan}restore#{reg}, but you haven't added any local backup files or specified a remote backup to download. You silly goose, you.\n\n")
     end
   end
