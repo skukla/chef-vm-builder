@@ -11,6 +11,7 @@
 				"luma_b2b": "b2b.luma.demo"
 			}
 		},
+		"backup": "",
 		"data_packs": {},
 		"custom_modules": {
 			"data-install": {
