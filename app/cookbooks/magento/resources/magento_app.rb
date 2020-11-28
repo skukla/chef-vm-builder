@@ -50,12 +50,7 @@ action :install do
 
   # Create the master install string
   install_string = [install_string, rewrites_string].join(' ') if new_resource.install_settings[:use_rewrites]
-  base_version = if new_resource.version.include?('-p')
-                   new_resource.version.sub(/.{3}$/, '')
-                 else
-                   new_resource.version
-                 end
-  if new_resource.use_elasticsearch && Gem::Version.new(base_version) >= Gem::Version.new('2.4.0')
+  if new_resource.use_elasticsearch && VersionHelper.check_version(new_resource.version, '>=', '2.4.0')
     install_string = [install_string, elasticsearch_string].join(' ')
   end
   if new_resource.install_settings[:use_secure_admin]

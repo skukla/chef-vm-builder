@@ -14,14 +14,8 @@ include_attribute 'magento_patches::external'
 version = node[:magento_patches][:magento][:version]
 use_sample_data = node[:magento_patches][:magento][:sample_data]
 
-base_version = if version.include?('-p')
-                 version.sub(/.{3}$/, '')
-               else
-                 version
-               end
-
-if ValueHelper.process_value(use_sample_data).zero? && Gem::Version.new(base_version) >= Gem::Version.new('2.4.1')
-  default[:magento_patches][:branch] = "pmet-#{base_version}-mc"
+if ValueHelper.process_value(use_sample_data).zero? && VersionHelper.check_version(version, '>=', '2.4.1')
+  default[:magento_patches][:branch] = "pmet-#{VersionHelper.get_base_version(version)}-mc"
 else
-  default[:magento_patches][:branch] = "pmet-#{base_version}-ref"
+  default[:magento_patches][:branch] = "pmet-#{VersionHelper.get_base_version(version)}-ref"
 end
