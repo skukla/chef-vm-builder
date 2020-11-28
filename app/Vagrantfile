@@ -17,7 +17,7 @@ demo_builder_patches_path = "#{app_dir}/cookbooks/magento_patches/files/default"
 environment_file = "#{app_dir}/environments/vm.rb"
 config_file = "#{top_dir}/config.json"
 demo_builder_files = (Dir["#{demo_builder_files_path}/*"] - ['.DS_Store', '.gitignore'])
-demo_files = (Dir["#{data_pack_dir}/*"] - ['.DS_Store', '.gitignore'])
+demo_files = (Dir["#{data_pack_dir}/*"] - ['.DS_Store', '.gitignore', "#{data_pack_dir}/patches"])
 backup_files = (Dir["#{backup_files_path}/*"] - ['.DS_Store', '.gitignore'])
 patch_files = (Dir["#{patches_dir}/*"] - ['.DS_Store', '.gitignore'])
 demo_builder_patches = (Dir["#{demo_builder_patches_path}/*"] - ['.DS_Store', '.gitignore'])
@@ -79,7 +79,7 @@ Vagrant.configure('2') do |config|
       trigger.ruby do
         demo_builder_files.each { |entry| FileUtils.rm_r(entry) }
         demo_files.each do |entry|
-          FileUtils.cp_r(entry, "#{demo_builder_files_path}/")
+          FileUtils.cp_r(entry, demo_builder_files_path)
         end
       end
     end
@@ -91,9 +91,7 @@ Vagrant.configure('2') do |config|
       trigger.name = 'Copying patches to the VM'
       trigger.ruby do
         demo_builder_patches.each { |entry| FileUtils.rm_r(entry) }
-        demo_files.each do |entry|
-          FileUtils.cp_r(entry, demo_builder_patches_path)
-        end
+        FileUtils.cp_r(patches_dir, demo_builder_patches_path)
       end
     end
   end
