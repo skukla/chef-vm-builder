@@ -1,0 +1,793 @@
+From 2e8a54d7d4bceb10ae278ea78ee293f4c5c91dcd Mon Sep 17 00:00:00 2001
+From: Buba Suma <soumah@adobe.com>
+Date: Tue, 10 Nov 2020 16:22:28 -0600
+Subject: [PATCH 1/2] MC-38568: Some times, media Gallery is not loaded from
+ Page Builder
+
+- Fix page builder config is cached globally
+---
+ .../PageBuilder/Block/WysiwygSetup.php        |  34 ++++--
+ .../Model/EditorConfigCacheCleaner.php        |  38 ++++++
+ .../PageBuilder/Model/Session/RandomKey.php   |  83 +++++++++++++
+ .../PageBuilder/Model/Stage/Config.php        |  17 ++-
+ .../Plugin/ClearEditorConfigCache.php         |  51 ++++++++
+ .../Model/EditorConfigCacheCleanerTest.php    |  51 ++++++++
+ .../Test/Unit/Model/Session/RandomKeyTest.php | 110 ++++++++++++++++++
+ .../Plugin/ClearEditorConfigCacheTest.php     |  82 +++++++++++++
+ .../Magento/PageBuilder/etc/adminhtml/di.xml  |   4 +
+ vendor/magento/module-page-builder/etc/di.xml       |  15 ++-
+ .../PageBuilder/Model/Stage/ConfigTest.php    |  46 +++++++-
+ 11 files changed, 517 insertions(+), 14 deletions(-)
+ create mode 100644 vendor/magento/module-page-builder/Model/EditorConfigCacheCleaner.php
+ create mode 100644 vendor/magento/module-page-builder/Model/Session/RandomKey.php
+ create mode 100644 vendor/magento/module-page-builder/Plugin/ClearEditorConfigCache.php
+ create mode 100644 vendor/magento/module-page-builder/Test/Unit/Model/EditorConfigCacheCleanerTest.php
+ create mode 100644 vendor/magento/module-page-builder/Test/Unit/Model/Session/RandomKeyTest.php
+ create mode 100644 vendor/magento/module-page-builder/Test/Unit/Plugin/ClearEditorConfigCacheTest.php
+
+diff --git a/vendor/magento/module-page-builder/Block/WysiwygSetup.php b/vendor/magento/module-page-builder/Block/WysiwygSetup.php
+index 61bb82b61..773073dc5 100644
+--- a/vendor/magento/module-page-builder/Block/WysiwygSetup.php
++++ b/vendor/magento/module-page-builder/Block/WysiwygSetup.php
+@@ -8,9 +8,13 @@
+ 
+ namespace Magento\PageBuilder\Block;
+ 
++use Magento\Framework\App\ObjectManager;
+ use Magento\Framework\Cache\FrontendInterface;
+ use Magento\Framework\DataObject;
+ use Magento\Framework\View\Element\Template;
++use Magento\Framework\View\Element\Template\Context;
++use Magento\PageBuilder\Model\Session\RandomKey;
++use Magento\Ui\Component\Wysiwyg\ConfigInterface;
+ 
+ /**
+  * @api
+@@ -20,7 +24,7 @@ class WysiwygSetup extends Template
+     private const WYSIWYG_CONFIG_CACHE_ID = 'WYSIWYG_CONFIG';
+ 
+     /**
+-     * @var \Magento\Ui\Component\Wysiwyg\ConfigInterface
++     * @var ConfigInterface
+      */
+     private $config;
+ 
+@@ -28,21 +32,29 @@ class WysiwygSetup extends Template
+      * @var FrontendInterface
+      */
+     private $cache;
++    /**
++     * @var RandomKey
++     */
++    private $sessionRandomKey;
+ 
+     /**
+-     * @param Template\Context $context
+-     * @param \Magento\Ui\Component\Wysiwyg\ConfigInterface $config
++     * @param Context $context
++     * @param ConfigInterface $config
+      * @param array $data
+      * @param FrontendInterface|null $cache
++     * @param RandomKey|null $sessionRandomKey
+      */
+     public function __construct(
+-        \Magento\Framework\View\Element\Template\Context $context,
+-        \Magento\Ui\Component\Wysiwyg\ConfigInterface $config,
++        Context $context,
++        ConfigInterface $config,
+         array $data = [],
+-        FrontendInterface $cache = null
++        FrontendInterface $cache = null,
++        ?RandomKey $sessionRandomKey = null
+     ) {
+         $this->config = $config;
+-        $this->cache = $cache ?: \Magento\Framework\App\ObjectManager::getInstance()->get(FrontendInterface::class);
++        $this->cache = $cache ?: ObjectManager::getInstance()->get(FrontendInterface::class);
++        $this->sessionRandomKey = $sessionRandomKey
++            ?: ObjectManager::getInstance()->get(RandomKey::class);
+         parent::__construct($context, $data);
+     }
+ 
+@@ -53,14 +65,18 @@ public function __construct(
+      */
+     public function getConfigJson() : string
+     {
+-        $configJson = $this->cache->load(self::WYSIWYG_CONFIG_CACHE_ID);
++        $cacheKey = self::WYSIWYG_CONFIG_CACHE_ID;
++        if ($this->_urlBuilder->useSecretKey()) {
++            $cacheKey .= '_' . $this->sessionRandomKey->getValue();
++        }
++        $configJson = $this->cache->load($cacheKey);
+         if (!$configJson) {
+             $config = $this->config->getConfig();
+             if (is_array($config)) {
+                 $config = new DataObject($config);
+             }
+             $configJson = $config->toJson();
+-            $this->cache->save($configJson, self::WYSIWYG_CONFIG_CACHE_ID);
++            $this->cache->save($configJson, $cacheKey);
+         }
+ 
+         return $configJson;
+diff --git a/vendor/magento/module-page-builder/Model/EditorConfigCacheCleaner.php b/vendor/magento/module-page-builder/Model/EditorConfigCacheCleaner.php
+new file mode 100644
+index 000000000..da8bbcc92
+--- /dev/null
++++ b/vendor/magento/module-page-builder/Model/EditorConfigCacheCleaner.php
+@@ -0,0 +1,38 @@
++<?php
++/**
++ * Copyright © Magento, Inc. All rights reserved.
++ * See COPYING.txt for license details.
++ */
++declare(strict_types=1);
++
++namespace Magento\PageBuilder\Model;
++
++use Magento\Framework\Cache\FrontendInterface;
++
++/**
++ * Clean page builder config cache
++ */
++class EditorConfigCacheCleaner
++{
++    /**
++     * @var FrontendInterface
++     */
++    private $cache;
++
++    /**
++     * @param FrontendInterface $cache
++     */
++    public function __construct(
++        FrontendInterface $cache
++    ) {
++        $this->cache = $cache;
++    }
++
++    /**
++     * Clean page builder config cache
++     */
++    public function execute(): void
++    {
++        $this->cache->clean();
++    }
++}
+diff --git a/vendor/magento/module-page-builder/Model/Session/RandomKey.php b/vendor/magento/module-page-builder/Model/Session/RandomKey.php
+new file mode 100644
+index 000000000..62336a537
+--- /dev/null
++++ b/vendor/magento/module-page-builder/Model/Session/RandomKey.php
+@@ -0,0 +1,83 @@
++<?php
++/**
++ * Copyright © Magento, Inc. All rights reserved.
++ * See COPYING.txt for license details.
++ */
++declare(strict_types=1);
++
++namespace Magento\PageBuilder\Model\Session;
++
++use Magento\Framework\Math\Random;
++use Magento\Framework\Session\SessionManagerInterface;
++
++/**
++ * Generate random key and save it in current session
++ *
++ * @SuppressWarnings(PHPMD.CookieAndSessionMisuse)
++ */
++class RandomKey
++{
++    /**
++     * Default key length to generate
++     */
++    const DEFAULT_KEY_LENGTH = 16;
++
++    /**
++     * Default key name
++     */
++    const DEFAULT_NAME = '_pb_config_cache_key_suffix';
++
++    /**
++     * @var Random
++     */
++    private $random;
++
++    /**
++     * @var SessionManagerInterface
++     */
++    private $session;
++
++    /**
++     * @var string
++     */
++    private $keyName;
++
++    /**
++     * @var int
++     */
++    private $keyLength;
++
++    /**
++     * @param Random $random
++     * @param SessionManagerInterface $session
++     * @param string $keyName
++     * @param int $keyLength
++     */
++    public function __construct(
++        Random $random,
++        SessionManagerInterface $session,
++        string $keyName = self::DEFAULT_NAME,
++        int $keyLength = self::DEFAULT_KEY_LENGTH
++    ) {
++        $this->random = $random;
++        $this->session = $session;
++        $this->keyName = $keyName;
++        $this->keyLength = $keyLength;
++    }
++
++    /**
++     * Retrieve generated random key from session
++     *
++     * @return string
++     * @throws \Magento\Framework\Exception\LocalizedException
++     */
++    public function getValue(): string
++    {
++        $randomKey = $this->session->getData($this->keyName);
++        if (!$randomKey) {
++            $randomKey = $this->random->getRandomString($this->keyLength);
++            $this->session->setData($this->keyName, $randomKey);
++        }
++        return $randomKey;
++    }
++}
+diff --git a/vendor/magento/module-page-builder/Model/Stage/Config.php b/vendor/magento/module-page-builder/Model/Stage/Config.php
+index 8f208c654..5d3a19276 100644
+--- a/vendor/magento/module-page-builder/Model/Stage/Config.php
++++ b/vendor/magento/module-page-builder/Model/Stage/Config.php
+@@ -13,6 +13,7 @@
+ use Magento\Framework\AuthorizationInterface;
+ use Magento\Framework\Cache\FrontendInterface;
+ use Magento\Framework\Serialize\Serializer\Json;
++use Magento\PageBuilder\Model\Session\RandomKey;
+ 
+ /**
+  * Provide configuration to the admin JavaScript app
+@@ -118,6 +119,10 @@ class Config
+      * @var Json
+      */
+     private $serializer;
++    /**
++     * @var RandomKey
++     */
++    private $sessionRandomKey;
+ 
+     /**
+      * @param \Magento\PageBuilder\Model\ConfigInterface $config
+@@ -136,6 +141,7 @@ class Config
+      * @param AuthorizationInterface|null $authorization
+      * @param FrontendInterface|null $cache
+      * @param Json|null $serializer
++     * @param RandomKey|null $sessionRandomKey
+      *
+      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+      */
+@@ -155,7 +161,8 @@ public function __construct(
+         \Magento\Variable\Model\Variable\Config $variableConfig = null,
+         AuthorizationInterface $authorization = null,
+         FrontendInterface $cache = null,
+-        Json $serializer = null
++        Json $serializer = null,
++        ?RandomKey $sessionRandomKey = null
+     ) {
+         $this->config = $config;
+         $this->uiComponentConfig = $uiComponentConfig;
+@@ -175,6 +182,8 @@ public function __construct(
+         $this->authorization = $authorization ?: ObjectManager::getInstance()->get(AuthorizationInterface::class);
+         $this->serializer = $serializer ?: \Magento\Framework\App\ObjectManager::getInstance()->get(Json::class);
+         $this->cache = $cache ?: \Magento\Framework\App\ObjectManager::getInstance()->get(FrontendInterface::class);
++        $this->sessionRandomKey = $sessionRandomKey
++            ?: \Magento\Framework\App\ObjectManager::getInstance()->get(RandomKey::class);
+     }
+ 
+     /**
+@@ -394,6 +403,9 @@ private function getCachedWidgetBreakpoints(): array
+      */
+     private function getCache(string $cacheIdentifier): array
+     {
++        if ($this->urlBuilder->useSecretKey()) {
++            $cacheIdentifier .= '_' . $this->sessionRandomKey->getValue();
++        }
+         $serializedData = $this->cache->load($cacheIdentifier);
+         $cache = $serializedData
+             ? $this->serializer->unserialize($serializedData)
+@@ -410,6 +422,9 @@ private function getCache(string $cacheIdentifier): array
+      */
+     private function saveCache(array $data, string $cacheIdentifier): void
+     {
++        if ($this->urlBuilder->useSecretKey()) {
++            $cacheIdentifier .= '_' . $this->sessionRandomKey->getValue();
++        }
+         $this->cache->save($this->serializer->serialize($data), $cacheIdentifier);
+     }
+ }
+diff --git a/vendor/magento/module-page-builder/Plugin/ClearEditorConfigCache.php b/vendor/magento/module-page-builder/Plugin/ClearEditorConfigCache.php
+new file mode 100644
+index 000000000..4848ee44d
+--- /dev/null
++++ b/vendor/magento/module-page-builder/Plugin/ClearEditorConfigCache.php
+@@ -0,0 +1,51 @@
++<?php
++/**
++ * Copyright © Magento, Inc. All rights reserved.
++ * See COPYING.txt for license details.
++ */
++declare(strict_types=1);
++
++namespace Magento\PageBuilder\Plugin;
++
++use Magento\Backend\Model\UrlInterface;
++use Magento\PageBuilder\Model\EditorConfigCacheCleaner;
++
++/**
++ * Clear page builder editor config cache after login
++ */
++class ClearEditorConfigCache
++{
++    /**
++     * @var EditorConfigCacheCleaner
++     */
++    private $cacheCleaner;
++    /**
++     * @var UrlInterface
++     */
++    private $backendUrl;
++
++    /**
++     * @param UrlInterface $backendUrl
++     * @param EditorConfigCacheCleaner $cacheCleaner
++     */
++    public function __construct(
++        UrlInterface $backendUrl,
++        EditorConfigCacheCleaner $cacheCleaner
++    ) {
++        $this->cacheCleaner = $cacheCleaner;
++        $this->backendUrl = $backendUrl;
++    }
++
++    /**
++     * Clear page builder editor config cache after login
++     *
++     * @param \Magento\Backend\Model\Auth $subject
++     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
++     */
++    public function afterLogin(\Magento\Backend\Model\Auth $subject)
++    {
++        if ($this->backendUrl->useSecretKey()) {
++            $this->cacheCleaner->execute();
++        }
++    }
++}
+diff --git a/vendor/magento/module-page-builder/Test/Unit/Model/EditorConfigCacheCleanerTest.php b/vendor/magento/module-page-builder/Test/Unit/Model/EditorConfigCacheCleanerTest.php
+new file mode 100644
+index 000000000..f6b48032c
+--- /dev/null
++++ b/vendor/magento/module-page-builder/Test/Unit/Model/EditorConfigCacheCleanerTest.php
+@@ -0,0 +1,51 @@
++<?php
++/**
++ * Copyright © Magento, Inc. All rights reserved.
++ * See COPYING.txt for license details.
++ */
++declare(strict_types=1);
++
++namespace Magento\PageBuilder\Test\Unit\Model;
++
++use Magento\Framework\Cache\FrontendInterface;
++use Magento\PageBuilder\Model\EditorConfigCacheCleaner;
++use PHPUnit\Framework\MockObject\MockObject;
++use PHPUnit\Framework\TestCase;
++
++/***
++ * Test for page builder cache config cleaner
++ */
++class EditorConfigCacheCleanerTest extends TestCase
++{
++    /**
++     * @var EditorConfigCacheCleaner
++     */
++    private $model;
++
++    /**
++     * @var FrontendInterface|MockObject
++     */
++    private $cache;
++
++    /**
++     * @inheritDoc
++     */
++    protected function setUp(): void
++    {
++        parent::setUp();
++        $this->cache = $this->createMock(FrontendInterface::class);
++        $this->model = new EditorConfigCacheCleaner(
++            $this->cache
++        );
++    }
++
++    /**
++     * Test that the supplied cache is clean up
++     */
++    public function testExecute(): void
++    {
++        $this->cache->expects($this->once())
++            ->method('clean');
++        $this->model->execute();
++    }
++}
+diff --git a/vendor/magento/module-page-builder/Test/Unit/Model/Session/RandomKeyTest.php b/vendor/magento/module-page-builder/Test/Unit/Model/Session/RandomKeyTest.php
+new file mode 100644
+index 000000000..57a9cdd08
+--- /dev/null
++++ b/vendor/magento/module-page-builder/Test/Unit/Model/Session/RandomKeyTest.php
+@@ -0,0 +1,110 @@
++<?php
++/**
++ * Copyright © Magento, Inc. All rights reserved.
++ * See COPYING.txt for license details.
++ */
++declare(strict_types=1);
++
++namespace Magento\PageBuilder\Test\Unit\Model\Session;
++
++use Magento\Framework\Math\Random;
++use Magento\Framework\Session\SessionManagerInterface;
++use Magento\PageBuilder\Model\Session\RandomKey;
++use PHPUnit\Framework\MockObject\MockObject;
++use PHPUnit\Framework\TestCase;
++
++/**
++ * Test for session random key
++ */
++class RandomKeyTest extends TestCase
++{
++    /**
++     * @var SessionManagerInterface|MockObject
++     */
++    private $session;
++
++    /**
++     * @var Random|MockObject
++     */
++    private $random;
++
++    /**
++     * @var RandomKey
++     */
++    private $model;
++
++    /**
++     * @inheritDoc
++     */
++    protected function setUp(): void
++    {
++        parent::setUp();
++        $this->session = $this->getMockBuilder(SessionManagerInterface::class)
++            ->addMethods(['getData', 'setData'])
++            ->getMockForAbstractClass();
++        $this->random = $this->createMock(Random::class);
++    }
++
++    /**
++     * @param string $keyName
++     * @param int $keyLength
++     * @param string|null $value
++     * @param string $expected
++     * @dataProvider getValueDataProvider
++     */
++    public function testGetValue(string $keyName, int $keyLength, ?string $value, string $expected)
++    {
++        $this->model = new RandomKey(
++            $this->random,
++            $this->session,
++            $keyName,
++            $keyLength
++        );
++        $this->random->method('getRandomString')
++            ->willReturnCallback(
++                function ($length) {
++                    return str_repeat('x', $length);
++                }
++            );
++        $this->session->expects($this->once())
++            ->method('getData')
++            ->with($keyName)
++            ->willReturn($value);
++
++        $this->session->expects($value === null ? $this->once() : $this->never())
++            ->method('setData')
++            ->with(
++                $keyName,
++                $expected
++            );
++
++        $this->assertEquals($expected, $this->model->getValue());
++    }
++
++    /**
++     * @return array[]
++     */
++    public function getValueDataProvider(): array
++    {
++        return [
++            [
++                'some_key_1',
++                8,
++                null,
++                'xxxxxxxx'
++            ],
++            [
++                'some_key_2',
++                16,
++                null,
++                'xxxxxxxxxxxxxxxx'
++            ],
++            [
++                'some_key_3',
++                32,
++                'some_value',
++                'some_value',
++            ]
++        ];
++    }
++}
+diff --git a/vendor/magento/module-page-builder/Test/Unit/Plugin/ClearEditorConfigCacheTest.php b/vendor/magento/module-page-builder/Test/Unit/Plugin/ClearEditorConfigCacheTest.php
+new file mode 100644
+index 000000000..228e443cb
+--- /dev/null
++++ b/vendor/magento/module-page-builder/Test/Unit/Plugin/ClearEditorConfigCacheTest.php
+@@ -0,0 +1,82 @@
++<?php
++/**
++ * Copyright © Magento, Inc. All rights reserved.
++ * See COPYING.txt for license details.
++ */
++declare(strict_types=1);
++
++namespace Magento\PageBuilder\Test\Unit\Plugin;
++
++use Magento\Backend\Model\Auth;
++use Magento\Backend\Model\UrlInterface;
++use Magento\PageBuilder\Model\EditorConfigCacheCleaner;
++use Magento\PageBuilder\Plugin\ClearEditorConfigCache;
++use PHPUnit\Framework\MockObject\MockObject;
++use PHPUnit\Framework\TestCase;
++
++/**
++ * Test for page builder cache config cleaner plugin
++ */
++class ClearEditorConfigCacheTest extends TestCase
++{
++    /**
++     * @var EditorConfigCacheCleaner|MockObject
++     */
++    private $cacheCleaner;
++
++    /**
++     * @var Auth|MockObject
++     */
++    private $auth;
++
++    /**
++     * @var ClearEditorConfigCache
++     */
++    private $model;
++    /**
++     * @var UrlInterface|MockObject
++     */
++    private $backendUrl;
++
++    /**
++     * @inheritDoc
++     */
++    protected function setUp(): void
++    {
++        parent::setUp();
++        $this->cacheCleaner = $this->createMock(EditorConfigCacheCleaner::class);
++        $this->backendUrl = $this->createMock(UrlInterface::class);
++        $this->auth = $this->createMock(Auth::class);
++        $this->model = new ClearEditorConfigCache(
++            $this->backendUrl,
++            $this->cacheCleaner,
++        );
++    }
++
++    /**
++     * Test that page builder cache config cleaner is executed if secret key is included in backend URLs
++     *
++     * @dataProvider afterLoginDataProvider
++     * @param bool $isUseSecretKey
++     */
++    public function testAfterLogin(bool $isUseSecretKey = false): void
++    {
++        $this->backendUrl->expects($this->once())
++            ->method('useSecretKey')
++            ->willReturn($isUseSecretKey);
++        $this->cacheCleaner->expects($isUseSecretKey ? $this->once() : $this->never())
++            ->method('execute');
++        $this->model->afterLogin($this->auth);
++    }
++
++    /**
++     * @return array
++     */
++    public function afterLoginDataProvider(): array
++    {
++        return [
++            [false],
++            [true],
++        ];
++    }
++}
+diff --git a/vendor/magento/module-page-builder/etc/adminhtml/di.xml b/vendor/magento/module-page-builder/etc/adminhtml/di.xml
+index 4095bffcd..17ce2b471 100644
+--- a/vendor/magento/module-page-builder/etc/adminhtml/di.xml
++++ b/vendor/magento/module-page-builder/etc/adminhtml/di.xml
+@@ -631,4 +631,8 @@
+     <type name="Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\Eav">
+         <plugin name="pagebuilder_product_form_eav" type="Magento\PageBuilder\Plugin\Catalog\Ui\DataProvider\Product\Form\Modifier\EavPlugin" sortOrder="20"/>
+     </type>
++    <type name="Magento\Backend\Model\Auth">
++        <plugin name="pagebuilder_clear_editor_config_cache"
++                type="Magento\PageBuilder\Plugin\ClearEditorConfigCache" sortOrder="10"/>
++    </type>
+ </config>
+diff --git a/vendor/magento/module-page-builder/etc/di.xml b/vendor/magento/module-page-builder/etc/di.xml
+index 78ae9d5cc..d906ee191 100644
+--- a/vendor/magento/module-page-builder/etc/di.xml
++++ b/vendor/magento/module-page-builder/etc/di.xml
+@@ -26,14 +26,25 @@
+     <preference for="Magento\PageBuilder\Model\Dom\Adapter\TextInterface" type="Magento\PageBuilder\Model\Dom\Text" />
+     <preference for="Magento\PageBuilder\Model\Dom\Adapter\TokenListInterface" type="Magento\PageBuilder\Model\Dom\TokenList" />
+     <preference for="Magento\PageBuilder\Model\Dom\Adapter\XmlDocumentInterface" type="Magento\PageBuilder\Model\Dom\XmlDocument" />
++    <virtualType name="Magento\PageBuilder\Model\Cache\Type\EditorConfig" type="Magento\Framework\Cache\Frontend\Decorator\TagScope">
++        <arguments>
++            <argument name="frontend" xsi:type="object">Magento\Framework\App\Cache\Type\Config</argument>
++            <argument name="tag" xsi:type="string">PB_EDITOR_CONFIG</argument>
++        </arguments>
++    </virtualType>
++    <type name="Magento\PageBuilder\Model\EditorConfigCacheCleaner">
++        <arguments>
++            <argument name="cache" xsi:type="object">Magento\PageBuilder\Model\Cache\Type\EditorConfig</argument>
++        </arguments>
++    </type>
+     <type name="Magento\PageBuilder\Model\Stage\Config">
+         <arguments>
+-            <argument name="cache" xsi:type="object">Magento\Framework\App\Cache\Type\Config</argument>
++            <argument name="cache" xsi:type="object">Magento\PageBuilder\Model\Cache\Type\EditorConfig</argument>
+         </arguments>
+     </type>
+     <type name="Magento\PageBuilder\Block\WysiwygSetup">
+         <arguments>
+-            <argument name="cache" xsi:type="object">Magento\Framework\App\Cache\Type\Config</argument>
++            <argument name="cache" xsi:type="object">Magento\PageBuilder\Model\Cache\Type\EditorConfig</argument>
+         </arguments>
+     </type>
+     <type name="Magento\PageBuilder\Model\Stage\Config\UiComponentConfig">
+
+From 70228cda2c1a6a5eb35a06885c63719ba6804442 Mon Sep 17 00:00:00 2001
+From: Buba Suma <soumah@adobe.com>
+Date: Thu, 12 Nov 2020 12:12:24 -0600
+Subject: [PATCH 2/2] MC-38568: Some times, media Gallery is not loaded from
+ Page Builder
+
+- Fix code style
+---
+ vendor/magento/module-page-builder/Block/WysiwygSetup.php         | 1 +
+ vendor/magento/module-page-builder/Model/Session/RandomKey.php    | 4 ++--
+ vendor/magento/module-page-builder/Model/Stage/Config.php         | 1 +
+ .../Magento/PageBuilder/Plugin/ClearEditorConfigCache.php   | 3 ++-
+ .../PageBuilder/Test/Unit/Model/Session/RandomKeyTest.php   | 2 +-
+ .../Test/Unit/Plugin/ClearEditorConfigCacheTest.php         | 3 ++-
+ .../Magento/PageBuilder/Model/Stage/ConfigTest.php          | 6 +++---
+ 7 files changed, 12 insertions(+), 8 deletions(-)
+
+diff --git a/vendor/magento/module-page-builder/Block/WysiwygSetup.php b/vendor/magento/module-page-builder/Block/WysiwygSetup.php
+index 773073dc5..d30a0979c 100644
+--- a/vendor/magento/module-page-builder/Block/WysiwygSetup.php
++++ b/vendor/magento/module-page-builder/Block/WysiwygSetup.php
+@@ -32,6 +32,7 @@ class WysiwygSetup extends Template
+      * @var FrontendInterface
+      */
+     private $cache;
++
+     /**
+      * @var RandomKey
+      */
+diff --git a/vendor/magento/module-page-builder/Model/Session/RandomKey.php b/vendor/magento/module-page-builder/Model/Session/RandomKey.php
+index 62336a537..6c93abeef 100644
+--- a/vendor/magento/module-page-builder/Model/Session/RandomKey.php
++++ b/vendor/magento/module-page-builder/Model/Session/RandomKey.php
+@@ -20,12 +20,12 @@ class RandomKey
+     /**
+      * Default key length to generate
+      */
+-    const DEFAULT_KEY_LENGTH = 16;
++    private const DEFAULT_KEY_LENGTH = 16;
+ 
+     /**
+      * Default key name
+      */
+-    const DEFAULT_NAME = '_pb_config_cache_key_suffix';
++    private const DEFAULT_NAME = '_pb_config_cache_key_suffix';
+ 
+     /**
+      * @var Random
+diff --git a/vendor/magento/module-page-builder/Model/Stage/Config.php b/vendor/magento/module-page-builder/Model/Stage/Config.php
+index 5d3a19276..014208277 100644
+--- a/vendor/magento/module-page-builder/Model/Stage/Config.php
++++ b/vendor/magento/module-page-builder/Model/Stage/Config.php
+@@ -119,6 +119,7 @@ class Config
+      * @var Json
+      */
+     private $serializer;
++
+     /**
+      * @var RandomKey
+      */
+diff --git a/vendor/magento/module-page-builder/Plugin/ClearEditorConfigCache.php b/vendor/magento/module-page-builder/Plugin/ClearEditorConfigCache.php
+index 4848ee44d..19c0944e2 100644
+--- a/vendor/magento/module-page-builder/Plugin/ClearEditorConfigCache.php
++++ b/vendor/magento/module-page-builder/Plugin/ClearEditorConfigCache.php
+@@ -19,6 +19,7 @@ class ClearEditorConfigCache
+      * @var EditorConfigCacheCleaner
+      */
+     private $cacheCleaner;
++
+     /**
+      * @var UrlInterface
+      */
+@@ -42,7 +43,7 @@ public function __construct(
+      * @param \Magento\Backend\Model\Auth $subject
+      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+      */
+-    public function afterLogin(\Magento\Backend\Model\Auth $subject)
++    public function afterLogin(\Magento\Backend\Model\Auth $subject): void
+     {
+         if ($this->backendUrl->useSecretKey()) {
+             $this->cacheCleaner->execute();
+diff --git a/vendor/magento/module-page-builder/Test/Unit/Model/Session/RandomKeyTest.php b/vendor/magento/module-page-builder/Test/Unit/Model/Session/RandomKeyTest.php
+index 57a9cdd08..61fb04da8 100644
+--- a/vendor/magento/module-page-builder/Test/Unit/Model/Session/RandomKeyTest.php
++++ b/vendor/magento/module-page-builder/Test/Unit/Model/Session/RandomKeyTest.php
+@@ -52,7 +52,7 @@ protected function setUp(): void
+      * @param string $expected
+      * @dataProvider getValueDataProvider
+      */
+-    public function testGetValue(string $keyName, int $keyLength, ?string $value, string $expected)
++    public function testGetValue(string $keyName, int $keyLength, ?string $value, string $expected): void
+     {
+         $this->model = new RandomKey(
+             $this->random,
+diff --git a/vendor/magento/module-page-builder/Test/Unit/Plugin/ClearEditorConfigCacheTest.php b/vendor/magento/module-page-builder/Test/Unit/Plugin/ClearEditorConfigCacheTest.php
+index 228e443cb..b08b301c0 100644
+--- a/vendor/magento/module-page-builder/Test/Unit/Plugin/ClearEditorConfigCacheTest.php
++++ b/vendor/magento/module-page-builder/Test/Unit/Plugin/ClearEditorConfigCacheTest.php
+@@ -33,6 +33,7 @@ class ClearEditorConfigCacheTest extends TestCase
+      * @var ClearEditorConfigCache
+      */
+     private $model;
++
+     /**
+      * @var UrlInterface|MockObject
+      */
+@@ -59,7 +60,7 @@ protected function setUp(): void
+      * @dataProvider afterLoginDataProvider
+      * @param bool $isUseSecretKey
+      */
+-    public function testAfterLogin(bool $isUseSecretKey = false): void
++    public function testAfterLogin(bool $isUseSecretKey): void
+     {
+         $this->backendUrl->expects($this->once())
+             ->method('useSecretKey')

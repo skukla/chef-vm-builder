@@ -9,14 +9,18 @@ system('clear')
 
 top_dir = File.expand_path('..', Dir.pwd).to_s
 data_pack_dir = "#{top_dir}/demo"
+patches_dir = "#{top_dir}/demo/patches"
 app_dir = File.dirname(File.expand_path(__FILE__))
 backup_files_path = "#{app_dir}/cookbooks/magento_restore/files/default"
 demo_builder_files_path = "#{app_dir}/cookbooks/magento_demo_builder/files/default"
+demo_builder_patches_path = "#{app_dir}/cookbooks/magento_patches/files/default"
 environment_file = "#{app_dir}/environments/vm.rb"
 config_file = "#{top_dir}/config.json"
 demo_builder_files = (Dir["#{demo_builder_files_path}/*"] - ['.DS_Store', '.gitignore'])
 demo_files = (Dir["#{data_pack_dir}/*"] - ['.DS_Store', '.gitignore'])
 backup_files = (Dir["#{backup_files_path}/*"] - ['.DS_Store', '.gitignore'])
+patch_files = (Dir["#{patches_dir}/*"] - ['.DS_Store', '.gitignore'])
+demo_builder_patches = (Dir["#{demo_builder_patches_path}/*"] - ['.DS_Store', '.gitignore'])
 file_types = ['.zip', '.tgz', '.sql']
 has_local_files = file_types.any? { |type| demo_files.find { |file| file.include?(type) } }
 config_file_content = File.read(config_file)
@@ -65,7 +69,7 @@ Vagrant.configure('2') do |config|
       end
       demo_files.each do |entry|
         entry_path = [File.dirname(entry), File.basename(entry)].join('/').split('/').pop(1).join('/')
-        if File.directory?(entry) && entry_path != data_pack['repository_url']
+        if File.directory?(entry) && entry_path != data_pack['repository_url'] && entry_path != 'patches'
           abort("#{magenta}[OOPS]: #{reg}Make sure your #{bold}#{cyan}#{data_pack['repository_url']} #{reg}data pack folder is in your demo workspace or check the repository url for the #{bold}#{cyan}#{key} #{reg}data pack in config.json.\n\n")
         end
       end
@@ -76,6 +80,19 @@ Vagrant.configure('2') do |config|
         demo_builder_files.each { |entry| FileUtils.rm_r(entry) }
         demo_files.each do |entry|
           FileUtils.cp_r(entry, "#{demo_builder_files_path}/")
+        end
+      end
+    end
+  end
+
+  # Copy patches
+  unless patch_files.empty?
+    config.trigger.before [:up, :reload, :provision] do |trigger|
+      trigger.name = 'Copying patches to the VM'
+      trigger.ruby do
+        demo_builder_patches.each { |entry| FileUtils.rm_r(entry) }
+        demo_files.each do |entry|
+          FileUtils.cp_r(entry, demo_builder_patches_path)
         end
       end
     end

@@ -149,13 +149,6 @@ action :clearcache do
   end
 end
 
-action :config_extra do
-  execute new_resource.name.to_s do
-    command "su #{new_resource.user} -c '#{new_resource.install_directory}/#{new_resource.file} config extra.patches-file #{new_resource.extra_content}'"
-    cwd new_resource.web_root
-  end
-end
-
 action :uninstall do
   ruby_block 'Remove composer' do
     block do

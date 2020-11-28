@@ -3,7 +3,6 @@
 # Recipe:: download
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-user = node[:magento][:init][:user]
 web_root = node[:magento][:init][:web_root]
 version = node[:magento][:options][:version]
 family = node[:magento][:options][:family]
@@ -81,10 +80,6 @@ composer 'Require the B2B modules' do
   end
 end
 
-if apply_patches && ((build_action == 'force_install') || (apply_patches && build_action == 'install' && !::File.exist?("#{web_root}/var/.first-run-state.flag")))
-  include_recipe 'magento_patches::default'
-end
-
 unless data_packs_list.empty?
   data_packs_list.each do |_data_pack_key, data_pack_data|
     custom_module "Add #{data_pack_data[:module_name]}" do
@@ -120,6 +115,10 @@ unless custom_module_list.empty?
   end
 end
 
+if apply_patches && (%w[force_install update].include?(build_action) || (apply_patches && build_action == 'install' && !::File.exist?("#{web_root}/var/.first-run-state.flag")))
+  include_recipe 'magento_patches::default'
+end
+
 magento_app 'Download the codebase' do
   action :download
   not_if { ::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action != 'force_install' }
@@ -140,6 +139,10 @@ magento_app 'Add sample data' do
     ::File.exist?("#{web_root}/var/.sample-data-state.flag") ||
       !sample_data
   end
+end
+
+if apply_patches && (%w[force_install update].include?(build_action) || (apply_patches && build_action == 'install' && !::File.exist?("#{web_root}/var/.first-run-state.flag")))
+  include_recipe 'magento_patches::apply'
 end
 
 samba 'Create samba drop directories' do

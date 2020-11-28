@@ -12,3 +12,4 @@ default[:magento_patches][:composer][:file] = node[:composer][:file]
 
 include_attribute 'magento::default'
 default[:magento_patches][:magento][:version] = node[:magento][:options][:version]
+default[:magento_patches][:magento][:sample_data] = node[:magento][:build][:sample_data]

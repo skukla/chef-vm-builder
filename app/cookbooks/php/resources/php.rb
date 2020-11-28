@@ -21,6 +21,8 @@ property :extension_list,           Array,             default: node[:php][:exte
 property :sendmail_path,            String,            default: node[:php][:sendmail_path]
 property :timezone,                 String,            default: node[:php][:init][:timezone]
 property :apache_package_list,      Array,             default: node[:php][:apache_package_list]
+property :web_root,                 String,            default: node[:php][:init][:web_root]
+property :command_list,             [String, Array]
 
 action :install do
   # Add PHP repository
@@ -163,6 +165,24 @@ end
 action :stop do
   service "php#{new_resource.version}-fpm" do
     action :stop
+  end
+end
+
+action :run do
+  command_list = []
+  if new_resource.command_list.is_a?(String)
+    command_list << new_resource.command_list
+  else
+    command_list = new_resource.command_list
+  end
+
+  command_list.each do |command|
+    bash "Running the #{command} PHP command" do
+      code <<-CONTENT
+                php #{command}
+      CONTENT
+      cwd new_resource.web_root
+    end
   end
 end
 

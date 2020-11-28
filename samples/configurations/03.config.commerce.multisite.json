@@ -51,10 +51,7 @@
 		"build": {
 			"action": "install",
 			"sample_data": false,
-			"patches": {
-				"apply": true,
-				"branch": "pmet-2.4.1-ref"
-			},
+			"patches": true,
 			"hooks": {
 				"warm_cache": true,
 				"enable_media_gallery": true,

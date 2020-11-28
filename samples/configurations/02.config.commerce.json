@@ -27,6 +27,7 @@
 		"build": {
 			"action": "install",
 			"sample_data": false,
+			"patches": true,
 			"hooks": {
 				"warm_cache": true,
 				"enable_media_gallery": true,

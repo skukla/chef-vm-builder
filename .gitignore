@@ -3,11 +3,13 @@
 config.json
 *.code-workspace
 app/backups/*
+app/cookbooks/magento_patches/files/default/*
 app/cookbooks/magento_restore/files/default/*
 app/cookbooks/magento_demo_builder/files/default/*
 !app/backups/.gitignore
-!app/cookbooks/magento_demo_builder/files/default/.gitignore
+!app/cookbooks/magento_patches/files/default/.gitignore
 !app/cookbooks/magento_restore/files/default/.gitignore
+!app/cookbooks/magento_demo_builder/files/default/.gitignore
 !samples/data-packs/starter/config.json
 !workspace.code-workspace
 
