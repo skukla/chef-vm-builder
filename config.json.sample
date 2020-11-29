@@ -12,7 +12,12 @@
 		},
 		backup: "",
 		"data_packs": {},
-		"custom_modules": {}
+		"custom_modules": {
+			"data-install": {
+				"name": "magentoese/module-data-install",
+				"repository_url": "https://github.com/PMET-public/module-data-install.git"
+			}
+		}
 	},
 	"application": {
 		"authentication": {
