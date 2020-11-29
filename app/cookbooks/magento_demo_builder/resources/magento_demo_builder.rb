@@ -14,7 +14,6 @@ property :db_user,                          String, default: node[:magento_demo_
 property :db_password,                      String, default: node[:magento_demo_builder][:mysql][:db_password]
 property :db_name,                          String, default: node[:magento_demo_builder][:mysql][:db_name]
 property :chef_files_path,                  String, default: node[:magento_demo_builder][:chef_files][:path]
-property :patches_holding_area,             String, default: node[:magento_demo_builder][:magento_patches][:holding_area]
 property :demo_shell_vendor,                String, default: node[:magento_demo_builder][:demo_shell][:vendor]
 property :demo_shell_module_file_list,      Array,  default: node[:magento_demo_builder][:demo_shell][:files]
 property :custom_module_list,               Hash,   default: node[:magento_demo_builder][:custom_modules]
@@ -152,23 +151,6 @@ action :install_local_data_pack_content do
             Dir.exist?("#{module_full_path}/#{media_type}/#{template_manager_dest}")
         end
       end
-    end
-  end
-end
-
-action :add_patches do
-  if Dir.exist?("#{new_resource.chef_files_path}/patches")
-    remote_directory 'Adding patches' do
-      source 'patches'
-      path new_resource.patches_holding_area.to_s
-      owner new_resource.user
-      group new_resource.group
-      files_owner new_resource.user
-      files_group new_resource.group
-      action :create_if_missing
-      recursive false
-      overwrite true
-      only_if { Dir.exist?(new_resource.patches_holding_area) }
     end
   end
 end

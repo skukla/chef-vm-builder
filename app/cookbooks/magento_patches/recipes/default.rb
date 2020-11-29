@@ -35,8 +35,8 @@ magento_patch 'Clone and filter patches repository' do
   not_if { patches_repository == 'local' || patches_repository.empty? }
 end
 
-magento_demo_builder 'Copy custom patches into place' do
-  action :add_patches
+magento_patch 'Copy custom patches into place' do
+  action :add_custom_patches
 end
 
 magento_patch 'Move patches into web root' do

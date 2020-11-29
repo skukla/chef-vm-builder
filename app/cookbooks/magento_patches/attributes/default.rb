@@ -3,6 +3,7 @@
 # Attribute:: default
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
+default[:magento_patches][:chef_files][:path] = '/var/chef/cache/cookbooks/magento_patches/files/default'
 default[:magento_patches][:apply] = false
 default[:magento_patches][:repository_url] = 'https://github.com/PMET-public/magento-cloud.git'
 default[:magento_patches][:repository_directory] = 'm2-hotfixes'

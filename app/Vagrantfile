@@ -8,21 +8,28 @@ require 'json'
 system('clear')
 
 top_dir = File.expand_path('..', Dir.pwd).to_s
-data_pack_dir = "#{top_dir}/demo"
-patches_dir = "#{top_dir}/demo/patches"
 app_dir = File.dirname(File.expand_path(__FILE__))
-backup_files_path = "#{app_dir}/cookbooks/magento_restore/files/default"
-demo_builder_files_path = "#{app_dir}/cookbooks/magento_demo_builder/files/default"
-demo_builder_patches_path = "#{app_dir}/cookbooks/magento_patches/files/default"
+workspace_dir = 'demo'
+backup_dir = 'backup'
+data_packs_dir = 'data_packs'
+patches_dir = 'patches'
+workspace_path = "#{top_dir}/#{workspace_dir}"
+backup_path = "#{workspace_path}/#{backup_dir}"
+data_packs_path = "#{workspace_path}/#{data_packs_dir}"
+patches_path = "#{workspace_path}/#{patches_dir}"
+chef_backup_files_path = "#{app_dir}/cookbooks/magento_restore/files/default/"
+chef_data_pack_files_path = "#{app_dir}/cookbooks/magento_demo_builder/files/default/"
+chef_patch_files_path = "#{app_dir}/cookbooks/magento_patches/files/default/"
 environment_file = "#{app_dir}/environments/vm.rb"
 config_file = "#{top_dir}/config.json"
-demo_builder_files = (Dir["#{demo_builder_files_path}/*"] - ['.DS_Store', '.gitignore'])
-demo_files = (Dir["#{data_pack_dir}/*"] - ['.DS_Store', '.gitignore', "#{data_pack_dir}/patches"])
-backup_files = (Dir["#{backup_files_path}/*"] - ['.DS_Store', '.gitignore'])
-patch_files = (Dir["#{patches_dir}/*"] - ['.DS_Store', '.gitignore'])
-demo_builder_patches = (Dir["#{demo_builder_patches_path}/*"] - ['.DS_Store', '.gitignore'])
+user_backup_files = Dir.entries(backup_path) - %w[. .. .gitignore]
+user_data_packs = Dir.entries(data_packs_path) - %w[. .. .gitignore]
+user_patches = Dir.entries(patches_path) - %w[. .. .gitignore]
+chef_data_pack_files = Dir.entries(chef_data_pack_files_path) - %w[. .. .gitignore]
+chef_backup_files = Dir.entries(chef_backup_files_path) - %w[. .. .gitignore]
+chef_patch_files = Dir.entries(chef_patch_files_path) - %w[. .. .gitignore]
 file_types = ['.zip', '.tgz', '.sql']
-has_local_files = file_types.any? { |type| demo_files.find { |file| file.include?(type) } }
+has_local_files = file_types.any? { |type| user_backup_files.find { |file| file.include?(type) } }
 config_file_content = File.read(config_file)
 settings = JSON.parse(config_file_content)
 bold = `tput bold`
@@ -57,41 +64,51 @@ Vagrant.configure('2') do |config|
     end
   end
 
-  # Copy selected demo packs
+  # Copy selected data packs
   if settings['custom_demo'].key?('data_packs') &&
-     (!settings['custom_demo']['data_packs'].nil? || settings['custom_demo']['data_packs'].empty?)
-    settings['custom_demo']['data_packs'].each do |key, data_pack|
+     (!settings['custom_demo']['data_packs'].nil? || !settings['custom_demo']['data_packs'].empty?)
+    settings['custom_demo']['data_packs'].each do |_key, data_pack|
       if data_pack['name'].nil? || data_pack['name'].empty?
         abort("#{magenta}[OOPS]: #{reg}It looks like you're missing one of your data pack names in your config.json file.\n\n")
       end
       if data_pack['repository_url'].nil? || data_pack['repository_url'].empty?
         abort("#{magenta}[OOPS]: #{reg}It looks like you're missing one of your data pack repository urls in your config.json file.\n\n")
       end
-      demo_files.each do |entry|
-        entry_path = [File.dirname(entry), File.basename(entry)].join('/').split('/').pop(1).join('/')
-        if File.directory?(entry) && entry_path != data_pack['repository_url'] && entry_path != 'patches'
-          abort("#{magenta}[OOPS]: #{reg}Make sure your #{bold}#{cyan}#{data_pack['repository_url']} #{reg}data pack folder is in your demo workspace or check the repository url for the #{bold}#{cyan}#{key} #{reg}data pack in config.json.\n\n")
-        end
-      end
     end
-    config.trigger.before %i[up reload provision] do |trigger|
-      trigger.name = 'Copying local data packs to VM'
-      trigger.ruby do
-        demo_builder_files.each { |entry| FileUtils.rm_r(entry) }
-        demo_files.each do |entry|
-          FileUtils.cp_r(entry, demo_builder_files_path)
+    missing_data_packs = ((settings['custom_demo']['data_packs'].map { |_key, value| value['repository_url'] }) - user_data_packs)
+    unless missing_data_packs.nil? || missing_data_packs.empty?
+      abort("#{magenta}[OOPS]: #{reg}Make sure the following folders are in your demo workspace and properly configured in config.json: #{bold}#{cyan}#{missing_data_packs.join(', ')}\n\n")
+    end
+    unless user_data_packs.empty?
+      config.trigger.before %i[up reload provision] do |trigger|
+        trigger.name = 'Copying local data packs to VM'
+        trigger.ruby do
+          unless chef_data_pack_files.empty?
+            chef_data_pack_files.each do |entry|
+              FileUtils.rm_r("#{chef_data_pack_files_path}/#{entry}")
+            end
+          end
+          user_data_packs.each do |entry|
+            FileUtils.cp_r("#{data_packs_path}/#{entry}", chef_data_pack_files_path)
+          end
         end
       end
     end
   end
 
   # Copy patches
-  unless patch_files.empty?
+  unless user_patches.empty?
     config.trigger.before [:up, :reload, :provision] do |trigger|
       trigger.name = 'Copying patches to the VM'
       trigger.ruby do
-        demo_builder_patches.each { |entry| FileUtils.rm_r(entry) }
-        FileUtils.cp_r(patches_dir, demo_builder_patches_path)
+        unless chef_patch_files.empty?
+          chef_patch_files.each do |entry|
+            FileUtils.rm_r("#{chef_patch_files_path}/#{entry}")
+          end
+        end
+        user_patches.each do |entry|
+          FileUtils.cp_r("#{patches_path}/#{entry}", chef_patch_files_path)
+        end
       end
     end
   end
@@ -102,14 +119,18 @@ Vagrant.configure('2') do |config|
       config.trigger.before %i[up provision] do |trigger|
         trigger.name = 'Copying local backup files'
         trigger.ruby do
-          backup_files.each { |entry| FileUtils.rm_r(entry) }
-          zip_file = demo_files.find { |file| file.include?('.zip') }
-          if !zip_file.nil?
-            FileUtils.cp_r(zip_file, "#{backup_files_path}/")
+          unless chef_backup_files.empty?
+            chef_backup_files.each do |entry|
+              FileUtils.rm_r("#{chef_backup_files_path}/#{entry}")
+            end
+          end
+          zip_file = user_backup_files.find { |file| file.include?('.zip') }
+          if zip_file
+            FileUtils.cp_r("#{backup_path}/#{zip_file}", chef_backup_files_path)
           else
-            demo_files.each do |entry|
+            user_backup_files.each do |entry|
               ['.tgz', '.sql'].any? do |extension|
-                FileUtils.cp_r(entry, "#{backup_files_path}/") if entry.include?(extension)
+                FileUtils.cp_r("#{backup_path}/#{entry}", chef_backup_files_path) if entry.include?(extension)
               end
             end
           end
