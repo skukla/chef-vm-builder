@@ -10,6 +10,10 @@ app = App.new
 
 system('clear')
 
+app.check_for_authentication
+app.check_for_data_pack_errors
+app.check_for_backup_errors
+
 Vagrant.configure('2') do |config|
   # Check for plugins
   config.trigger.before :up do |trigger|
@@ -20,7 +24,6 @@ Vagrant.configure('2') do |config|
   end
 
   # Copy selected data packs
-  app.check_for_data_pack_errors
 
   unless app.entries[:user_data_packs].empty?
     config.trigger.before %i[up reload provision] do |trigger|
@@ -43,8 +46,6 @@ Vagrant.configure('2') do |config|
 
   # Handle backups
   if app.settings['application']['build']['action'] == 'restore'
-    app.check_for_backup_errors
-
     if ['.zip', '.tgz', '.sql'].any? { |type| app.entries[:user_backups].find { |file| file.include?(type) } }
       config.trigger.before %i[up provision] do |trigger|
         trigger.name = 'Copying local backup files'

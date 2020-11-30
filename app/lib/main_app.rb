@@ -51,6 +51,20 @@ class App
     @settings = JSON.parse(File.read(@paths[:config_file]))
   end
 
+  def check_for_authentication
+    message = %W[
+      #{@colors[:magenta]}[OOPS]: #{@colors[:reg]}It looks like you're missing your
+      #{@colors[:bold]}#{@colors[:cyan]}composer keys #{@colors[:reg]}or
+      #{@colors[:bold]}#{@colors[:cyan]}github oauth token#{@colors[:reg]}.
+      Please check your config.json file.\n\n
+    ].join(' ')
+    %w[public_key private_key github_token].each do |setting|
+      if @settings['application']['authentication'][setting].nil? || @settings['application']['authentication'][setting].empty?
+        abort(message)
+      end
+    end
+  end
+
   def check_for_plugins
     completed = []
     plugins = @settings['vagrant']['plugins']['all']
@@ -71,19 +85,49 @@ class App
   end
 
   def check_for_data_pack_errors
-    if @settings['custom_demo'].key?('data_packs') && (!@settings['custom_demo']['data_packs'].nil? || !@settings['custom_demo']['data_packs'].empty?)
-      @settings['custom_demo']['data_packs'].each do |_key, data_pack|
-        if data_pack['name'].nil? || data_pack['name'].empty?
-          abort("#{@colors[:magenta]}[OOPS]: #{@colors[:reg]}It looks like you're missing one of your data pack names in your config.json file.\n\n")
+    return if @settings['application']['build']['action'] == 'restore'
+
+    if @settings['custom_demo'].key?('data_packs') && (!@settings['custom_demo']['data_packs'].nil? ||
+      !@settings['custom_demo']['data_packs'].empty?)
+
+      if @settings['custom_demo']['custom_modules'].nil? || @settings['custom_demo']['custom_modules'].empty?
+        message = %W[
+          #{@colors[:magenta]}[OOPS]: #{@colors[:reg]}You've specified a data pack but it looks like
+          you're missing the #{@colors[:bold]}#{@colors[:cyan]}data install custom module
+          #{@colors[:reg]}in your config.json file.\n\n
+        ].join(' ')
+        abort(message)
+      elsif !@settings['custom_demo']['custom_modules'].nil? || !@settings['custom_demo']['custom_modules'].empty?
+        @settings['custom_demo']['custom_modules'].each do |_key, value|
+          next unless value['name'].split('/')[1] != 'module-data-install' || value['repository_url'] != 'https://github.com/PMET-public/module-data-install.git'
+
+          message = %W[
+            #{@colors[:magenta]}[OOPS]: #{@colors[:reg]}You've specified a data pack but it looks like
+            you have the wrong values for the #{@colors[:bold]}#{@colors[:cyan]}data install custom module
+            #{@colors[:reg]}\nin your config.json file.\n\n
+          ].join(' ')
+          abort(message)
         end
-        if data_pack['repository_url'].nil? || data_pack['repository_url'].empty?
-          abort("#{@colors[:magenta]}[OOPS]: #{@colors[:reg]}It looks like you're missing one of your data pack repository urls in your config.json file.\n\n")
+      end
+
+      @settings['custom_demo']['data_packs'].each do |_key, data_pack|
+        %w[name repository_url].each do |field|
+          message = %W[
+            #{@colors[:magenta]}[OOPS]: #{@colors[:reg]}It looks like you're missing a
+            #{@colors[:bold]}#{@colors[:cyan]}value#{@colors[:reg]} for a
+            #{@colors[:bold]}#{@colors[:cyan]}data pack #{field.sub('_', ' ')}
+            #{@colors[:reg]}in your config.json file.\n\n
+          ].join(' ')
+          abort(message) if data_pack[field].nil? || data_pack[field].empty?
         end
       end
       missing_data_packs = ((@settings['custom_demo']['data_packs'].map { |_key, value| value['repository_url'] }) - @entries[:user_data_packs])
-      unless missing_data_packs.nil? || missing_data_packs.empty?
-        abort("#{@colors[:magenta]}[OOPS]: #{@colors[:reg]}Make sure the following folders are in your demo workspace and properly configured in config.json: #{@colors[:bold]}#{@colors[:cyan]}#{missing_data_packs.join(', ')}\n\n")
-      end
+      message = %W[
+        #{@colors[:magenta]}[OOPS]: #{@colors[:reg]}Make sure the following folders are in your demo workspace
+        and properly configured in config.json:
+        #{@colors[:bold]}#{@colors[:cyan]}#{missing_data_packs.join(', ')}\n\n
+      ].join(' ')
+      abort(message) unless missing_data_packs.nil? || missing_data_packs.empty?
     end
   end
 
@@ -110,8 +154,18 @@ class App
   end
 
   def check_for_backup_errors
-    if !@settings['custom_demo'].key?('backup') || (@settings['custom_demo'].key?('backup') && @settings['custom_demo']['backup'].empty?)
-      abort("#{@colors[:magenta]}[OOPS]: #{@colors[:reg]}You have a build action of #{@colors[:bold]}#{@colors[:cyan]}restore#{@colors[:reg]}, but you haven't added any local backup files or specified a remote backup to download. You silly goose, you.\n\n")
+    return unless @settings['application']['build']['action'] == 'restore'
+
+    if !@settings['custom_demo'].key?('backup') || (@settings['custom_demo'].key?('backup') &&
+      @settings['custom_demo']['backup'].empty?)
+      message = %W[
+        #{@colors[:magenta]}[OOPS]: #{@colors[:reg]}You have a build action of
+        #{@colors[:bold]}#{@colors[:cyan]}restore#{@colors[:reg]}, but you haven't added any
+        #{@colors[:bold]}#{@colors[:cyan]}local backup files#{@colors[:reg]}
+        or specified a #{@colors[:bold]}#{@colors[:cyan]}remote backup #{@colors[:reg]}to download.\n\n
+        You silly goose, you.\n\n
+      ].join(' ')
+      abort(message)
     end
   end
 
