@@ -48,7 +48,8 @@ vm_cli 'Running the warm cache hook' do
 end
 
 DemoStructureHelper.get_vhost_data(demo_structure).each do |vhost|
-  next if vhost[:code] == 'base'
+  next if (vhost[:scope] == 'website' && vhost[:code] == 'base') ||
+          (vhost[:scope] == 'store_view' && vhost[:code] == 'default')
 
   magento_cli 'Configure additional unsecure URLs' do
     action :config_set

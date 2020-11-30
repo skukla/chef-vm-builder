@@ -201,11 +201,12 @@ class App
   def define_urls
     result = {}
     demo_urls = []
-    @settings['custom_demo']['structure'].each do |_scope, scope_hash|
+    @settings['custom_demo']['structure'].each do |scope, scope_hash|
       scope_hash.each do |code, url|
-        case code
-        when 'base'
+        if scope == 'website' && code == 'base'
           result[:hostname] = @settings['custom_demo']['structure']['website'][code]
+        elsif scope == 'store_view' && code == 'default'
+          result[:hostname] = @settings['custom_demo']['structure']['store_view'][code]
         else
           demo_urls << url
         end
