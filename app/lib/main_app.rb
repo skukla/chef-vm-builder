@@ -156,13 +156,13 @@ class App
   def check_for_backup_errors
     return unless @settings['application']['build']['action'] == 'restore'
 
-    if !@settings['custom_demo'].key?('backup') || (@settings['custom_demo'].key?('backup') &&
-      @settings['custom_demo']['backup'].empty?)
+    if ['.zip', '.tgz', '.sql'].none? { |type| @entries[:user_backups].find { |file| file.include?(type) } } &&
+       (@settings['custom_demo'].key?('backup') && @settings['custom_demo']['backup'].empty?)
       message = %W[
         #{@colors[:magenta]}[OOPS]: #{@colors[:reg]}You have a build action of
         #{@colors[:bold]}#{@colors[:cyan]}restore#{@colors[:reg]}, but you haven't added any
-        #{@colors[:bold]}#{@colors[:cyan]}local backup files#{@colors[:reg]}
-        or specified a #{@colors[:bold]}#{@colors[:cyan]}remote backup #{@colors[:reg]}to download.\n\n
+        #{@colors[:bold]}#{@colors[:cyan]}local backup files#{@colors[:reg]}\nor specified a
+        #{@colors[:bold]}#{@colors[:cyan]}remote backup #{@colors[:reg]}to download.
         You silly goose, you.\n\n
       ].join(' ')
       abort(message)
