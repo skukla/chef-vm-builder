@@ -138,6 +138,7 @@ action :install_local_data_pack_content do
       module_full_path = "#{new_resource.web_root}/#{vendor}/#{module_name}"
       template_manager_src = 'template_manager'
       template_manager_dest = '.template-manager'
+
       ruby_block "Copying files from #{template_manager_src} to #{template_manager_dest}" do
         block do
           Dir["#{module_full_path}/#{media_type}/#{template_manager_src}/*"].each do |file|
@@ -150,6 +151,13 @@ action :install_local_data_pack_content do
             !Dir.empty?("#{module_full_path}/#{media_type}/#{template_manager_src}") &&
             Dir.exist?("#{module_full_path}/#{media_type}/#{template_manager_dest}")
         end
+      end
+
+      execute 'Remove unwanted hidden files from local data packs' do
+        command "cd #{new_resource.web_root}/app/code/#{vendor}/#{module_name} &&
+        find . -name '.DS_Store' -type f -delete &&
+        find . -name '.gitignore' -type f -delete"
+        only_if { ::Dir.exist?("#{new_resource.web_root}/app/code/#{vendor}/#{module_name}") }
       end
     end
   end
