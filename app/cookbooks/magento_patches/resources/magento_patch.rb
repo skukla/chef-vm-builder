@@ -69,20 +69,17 @@ action :add_custom_patches do
   end
 end
 
-action :move_into_web_root do
-  execute 'Move patches into hotfixes directory' do
-    command "mv #{new_resource.patches_holding_area} #{new_resource.web_root}/#{new_resource.directory_in_codebase}"
-  end
-end
-
 action :rename_patches do
   ruby_block 'Rename patches' do
     block do
-      PatchHelper.define_sample_data_patches(
-        "#{new_resource.web_root}/#{new_resource.directory_in_codebase}",
-        new_resource.sample_data_flag
-      )
+      PatchHelper.define_sample_data_patches(new_resource.patches_holding_area, new_resource.sample_data_flag)
     end
+  end
+end
+
+action :move_into_web_root do
+  execute 'Move patches into hotfixes directory' do
+    command "mv #{new_resource.patches_holding_area} #{new_resource.web_root}/#{new_resource.directory_in_codebase}"
   end
 end
 

@@ -39,12 +39,12 @@ magento_patch 'Copy custom patches into place' do
   action :add_custom_patches
 end
 
-magento_patch 'Move patches into web root' do
-  action :move_into_web_root
-end
-
 magento_patch 'Enable/disable sample data patches' do
   action :rename_patches
+end
+
+magento_patch 'Move patches into web root' do
+  action :move_into_web_root
 end
 
 magento_app 'Update patch permissions' do
