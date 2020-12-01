@@ -87,8 +87,8 @@ class App
   def check_for_data_pack_errors
     return if @settings['application']['build']['action'] == 'restore'
 
-    if @settings['custom_demo'].key?('data_packs') && (!@settings['custom_demo']['data_packs'].nil? ||
-      !@settings['custom_demo']['data_packs'].empty?)
+    if @settings['custom_demo'].key?('data_packs') &&
+       (!@settings['custom_demo']['data_packs'].nil? && !@settings['custom_demo']['data_packs'].empty?)
 
       if @settings['custom_demo']['custom_modules'].nil? || @settings['custom_demo']['custom_modules'].empty?
         message = %W[
