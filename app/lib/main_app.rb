@@ -12,7 +12,7 @@ class App
       root: File.expand_path('..', Dir.pwd).to_s,
       app: Pathname.new("#{File.expand_path('..', Dir.pwd)}/app"),
       environments: 'environments',
-      workspace: 'demo',
+      workspace: 'project',
       backup: 'backup',
       data_packs: 'data_packs',
       patches: 'patches',
