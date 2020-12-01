@@ -36,7 +36,7 @@ end
 
 action :remove_from_web_root do
   execute 'Remove patches from web root' do
-    command "rm -rf #{new_resource.web_root}/#{new_resource.directory_in_codebase}/*"
+    command "rm -rf #{new_resource.web_root}/#{new_resource.directory_in_codebase}"
     only_if { ::Dir.exist?("#{new_resource.web_root}/#{new_resource.directory_in_codebase}") }
   end
 end
