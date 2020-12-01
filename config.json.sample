@@ -38,7 +38,10 @@
 				"enable_media_gallery": true,
 				"commands": []
 			}
-		}
+		},
+        "settings": {
+            "admin_password": "admin123"
+        }
 	},
 	"infrastructure": {
 		"php": "7.4",
