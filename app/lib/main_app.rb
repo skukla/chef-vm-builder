@@ -142,10 +142,10 @@ class App
         end
       end
       missing_data_packs = ((@settings['custom_demo']['data_packs'].map { |_key, value| value['repository_url'] }) - @entries[:user_data_packs])
+
       message = %W[
-        #{@colors[:magenta]}[OOPS]: #{@colors[:reg]}Make sure the following folders are in your demo workspace
-        and properly configured in config.json:
-        #{@colors[:bold]}#{@colors[:cyan]}#{missing_data_packs.join(', ')}\n\n
+        #{@colors[:magenta]}[OOPS]: #{@colors[:reg]}Make sure the following folders are in your project's workspace and properly configured in your config.json file:
+        \n\n#{@colors[:bold]}#{@colors[:cyan]}#{missing_data_packs.join("\n")}\n\n
       ].join(' ')
       abort(message) unless missing_data_packs.nil? || missing_data_packs.empty?
     end

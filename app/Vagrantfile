@@ -25,7 +25,6 @@ Vagrant.configure('2') do |config|
   end
 
   # Copy selected data packs
-
   unless app.entries[:user_data_packs].empty?
     config.trigger.before %i[up reload provision] do |trigger|
       trigger.name = 'Copying local data packs to VM'
