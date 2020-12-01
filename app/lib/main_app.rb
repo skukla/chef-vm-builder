@@ -65,6 +65,26 @@ class App
     end
   end
 
+  def check_for_build_action
+    build_action_list = %w[install force_install restore update reinstall]
+    if @settings['application']['build']['action'].nil? || @settings['application']['build']['action'].empty?
+      message = %W[
+        #{@colors[:magenta]}[OOPS]: #{@colors[:reg]}It looks like your
+        #{@colors[:bold]}#{@colors[:cyan]}build action#{@colors[:reg]} is
+        #{@colors[:bold]}#{@colors[:cyan]}missing or empty#{@colors[:reg]}.
+        Please check your config.json file.\n\n
+      ].join(' ')
+      abort(message)
+    elsif !build_action_list.find { |action| @settings['application']['build']['action'] == action }
+      message = %W[
+        #{@colors[:magenta]}[OOPS]: #{@colors[:reg]}It looks like you've got an incorrect build action:
+        #{@colors[:bold]}#{@colors[:cyan]}#{@settings['application']['build']['action']}.#{@colors[:reg]}
+        \n\nAcceptable values are:\n\n#{build_action_list.join("\n")}\n\nPlease check your config.json file.\n\n
+      ].join(' ')
+      abort(message)
+    end
+  end
+
   def check_for_plugins
     completed = []
     plugins = @settings['vagrant']['plugins']['all']
