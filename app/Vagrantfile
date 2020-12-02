@@ -113,6 +113,14 @@ Vagrant.configure('2') do |config|
     chef.arguments = '--chef-license accept'
   end
 
+  # Post-build clean-up
+  config.trigger.after %i[up provision] do |trigger|
+    trigger.name = 'Cleaning up chef cache'
+    trigger.ruby do
+      app.clean_up_chef_cache
+    end
+  end
+
   # SSL certificates triggers
   config.trigger.after %i[reload destroy] do |trigger|
     trigger.name = 'Cleaning up ssl certificate'

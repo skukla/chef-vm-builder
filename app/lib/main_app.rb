@@ -26,9 +26,9 @@ class App
       backups: Pathname.new("#{@dirs[:root]}/#{@dirs[:workspace]}/#{@dirs[:backup]}"),
       data_packs: Pathname.new("#{@dirs[:root]}/#{@dirs[:workspace]}/#{@dirs[:data_packs]}"),
       patches: Pathname.new("#{@dirs[:root]}/#{@dirs[:workspace]}/#{@dirs[:patches]}"),
-      chef_backup_files: Pathname.new("#{@dirs[:app]}/cookbooks/magento_restore/files/default/"),
-      chef_data_pack_files: Pathname.new("#{@dirs[:app]}/cookbooks/magento_demo_builder/files/default/"),
-      chef_patch_files: Pathname.new("#{@dirs[:app]}/cookbooks/magento_patches/files/default/"),
+      chef_backup_files: Pathname.new("#{@dirs[:app]}/cookbooks/magento_restore/files/default"),
+      chef_data_pack_files: Pathname.new("#{@dirs[:app]}/cookbooks/magento_demo_builder/files/default"),
+      chef_patch_files: Pathname.new("#{@dirs[:app]}/cookbooks/magento_patches/files/default"),
       ssl_certificates: Pathname.new("#{@dirs[:app]}/#{@dirs[:certificate]}"),
       environment_file: Pathname.new("#{@dirs[:app]}/#{@dirs[:environments]}/#{@files[:environment]}"),
       config_file: Pathname.new("#{@dirs[:root]}/#{@files[:config]}")
@@ -37,8 +37,8 @@ class App
       user_backups: Dir.entries(@paths[:backups]) - %w[. .. .gitignore],
       user_data_packs: Dir.entries(@paths[:data_packs]) - %w[. .. .gitignore],
       user_patches: Dir.entries(@paths[:patches]) - %w[. .. .gitignore],
-      chef_data_pack_files: Dir.entries(@paths[:chef_data_pack_files]) - %w[. .. .gitignore],
       chef_backup_files: Dir.entries(@paths[:chef_backup_files]) - %w[. .. .gitignore],
+      chef_data_pack_files: Dir.entries(@paths[:chef_data_pack_files]) - %w[. .. .gitignore],
       chef_patch_files: Dir.entries(@paths[:chef_patch_files]) - %w[. .. .gitignore]
     }
     @colors = {
@@ -234,6 +234,13 @@ class App
       result[:demo_urls] = demo_urls
     end
     result
+  end
+
+  def clean_up_chef_cache
+    %i[chef_data_pack_files chef_backup_files chef_patch_files].each do |entry_group|
+      system("find #{@paths[entry_group]} -name '.DS_Store' -type f -delete")
+      FileUtils.rm_rf Dir.glob("#{@paths[entry_group]}/*")
+    end
   end
 
   def clean_up_ssl_certificates
