@@ -4,7 +4,6 @@
     "terminal.integrated.cwd": "./app",
     "csv-edit.initiallyFixedRowsTop": 1,
     "files.exclude": {
-        ".gitignore": true,
         "**/.gitignore": true,
         "**/.vscode": true
     }
