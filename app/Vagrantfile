@@ -25,7 +25,9 @@ Vagrant.configure('2') do |config|
   end
 
   # Copy selected data packs
-  unless app.entries[:user_data_packs].empty?
+  if !app.entries[:user_data_packs].empty? &&
+     !app.settings['custom_demo']['data_packs'].empty? &&
+     !app.settings['custom_demo']['data_packs'].find { |_key, value| !value['repository_url'].include?('github') }.nil?
     config.trigger.before %i[up reload provision] do |trigger|
       trigger.name = 'Copying local data packs to VM'
       trigger.ruby do
@@ -45,13 +47,13 @@ Vagrant.configure('2') do |config|
   end
 
   # Handle backups
-  if app.settings['application']['build']['action'] == 'restore'
-    if ['.zip', '.tgz', '.sql'].any? { |type| app.entries[:user_backups].find { |file| file.include?(type) } }
-      config.trigger.before %i[up provision] do |trigger|
-        trigger.name = 'Copying local backup files'
-        trigger.ruby do
-          app.copy_local_backup_files
-        end
+  if app.settings['application']['build']['action'] == 'restore' &&
+     !app.entries[:user_backups].empty? &&
+     ['.zip', '.tgz', '.sql'].any? { |type| app.entries[:user_backups].find { |file| file.include?(type) } }
+    config.trigger.before %i[up provision] do |trigger|
+      trigger.name = 'Copying local backup files'
+      trigger.ruby do
+        app.copy_local_backup_files
       end
     end
   end
@@ -114,10 +116,14 @@ Vagrant.configure('2') do |config|
   end
 
   # Post-build clean-up
-  config.trigger.after %i[up provision] do |trigger|
-    trigger.name = 'Cleaning up chef cache'
-    trigger.ruby do
-      app.clean_up_chef_cache
+  if !app.entries[:chef_backup_files].empty? ||
+     !app.entries[:chef_data_pack_files].empty? ||
+     !app.entries[:chef_patch_files].empty?
+    config.trigger.after %i[up provision] do |trigger|
+      trigger.name = 'Cleaning up chef cache'
+      trigger.ruby do
+        app.clean_up_chef_cache
+      end
     end
   end
 
