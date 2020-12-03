@@ -6,7 +6,7 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 module PatchHelper
-  def self.define_sample_data_patches(patch_file_directory, _sample_data_flag)
+  def self.define_sample_data_patches(patch_file_directory, sample_data_flag)
     files = Dir.entries(patch_file_directory) - ['..', '.', '.git']
     file_list = []
     files.each do |file|
