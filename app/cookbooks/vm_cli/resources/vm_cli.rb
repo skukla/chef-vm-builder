@@ -88,9 +88,9 @@ action :run do
 
   command_list.each do |command|
     bash "Running the #{command} VM CLI command" do
-      code <<-CONTENT
-                source /home/#{new_resource.user}/cli/commands.sh
-                #{command}
+      code <<~CONTENT
+        source /home/#{new_resource.user}/cli/commands.sh
+        #{command}
       CONTENT
       cwd new_resource.web_root
     end
