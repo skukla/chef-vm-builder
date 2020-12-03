@@ -19,12 +19,12 @@ magento_patch 'Prepare for Magento patches' do
   action %i[
     remove_holding_area
     remove_from_web_root
+
   ]
 end
 
 magento_patch 'Create holding area' do
   action :create_holding_area
-  only_if { patches_repository == 'local' || patches_repository.empty? }
 end
 
 magento_patch 'Clone and filter patches repository' do

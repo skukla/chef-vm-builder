@@ -30,6 +30,9 @@ end
 action :create_holding_area do
   directory 'Patches holding area' do
     path new_resource.patches_holding_area
+    owner new_resource.user
+    group new_resource.group
+    mode '755'
     not_if { ::Dir.exist?(new_resource.patches_holding_area) }
   end
 end
@@ -42,18 +45,18 @@ action :remove_from_web_root do
 end
 
 action :clone_patches_repository do
-  execute "Cloning the #{new_resource.patches_branch} branch from the #{new_resource.patches_repository_url} repository" do
-    command "git clone --single-branch --branch #{new_resource.patches_branch} #{new_resource.patches_repository_url} #{new_resource.patches_holding_area}"
-    user new_resource.user
-    cwd new_resource.web_root
+  bash "Cloning the #{new_resource.patches_branch} branch from the #{new_resource.patches_repository_url} repository" do
+    code "git clone --single-branch --branch #{new_resource.patches_branch} #{new_resource.patches_repository_url} ."
+    cwd new_resource.patches_holding_area
+    only_if { ::Dir.exist?(new_resource.patches_holding_area) && ::Dir.empty?(new_resource.patches_holding_area) }
     not_if { ::Dir.exist?(new_resource.directory_in_codebase) }
   end
 end
 
 action :filter_directory do
-  execute 'Pull out patches from repository' do
-    command "cd #{new_resource.patches_holding_area} &&
-        git filter-branch --subdirectory-filter #{new_resource.directory_in_repository}"
+  bash 'Pull out patches from repository' do
+    code "git filter-branch --subdirectory-filter #{new_resource.directory_in_repository}"
+    cwd new_resource.patches_holding_area
   end
 end
 
