@@ -117,7 +117,7 @@ Vagrant.configure('2') do |config|
 
   # Post-build clean-up
   config.trigger.after %i[up provision] do |trigger|
-    trigger.name = 'Cleaning up chef cache'
+    trigger.name = 'Cleaning up application cache'
     trigger.ruby do
       app.clean_up_chef_cache
     end
