@@ -2,6 +2,7 @@
 
 require 'pathname'
 require 'json'
+require 'English'
 
 # Application class
 class App
@@ -39,7 +40,8 @@ class App
       user_patches: Dir.entries(@paths[:patches]) - %w[. .. .gitignore],
       chef_backup_files: Dir.entries(@paths[:chef_backup_files]) - %w[. .. .gitignore .DS_Store],
       chef_data_pack_files: Dir.entries(@paths[:chef_data_pack_files]) - %w[. .. .gitignore .DS_Store],
-      chef_patch_files: Dir.entries(@paths[:chef_patch_files]) - %w[. .. .gitignore .DS_Store]
+      chef_patch_files: Dir.entries(@paths[:chef_patch_files]) - %w[. .. .gitignore .DS_Store],
+      ssl_certificates: Dir.entries(@paths[:ssl_certificates]) - %w[. .. .gitignore .DS_Store]
     }
     @colors = {
       bold: `tput bold`,
@@ -252,24 +254,47 @@ class App
     end
   end
 
+  def has_ssl_certificates
+    data = {}
+    base_website = @settings.dig('custom_demo', 'structure', 'website', 'base')
+    default_store_view = @settings.dig('custom_demo', 'structure', 'store_view', 'default')
+
+    data[:status] = if (base_website.nil? && default_store_view.nil?) || @entries[:ssl_certificates].empty?
+                      nil
+                    else
+                      true
+                    end
+
+    if File.exist?("#{@paths[:ssl_certificates]}/#{base_website}.crt")
+      data[:crt_file] = "#{@paths[:ssl_certificates]}/#{base_website}.crt"
+    elsif File.exist?("#{@paths[:ssl_certificates]}/#{default_store_view}.crt")
+      data[:crt_file] = "#{@paths[:ssl_certificates]}/#{default_store_view}.crt"
+    end
+    data
+  end
+
   def clean_up_ssl_certificates
-    system("sudo security find-certificate -c #{@settings['custom_demo']['structure']['website']['base'].to_s.chomp} > /dev/null 2>&1")
-    if $?.exitstatus == 0
-      system("sudo security delete-certificate -c #{@settings['custom_demo']['structure']['website']['base'].to_s.chomp} /Library/Keychains/System.keychain")
+    return if has_ssl_certificates[:status].nil?
+
+    @entries[:ssl_certificates].each do |entry|
+      system("sudo security find-certificate -c #{"#{@paths[:ssl_certificates]}/#{entry}"} > /dev/null 2>&1")
+      if $CHILD_STATUS.exitstatus.zero?
+        system("sudo security delete-certificate -c #{entry} /Library/Keychains/System.keychain")
+      end
     end
   end
 
   def remove_local_ssl_certificates
-    if File.exist?("#{@paths[:ssl_certificates]}/#{@settings['custom_demo']['structure']['website']['base']}.crt")
-      FileUtils.rm_rf("#{@paths[:ssl_certificates]}/#{@settings['custom_demo']['structure']['website']['base']}.crt")
-    end
+    return if has_ssl_certificates[:status].nil?
+
+    FileUtils.rm_rf(has_ssl_certificates[:crt_file])
   end
 
   def set_up_ssl_certificates
-    system("sudo security find-certificate -c #{@settings['custom_demo']['structure']['website']['base'].to_s.chomp} > /dev/null 2>&1")
-    if $?.exitstatus == 0
-      system("sudo security delete-certificate -c #{@settings['custom_demo']['structure']['website']['base'].to_s.chomp} /Library/Keychains/System.keychain")
-    end
-    system("sudo security add-trusted-cert -d -r trustAsRoot -k /Library/Keychains/System.keychain '#{@paths[:ssl_certificates]}/#{@settings['custom_demo']['structure']['website']['base']}.crt'")
+    return if has_ssl_certificates[:status].nil?
+
+    clean_up_ssl_certificates
+    puts "Adding certificate: '#{has_ssl_certificates[:crt_file]}'"
+    system("sudo security add-trusted-cert -d -r trustAsRoot -k /Library/Keychains/System.keychain '#{has_ssl_certificates[:crt_file]}'")
   end
 end

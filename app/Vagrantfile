@@ -126,9 +126,7 @@ Vagrant.configure('2') do |config|
   # SSL certificates triggers
   config.trigger.after %i[reload destroy] do |trigger|
     trigger.name = 'Cleaning up ssl certificate'
-    trigger.ruby do
-      app.clean_up_ssl_certificates
-    end
+    trigger.run = { path: 'scripts/clean-up-certificates.sh' }
   end
 
   config.trigger.after :destroy do |trigger|
@@ -141,14 +139,11 @@ Vagrant.configure('2') do |config|
   if app.settings['application'].key?('settings') &&
      (app.settings['application']['settings'].key?('use_secure_frontend') || app.settings['application']['settings'].key?('use_secure_backend')) &&
      (!app.settings['application']['settings']['use_secure_frontend'].nil? || !app.settings['application']['settings']['use_secure_admin'].nil?) &&
-     (app.settings['application']['settings']['use_secure_frontend'] == true || app.settings['application']['settings']['use_secure_admin'] == true) &&
-     File.exist?("#{app.paths[:ssl_certificates]}/#{app.settings['custom_demo']['structure']['website']['base']}.crt")
+     (app.settings['application']['settings']['use_secure_frontend'] == true || app.settings['application']['settings']['use_secure_admin'] == true)
 
     config.trigger.after %i[up reload provision] do |trigger|
       trigger.name = 'Setting up ssl certificate'
-      trigger.ruby do
-        app.set_up_ssl_certificates
-      end
+      trigger.run = { path: 'scripts/set-up-certificates.sh' }
     end
   end
 end
