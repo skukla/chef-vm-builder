@@ -43,7 +43,7 @@ action :create_directories do
 end
 
 action :install do
-  protocol = new_resource.use_secure_frontend ? 'http' : 'https'
+  protocol = 'http'
   template 'VM CLI' do
     source 'commands.sh.erb'
     path "/home/#{new_resource.user}/cli/commands.sh"
