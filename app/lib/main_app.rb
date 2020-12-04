@@ -34,12 +34,12 @@ class App
       config_file: Pathname.new("#{@dirs[:root]}/#{@files[:config]}")
     }
     @entries = {
-      user_backups: Dir.entries(@paths[:backups]) - %w[. .. .gitignore],
-      user_data_packs: Dir.entries(@paths[:data_packs]) - %w[. .. .gitignore],
+      user_backups: Dir.entries(@paths[:backups]) - %w[. .. .gitignore .DS_Store],
+      user_data_packs: Dir.entries(@paths[:data_packs]) - %w[. .. .gitignore .DS_Store],
       user_patches: Dir.entries(@paths[:patches]) - %w[. .. .gitignore],
-      chef_backup_files: Dir.entries(@paths[:chef_backup_files]) - %w[. .. .gitignore],
-      chef_data_pack_files: Dir.entries(@paths[:chef_data_pack_files]) - %w[. .. .gitignore],
-      chef_patch_files: Dir.entries(@paths[:chef_patch_files]) - %w[. .. .gitignore]
+      chef_backup_files: Dir.entries(@paths[:chef_backup_files]) - %w[. .. .gitignore .DS_Store],
+      chef_data_pack_files: Dir.entries(@paths[:chef_data_pack_files]) - %w[. .. .gitignore .DS_Store],
+      chef_patch_files: Dir.entries(@paths[:chef_patch_files]) - %w[. .. .gitignore .DS_Store]
     }
     @colors = {
       bold: `tput bold`,
@@ -117,17 +117,16 @@ class App
           #{@colors[:reg]}in your config.json file.\n\n
         ].join(' ')
         abort(message)
-      elsif !@settings['custom_demo']['custom_modules'].nil? || !@settings['custom_demo']['custom_modules'].empty?
-        @settings['custom_demo']['custom_modules'].each do |_key, value|
-          next unless value['name'].split('/')[1] != 'module-data-install' || value['repository_url'] != 'https://github.com/PMET-public/module-data-install.git'
-
-          message = %W[
-            #{@colors[:magenta]}[OOPS]: #{@colors[:reg]}You've specified a data pack but it looks like
-            you have the wrong values for the #{@colors[:bold]}#{@colors[:cyan]}data install custom module
-            #{@colors[:reg]}\nin your config.json file.\n\n
-          ].join(' ')
-          abort(message)
-        end
+      elsif (!@settings['custom_demo']['custom_modules'].nil? ||
+            !@settings['custom_demo']['custom_modules'].empty?) &&
+            @settings['custom_demo']['custom_modules'].find { |_key, value| value['name'].split('/')[1] == 'module-data-install' }.nil? ||
+            @settings['custom_demo']['custom_modules'].find { |_key, value| value['repository_url'] == 'https://github.com/PMET-public/module-data-install.git' }.nil?
+        message = %W[
+          #{@colors[:magenta]}[OOPS]: #{@colors[:reg]}You've specified a data pack but it looks like
+          you're missing the #{@colors[:bold]}#{@colors[:cyan]}data install custom module
+          #{@colors[:reg]}or have the wrong values for it \nin your config.json file.\n\n
+        ].join(' ')
+        abort(message)
       end
 
       @settings['custom_demo']['data_packs'].each do |_key, data_pack|
@@ -141,13 +140,23 @@ class App
           abort(message) if data_pack[field].nil? || data_pack[field].empty?
         end
       end
-      missing_data_packs = ((@settings['custom_demo']['data_packs'].map { |_key, value| value['repository_url'] }) - @entries[:user_data_packs])
 
-      message = %W[
-        #{@colors[:magenta]}[OOPS]: #{@colors[:reg]}Make sure the following folders are in your project's workspace and properly configured in your config.json file:
-        \n\n#{@colors[:bold]}#{@colors[:cyan]}#{missing_data_packs.join("\n")}\n\n
-      ].join(' ')
-      abort(message) unless missing_data_packs.nil? || missing_data_packs.empty?
+      configured_local_data_packs = @settings['custom_demo']['data_packs'].values.reject { |value| value['repository_url'].include?('github') }
+
+      return if configured_local_data_packs.nil?
+
+      unless configured_local_data_packs.nil?
+        if @entries[:user_data_packs].empty?
+          missing_data_packs = configured_local_data_packs.map { |value| value['repository_url'] }
+        else
+          missing_data_packs = ((configured_local_data_packs.map { |value| value['repository_url'] }) - @entries[:user_data_packs])
+        end
+        message = %W[
+          #{@colors[:magenta]}[OOPS]: #{@colors[:reg]}Make sure the following folders are in your project's workspace and properly configured in your config.json file:
+          \n\n#{@colors[:bold]}#{@colors[:cyan]}#{missing_data_packs.join("\n")}\n\n
+        ].join(' ')
+        abort(message) unless missing_data_packs.nil? || missing_data_packs.empty?
+      end
     end
   end
 
