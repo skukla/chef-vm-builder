@@ -247,7 +247,7 @@ class App
 
   def clean_up_chef_cache
     %i[chef_data_pack_files chef_backup_files chef_patch_files].each do |entry_group|
-      system("find #{@paths[entry_group]} -name '.DS_Store' -type f -delete")
+      system("find '#{@paths[entry_group]}' -name '.DS_Store' -type f -delete")
       FileUtils.rm_rf Dir.glob("#{@paths[entry_group]}/*")
     end
   end
