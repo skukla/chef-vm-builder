@@ -4,7 +4,7 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 supported_settings = {
-  custom_demo: [:structure],
+  custom_demo: %i[structure data_packs],
   installation_options: %i[family version minimum_stability directory consumer_list],
   build_options: [:action, :force_install, :sample_data, :modules_to_remove, { deploy_mode: %i[apply mode] }],
   build_hooks: %i[warm_cache enable_media_gallery commands],
@@ -81,6 +81,8 @@ supported_settings.each do |setting_key, setting_data|
         override[:magento][:settings][:unsecure_base_url] = "http://#{node[setting_key][field][:website][:base]}/"
         override[:magento][:settings][:secure_base_url] = "https://#{node[setting_key][field][:website][:base]}/"
         override[:magento][:settings][:admin_email] = "admin@#{node[setting_key][field][:website][:base]}"
+      when :data_packs
+        override[:magento][:data_packs] = node[setting_key][field] unless node[setting_key][field].nil?
       end
     end
   end

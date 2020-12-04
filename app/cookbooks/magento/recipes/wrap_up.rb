@@ -14,6 +14,7 @@ commands = node[:magento][:build][:hooks][:commands]
 media_gallery_commands = ['config:set system/media_gallery/enabled 1', 'media-gallery:sync']
 vm_cli_commands = commands.reject { |command| command.include?(':') }
 magento_cli_commands = commands.select { |command| command.include?(':') }
+data_pack_list = node[:magento][:data_packs]
 
 magento_cli 'Running the enable_media_gallery hook' do
   action :run
@@ -47,25 +48,27 @@ vm_cli 'Running the warm cache hook' do
   not_if { ::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == 'install' }
 end
 
-DemoStructureHelper.get_vhost_data(demo_structure).each do |vhost|
-  next if (vhost[:scope] == 'website' && vhost[:code] == 'base') ||
-          (vhost[:scope] == 'store_view' && vhost[:code] == 'default')
+unless data_pack_list.empty?
+  DemoStructureHelper.get_vhost_data(demo_structure).each do |vhost|
+    next if (vhost[:scope] == 'website' && vhost[:code] == 'base') ||
+            (vhost[:scope] == 'store_view' && vhost[:code] == 'default')
 
-  magento_cli 'Configure additional unsecure URLs' do
-    action :config_set
-    config_path 'web/unsecure/base_url'
-    config_value "http://#{vhost[:url]}/"
-    config_scope vhost[:scope]
-    config_scope_code vhost[:code]
-    not_if { use_secure_frontend == 1 || use_secure_admin == 1 }
-  end
-  magento_cli 'Configure additional secure URLs' do
-    action :config_set
-    config_path 'web/secure/base_url'
-    config_value "https://#{vhost[:url]}/"
-    config_scope vhost[:scope]
-    config_scope_code vhost[:code]
-    only_if { use_secure_frontend == 1 || use_secure_admin == 1 }
+    magento_cli 'Configure additional unsecure URLs' do
+      action :config_set
+      config_path 'web/unsecure/base_url'
+      config_value "http://#{vhost[:url]}/"
+      config_scope vhost[:scope]
+      config_scope_code vhost[:code]
+      not_if { use_secure_frontend == 1 || use_secure_admin == 1 }
+    end
+    magento_cli 'Configure additional secure URLs' do
+      action :config_set
+      config_path 'web/secure/base_url'
+      config_value "https://#{vhost[:url]}/"
+      config_scope vhost[:scope]
+      config_scope_code vhost[:code]
+      only_if { use_secure_frontend == 1 || use_secure_admin == 1 }
+    end
   end
 end
 
