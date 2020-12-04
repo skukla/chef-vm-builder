@@ -27,7 +27,7 @@ property :region,                            String,            default: node[:s
 property :locality,                          String,            default: node[:ssl][:locality]
 property :organization,                      String,            default: node[:ssl][:organization]
 property :organizational_unit,               String,            default: node[:ssl][:organizational_unit]
-property :common_name,                       String,            default: node[:fqdn]
+property :common_name,                       String,            default: node[:ssl][:common_name]
 
 action :remove_local_ssl_certificates do
   execute 'Remove local server certificates' do

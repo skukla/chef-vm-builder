@@ -23,3 +23,11 @@ default[:ssl][:locality] = 'Los Angeles'
 default[:ssl][:organization] = 'Kukla Certificate Authority'
 default[:ssl][:organizational_unit] = 'Commerce'
 default[:ssl][:country] = 'US'
+
+include_attribute 'ssl::external'
+DemoStructureHelper.get_vhost_data(node[:ssl][:init][:demo_structure]).each do |vhost|
+  if (vhost[:scope] == 'website' && vhost[:code] == 'base') ||
+     (vhost[:scope] == 'store_view' && vhost[:code] == 'default')
+    default[:ssl][:common_name] = vhost[:url]
+  end
+end
