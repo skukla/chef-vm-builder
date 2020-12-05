@@ -84,10 +84,10 @@ unless data_packs_list.empty?
   data_packs_list.each do |_data_pack_key, data_pack_data|
     custom_module "Add #{data_pack_data[:module_name]}" do
       action :download
-      package_name (data_pack_data[:package_name]).to_s
-      module_name (data_pack_data[:module_name]).to_s
-      package_version (data_pack_data[:package_version]).to_s
-      repository_url (data_pack_data[:repository_url]).to_s
+      package_name data_pack_data[:package_name]
+      module_name data_pack_data[:module_name]
+      package_version data_pack_data[:package_version]
+      repository_url data_pack_data[:repository_url]
       options ['no-update']
       not_if do
         build_action == 'reinstall' ||
@@ -101,10 +101,10 @@ unless custom_module_list.empty?
   custom_module_list.each do |_custom_module_key, custom_module_data|
     custom_module "Add #{custom_module_data[:module_name]}" do
       action :download
-      package_name (custom_module_data[:package_name]).to_s
-      module_name (custom_module_data[:module_name]).to_s
-      package_version (custom_module_data[:package_version]).to_s
-      repository_url (custom_module_data[:repository_url]).to_s
+      package_name custom_module_data[:package_name]
+      module_name custom_module_data[:module_name]
+      package_version custom_module_data[:package_version]
+      repository_url custom_module_data[:repository_url]
       options ['no-update']
       not_if do
         build_action == 'reinstall' ||
