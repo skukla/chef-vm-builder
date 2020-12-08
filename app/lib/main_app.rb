@@ -40,8 +40,7 @@ class App
       user_patches: Dir.entries(@paths[:patches]) - %w[. .. .gitignore],
       chef_backup_files: Dir.entries(@paths[:chef_backup_files]) - %w[. .. .gitignore .DS_Store],
       chef_data_pack_files: Dir.entries(@paths[:chef_data_pack_files]) - %w[. .. .gitignore .DS_Store],
-      chef_patch_files: Dir.entries(@paths[:chef_patch_files]) - %w[. .. .gitignore .DS_Store],
-      ssl_certificates: Dir.entries(@paths[:ssl_certificates]) - %w[. .. .gitignore .DS_Store]
+      chef_patch_files: Dir.entries(@paths[:chef_patch_files]) - %w[. .. .gitignore .DS_Store]
     }
     @colors = {
       bold: `tput bold`,
@@ -259,42 +258,71 @@ class App
     base_website = @settings.dig('custom_demo', 'structure', 'website', 'base')
     default_store_view = @settings.dig('custom_demo', 'structure', 'store_view', 'default')
 
-    data[:status] = if (base_website.nil? && default_store_view.nil?) || @entries[:ssl_certificates].empty?
+    data[:status] = if (base_website.nil? && default_store_view.nil?) || Dir.glob("#{@paths[:ssl_certificates]}/*.crt").empty?
                       nil
                     else
                       true
                     end
-
     if File.exist?("#{@paths[:ssl_certificates]}/#{base_website}.crt")
       data[:crt_file] = "#{@paths[:ssl_certificates]}/#{base_website}.crt"
     elsif File.exist?("#{@paths[:ssl_certificates]}/#{default_store_view}.crt")
       data[:crt_file] = "#{@paths[:ssl_certificates]}/#{default_store_view}.crt"
+    else
+      data[:status] = nil
     end
     data
   end
 
-  def clean_up_ssl_certificates
-    return if has_ssl_certificates[:status].nil?
+  def remove_old_keychain_ssl_certificates
+    Dir.glob("#{@paths[:ssl_certificates]}/*.crt").each do |file|
+      next if file == has_ssl_certificates[:crt_file]
 
-    @entries[:ssl_certificates].each do |entry|
-      system("sudo security find-certificate -c #{"#{@paths[:ssl_certificates]}/#{entry}"} > /dev/null 2>&1")
-      if $CHILD_STATUS.exitstatus.zero?
-        system("sudo security delete-certificate -c #{entry} /Library/Keychains/System.keychain")
+      cert = File.basename(file, '.crt')
+      `sudo security find-certificate -c #{cert} > /dev/null 2>&1`
+      if $CHILD_STATUS.success?
+        puts "#{@colors[:green]}Removing the '#{cert}' certificate from your keychain#{@colors[:reg]}"
+        `sudo security delete-certificate -c #{cert} /Library/Keychains/System.keychain > /dev/null 2>&1`
       end
     end
   end
 
-  def remove_local_ssl_certificates
-    return if has_ssl_certificates[:status].nil?
+  def remove_all_keychain_ssl_certificates
+    Dir.glob("#{@paths[:ssl_certificates]}/*.crt").each do |file|
+      cert = File.basename(file, '.crt')
+      `sudo security find-certificate -c #{cert} > /dev/null 2>&1`
+      if $CHILD_STATUS.success?
+        puts "#{@colors[:green]}Removing the '#{cert}' certificate from your keychain#{@colors[:reg]}"
+        `sudo security delete-certificate -c #{cert} /Library/Keychains/System.keychain > /dev/null 2>&1`
+      end
+    end
+  end
 
-    FileUtils.rm_rf(has_ssl_certificates[:crt_file])
+  def remove_old_ssl_certificates
+    return if Dir.glob("#{@paths[:ssl_certificates]}/*.crt").empty?
+
+    Dir.glob("#{@paths[:ssl_certificates]}/*.crt").each do |file|
+      next if file == has_ssl_certificates[:crt_file]
+
+      cert = File.basename(file, '.crt')
+      puts "#{@colors[:green]}Removing the #{cert} certificate from your system#{@colors[:reg]}"
+      FileUtils.rm_rf file
+    end
+  end
+
+  def remove_all_ssl_certificates
+    return if Dir.glob("#{@paths[:ssl_certificates]}/*.crt").empty?
+
+    puts "#{@colors[:green]}Removing VM ssl certificates from your system#{@colors[:reg]}"
+    Dir.glob("#{@paths[:ssl_certificates]}/*.crt").each do |cert|
+      FileUtils.rm_rf cert
+    end
   end
 
   def set_up_ssl_certificates
     return if has_ssl_certificates[:status].nil?
 
-    clean_up_ssl_certificates
-    puts "Adding certificate: '#{has_ssl_certificates[:crt_file]}'"
+    cert = File.basename(has_ssl_certificates[:crt_file], '.crt')
+    puts "#{@colors[:green]}Adding certificate: '#{cert}'#{@colors[:reg]}"
     system("sudo security add-trusted-cert -d -r trustAsRoot -k /Library/Keychains/System.keychain '#{has_ssl_certificates[:crt_file]}'")
   end
 end
