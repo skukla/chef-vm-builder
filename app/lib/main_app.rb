@@ -120,8 +120,8 @@ class App
         abort(message)
       elsif (!@settings['custom_demo']['custom_modules'].nil? ||
             !@settings['custom_demo']['custom_modules'].empty?) &&
-            @settings['custom_demo']['custom_modules'].find { |_key, value| value['name'].split('/')[1] == 'module-data-install' }.nil? ||
-            @settings['custom_demo']['custom_modules'].find { |_key, value| value['repository_url'] == 'https://github.com/PMET-public/module-data-install.git' }.nil?
+            @settings['custom_demo']['custom_modules'].select { |_key, value| value.is_a?(Hash) }.find { |_key, value| value['name'].split('/')[1] == 'module-data-install' }.nil? ||
+            @settings['custom_demo']['custom_modules'].select { |_key, value| value.is_a?(Hash) }.find { |_key, value| value['repository_url'] == 'https://github.com/PMET-public/module-data-install.git' }.nil?
         message = %W[
           #{@colors[:magenta]}[OOPS]: #{@colors[:reg]}You've specified a data pack but it looks like
           you're missing the #{@colors[:bold]}#{@colors[:cyan]}data install custom module
