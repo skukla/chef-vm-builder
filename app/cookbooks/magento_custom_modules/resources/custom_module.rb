@@ -10,7 +10,7 @@ property :name,                   String, name_property: true
 property :package_name,           String
 property :module_name,            String
 property :package_version,        String
-property :repository_url,         String
+property :repository_url,         String, default: ''
 property :options,                Array
 
 action :download do

@@ -105,10 +105,6 @@ action :add_repository do
   execute new_resource.name do
     command "su #{new_resource.user} -c '#{new_resource.install_directory}/#{new_resource.file} config repositories.#{new_resource.module_name} git #{new_resource.repository_url}'"
     cwd new_resource.web_root
-    only_if do
-      new_resource.repository_url.include?('https://github.com/') ||
-        new_resource.repository_url.include?('git@github.com:')
-    end
   end
 end
 
