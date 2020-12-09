@@ -33,6 +33,14 @@ unless data_packs_list.empty?
                        value: data_pack_value
                      })
     end
+
+    magento_demo_builder 'Clean up data packs' do
+      action :clean_up_data_packs
+      data_pack_data({
+                       key: data_pack_key,
+                       value: data_pack_value
+                     })
+    end
   end
 end
 

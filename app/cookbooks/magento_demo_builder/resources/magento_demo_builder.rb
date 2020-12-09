@@ -24,7 +24,11 @@ action :remove_data_patches do
     entry_path = [::File.dirname(entry), ::File.basename(entry)].join('/').split('/').pop(1).join
     next unless new_resource.data_pack_data[:value]['repository_url'] == entry_path
 
-    module_name_data = StringReplaceHelper.prepare_module_names(new_resource.data_pack_data[:value]['name'], new_resource.demo_shell_vendor)
+    module_name_data = StringReplaceHelper.prepare_module_names(
+      new_resource.data_pack_data[:value]['name'],
+      new_resource.demo_shell_vendor,
+      'local'
+    )
     vendor = module_name_data[:vendor]
     module_name = module_name_data[:module_name]
     patch_class = "#{vendor}\\#{module_name}\\Setup\\Patch\\Data"
@@ -48,7 +52,11 @@ action :build_local_data_packs do
       entry_path = [::File.dirname(entry), ::File.basename(entry)].join('/').split('/').pop(1).join
       next unless new_resource.data_pack_data[:value]['repository_url'] == entry_path
 
-      module_name_data = StringReplaceHelper.prepare_module_names(new_resource.data_pack_data[:value]['name'], new_resource.demo_shell_vendor)
+      module_name_data = StringReplaceHelper.prepare_module_names(
+        new_resource.data_pack_data[:value]['name'],
+        new_resource.demo_shell_vendor,
+        'local'
+      )
       package_name = module_name_data[:package_name]
       vendor = module_name_data[:vendor]
       module_name = module_name_data[:module_name]
@@ -100,7 +108,8 @@ action :install_local_data_pack_content do
 
     module_name_data = StringReplaceHelper.prepare_module_names(
       new_resource.data_pack_data[:value]['name'],
-      new_resource.demo_shell_vendor
+      new_resource.demo_shell_vendor,
+      'local'
     )
     vendor = module_name_data[:vendor]
     module_name = module_name_data[:module_name]
@@ -152,13 +161,35 @@ action :install_local_data_pack_content do
             Dir.exist?("#{module_full_path}/#{media_type}/#{template_manager_dest}")
         end
       end
-
-      execute 'Remove unwanted hidden files from local data packs' do
-        command "cd #{new_resource.web_root}/app/code/#{vendor}/#{module_name} &&
-        find . -name '.DS_Store' -type f -delete &&
-        find . -name '.gitignore' -type f -delete"
-        only_if { ::Dir.exist?("#{new_resource.web_root}/app/code/#{vendor}/#{module_name}") }
-      end
     end
+  end
+end
+
+action :clean_up_data_packs do
+  if new_resource.data_pack_data[:value]['repository_url'].include?('github')
+    module_name_data = StringReplaceHelper.prepare_module_names(
+      new_resource.data_pack_data[:value]['name'],
+      new_resource.data_pack_data[:value]['name'].split('/')[0],
+      'remote'
+    )
+    vendor = module_name_data[:vendor]
+    module_name = module_name_data[:module_name]
+    module_path = 'vendor'
+  else
+    module_name_data = StringReplaceHelper.prepare_module_names(
+      new_resource.data_pack_data[:value]['name'],
+      new_resource.data_pack_data[:value]['name'].split('/')[0],
+      'local'
+    )
+    vendor = module_name_data[:vendor]
+    module_name = module_name_data[:module_name]
+    module_path = 'app/code'
+  end
+
+  ruby_block "Remove unwanted hidden files from remote data pack #{module_name}" do
+    block do
+      ModuleListHelper.clean_up_module_data("#{new_resource.web_root}/#{module_path}/#{vendor}/#{module_name}")
+    end
+    only_if { ::Dir.exist?("#{new_resource.web_root}/#{module_path}/#{vendor}/#{module_name}") }
   end
 end

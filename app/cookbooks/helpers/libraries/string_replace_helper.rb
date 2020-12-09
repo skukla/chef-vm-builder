@@ -79,10 +79,11 @@ module StringReplaceHelper
     FileUtils.chown('vagrant', 'vagrant', "#{web_root}/#{composer_json}")
   end
 
-  def self.prepare_module_names(package_name, vendor)
-    return if package_name.nil?
+  def self.prepare_module_names(package_name, vendor, module_type)
+    return if package_name.nil? || module_type.nil?
 
-    package_name = "module-#{package_name}" unless package_name.include?('module-')
+    package_name = "module-#{package_name}" if !package_name.include?('module-') && module_type == 'local'
+
     if package_name.include?('/')
       vendor_name = package_name.split('/')[0]
       module_name = package_name.split('/')[1]
@@ -90,8 +91,10 @@ module StringReplaceHelper
       module_name = package_name
       vendor_name = vendor
     end
-    module_name = module_name.split('-').map(&:capitalize).join if module_name.include?('-')
-    vendor_name = vendor_name.split('-').map(&:capitalize).join if vendor_name.include?('-')
+    if module_type == 'local'
+      module_name = module_name.split('-').map(&:capitalize).join if module_name.include?('-')
+      vendor_name = vendor_name.split('-').map(&:capitalize).join if vendor_name.include?('-')
+    end
     {
       package_name: package_name,
       vendor: vendor_name,
