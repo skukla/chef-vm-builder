@@ -17,12 +17,7 @@ app.check_for_backup_errors
 
 Vagrant.configure('2') do |config|
   # Check for plugins
-  config.trigger.before :up do |trigger|
-    trigger.name = 'Checking for required plugins'
-    trigger.ruby do
-      app.check_for_plugins
-    end
-  end
+  config.vagrant.plugins = app.define_plugin_list
 
   # Copy selected data packs
   if !app.entries[:user_data_packs].empty? &&
