@@ -2,34 +2,38 @@
 	"custom-packs": {
 		"kukla": {
 			"starter": {
-				"pack-snippet": {
+				"configurations": {
 					"starter-data-pack": {
 						"name": "custom-demo",
 						"repository_url": "starter"
 					}
 				},
-				"pack-structure": {
-					"structure": {
-						"website": {
-							"base": "luma.demo"
+				"structures": {
+					"starter-data-pack": {
+						"structure": {
+							"website": {
+								"base": "luma.demo"
+							}
 						}
 					}
 				}
 			},
 			"sealed-air": {
-				"pack-snippet": {
+				"configurations": {
 					"sealed-air-data-pack": {
 						"name": "skukla/sealed-air-data-pack",
 						"repository_url": "git@github.com:skukla/module-sealed-air-data-pack.git"
 					}
 				},
-				"pack-structure": {
-					"structure": {
-						"website": {
-							"base": "sealed-air.demo"
-						},
-						"store_view": {
-							"smb": "smb.sealed-air.demo"
+				"structures": {
+					"sealed-air-data-pack": {
+						"structure": {
+							"website": {
+								"base": "sealed-air.demo"
+							},
+							"store_view": {
+								"smb": "smb.sealed-air.demo"
+							}
 						}
 					}
 				}
@@ -39,31 +43,27 @@
 	"vertical-packs": {
 		"grocery": {
 			"fresh-market": {
-				"fresh-market-standalone": {
-					"pack-snippet": {
-						"fresh-market-data-pack-standalone": {
-							"name": "story-store/grocery",
-							"version": "dev-standalone",
-							"repository_url": "git@github.com:PMET-public/module-storystore-grocery.git"
-						}
+				"configurations": {
+					"fresh-market-data-pack-standalone": {
+						"name": "story-store/grocery",
+						"version": "dev-standalone",
+						"repository_url": "git@github.com:PMET-public/module-storystore-grocery.git"
 					},
-					"pack-structure": {
+					"fresh-market-data-pack-demo": {
+						"name": "story-store/grocery",
+						"version": "dev-demo",
+						"repository_url": "git@github.com:PMET-public/module-storystore-grocery.git"
+					}
+				},
+				"structures": {
+					"fresh-market-data-pack-standalone": {
 						"structure": {
 							"website": {
 								"base": "freshmarket.demo"
 							}
 						}
-					}
-				},
-				"fresh-market-demo": {
-					"pack-snippet": {
-						"fresh-market-data-pack-demo": {
-							"name": "story-store/grocery",
-							"version": "dev-demo",
-							"repository_url": "git@github.com:PMET-public/module-storystore-grocery.git"
-						}
 					},
-					"pack-structure": {
+					"fresh-market-data-pack-demo": {
 						"structure": {
 							"store_view": {
 								"fresh_store": "freshmarket.demo"
@@ -75,52 +75,50 @@
 		},
 		"fashion": {
 			"venia": {
-				"venia-standalone": {
-					"pack-snippet": {
-						"venia-data-pack-standalone": {
-							"name": "skukla/venia-data-pack",
-							"version": "dev-standalone",
-							"repository_url": "git@github.com:skukla/module-venia-data-pack.git"
-						}
+				"configurations": {
+					"venia-data-pack-standalone": {
+						"name": "skukla/venia-data-pack",
+						"version": "dev-standalone",
+						"repository_url": "git@github.com:skukla/module-venia-data-pack.git"
 					},
-					"pack-structure": {
+					"venia-data-pack-store": {
+						"name": "skukla/venia-data-pack",
+						"version": "dev-store",
+						"repository_url": "git@github.com:skukla/module-venia-data-pack.git"
+					},
+					"venia-data-pack-website": {
+						"name": "skukla/venia-data-pack",
+						"version": "dev-website",
+						"repository_url": "git@github.com:skukla/module-venia-data-pack.git"
+					}
+				},
+				"structures": {
+					"venia-data-pack-standalone": {
 						"structure": {
 							"website": {
 								"base": "venia.demo"
 							}
 						}
-					}
-				},
-				"venia-store": {
-					"pack-snippet": {
-						"venia-data-pack-store": {
-							"name": "skukla/venia-data-pack",
-							"version": "dev-store",
-							"repository_url": "git@github.com:skukla/module-venia-data-pack.git"
-						}
 					},
-					"pack-structure": {
+					"venia-data-pack-store": {
 						"structure": {
 							"store_view": {
+								"venia_b2c_us_en": "venia.demo"
+							}
+						}
+					},
+					"venia-data-pack-website": {
+						"structure": {
+							"website": {
 								"venia": "venia.demo"
 							}
 						}
 					}
 				},
-				"venia-website": {
-					"pack-snippet": {
-						"venia-data-pack-website": {
-							"name": "skukla/venia-data-pack",
-							"version": "dev-website",
-							"repository_url": "git@github.com:skukla/module-venia-data-pack.git"
-						}
-					},
-					"pack-structure": {
-						"structure": {
-							"website": {
-								"base": "venia.demo"
-							}
-						}
+				"required-extensions": {
+					"venia-theme": {
+						"name": "magentoese/theme-frontend-venia",
+						"repository_url": "git@github.com:PMET-public/theme-frontend-venia.git"
 					}
 				}
 			}
