@@ -22,7 +22,7 @@
 	"owl-carousel": "classyllama/module-owlcarousel",
 	"amasty-base": {
 		"name": "amasty/base",
-		"version": "1.10.10.x-dev",
+		"version": "1.11.0.x-dev",
 		"repository_url": "git@github.com:PMET-public/amasty-module-base.git"
 	},
 	"amasty-advanced-conditions": {
@@ -62,7 +62,7 @@
 	},
 	"amasty-geoip": {
 		"name": "amasty/geoip",
-		"version": "1.5.3.x-dev",
+		"version": "1.5.4.x-dev",
 		"repository_url": "git@github.com:PMET-public/amasty-module-geoip.git"
 	},
 	"amasty-product-attachment": {
@@ -72,7 +72,7 @@
 	},
 	"amasty-store-locator": {
 		"name": "amasty/module-store-locator",
-		"version": "2.4.3.x-dev",
+		"version": "2.4.5.x-dev",
 		"repository_url": "git@github.com:PMET-public/amasty-module-store-locator.git"
 	}
 }
