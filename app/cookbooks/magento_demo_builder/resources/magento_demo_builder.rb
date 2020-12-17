@@ -31,16 +31,15 @@ action :remove_data_patches do
     )
     vendor = module_name_data[:vendor]
     module_name = module_name_data[:module_name]
-    patch_class = "#{vendor}\\#{module_name}\\Setup\\Patch\\Data"
     source = "#{new_resource.web_root}/app/code/#{vendor}/#{module_name}/fixtures"
 
     ruby_block "Remove existing data patch for #{new_resource.data_pack_data[:value]['name']}" do
       block do
-        DatabaseHelper.remove_data_patch(patch_class)
+        DatabaseHelper.remove_data_patch(vendor)
       end
       only_if do
         Dir.exist?(source) ||
-          DatabaseHelper.patch_exists(patch_class)
+          DatabaseHelper.patch_exists(vendor)
       end
     end
   end

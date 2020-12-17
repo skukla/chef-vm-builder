@@ -15,14 +15,13 @@ module DatabaseHelper
   end
 
   def self.patch_exists(patch_class)
-    result = execute_query("SELECT * FROM patch_list WHERE patch_name = '#{patch_class}'")
+    result = execute_query("SELECT * FROM patch_list WHERE patch_name LIKE '%#{patch_class}%'")
     !result.empty?
   end
 
   def self.remove_data_patch(patch_class)
-    query_string = "DELETE FROM patch_list WHERE patch_name = '#{patch_class}'"
-    execute_query(query_string)
-    print "Ran #{query_string}"
+    execute_query("DELETE FROM patch_list WHERE patch_name LIKE '%#{patch_class}%'")
+    puts "Ran DELETE FROM patch_list WHERE patch_name LIKE '%#{patch_class}%'"
   end
 
   def self.check_code_exists(code)
