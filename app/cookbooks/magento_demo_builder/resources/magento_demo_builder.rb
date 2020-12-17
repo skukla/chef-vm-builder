@@ -36,11 +36,11 @@ action :remove_data_patches do
 
     ruby_block "Remove existing data patch for #{new_resource.data_pack_data[:value]['name']}" do
       block do
-        DatabaseHelper.remove_data_patch(patch_class, new_resource.db_user, new_resource.db_password, new_resource.db_name)
+        DatabaseHelper.remove_data_patch(patch_class)
       end
       only_if do
         Dir.exist?(source) ||
-          DatabaseHelper.patch_exists(patch_class, new_resource.db_user, new_resource.db_password, new_resource.db_name)
+          DatabaseHelper.patch_exists(patch_class)
       end
     end
   end

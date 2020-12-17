@@ -14,9 +14,6 @@ commands = node[:magento][:build][:hooks][:commands]
 media_gallery_commands = ['config:set system/media_gallery/enabled 1', 'media-gallery:sync']
 vm_cli_commands = commands.reject { |command| command.include?(':') }
 magento_cli_commands = commands.select { |command| command.include?(':') }
-db_user = node[:magento][:mysql][:db_user]
-db_password = node[:magento][:mysql][:db_password]
-db_name = node[:magento][:mysql][:db_name]
 
 DemoStructureHelper.get_vhost_data(demo_structure).each do |vhost|
   next if (vhost[:scope] == 'website' && vhost[:code] == 'base') ||
@@ -31,7 +28,7 @@ DemoStructureHelper.get_vhost_data(demo_structure).each do |vhost|
     config_scope vhost[:scope]
     config_scope_code vhost[:code]
     not_if { use_secure_frontend == 1 || use_secure_admin == 1 }
-    only_if { DatabaseHelper.check_code_exists(db_user, db_password, db_name, vhost[:code]) }
+    only_if { DatabaseHelper.check_code_exists(vhost[:code]) }
   end
   magento_cli "Configuring additional secure URL for the #{vhost[:code]} #{scope_value}" do
     action :config_set
@@ -41,7 +38,7 @@ DemoStructureHelper.get_vhost_data(demo_structure).each do |vhost|
     config_scope_code vhost[:code]
     only_if do
       use_secure_frontend == 1 || use_secure_admin == 1 &&
-        DatabaseHelper.check_code_exists(db_user, db_password, db_name, vhost[:code])
+        DatabaseHelper.check_code_exists(vhost[:code])
     end
   end
 end

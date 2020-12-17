@@ -116,12 +116,7 @@ end
 action :run_query do
   ruby_block 'Executing MySQL query' do
     block do
-      DatabaseHelper.execute_query(
-        new_resource.db_user,
-        new_resource.db_password,
-        new_resource.db_name,
-        new_resource.db_query
-      )
+      DatabaseHelper.execute_query(new_resource.db_query)
     end
   end
 end
