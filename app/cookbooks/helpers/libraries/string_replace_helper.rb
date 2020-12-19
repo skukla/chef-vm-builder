@@ -79,26 +79,45 @@ module StringReplaceHelper
     FileUtils.chown('vagrant', 'vagrant', "#{web_root}/#{composer_json}")
   end
 
-  def self.prepare_module_names(package_name, vendor, module_type)
-    return if package_name.nil? || module_type.nil?
-
-    package_name = "module-#{package_name}" if !package_name.include?('module-') && module_type == 'local'
+  def self.prepare_module_names(package_name, default_vendor_name, repository_url, module_type)
+    return if package_name.nil? || module_type.nil? || (module_type == 'local' && repository_url.nil?)
 
     if package_name.include?('/')
       vendor_name = package_name.split('/')[0]
       module_name = package_name.split('/')[1]
     else
-      module_name = package_name
-      vendor_name = vendor
+      vendor_name = default_vendor_name
+      module_name = repository_url
     end
+
     if module_type == 'local'
-      module_name = module_name.split('-').map(&:capitalize).join if module_name.include?('-')
-      vendor_name = vendor_name.split('-').map(&:capitalize).join if vendor_name.include?('-')
+      package_name = "#{vendor_name}/#{module_name}"
+
+      vendor_string = if vendor_name.include?('-')
+                        vendor_name.split('-').map(&:capitalize).join
+                      else
+                        vendor_name.capitalize
+                      end
+
+      module_string = if module_name.include?('-')
+                        module_name.split('-').map(&:capitalize).join
+                      else
+                        module_name.capitalize
+                      end
+
+      {
+        package_name: package_name,
+        vendor_name: vendor_name,
+        module_name: module_name,
+        vendor_string: vendor_string,
+        module_string: module_string
+      }
+    elsif module_type == 'remote'
+      {
+        package_name: package_name,
+        vendor_name: vendor_name,
+        module_name: module_name
+      }
     end
-    {
-      package_name: package_name,
-      vendor: vendor_name,
-      module_name: module_name.sub('Module', '')
-    }
   end
 end

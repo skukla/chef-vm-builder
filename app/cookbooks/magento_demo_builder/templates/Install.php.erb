@@ -4,7 +4,7 @@
  * See COPYING.txt for license details.
  */
 
-namespace <%= @vendor %>\<%= @module_name %>\Setup\Patch\Data;
+namespace <%= @vendor_string %>\<%= @module_string %>\Setup\Patch\Data;
 
 use Magento\Framework\Setup\Patch\DataPatchInterface;
 use MagentoEse\DataInstall\Model\Process;
@@ -26,7 +26,7 @@ class Install implements DataPatchInterface
          *
          * the data files directory can be any directory in the root of the module, or a subdirectory (fixtures/grocery)
          */
-        $this->process->loadFiles('<%= @vendor %>_<%= @module_name %>', 'fixtures');
+        $this->process->loadFiles('<%= @vendor_string %>_<%= @module_string %>', 'fixtures');
         //$this->process->loadFiles('Vendor_Module', 'fixtures/xxxx');
     }
 
