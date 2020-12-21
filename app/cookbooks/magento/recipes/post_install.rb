@@ -54,6 +54,11 @@ magento_app 'Set final permissions' do
   not_if { ::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == 'install' }
 end
 
+magento_app 'Disable maintenance mode' do
+  action :disable_maintenance_mode
+  only_if { ::File.exist?("#{web_root}/var/.maintenance.flag") }
+end
+
 magento_app 'Set first run flag' do
   action :set_first_run
   not_if { ::File.exist?("#{web_root}/var/.first-run-state.flag") }

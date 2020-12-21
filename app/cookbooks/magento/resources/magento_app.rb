@@ -248,6 +248,12 @@ action :start_consumers do
   end
 end
 
+action :disable_maintenance_mode do
+  magento_cli new_resource.name do
+    action :disable_maintenance_mode
+  end
+end
+
 action :set_first_run do
   template new_resource.name do
     source '.first-run-state.flag.erb'

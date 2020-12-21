@@ -136,6 +136,13 @@ action :config_set do
   end
 end
 
+action :disable_maintenance_mode do
+  execute new_resource.name do
+    command "su #{new_resource.user} -c 'bin/magento maintenance:disable'"
+    cwd new_resource.web_root
+  end
+end
+
 action :create_admin_user do
   execute new_resource.name do
     command "su #{new_resource.user} -c 'bin/magento admin:user:create
