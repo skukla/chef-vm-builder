@@ -20,34 +20,47 @@ property :custom_module_list,               Hash,   default: node[:magento_demo_
 property :data_pack_data,                   Hash
 
 action :remove_data_patches do
-  Dir["#{new_resource.chef_files_path}/*"].each do |entry|
-    entry_path = [::File.dirname(entry), ::File.basename(entry)].join('/').split('/').pop(1).join
-    module_type = if new_resource.data_pack_data[:value]['repository_url'] == entry_path
-                    'local'
-                  else
-                    'remote'
-                  end
+  module_name_data = StringReplaceHelper.prepare_module_names(
+    new_resource.data_pack_data[:value]['name'],
+    new_resource.data_pack_vendor,
+    new_resource.data_pack_data[:value]['repository_url'],
+    !new_resource.data_pack_data[:value]['repository_url'].include?('github') ? 'local' : 'remote'
+  )
 
-    module_name_data = StringReplaceHelper.prepare_module_names(
-      new_resource.data_pack_data[:value]['name'],
-      new_resource.data_pack_vendor,
-      new_resource.data_pack_data[:value]['repository_url'],
-      module_type
-    )
+  if !new_resource.data_pack_data[:value]['repository_url'].include?('github')
+    module_path = 'app/code'
+    full_path = "#{module_name_data[:vendor_string]}/#{module_name_data[:module_string]}"
+  else
+    module_path = 'vendor'
+    full_path = "#{module_name_data[:vendor_name]}/#{module_name_data[:module_name]}"
+  end
 
-    vendor_name = module_name_data[:vendor_name]
-    module_name = module_name_data[:module_name]
-    vendor_string = module_name_data[:vendor_string]
-    source = "#{new_resource.web_root}/app/code/#{vendor_name}/#{module_name}/fixtures"
+  ruby_block "Remove existing data patch for #{module_name_data[:vendor_name]}/#{module_name_data[:module_name]}" do
+    block do
+      DatabaseHelper.remove_data_patch(module_name_data[:module_string])
+      only_if Dir.exist?("#{new_resource.web_root}/#{module_path}/#{full_path}/fixtures")
+    end
+  end
+end
 
-    ruby_block "Remove existing data patch for #{vendor_name}" do
-      block do
-        DatabaseHelper.remove_data_patch(vendor_string)
-      end
-      only_if do
-        Dir.exist?(source) ||
-          DatabaseHelper.patch_exists(vendor_string)
-      end
+action :remove_remote_data_patches do
+  module_name_data = StringReplaceHelper.prepare_module_names(
+    new_resource.data_pack_data[:value]['name'],
+    new_resource.data_pack_vendor,
+    new_resource.data_pack_data[:value]['repository_url'],
+    'remote'
+  )
+
+  vendor_name = module_name_data[:vendor_name]
+  module_name = module_name_data[:module_name]
+  module_string = module_name_data[:module_string]
+  source = "#{new_resource.web_root}/vendor/#{vendor_name}/#{module_name}/fixtures"
+
+  ruby_block "Remove existing remote data patch for #{vendor_name}/#{module_name}" do
+    block do
+      DatabaseHelper.remove_data_patch(module_string)
+      only_if Dir.exist?(source) &&
+              DatabaseHelper.patch_exists(module_string)
     end
   end
 end
@@ -182,33 +195,25 @@ action :install_local_data_pack_content do
 end
 
 action :clean_up_data_packs do
-  Dir["#{new_resource.chef_files_path}/*"].each do |entry|
-    entry_path = [::File.dirname(entry), ::File.basename(entry)].join('/').split('/').pop(1).join
-    if new_resource.data_pack_data[:value]['repository_url'] == entry_path
-      module_type = 'local'
-      module_path = 'app/code'
-    else
-      module_type = 'remote'
-      module_path = 'vendor'
+  module_name_data = StringReplaceHelper.prepare_module_names(
+    new_resource.data_pack_data[:value]['name'],
+    new_resource.data_pack_vendor,
+    new_resource.data_pack_data[:value]['repository_url'],
+    !new_resource.data_pack_data[:value]['repository_url'].include?('github') ? 'local' : 'remote'
+  )
+
+  if !new_resource.data_pack_data[:value]['repository_url'].include?('github')
+    module_path = 'app/code'
+    full_path = "#{module_name_data[:vendor_string]}/#{module_name_data[:module_string]}"
+  else
+    module_path = 'vendor'
+    full_path = "#{module_name_data[:vendor_name]}/#{module_name_data[:module_name]}"
+  end
+
+  ruby_block "Remove unwanted hidden files from #{module_name_data[:module_name]} data pack" do
+    block do
+      ModuleListHelper.clean_up_module_data("#{new_resource.web_root}/#{module_path}/#{full_path}")
     end
-
-    module_name_data = StringReplaceHelper.prepare_module_names(
-      new_resource.data_pack_data[:value]['name'],
-      new_resource.data_pack_vendor,
-      new_resource.data_pack_data[:value]['repository_url'],
-      module_type
-    )
-
-    # vendor_name = module_name_data[:vendor_name]
-    module_name = module_name_data[:module_name]
-    vendor_string = module_name_data[:vendor_string]
-    module_string = module_name_data[:module_string]
-
-    ruby_block "Remove unwanted hidden files from remote data pack #{module_name}" do
-      block do
-        ModuleListHelper.clean_up_module_data("#{new_resource.web_root}/#{module_path}/#{vendor_string}/#{module_string}")
-      end
-      only_if { ::Dir.exist?("#{new_resource.web_root}/#{module_path}/#{vendor_string}/#{module_string}") }
-    end
+    only_if { ::Dir.exist?("#{new_resource.web_root}/#{module_path}/#{full_path}") }
   end
 end

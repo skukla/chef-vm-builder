@@ -63,7 +63,7 @@ module StringReplaceHelper
     file.write_file
   end
 
-  def self.update_app_version(_user, version, family, web_root, composer_json)
+  def self.update_app_version(version, family, web_root, composer_json)
     output_file = "#{web_root}/new_composer.json"
     File.open(output_file, 'a') do |output|
       File.foreach("#{web_root}/#{composer_json}") do |line|
@@ -90,34 +90,26 @@ module StringReplaceHelper
       module_name = repository_url
     end
 
-    if module_type == 'local'
-      package_name = "#{vendor_name}/#{module_name}"
+    package_name = "#{vendor_name}/#{module_name}" if module_type == 'local'
 
-      vendor_string = if vendor_name.include?('-')
-                        vendor_name.split('-').map(&:capitalize).join
-                      else
-                        vendor_name.capitalize
-                      end
+    vendor_string = if vendor_name.include?('-')
+                      vendor_name.split('-').map(&:capitalize).join
+                    else
+                      vendor_name.capitalize
+                    end
 
-      module_string = if module_name.include?('-')
-                        module_name.split('-').map(&:capitalize).join
-                      else
-                        module_name.capitalize
-                      end
+    module_string = if module_name.include?('-')
+                      module_name.split('-').map(&:capitalize).join
+                    else
+                      module_name.capitalize
+                    end
 
-      {
-        package_name: package_name,
-        vendor_name: vendor_name,
-        module_name: module_name,
-        vendor_string: vendor_string,
-        module_string: module_string
-      }
-    elsif module_type == 'remote'
-      {
-        package_name: package_name,
-        vendor_name: vendor_name,
-        module_name: module_name
-      }
-    end
+    {
+      package_name: package_name,
+      vendor_name: vendor_name,
+      module_name: module_name,
+      vendor_string: vendor_string,
+      module_string: module_string
+    }
   end
 end

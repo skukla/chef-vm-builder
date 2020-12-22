@@ -31,14 +31,8 @@ module DatabaseHelper
     `#{[connection_string, query_string].join(' -N -s -e ')}`
   end
 
-  def self.patch_exists(patch_class)
-    result = execute_query("SELECT * FROM patch_list WHERE patch_name LIKE '%#{patch_class}%'")
-    !result.empty?
-  end
-
-  def self.remove_data_patch(patch_class)
-    execute_query("DELETE FROM patch_list WHERE patch_name LIKE '%#{patch_class}%'")
-    puts "Ran DELETE FROM patch_list WHERE patch_name LIKE '%#{patch_class}%'"
+  def self.remove_data_patch(module_name)
+    execute_query("DELETE from patch_list WHERE patch_name LIKE '%#{module_name}%'")
   end
 
   def self.check_code_exists(code)
