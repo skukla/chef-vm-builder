@@ -95,13 +95,13 @@
 			"braintree_cc_vault": {
 				"active": "1",
 				"title": "Stored Cards"
-			},
-			"shipping": {
-				"origin": {
-					"city": "Los Angeles",
-					"street_line1": "3640 Holdrege Ave",
-					"postcode": "90016"
-				}
+			}
+		},
+		"shipping": {
+			"origin": {
+				"city": "Los Angeles",
+				"street_line1": "3640 Holdrege Ave",
+				"postcode": "90016"
 			}
 		},
 		"sales": {
