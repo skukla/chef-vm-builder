@@ -513,14 +513,14 @@ function backup() {
 }
 export -f backup
 
-function export-backups() {
+function export-backup() {
   USER=<%= @user %>
   EXPORT_DIR="/${USER}/backups"
   BACKUP_DIR="/var/www/magento/var/backups"
 
   list-backups
   if [ -d "${BACKUP_DIR}" ]; then
-    printf "\nExporting all backups to the VM app/backups/export directory..."
+    printf "\nExporting all backups to the VM app/backups directory..."
     if [ ! -d "${EXPORT_DIR}" ]; then
       mkdir -p ${EXPORT_DIR}
     fi
@@ -528,9 +528,9 @@ function export-backups() {
     printf "done. \n"
   fi
 }
-export -f export-backups
+export -f export-backup
 
-function remove-backups() {
+function remove-backup() {
   BACKUP_DIR="/var/www/magento/var/backups"
   
   www
@@ -542,9 +542,9 @@ function remove-backups() {
   fi
   list-backups
 }
-export -f remove-backups
+export -f remove-backup
 
-function import-backups() {
+function import-backup() {
   USER="vagrant"
   IMPORT_DIR="/${USER}/backups"
   BACKUP_DIR="/var/www/magento/var/backups"
@@ -587,7 +587,7 @@ function import-backups() {
   chown ${USER}:${USER} -R ./var/*
   chmod -R 777 ./var/*
 }
-export -f import-backups
+export -f import-backup
 
 function restore() {
   START=`date +%s`

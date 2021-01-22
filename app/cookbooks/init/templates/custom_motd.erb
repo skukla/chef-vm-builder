@@ -57,8 +57,8 @@ printf '\n%23s : %s' "${BOLD}prod-mode" "${REG}Puts application into production 
 printf '\n%23s : %s' "${BOLD}process-catalogs" "${REG}Processes B2B Shared Catalogs (Runs \"clean\" and a single cron trigger)."
 printf '\n%23s : %s' "${BOLD}backup" "${REG}Take a backup of your build. Stores backup in <webroot>/var/backups."
 printf '\n%23s : %s' "${BOLD}restore" "${REG}Restore a backup. Files must be present in <webroot>/var/backups."
-printf '\n%23s : %s' "${BOLD}import-backups" "${REG}Imports backup files from your local system in <project>/app/backups to the VM."
-printf '\n%23s : %s' "${BOLD}export-backups" "${REG}Exports backup files to your local system in <project>/app/backups."
-printf '\n%23s : %s' "${BOLD}remove-backups" "${REG}Removes all backup files from the VM but does not affect local backups."
+printf '\n%23s : %s' "${BOLD}import-backup" "${REG}Imports backup files from your local system in <project>/app/backups to the VM."
+printf '\n%23s : %s' "${BOLD}export-backup" "${REG}Exports backup files to your local system in <project>/app/backups."
+printf '\n%23s : %s' "${BOLD}remove-backup" "${REG}Removes all backup files from the VM but does not affect local backups."
 printf "\n\n"
 rule
