@@ -25,5 +25,7 @@ reference/patches/*
 !reference/patches/.gitignore
 !reference/data_packs/data-packs.json
 !reference/data_packs/starter
+!reference/data_packs/multisite
+!reference/data_packs/multisite/config.json
 !reference/data_packs/luma
 !reference/data_packs/venia
