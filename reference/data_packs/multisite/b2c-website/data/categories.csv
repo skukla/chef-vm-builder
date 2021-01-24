@@ -1,0 +1,7 @@
+name,url_key,path,active,is_anchor,include_in_menu,position
+Gear,gear,,1,1,1,1
+Bags,bags,Gear,1,1,1,1
+Duffle,duffle,Gear/Bags,1,1,1,1
+Overnight,overnight,Gear/Bags,1,1,1,2
+Watches,watches,Gear,1,1,1,2
+Sport Watches,sport-watches,Gear/Watches,1,1,1,1

@@ -1,0 +1,6 @@
+name,value
+site_code,base_b2b
+store_code,b2b_store
+store_view_code,default_b2b
+product_image_import_directory,
+product_validation_strategy,validation-stop-on-errors

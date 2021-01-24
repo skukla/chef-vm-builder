@@ -1,0 +1,2 @@
+site_code,site_name,site_order,is_default_site,store_code,store_name,store_root_category,is_default_store,store_view_code,view_name,is_default_view,view_order,view_is_active,theme,host
+base_b2b,B2B Site,2,N,b2b_store,B2B Store,Default Category,Y,default_b2b,US English,Y,1,Y,Magento/luma,

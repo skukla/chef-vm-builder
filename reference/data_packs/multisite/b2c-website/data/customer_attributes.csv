@@ -1,0 +1,7 @@
+attribute_code,frontend_label,frontend_input,options
+customer_attrib,Select,select,"VIP
+Runner
+Nurse
+Compliance
+Legal
+Reseller"

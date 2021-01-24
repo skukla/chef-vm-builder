@@ -1,40 +1,50 @@
 {
-	"custom-packs": {
-		"kukla": {
-			"starter": {
-				"configurations": {
-					"starter-data-pack": {
-						"name": "custom-demo",
-						"repository_url": "starter"
+	"starter-packs": {
+		"single-site": {
+			"configurations": {
+				"starter": {
+					"name": "custom-demo",
+					"repository_url": "starter"
+				}
+			},
+			"structures": {
+				"starter": {
+					"website": {
+						"base": "luma.demo"
 					}
-				},
-				"structures": {
-					"starter-data-pack": {
-						"structure": {
-							"website": {
-								"base": "luma.demo"
-							}
-						}
+				}
+			}
+		},
+		"multi-site": {
+			"configurations": {
+				"starter": {
+					"b2c-website": {
+						"name": "b2c-website",
+						"repository_url": "b2c-website"
+					},
+					"custom-store": {
+						"name": "custom-store",
+						"repository_url": "custom-store"
+					},
+					"b2c-fr-ca-store-view": {
+						"name": "b2c-fr-ca-store-view",
+						"repository_url": "b2c-fr-ca-store-view"
+					},
+					"b2b-website": {
+						"name": "b2b-website",
+						"repository_url": "b2b-website"
 					}
 				}
 			},
-			"sealed-air": {
-				"configurations": {
-					"sealed-air-data-pack": {
-						"name": "skukla/sealed-air-data-pack",
-						"repository_url": "git@github.com:skukla/module-sealed-air-data-pack.git"
-					}
-				},
-				"structures": {
-					"sealed-air-data-pack": {
-						"structure": {
-							"website": {
-								"base": "sealed-air.demo"
-							},
-							"store_view": {
-								"smb": "smb.sealed-air.demo"
-							}
-						}
+			"structures": {
+				"starter": {
+					"website": {
+						"base": "luma.demo",
+						"base_b2b": "b2b.luma.demo"
+					},
+					"store_view": {
+						"default_custom": "custom.luma.demo",
+						"default_ca_fr": "fr.luma.ca"
 					}
 				}
 			}
@@ -57,17 +67,13 @@
 				},
 				"structures": {
 					"fresh-market-data-pack-standalone": {
-						"structure": {
-							"website": {
-								"base": "freshmarket.demo"
-							}
+						"website": {
+							"base": "freshmarket.demo"
 						}
 					},
 					"fresh-market-data-pack-demo": {
-						"structure": {
-							"store_view": {
-								"fresh_store": "freshmarket.demo"
-							}
+						"store_view": {
+							"fresh_store": "freshmarket.demo"
 						}
 					}
 				}
@@ -94,24 +100,18 @@
 				},
 				"structures": {
 					"venia-data-pack-standalone": {
-						"structure": {
-							"website": {
-								"base": "venia.demo"
-							}
+						"website": {
+							"base": "venia.demo"
 						}
 					},
 					"venia-data-pack-store": {
-						"structure": {
-							"store_view": {
-								"venia_b2c_us_en": "venia.demo"
-							}
+						"store_view": {
+							"venia_b2c_us_en": "venia.demo"
 						}
 					},
 					"venia-data-pack-website": {
-						"structure": {
-							"website": {
-								"venia": "venia.demo"
-							}
+						"website": {
+							"venia": "venia.demo"
 						}
 					}
 				},
@@ -119,6 +119,26 @@
 					"venia-theme": {
 						"name": "magentoese/theme-frontend-venia",
 						"repository_url": "git@github.com:PMET-public/theme-frontend-venia.git"
+					}
+				}
+			}
+		}
+	},
+	"custom-packs": {
+		"sealed-air": {
+			"configurations": {
+				"sealed-air-data-pack": {
+					"name": "skukla/sealed-air-data-pack",
+					"repository_url": "git@github.com:skukla/module-sealed-air-data-pack.git"
+				}
+			},
+			"structures": {
+				"sealed-air-data-pack": {
+					"website": {
+						"base": "sealed-air.demo"
+					},
+					"store_view": {
+						"smb": "smb.sealed-air.demo"
 					}
 				}
 			}

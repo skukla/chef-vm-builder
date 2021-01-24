@@ -1,0 +1,64 @@
+{
+	"configuration": {
+		"design": {
+			"header": {
+				"logo_src": {
+					"store_view": {
+						"default_ca_fr": "stores/logo.png"
+					}
+				}
+			},
+			"email": {
+				"logo": {
+					"store_view": {
+						"default_ca_fr": "stores/logo.png"
+					}
+				}
+			},
+			"head": {
+				"shortcut_icon": {
+					"store_view": {
+						"default_ca_fr": "stores/favicon.png"
+					}
+				},
+				"includes": {
+					"store_view": {
+						"default_ca_fr": ""
+					}
+				}
+			}
+		},
+		"general": {
+			"locale": {
+				"code": {
+					"store_view": {
+						"default_ca_fr": "fr_CA"
+					}
+				}
+			}
+		},
+		"currency": {
+			"options": {
+				"default": {
+					"store_view": {
+						"default_ca_fr": "CAD"
+					}
+				},
+				"allow": {
+					"store_view": {
+						"default_ca_fr": "CAD"
+					}
+				}
+			}
+		},
+		"web": {
+			"default": {
+				"cms_home_page": {
+					"store_view": {
+						"default_ca_fr": "home-b2c-fr-ca"
+					}
+				}
+			}
+		}
+	}
+}

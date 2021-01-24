@@ -1,0 +1,4 @@
+firstname,lastname,email,password,group,street,city,region,country_id,postcode,telephone,preferred_activity,add_to_autofill
+Sharon,Reynolds,sreynolds@thelumastory.com,Password1,,4346 Parkway Street,San Diego,California,US,92103,(555) 229-3326,Health,Y
+Mark,Woodward,mwoodward@thelumastory.com,Password1,,500 Buckhannan Avenue,Ithaca,New York,US,14853,(555) 229-3326,Legal,Y
+Jim,Nasium,jimnasium@thelumastory.com,Password1,,38W724 Hilltop Drive,St. Charles,Illinois,US,60175,(555) 788-6498,,Y

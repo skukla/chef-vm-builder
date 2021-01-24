@@ -1,0 +1,46 @@
+{
+	"configuration": {
+		"design": {
+			"header": {
+				"logo_src": {
+					"store_view": {
+						"default": "stores/logo_finning-cat.png"
+					}
+				}
+			},
+			"email": {
+				"logo": {
+					"store_view": {
+						"default": "stores/logo_finning-cat.png"
+					}
+				}
+			},
+			"head": {
+				"shortcut_icon": {
+					"store_view": {
+						"default": "stores/favicon.png"
+					}
+				},
+				"includes": {
+					"store_view": {
+						"default": ""
+					}
+				}
+			}
+		},
+		"magentoese_autofill": {
+			"general": {
+				"enable_autofill": "1"
+			}
+		},
+		"web": {
+			"default": {
+				"cms_home_page": {
+					"store_view": {
+						"default": "b2c-home"
+					}
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,6 @@
+name,value
+site_code,base
+store_code,custom_store
+store_view_code,default_custom
+product_image_import_directory,
+product_validation_strategy,validation-stop-on-errors
