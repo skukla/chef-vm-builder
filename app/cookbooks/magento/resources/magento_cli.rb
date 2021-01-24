@@ -145,12 +145,7 @@ end
 
 action :create_admin_user do
   execute new_resource.name do
-    command "su #{new_resource.user} -c 'bin/magento admin:user:create
-    --admin-user=#{new_resource.admin_username}
-    --admin-password=#{new_resource.admin_password}
-    --admin-email=#{new_resource.admin_email}
-    --admin-firstname=#{new_resource.admin_firstname}
-    --admin-lastname=#{new_resource.admin_lastname}'"
+    command "su #{new_resource.user} -c 'bin/magento admin:user:create --admin-user=#{new_resource.admin_username} --admin-password=#{new_resource.admin_password} --admin-email=#{new_resource.admin_email} --admin-firstname=#{new_resource.admin_firstname} --admin-lastname=#{new_resource.admin_lastname}'"
     cwd new_resource.web_root
   end
 end
