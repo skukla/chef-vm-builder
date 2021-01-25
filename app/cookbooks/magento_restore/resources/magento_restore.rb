@@ -39,7 +39,7 @@ action :download_remote_backup do
     revision new_resource.backup_version
   end
 
-  %w[code media].each do |entity|
+  %w[code media db].each do |entity|
     execute "Stich #{entity} backup pieces together" do
       command "cat ./backup/#{entity}/part* > ./backup/#{new_resource.backup_version}-#{entity}.tgz"
       only_if { Dir.exist?("#{new_resource.restore_path}/backup/#{entity}") }
@@ -48,7 +48,7 @@ action :download_remote_backup do
   end
 
   execute 'Move backup files into place' do
-    command 'mv ./backup/*.tgz . && mv backup/*.sql .'
+    command 'mv ./backup/*.tgz .'
     cwd new_resource.restore_path
     only_if { Dir.exist?("#{new_resource.restore_path}/backup") }
     not_if { Dir.empty?("#{new_resource.restore_path}/backup") }
