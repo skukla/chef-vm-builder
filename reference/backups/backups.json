@@ -1,6 +1,10 @@
 {
 	"Base Commerce": {
-		"summary": "A baseline Magento 2.4.1 installatiion",
+		"summary": "A baseline Magento 2.4.1 installation",
 		"backup": "base-commerce"
+	},
+	"Old School VM": {
+		"summary": "An old school VM installation on 2.3.5-p1.  NOTE: This build requires PHP 7.3. Set the media gallery hook to false",
+		"backup": "oldschool-vm"
 	}
 }
