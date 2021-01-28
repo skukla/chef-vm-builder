@@ -54,14 +54,14 @@
 		},
 		"general": {
 			"store_information": {
-				"name": "Finning",
+				"name": "Luma, Inc.",
 				"phone": "310-945-0345",
 				"hours": "9AM - 5PM",
 				"country_id": "US",
 				"region_id": "12",
 				"postcode": "90016",
 				"city": "Los Angeles",
-				"street_line1": "5880 West Jefferson Blvd."
+				"street_line1": "3640 Holdrege Ave"
 			}
 		},
 		"carriers": {
@@ -70,10 +70,7 @@
 			},
 			"ups": {
 				"active": "1",
-				"allowed_methods": [
-					"UPS Ground",
-					"UPS Next Day Air"
-				]
+				"allowed_methods": ["UPS Ground", "UPS Next Day Air"]
 			}
 		},
 		"payment": {
