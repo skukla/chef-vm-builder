@@ -1,59 +1,53 @@
 {
-	"starter-packs": {
-		"single-site": {
-			"configurations": {
+	"STARTER PACKS": {
+		"SINGLE SITE": {
+			"CONFIGURATIONS": {
 				"starter": {
 					"name": "custom-demo",
 					"repository_url": "starter"
 				}
 			},
-			"structures": {
-				"starter": {
-					"website": {
-						"base": "luma.demo"
-					}
+			"STRUCTURES": {
+				"website": {
+					"base": "luma.demo"
 				}
 			}
 		},
-		"multi-site": {
-			"configurations": {
-				"starter": {
-					"b2c-website": {
-						"name": "b2c-website",
-						"repository_url": "b2c-website"
-					},
-					"custom-store": {
-						"name": "custom-store",
-						"repository_url": "custom-store"
-					},
-					"b2c-fr-ca-store-view": {
-						"name": "b2c-fr-ca-store-view",
-						"repository_url": "b2c-fr-ca-store-view"
-					},
-					"b2b-website": {
-						"name": "b2b-website",
-						"repository_url": "b2b-website"
-					}
+		"MULTISITE": {
+			"CONFIGURATIONS": {
+				"b2c-website": {
+					"name": "b2c-website",
+					"repository_url": "b2c-website"
+				},
+				"custom-store": {
+					"name": "custom-store",
+					"repository_url": "custom-store"
+				},
+				"b2c-fr-ca-store-view": {
+					"name": "b2c-fr-ca-store-view",
+					"repository_url": "b2c-fr-ca-store-view"
+				},
+				"b2b-website": {
+					"name": "b2b-website",
+					"repository_url": "b2b-website"
 				}
 			},
-			"structures": {
-				"starter": {
-					"website": {
-						"base": "luma.demo",
-						"base_b2b": "b2b.luma.demo"
-					},
-					"store_view": {
-						"default_custom": "custom.luma.demo",
-						"default_ca_fr": "fr.luma.ca"
-					}
+			"STRUCTURES": {
+				"website": {
+					"base": "luma.demo",
+					"base_b2b": "b2b.luma.demo"
+				},
+				"store_view": {
+					"default_custom": "custom.luma.demo",
+					"default_ca_fr": "fr.luma.ca"
 				}
 			}
 		}
 	},
-	"vertical-packs": {
-		"grocery": {
-			"fresh-market": {
-				"configurations": {
+	"VERTICAL PACKS": {
+		"GROCERY": {
+			"FRESH MARKET": {
+				"CONFIGURATIONS": {
 					"fresh-market-data-pack-standalone": {
 						"name": "story-store/grocery",
 						"version": "dev-standalone",
@@ -65,13 +59,13 @@
 						"repository_url": "git@github.com:PMET-public/module-storystore-grocery.git"
 					}
 				},
-				"structures": {
-					"fresh-market-data-pack-standalone": {
+				"STRUCTURES": {
+					"STAND-ALONE BASE WEBSITE": {
 						"website": {
 							"base": "freshmarket.demo"
 						}
 					},
-					"fresh-market-data-pack-demo": {
+					"NEW STORE INSIDE BASE WEBSITE": {
 						"store_view": {
 							"fresh_store": "freshmarket.demo"
 						}
@@ -79,9 +73,9 @@
 				}
 			}
 		},
-		"fashion": {
-			"venia": {
-				"configurations": {
+		"FASHION": {
+			"VENIA": {
+				"CONFIGURATIONS": {
 					"venia-data-pack-standalone": {
 						"name": "skukla/venia-data-pack",
 						"version": "dev-standalone",
@@ -98,24 +92,24 @@
 						"repository_url": "git@github.com:skukla/module-venia-data-pack.git"
 					}
 				},
-				"structures": {
-					"venia-data-pack-standalone": {
+				"STRUCTURES": {
+					"STAND-ALONE BASE WEBSITE": {
 						"website": {
 							"base": "venia.demo"
 						}
 					},
-					"venia-data-pack-store": {
+					"NEW STORE INSIDE BASE WEBSITE": {
 						"store_view": {
 							"venia_b2c_us_en": "venia.demo"
 						}
 					},
-					"venia-data-pack-website": {
+					"NEW WEBSITE": {
 						"website": {
 							"venia": "venia.demo"
 						}
 					}
 				},
-				"required-extensions": {
+				"REQUIRED EXTENSIONS": {
 					"venia-theme": {
 						"name": "magentoese/theme-frontend-venia",
 						"repository_url": "git@github.com:PMET-public/theme-frontend-venia.git"
@@ -124,22 +118,20 @@
 			}
 		}
 	},
-	"custom-packs": {
-		"sealed-air": {
-			"configurations": {
+	"CUSTOM PACKS": {
+		"SEALED AIR": {
+			"CONFIGURATIONS": {
 				"sealed-air-data-pack": {
 					"name": "skukla/sealed-air-data-pack",
 					"repository_url": "git@github.com:skukla/module-sealed-air-data-pack.git"
 				}
 			},
-			"structures": {
-				"sealed-air-data-pack": {
-					"website": {
-						"base": "sealed-air.demo"
-					},
-					"store_view": {
-						"smb": "smb.sealed-air.demo"
-					}
+			"STRUCTURES": {
+				"website": {
+					"base": "sealed-air.demo"
+				},
+				"store_view": {
+					"smb": "smb.sealed-air.demo"
 				}
 			}
 		}

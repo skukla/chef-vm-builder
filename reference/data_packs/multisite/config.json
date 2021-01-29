@@ -70,7 +70,7 @@
 			"version": "2.4.0"
 		},
 		"build": {
-			"action": "update",
+			"action": "install",
 			"sample_data": false,
 			"patches": true,
 			"hooks": {
