@@ -9,7 +9,7 @@ project/backup/*
 project/data_packs/*
 project/patches/*
 reference/backups/*
-reference/data_packs/*
+reference/data-packs/*
 reference/patches/*
 !app/backups/.gitignore
 !app/cookbooks/magento_patches/files/default/.gitignore
@@ -23,9 +23,5 @@ reference/patches/*
 !reference/backups/.gitignore
 !reference/patches/kukla*.patch
 !reference/patches/.gitignore
-!reference/data_packs/data-packs.json
-!reference/data_packs/starter
-!reference/data_packs/multisite
-!reference/data_packs/multisite/config.json
-!reference/data_packs/luma
-!reference/data_packs/venia
+!reference/data-packs/data-packs.json
+!reference/data-packs/starter-packs
