@@ -17,6 +17,15 @@
 				"name": "magentoese/module-data-install",
 				"repository_url": "https://github.com/PMET-public/module-data-install.git"
 			}
+		},
+		"admin_users": {
+			"Phil": {
+				"first_name": "Phil",
+				"last_name": "Baker",
+				"username": "phil",
+				"password": "Password1",
+				"email": "phil@luma.com"
+			}
 		}
 	},
 	"application": {
@@ -39,9 +48,9 @@
 				"commands": []
 			}
 		},
-        "settings": {
-            "admin_password": "admin123"
-        }
+    "settings": {
+      "admin_password": "admin123"
+    }
 	},
 	"infrastructure": {
 		"php": "7.4",
