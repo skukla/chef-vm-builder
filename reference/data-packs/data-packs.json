@@ -29,7 +29,7 @@
 		"ADDITIONAL B2C BRAND (WEBSITE + STORE + STORE VIEW)": {
 			"STRUCTURE": {
 				"website": {
-					"custom-b2c-website": "custom-b2c.demo"
+					"custom_b2c_website": "custom-b2c.demo"
 				}
 			},
 			"CONFIGURATION": {
@@ -42,7 +42,7 @@
 		"ADDITIONAL B2B BRAND (WEBSITE + STORE + STORE VIEW)": {
 			"STRUCTURE": {
 				"website": {
-					"custom-b2b-website": "custom-b2b.demo"
+					"custom_b2b_website": "custom-b2b.demo"
 				}
 			},
 			"CONFIGURATION": {
