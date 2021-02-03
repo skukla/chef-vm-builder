@@ -32,7 +32,7 @@
 			"default": {
 				"cms_home_page": {
 					"store_view": {
-						"custom_store_view_us_en": "custom-home"
+						"custom_store_view_us_en": "custom-home-us-en"
 					}
 				}
 			}
