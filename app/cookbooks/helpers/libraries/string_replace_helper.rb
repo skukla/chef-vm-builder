@@ -63,7 +63,7 @@ module StringReplaceHelper
     file.write_file
   end
 
-  def self.update_app_version(version, family, web_root, composer_json)
+  def self.update_app_version(version, family, user, web_root, composer_json)
     output_file = "#{web_root}/new_composer.json"
     File.open(output_file, 'a') do |output|
       File.foreach("#{web_root}/#{composer_json}") do |line|
@@ -76,7 +76,7 @@ module StringReplaceHelper
     end
     FileUtils.mv(output_file, "#{web_root}/#{composer_json}")
     FileUtils.chmod(0o664, "#{web_root}/#{composer_json}")
-    FileUtils.chown('vagrant', 'vagrant', "#{web_root}/#{composer_json}")
+    FileUtils.chown(user, user, "#{web_root}/#{composer_json}")
   end
 
   def self.prepare_module_names(package_name, default_vendor_name, repository_url, module_type)

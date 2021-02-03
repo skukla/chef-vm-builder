@@ -126,9 +126,9 @@ action :update_version do
   ruby_block new_resource.name do
     block do
       StringReplaceHelper.update_app_version(
-        new_resource.user,
         new_resource.version,
         new_resource.family,
+        new_resource.user,
         new_resource.web_root,
         'composer.json'
       )
