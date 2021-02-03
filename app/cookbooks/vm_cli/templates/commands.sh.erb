@@ -5,6 +5,22 @@ function www() {
 }
 export -f www
 
+function reports() {
+  www
+  if [ ! -z "$(ls -A ./var/report > /dev/null 2>&1;)" ]; then
+    cd var/report
+  else
+    printf "\nThere is no report directory.\n\n"
+  fi
+}
+export -f reports
+
+function logs() {
+  www
+  cd var/log
+}
+export -f logs
+
 # CLI
 function own() {
   USER="<%= @user %>"
@@ -147,13 +163,6 @@ function deploy-content() {
   ./bin/magento setup:static-content:deploy -f
 }
 export -f deploy-content
-
-function deploy-content-de() {
-  printf "\nDeploying German theme static content...\n"
-  www
-  ./bin/magento setup:static-content:deploy -f de_DE
-}
-export -f deploy-content-de
 
 function dev-mode() {
   printf "\nSwitching to Developer mode...\n"
@@ -416,19 +425,10 @@ function warm-cache() {
 }
 
 function motd() {
+  clear
   cat /var/run/motd.dynamic
 }
 export -f motd
-
-function cloud-login() {
-  magento-cloud auth:password-login
-}
-export -f cloud-login
-
-function cloud-logout() {
-  magento-cloud logout
-}
-export -f cloud-logout
 
 function clear-cron-schedule() {
   DB_USER="<%= @db_user %>"
@@ -441,28 +441,34 @@ function clear-cron-schedule() {
 }
 export -f clear-cron-schedule
 
-function apply-patches() {
-  MAGENTO_DIRECTORY="<%= @web_root %>"
-  VERSION="<%= @magento_version %>"
-  printf "\nGetting patch list...\n"
+# Error Reporting / Logs
+function list-reports() {
   www
-  cd ../cloud
-  git pull
-  git checkout pmet-${VERSION}-demo
-  sleep 1
-  printf "done.\n"
-  sleep 1
-  printf "\nCopying patches..."
-  cp m2-hotfixes/* ${MAGENTO_DIRECTORY}/m2-hotfixes/
-  sleep 1
-  printf "done. \n"
-  sleep 1
-  printf "\nApplying patches...\n"
-  sleep 1
-  php vendor/magentoese/ece-tools/bin/ece-tools patch
-  www
+  if [ ! -z "$(ls -A ./var/report > /dev/null 2>&1;)" ]; then
+    ll var/report > /dev/null 2>&1;
+  else
+    printf "\nThere are no error reports to view.\n\n"
+  fi
 }
-export -f apply-patches
+export -f list-reports
+
+function list-logs() {
+  www
+  ll var/log
+}
+export -f list-logs
+
+function report() {
+  www
+  cat var/report/$1
+}
+export -f report
+
+function log() {
+  www
+  cat var/log/$1
+}
+export -f log
 
 # Backup / Rollback
 function enable-backups() {

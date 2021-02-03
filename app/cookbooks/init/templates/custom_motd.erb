@@ -60,5 +60,9 @@ printf '\n%23s : %s' "${BOLD}restore" "${REG}Restore a backup. Files must be pre
 printf '\n%23s : %s' "${BOLD}import-backup" "${REG}Imports backup files from your local system in <project>/app/backups to the VM."
 printf '\n%23s : %s' "${BOLD}export-backup" "${REG}Exports backup files to your local system in <project>/app/backups."
 printf '\n%23s : %s' "${BOLD}remove-backup" "${REG}Removes all backup files from the VM but does not affect local backups."
+printf '\n%23s : %s' "${BOLD}list-reports" "${REG}Lists all error reports available in <webroot>/var/report"
+printf '\n%23s : %s' "${BOLD}list-logs" "${REG}Lists all error logs available in <webroot>/var/log"
+printf '\n%23s : %s' "${BOLD}report <id>" "${REG}Views the specified report"
+printf '\n%23s : %s' "${BOLD}log <filename>" "${REG}Views the specified log"
 printf "\n\n"
 rule
