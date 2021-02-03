@@ -66,6 +66,21 @@ class App
     end
   end
 
+  def check_for_structure
+    message = %W[
+      #{@colors[:magenta]}[OOPS]: #{@colors[:reg]}It looks like your
+      #{@colors[:bold]}#{@colors[:cyan]}structure#{@colors[:reg]} doesn't contain a website with a code of
+      #{@colors[:bold]}#{@colors[:cyan]}base#{@colors[:reg]}.
+      Please check your config.json file.\n\n
+    ].join(' ')
+    unless @settings['custom_demo']['structure']['website']['base'].nil? ||
+           @settings['custom_demo']['structure']['website']['base'].empty?
+      return
+    end
+
+    abort(message)
+  end
+
   def check_for_build_action
     build_action_list = %w[install force_install restore update reinstall]
     if @settings['application']['build']['action'].nil? || @settings['application']['build']['action'].empty?
