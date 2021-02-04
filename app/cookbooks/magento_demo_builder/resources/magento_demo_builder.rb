@@ -54,7 +54,7 @@ action :remove_remote_data_patches do
   vendor_name = module_name_data[:vendor_name]
   module_name = module_name_data[:module_name]
   module_string = module_name_data[:module_string]
-  source = "#{new_resource.web_root}/vendor/#{vendor_name}/#{module_name}/fixtures"
+  source = "#{new_resource.web_root}/#{module_path}/#{vendor_name}/#{module_name}/fixtures"
 
   ruby_block "Remove existing remote data patch for #{vendor_name}/#{module_name}" do
     block do
@@ -83,17 +83,23 @@ action :build_local_data_packs do
       module_name = module_name_data[:module_name]
       vendor_string = module_name_data[:vendor_string]
       module_string = module_name_data[:module_string]
+      module_path = 'app/code'
+
+      execute "Clearing fixtures" do
+        command "rm -rf #{new_resource.web_root}/#{module_path}/#{vendor_string}/#{module_string}/fixtures/*"
+      end
+
       [
         'app',
-        'app/code',
-        "app/code/#{vendor_string}",
-        "app/code/#{vendor_string}/#{module_string}",
-        "app/code/#{vendor_string}/#{module_string}/media",
-        "app/code/#{vendor_string}/#{module_string}/fixtures",
-        "app/code/#{vendor_string}/#{module_string}/etc",
-        "app/code/#{vendor_string}/#{module_string}/Setup",
-        "app/code/#{vendor_string}/#{module_string}/Setup/Patch",
-        "app/code/#{vendor_string}/#{module_string}/Setup/Patch/Data"
+        module_path.to_s,
+        "#{module_path}/#{vendor_string}",
+        "#{module_path}/#{vendor_string}/#{module_string}",
+        "#{module_path}/#{vendor_string}/#{module_string}/media",
+        "#{module_path}/#{vendor_string}/#{module_string}/fixtures",
+        "#{module_path}/#{vendor_string}/#{module_string}/etc",
+        "#{module_path}/#{vendor_string}/#{module_string}/Setup",
+        "#{module_path}/#{vendor_string}/#{module_string}/Setup/Patch",
+        "#{module_path}/#{vendor_string}/#{module_string}/Setup/Patch/Data"
       ].each do |dir|
         directory "Creating #{dir}" do
           path "#{new_resource.web_root}/#{dir}"
@@ -105,7 +111,7 @@ action :build_local_data_packs do
       new_resource.data_pack_file_list.each do |file_data|
         template "Creating #{file_data[:source]}" do
           source "#{file_data[:source]}.erb"
-          path "#{new_resource.web_root}/app/code/#{vendor_string}/#{module_string}/#{file_data[:path]}/#{file_data[:source]}"
+          path "#{new_resource.web_root}/#{module_path}/#{vendor_string}/#{module_string}/#{file_data[:path]}/#{file_data[:source]}"
           owner new_resource.user
           group new_resource.group
           mode file_data[:mode]
@@ -118,7 +124,7 @@ action :build_local_data_packs do
                     })
           only_if do
             Dir.exist?("#{new_resource.chef_files_path}/#{new_resource.data_pack_data[:value]['repository_url']}") &&
-              Dir.exist?("#{new_resource.web_root}/app/code/#{vendor_string}/#{module_string}")
+              Dir.exist?("#{new_resource.web_root}/#{module_path}/#{vendor_string}/#{module_string}")
           end
         end
       end
@@ -142,6 +148,7 @@ action :install_local_data_pack_content do
     module_name = module_name_data[:module_name]
     vendor_string = module_name_data[:vendor_string]
     module_string = module_name_data[:module_string]
+    module_path = 'app/code'
 
     %w[data media].each do |media_type|
       unless Dir.exist?("#{new_resource.chef_files_path}/#{new_resource.data_pack_data[:value]['repository_url']}/#{media_type}")
@@ -151,12 +158,12 @@ action :install_local_data_pack_content do
       dest_path = media_type == 'data' ? 'fixtures' : media_type
       remote_directory "Adding #{media_type} files to #{vendor_name}/#{module_name}" do
         source "#{new_resource.data_pack_data[:value]['repository_url']}/#{media_type}"
-        path "#{new_resource.web_root}/app/code/#{vendor_string}/#{module_string}/#{dest_path}"
+        path "#{new_resource.web_root}/#{module_path}/#{vendor_string}/#{module_string}/#{dest_path}"
         owner new_resource.user
         group new_resource.group
         files_owner new_resource.user
         files_group new_resource.group
-        action :create_if_missing
+        action :create
         recursive false
         overwrite true
       end
@@ -164,31 +171,14 @@ action :install_local_data_pack_content do
 
       remote_directory "#{module_name.downcase} media" do
         source "#{new_resource.data_pack_data[:value]['repository_url']}/#{media_type}"
-        path "#{new_resource.web_root}/app/code/#{vendor_string}/#{module_string}/#{media_type}"
+        path "#{new_resource.web_root}/#{module_path}/#{vendor_string}/#{module_string}/#{media_type}"
         owner new_resource.user
         group new_resource.group
         files_owner new_resource.user
         files_group new_resource.group
-        action :create_if_missing
+        action :create
         recursive false
         overwrite true
-      end
-      module_full_path = "#{new_resource.web_root}/#{vendor_string}/#{module_string}"
-      template_manager_src = 'template_manager'
-      template_manager_dest = '.template-manager'
-
-      ruby_block "Copying files from #{template_manager_src} to #{template_manager_dest}" do
-        block do
-          Dir["#{module_full_path}/#{media_type}/#{template_manager_src}/*"].each do |file|
-            FileUtils.cp(file, file.sub(template_manager_src, template_manager_dest))
-          end
-          FileUtils.rm_rf("#{module_full_path}/#{media_type}/#{template_manager_src}")
-        end
-        only_if do
-          Dir.exist?("#{module_full_path}/#{media_type}/#{template_manager_src}") &&
-            !Dir.empty?("#{module_full_path}/#{media_type}/#{template_manager_src}") &&
-            Dir.exist?("#{module_full_path}/#{media_type}/#{template_manager_dest}")
-        end
       end
     end
   end
