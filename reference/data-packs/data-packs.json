@@ -6,7 +6,7 @@
 					"base": "luma.demo"
 				}
 			},
-			"DATA-PACKS": {
+			"DATA PACKS": {
 				"base-b2c-website": {
 					"name": "base-b2c-website",
 					"repository_url": "base-b2c-website"
@@ -19,10 +19,10 @@
 					"base": "b2b.luma.demo"
 				}
 			},
-			"DATA-PACKS": {
-				"b2b-website": {
+			"DATA PACKS": {
+				"base-b2b-website": {
 					"name": "base-b2b-website",
-					"repository_url": "b2b-website"
+					"repository_url": "base-b2b-website"
 				}
 			}
 		},
@@ -32,7 +32,7 @@
 					"custom_b2c_website": "custom-b2c.demo"
 				}
 			},
-			"DATA-PACKS": {
+			"DATA PACKS": {
 				"custom-b2c-website": {
 					"name": "custom-b2c-website",
 					"repository_url": "custom-b2c-website"
@@ -45,7 +45,7 @@
 					"custom_b2b_website": "custom-b2b.demo"
 				}
 			},
-			"DATA-PACKS": {
+			"DATA PACKS": {
 				"custom-b2b-website": {
 					"name": "custom-b2b-website",
 					"repository_url": "custom-b2b-website"
@@ -58,7 +58,7 @@
 					"custom_store_view_us_en": "custom.luma.demo"
 				}
 			},
-			"DATA-PACKS": {
+			"DATA PACKS": {
 				"custom-store": {
 					"name": "custom-store",
 					"repository_url": "custom-store"
@@ -71,7 +71,7 @@
 					"custom_store_view_ca_fr": "fr.luma.ca"
 				}
 			},
-			"DATA-PACKS": {
+			"DATA PACKS": {
 				"custom-store-view-ca-fr": {
 					"name": "custom-store-view-ca-fr",
 					"repository_url": "custom-store-view-ca-fr"
@@ -94,7 +94,7 @@
 						}
 					}
 				},
-				"CONFIGURATIONS": {
+				"DATA PACKS": {
 					"fresh-market-data-pack-standalone": {
 						"name": "story-store/grocery",
 						"version": "dev-standalone",
@@ -127,7 +127,7 @@
 						}
 					}
 				},
-				"DATA-PACKS": {
+				"DATA PACKS": {
 					"venia-data-pack-standalone": {
 						"name": "skukla/venia-data-pack",
 						"version": "dev-standalone",
@@ -163,7 +163,7 @@
 					"smb": "smb.sealed-air.demo"
 				}
 			},
-			"DATA-PACKS": {
+			"DATA PACKS": {
 				"sealed-air-data-pack": {
 					"name": "skukla/sealed-air-data-pack",
 					"repository_url": "git@github.com:skukla/module-sealed-air-data-pack.git"
