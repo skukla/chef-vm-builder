@@ -27,6 +27,10 @@ action :download do
     package_name new_resource.package_name
     package_version new_resource.package_version
     options new_resource.options
-    only_if { new_resource.package_name.include?('/') }
+    only_if do
+      new_resource.package_name.include?('/') &&
+        (new_resource.repository_url.nil? || new_resource.repository_url.empty?) ||
+        new_resource.repository_url.include?('github.com')
+    end
   end
 end
