@@ -20,6 +20,12 @@
 			}
 		},
 		"catalog": {
+			"magento_catalogpermissions": {
+				"enabled": "1",
+				"grant_checkout_items": "1",
+				"grant_catalog_product_price": "1",
+				"grant_catalog_category_view": "1"
+			},
 			"magento_targetrule": {
 				"crosssell_position_limit": "6",
 				"related_position_limit": "5"
