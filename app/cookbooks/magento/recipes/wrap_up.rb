@@ -11,7 +11,6 @@ demo_structure = node[:magento][:init][:demo_structure]
 warm_cache = node[:magento][:build][:hooks][:warm_cache]
 enable_media_gallery = node[:magento][:build][:hooks][:enable_media_gallery]
 commands = node[:magento][:build][:hooks][:commands]
-media_gallery_commands = ['config:set system/media_gallery/enabled 1', 'media-gallery:sync']
 vm_cli_commands = commands.reject { |command| command.include?(':') }
 magento_cli_commands = commands.select { |command| command.include?(':') }
 
@@ -48,10 +47,12 @@ mysql 'Configure default store' do
   db_query "UPDATE store_website SET default_group_id = '1' WHERE code = 'base'"
 end
 
+media_gallery_commands = "config:set system/media_gallery/enabled #{ValueHelper.process_value(enable_media_gallery)}"
+media_gallery_commands = [media_gallery_commands, 'media-gallery:sync'] if enable_media_gallery
+
 magento_cli 'Running the enable_media_gallery hook' do
   action :run
   command_list media_gallery_commands
-  only_if { enable_media_gallery }
   not_if { ::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == 'install' }
 end
 
