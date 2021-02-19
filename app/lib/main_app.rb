@@ -101,12 +101,22 @@ class App
     end
   end
 
-  def define_plugin_list
+  def check_for_plugins
+    completed = []
     plugins = @settings['vagrant']['plugins']['all']
     if @settings['vm']['hypervisor'] == 'virtualbox'
       plugins.push(*@settings['vagrant']['plugins']['virtualbox'])
     else
       plugins.push(*@settings['vagrant']['plugins']['vmware'])
+    end
+    plugins.each do |plugin|
+      unless Vagrant.has_plugin?(plugin.to_s)
+        system("vagrant plugin install #{plugin}", chdir: '/tmp') || exit!
+        completed << plugin
+      end
+    end
+    unless plugins.difference(completed).any?
+      abort("#{@colors[:green]}[SUCCESS]: #{@colors[:reg]}Plugins have been installed. Please run the #{@colors[:bold]}#{@colors[:cyan]}vagrant up #{@colors[:reg]}command again to continue.\n")
     end
   end
 
