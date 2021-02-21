@@ -75,15 +75,15 @@
 		"vram": 16
 	},
 	"hypervisor": {
-		"all": {
-			"gui": true,
-			"linked_clones": true
-		},
 		"vmware": {
+			"gui": true,
+			"linked_clones": true,
 			"eth0_pcislotnumber": "32",
 			"eth1_pcislotnumber": "33"
 		},
 		"virtualbox": {
+			"gui": false,
+			"linked_clones": false,
 			"remote_display": "off",
 			"default_nic_type": "82543GC"
 		}

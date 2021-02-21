@@ -30,10 +30,9 @@ Vagrant.configure('2') do |config|
 
   # Configure VM machine based on hypervisor
   config.vm.provider app.settings['vm']['hypervisor'] do |machine|
-    machine.gui = app.settings['hypervisor']['all']['gui']
-    machine.linked_clone = app.settings['hypervisor']['all']['linked_clones']
-
     if app.settings['vm']['hypervisor'] == 'virtualbox'
+      machine.gui = app.settings['hypervisor']['virtualbox']['gui']
+      machine.linked_clone = app.settings['hypervisor']['virtualbox']['linked_clones']
       machine.default_nic_type = app.settings['hypervisor']['virtualbox']['default_nic_type']
       machine.customize [
         'modifyvm', :id,
@@ -46,6 +45,9 @@ Vagrant.configure('2') do |config|
       ]
     # VMWare-specific settings
     elsif app.settings['vm']['hypervisor'].include?('vmware')
+      machine.gui = app.settings['hypervisor']['vmware']['gui']
+      machine.linked_clone = app.settings['hypervisor']['vmware']['linked_clones']
+      machine.vmx['displayName'] = app.settings['vm']['name']
       machine.vmx['memsize'] = app.settings['remote_machine']['memory']
       machine.vmx['numvcpus'] = app.settings['remote_machine']['cpus']
       machine.vmx['ethernet0.pcislotnumber'] = app.settings['hypervisor']['vmware']['eth0_pcislotnumber']
