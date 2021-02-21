@@ -2,7 +2,7 @@
 	"vm": {
 		"ip": "192.168.57.12",
 		"name": "Luma Demo",
-		"hypervisor": "virtualbox"
+		"hypervisor": "vmware_fusion"
 	},
 	"custom_demo": {
 		"structure": {
@@ -76,12 +76,12 @@
 	},
 	"hypervisor": {
 		"all": {
-			"gui": false,
-			"linked_clones": false
+			"gui": true,
+			"linked_clones": true
 		},
 		"vmware": {
-			"eth0_pcislotnumber": 32,
-			"eth1_pcislotnumber": 33
+			"eth0_pcislotnumber": "32",
+			"eth1_pcislotnumber": "33"
 		},
 		"virtualbox": {
 			"remote_display": "off",
