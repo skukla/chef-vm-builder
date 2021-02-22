@@ -22,6 +22,7 @@ default[:magento][:options][:community_consumer_list] = [
   'media.content.synchronization',
   'media.gallery.synchronization'
 ]
+
 default[:magento][:options][:enterprise_consumer_list] = [
   'negotiableQuotePriceUpdate',
   'sharedCatalogUpdatePrice',
@@ -30,7 +31,8 @@ default[:magento][:options][:enterprise_consumer_list] = [
   'inventoryQtyCounter',
   'purchaseorder.toorder',
   'purchaseorder.transactional.email',
-  'purchaseorder.validation'
+  'purchaseorder.validation',
+  'matchCustomerSegmentProcessor'
 ]
 consumer_list = []
 node[:magento][:options][:community_consumer_list].each do |consumer|
