@@ -8,7 +8,7 @@ supported_settings = %i[apply repository_url repository_directory branch codebas
 supported_settings.each do |setting|
   if (setting == :apply) && (node[:application][:build][:patches].is_a?(TrueClass) || node[:application][:build][:patches].is_a?(FalseClass))
     override[:magento_patches][setting] = node[:application][:build][:patches]
-  elsif node[:application][:build][:patches].is_a?(Chef::Node::ImmutableMash) && node[:application][:build][:patches][setting].nil?
+  elsif node[:application][:build][:patches].is_a?(Chef::Node::ImmutableMash) && !node[:application][:build][:patches][setting].nil?
     override[:magento_patches][setting] = node[:application][:build][:patches][setting]
   end
 end

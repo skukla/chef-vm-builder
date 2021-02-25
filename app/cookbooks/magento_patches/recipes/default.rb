@@ -19,7 +19,6 @@ magento_patch 'Prepare for Magento patches' do
   action %i[
     remove_holding_area
     remove_from_web_root
-
   ]
 end
 
