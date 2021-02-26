@@ -20,7 +20,9 @@ default[:magento][:options][:community_consumer_list] = [
   'inventory.indexer.sourceItem',
   'inventory.indexer.stock',
   'media.content.synchronization',
-  'media.gallery.synchronization'
+  'media.gallery.synchronization',
+  'media.gallery.renditions.update',
+  'async.operations.all'
 ]
 
 default[:magento][:options][:enterprise_consumer_list] = [
