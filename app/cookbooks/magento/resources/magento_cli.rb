@@ -14,7 +14,8 @@ property :config_path,              String
 property :config_value,             [String, Integer, TrueClass, FalseClass]
 property :config_scope,             String,                                   default: 'default'
 property :config_scope_code,        String,                                   default: ''
-property :deploy_mode,              String,                                   default: node[:magento][:build][:deploy_mode][:mode]
+property :deploy_mode,              String,
+         default: node[:magento][:build][:deploy_mode][:mode]
 property :cache_types,              Array,                                    default: []
 property :indexers,                 Array,                                    default: []
 property :consumer_list,            Array
@@ -44,6 +45,7 @@ action :reindex do
   indexers = new_resource.indexers.join(' ') unless new_resource.indexers.empty?
   execute new_resource.name do
     command "su #{new_resource.user} -c 'bin/magento indexer:reindex #{indexers}'"
+    retries 2
     cwd new_resource.web_root
   end
 end
