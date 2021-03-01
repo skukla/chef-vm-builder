@@ -68,7 +68,7 @@
 		"ADDITIONAL GEO (STORE VIEW)": {
 			"STRUCTURE": {
 				"store_view": {
-					"custom_store_view_ca_fr": "fr.luma.ca"
+					"custom_store_view_ca_fr": "ca-fr.luma.demo"
 				}
 			},
 			"DATA PACKS": {
