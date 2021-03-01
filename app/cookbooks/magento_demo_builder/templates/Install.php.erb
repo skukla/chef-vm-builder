@@ -26,7 +26,9 @@ class Install implements DataPatchInterface
          *
          * the data files directory can be any directory in the root of the module, or a subdirectory (fixtures/grocery)
          */
-        $this->process->loadFiles('<%= @vendor_string %>_<%= @module_string %>', 'fixtures');
+        $this->process->loadFiles('<%= @vendor_string %>_<%= @module_string %>', 'fixtures', ['config_default.json','config_vertical.json','config_secret.json','config.csv',
+        'admin_roles.csv','admin_users.csv','customer_groups.csv','customer_attributes.csv','customers.csv','product_attributes.csv',
+        'blocks.csv','categories.csv']);
         //$this->process->loadFiles('Vendor_Module', 'fixtures/xxxx');
     }
 

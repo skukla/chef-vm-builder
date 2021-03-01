@@ -10,6 +10,7 @@ default[:magento_demo_builder][:data_pack][:files] = [
   { source: 'registration.php', path: '', mode: '664' },
   { source: 'Install.php', path: 'Setup/Patch/Data', mode: '664' },
   { source: 'InstallStore.php', path: 'Setup/Patch/Data', mode: '644' },
+  { source: 'RecurringData.php', path: 'Setup', mode: '644' },
   { source: 'module.xml', path: 'etc', mode: '664' }
 ]
 default[:magento_demo_builder][:custom_modules] = {}
