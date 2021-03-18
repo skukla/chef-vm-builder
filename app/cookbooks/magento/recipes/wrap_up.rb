@@ -53,14 +53,17 @@ media_gallery_commands = [media_gallery_commands, 'media-gallery:sync'] if enabl
 magento_cli 'Running the enable_media_gallery hook' do
   action :run
   command_list media_gallery_commands
-  not_if { ::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == 'install' }
+  not_if do
+    !enable_media_gallery && (enable_media_gallery.nil? || enable_media_gallery.empty?) ||
+      ::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == 'install'
+  end
 end
 
 magento_cli 'Running user Magento CLI hooks' do
   action :run
   command_list magento_cli_commands
   not_if do
-    commands.empty? ||
+    commands.nil? || commands.empty? ||
       ::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == 'install'
   end
 end
@@ -69,7 +72,7 @@ vm_cli 'Running user VM CLI hooks' do
   action :run
   command_list vm_cli_commands
   not_if do
-    commands.empty? ||
+    commands.nil? || commands.empty? ||
       ::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == 'install'
   end
 end
@@ -78,5 +81,8 @@ vm_cli 'Running the warm cache hook' do
   action :run
   command_list 'warm-cache'
   only_if { warm_cache }
-  not_if { ::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == 'install' }
+  not_if do
+    warm_cache.nil? || warm_cache.empty? ||
+      ::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == 'install'
+  end
 end

@@ -57,10 +57,6 @@ default[:magento][:build][:sample_data] = true
 default[:magento][:build][:deploy_mode][:apply] = true
 default[:magento][:build][:deploy_mode][:mode] = 'production'
 
-default[:magento][:build][:hooks][:warm_cache] = false
-default[:magento][:build][:hooks][:enable_media_gallery] = false
-default[:magento][:build][:hooks][:commands] = []
-
 default[:magento][:settings][:backend_frontname] = 'admin'
 default[:magento][:settings][:unsecure_base_url] = "http://#{node[:fqdn]}/"
 default[:magento][:settings][:secure_base_url] = "https://#{node[:fqdn]}/"
