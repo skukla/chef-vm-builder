@@ -54,7 +54,7 @@ magento_cli 'Running the enable_media_gallery hook' do
   action :run
   command_list media_gallery_commands
   not_if do
-    enable_media_gallery.nil? || enable_media_gallery.empty? ||
+    !enable_media_gallery && (enable_media_gallery.nil? || enable_media_gallery.empty?) ||
       ::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == 'install'
   end
 end
