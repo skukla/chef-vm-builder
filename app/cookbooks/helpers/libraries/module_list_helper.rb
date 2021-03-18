@@ -83,4 +83,19 @@ module ModuleListHelper
     `cd #{module_directory} && find . -name '.gitignore' -type f -delete`
     puts '.gitignore files removed'
   end
+
+  def self.build_require_string(module_list)
+    module_str = ''
+    module_arr = []
+    module_list.each do |_key, value|
+      next unless value.is_a? Hash
+
+      value.each do |k, v|
+        module_str = v if k == 'package_name'
+        module_str = [module_str, v].join(':') if k == 'package_version'
+      end
+      module_arr << module_str
+    end
+    module_arr.join(' ')
+  end
 end

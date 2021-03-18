@@ -61,7 +61,8 @@ magento_app 'Remove outdated modules' do
   action :remove_modules
   not_if do
     ::File.foreach("#{web_root}/composer.json").grep(/replace/).any? ||
-      (::File.exist?("#{web_root}/var/.first-run-state.flag") && %w[install force_install install force_install install reinstall].include?(build_action))
+      (::File.exist?("#{web_root}/var/.first-run-state.flag") && %w[install force_install install force_install
+                                                                    install reinstall].include?(build_action))
   end
 end
 
@@ -97,25 +98,30 @@ unless data_packs_list.empty?
   end
 end
 
-unless custom_module_list.empty?
-  custom_module_list.each do |_custom_module_key, custom_module_data|
-    custom_module "Add #{custom_module_data[:module_name]}" do
-      action :download
-      package_name custom_module_data[:package_name]
-      module_name custom_module_data[:module_name]
-      package_version custom_module_data[:package_version]
-      repository_url custom_module_data[:repository_url]
-      options ['no-update']
-      not_if do
-        build_action == 'reinstall' ||
-          (::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == 'install') ||
-          (!use_elasticsearch && custom_module_data[:module_name].include?('elasticsuite'))
-      end
+custom_module_list.each do |_custom_module_key, custom_module_data|
+  next if custom_module_data[:repository_url].nil? || custom_module_data[:repository_url].empty?
+
+  composer "Adding repository #{custom_module_data[:package_name]}" do
+    action :add_repository
+    module_name custom_module_data[:module_name]
+    repository_url custom_module_data[:repository_url]
+    not_if do
+      build_action == 'reinstall' ||
+        (::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == 'install') ||
+        (!use_elasticsearch && custom_module_data[:module_name].include?('elasticsuite'))
     end
+    only_if { custom_module_data[:repository_url].include?('github.com') }
   end
 end
 
-if apply_patches && (%w[force_install update].include?(build_action) || (apply_patches && build_action == 'install' && !::File.exist?("#{web_root}/var/.first-run-state.flag")))
+composer "Adding modules #{ModuleListHelper.build_require_string(custom_module_list)}" do
+  action :require
+  package_name ModuleListHelper.build_require_string(custom_module_list)
+  options ['no-update']
+end
+
+if apply_patches && (%w[force_install
+                        update].include?(build_action) || (apply_patches && build_action == 'install' && !::File.exist?("#{web_root}/var/.first-run-state.flag")))
   include_recipe 'magento_patches::default'
 end
 
@@ -141,7 +147,8 @@ magento_app 'Add sample data' do
   end
 end
 
-if apply_patches && (%w[force_install update].include?(build_action) || (apply_patches && build_action == 'install' && !::File.exist?("#{web_root}/var/.first-run-state.flag")))
+if apply_patches && (%w[force_install
+                        update].include?(build_action) || (apply_patches && build_action == 'install' && !::File.exist?("#{web_root}/var/.first-run-state.flag")))
   include_recipe 'magento_patches::apply'
 end
 
