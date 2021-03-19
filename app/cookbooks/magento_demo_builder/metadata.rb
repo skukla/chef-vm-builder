@@ -10,7 +10,6 @@ chef_version '>= 14.0'
 depends 'helpers'               # Brings in the various helpers
 depends 'nginx'                 # Brings in web root
 depends 'magento'               # Brings in Magento settings
-depends 'magento_configuration' # Brings Magento Configuration settings
 depends 'magento_patches'       # Brings in Magento patch settings
 
 # The `issues_url` points to the location where issues for this cookbook are

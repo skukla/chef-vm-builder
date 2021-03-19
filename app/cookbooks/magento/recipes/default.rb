@@ -14,7 +14,6 @@ else
   include_recipe 'magento::download'
   include_recipe 'magento_demo_builder::default'
   include_recipe 'magento::install'
-  include_recipe 'magento::configure'
 end
 
 include_recipe 'magento::post_install'

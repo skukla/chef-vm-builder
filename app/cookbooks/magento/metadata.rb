@@ -19,7 +19,6 @@ depends 'composer'                # This brings in Composer configuration option
 depends 'magento_restore'         # This brings in the ability to restore a Magento backup
 depends 'magento_custom_modules'  # This brings in Custom Module configuration options
 depends 'magento_patches'         # This brings in Magento Patches configuration options
-depends 'magento_configuration'   # This brings in Magento Configuration configuration options
 depends 'magento_demo_builder'    # This brings in the Demo Builder resource
 depends 'vm_cli'                  # This brings in VM CLI commands
 

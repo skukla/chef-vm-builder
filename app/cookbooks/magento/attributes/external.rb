@@ -41,11 +41,3 @@ default[:magento][:data_packs] = node[:magento_demo_builder][:data_pack_list]
 
 include_attribute 'magento_patches::default'
 default[:magento][:patches][:apply] = node[:magento_patches][:apply]
-
-include_attribute 'magento_configuration::default'
-default[:magento][:configuration][:flags][:base] = node[:magento_configuration][:flags][:base]
-default[:magento][:configuration][:flags][:b2b] = node[:magento_configuration][:flags][:b2b]
-default[:magento][:configuration][:flags][:custom_modules] = node[:magento_configuration][:flags][:custom_modules]
-default[:magento][:configuration][:flags][:admin_users] = node[:magento_configuration][:flags][:admin_users]
-default[:magento][:configuration][:settings] = node[:magento_configuration][:settings]
-default[:magento][:configuration][:admin_users] = node[:magento_configuration][:admin_users]
