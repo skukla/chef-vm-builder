@@ -4,9 +4,8 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 module ModuleListHelper
-  def self.get_module_data(supported_modules, supported_settings, configured_custom_modules)
+  def self.get_module_data(supported_settings, configured_custom_modules)
     module_list = []
-    user_configurations = []
     data_hash = {}
     unless configured_custom_modules.nil?
       configured_custom_modules.each do |_custom_key, custom_value|
@@ -47,25 +46,6 @@ module ModuleListHelper
               custom_module_hash[setting] = custom_value[setting]
             end
           end
-          if custom_value.key?(:configuration)
-            supported_modules.each do |_supported_key, supported_value|
-              supported_value[:config_paths].each do |config_path|
-                configuration_setting = {}
-                if config_path.include?('enable_autofill')
-                  configuration_setting[:path] = config_path
-                  configuration_setting[:value] = 1
-                  user_configurations << configuration_setting
-                end
-                setting_value = custom_value[:configuration].dig(*config_path.split('/').map(&:to_sym))
-                next if setting_value.nil?
-
-                configuration_setting[:path] = config_path
-                configuration_setting[:value] = setting_value
-                user_configurations << configuration_setting
-              end
-              custom_module_hash[:configuration] = user_configurations
-            end
-          end
         end
         module_list << custom_module_hash
       end
@@ -85,16 +65,15 @@ module ModuleListHelper
   end
 
   def self.build_require_string(module_list)
-    module_str = ''
     module_arr = []
     module_list.each do |_key, value|
       next unless value.is_a? Hash
 
       value.each do |k, v|
-        module_str = v if k == 'package_name'
-        module_str = [module_str, v].join(':') if k == 'package_version'
+        if k == 'repository_url' && v.include?('github.com')
+          module_arr << "#{value['package_name']}:#{value['package_version']}"
+        end
       end
-      module_arr << module_str
     end
     module_arr.join(' ')
   end

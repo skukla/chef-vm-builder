@@ -13,5 +13,4 @@ default[:magento_demo_builder][:data_pack][:files] = [
   { source: 'RecurringData.php', path: 'Setup', mode: '644' },
   { source: 'module.xml', path: 'etc', mode: '664' }
 ]
-default[:magento_demo_builder][:custom_modules] = {}
 default[:magento_demo_builder][:data_packs] = {}

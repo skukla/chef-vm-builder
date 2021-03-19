@@ -35,7 +35,9 @@ default[:magento][:elasticsearch][:node_name] = node[:elasticsearch][:node_name]
 
 include_attribute 'magento_custom_modules::default'
 default[:magento][:custom_modules] = node[:magento_custom_modules][:module_list]
-default[:magento][:data_packs] = node[:magento_custom_modules][:data_pack_list]
+
+include_attribute 'magento_demo_builder::default'
+default[:magento][:data_packs] = node[:magento_demo_builder][:data_pack_list]
 
 include_attribute 'magento_patches::default'
 default[:magento][:patches][:apply] = node[:magento_patches][:apply]

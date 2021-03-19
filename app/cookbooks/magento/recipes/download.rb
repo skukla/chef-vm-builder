@@ -9,7 +9,7 @@ family = node[:magento][:options][:family]
 build_action = node[:magento][:build][:action]
 sample_data = node[:magento][:build][:sample_data]
 custom_module_list = node[:magento][:custom_modules]
-data_packs_list = node[:magento][:data_packs]
+data_pack_list = node[:magento][:data_packs]
 apply_patches = node[:magento][:patches][:apply]
 use_elasticsearch = node[:magento][:elasticsearch][:use]
 
@@ -81,14 +81,27 @@ composer 'Require the B2B modules' do
   end
 end
 
-unless data_packs_list.empty?
-  data_packs_list.each do |_data_pack_key, data_pack_data|
-    custom_module "Add #{data_pack_data[:module_name]}" do
-      action :download
-      package_name data_pack_data[:package_name]
+unless data_pack_list.empty?
+  data_pack_list.each do |_data_pack_key, data_pack_data|
+    next if data_pack_data[:repository_url].nil? ||
+            data_pack_data[:repository_url].empty? ||
+            !data_pack_data[:repository_url].include?('github.com')
+
+    composer "Adding remote data pack repository: #{data_pack_data[:module_name]}" do
+      action :add_repository
       module_name data_pack_data[:module_name]
-      package_version data_pack_data[:package_version]
       repository_url data_pack_data[:repository_url]
+      not_if do
+        build_action == 'reinstall' ||
+          (::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == 'install')
+      end
+    end
+  end
+
+  unless ModuleListHelper.build_require_string(data_pack_list).empty?
+    composer "Adding remote data packs: #{ModuleListHelper.build_require_string(data_pack_list)}" do
+      action :require
+      package_name ModuleListHelper.build_require_string(custom_module_list)
       options ['no-update']
       not_if do
         build_action == 'reinstall' ||
@@ -98,26 +111,35 @@ unless data_packs_list.empty?
   end
 end
 
-custom_module_list.each do |_custom_module_key, custom_module_data|
-  next if custom_module_data[:repository_url].nil? || custom_module_data[:repository_url].empty?
+unless custom_module_list.empty?
+  custom_module_list.each do |_custom_module_key, custom_module_data|
+    next if custom_module_data[:repository_url].nil? ||
+            custom_module_data[:repository_url].empty? ||
+            !custom_module_data[:repository_url].include?('github.com')
 
-  composer "Adding repository #{custom_module_data[:package_name]}" do
-    action :add_repository
-    module_name custom_module_data[:module_name]
-    repository_url custom_module_data[:repository_url]
-    not_if do
-      build_action == 'reinstall' ||
-        (::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == 'install') ||
-        (!use_elasticsearch && custom_module_data[:module_name].include?('elasticsuite'))
+    composer "Adding repository #{custom_module_data[:package_name]}" do
+      action :add_repository
+      module_name custom_module_data[:module_name]
+      repository_url custom_module_data[:repository_url]
+      not_if do
+        build_action == 'reinstall' ||
+          (::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == 'install') ||
+          (!use_elasticsearch && custom_module_data[:module_name].include?('elasticsuite'))
+      end
     end
-    only_if { custom_module_data[:repository_url].include?('github.com') }
   end
-end
 
-composer "Adding modules #{ModuleListHelper.build_require_string(custom_module_list)}" do
-  action :require
-  package_name ModuleListHelper.build_require_string(custom_module_list)
-  options ['no-update']
+  unless ModuleListHelper.build_require_string(custom_module_list).empty?
+    composer "Adding modules #{ModuleListHelper.build_require_string(custom_module_list)}" do
+      action :require
+      package_name ModuleListHelper.build_require_string(custom_module_list)
+      options ['no-update']
+      not_if do
+        build_action == 'reinstall' ||
+          (::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == 'install')
+      end
+    end
+  end
 end
 
 if apply_patches && (%w[force_install

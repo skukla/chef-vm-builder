@@ -86,21 +86,6 @@ magento_config 'Configure admin users' do
   end
 end
 
-custom_module_config 'Configure custom modules' do
-  action :process_configuration
-  config_data custom_module_list
-  not_if do
-    (build_action == 'install' && ::File.exist?("#{web_root}/var/.first-run-state.flag")) ||
-      custom_module_list.empty? ||
-      !configuration_flags[:custom_modules]
-  end
-  only_if do
-    ::File.exist?("#{web_root}/app/etc/config.php") &&
-      !custom_module_list.empty? &&
-      configuration_flags[:custom_modules]
-  end
-end
-
 php "Switch PHP user to #{user}" do
   action :set_user
   php_user user
