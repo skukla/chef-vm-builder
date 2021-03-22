@@ -82,7 +82,7 @@ vm_cli 'Running the warm cache hook' do
   command_list 'warm-cache'
   only_if { warm_cache }
   not_if do
-    warm_cache.nil? || warm_cache.empty? ||
+    !warm_cache && (warm_cache.nil? || warm_cache.empty?) ||
       ::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == 'install'
   end
 end
