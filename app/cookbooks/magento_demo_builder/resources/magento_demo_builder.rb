@@ -21,7 +21,7 @@ property :data_pack_data,                   Hash
 
 action :remove_data_patches do
   module_name_data = StringReplaceHelper.prepare_module_names(
-    new_resource.data_pack_data[:value]['name'],
+    new_resource.data_pack_data[:value]['package_name'],
     new_resource.data_pack_vendor,
     new_resource.data_pack_data[:value]['repository_url'],
     !new_resource.data_pack_data[:value]['repository_url'].include?('github') ? 'local' : 'remote'
@@ -45,7 +45,7 @@ end
 
 action :remove_remote_data_patches do
   module_name_data = StringReplaceHelper.prepare_module_names(
-    new_resource.data_pack_data[:value]['name'],
+    new_resource.data_pack_data[:value]['package_name'],
     new_resource.data_pack_vendor,
     new_resource.data_pack_data[:value]['repository_url'],
     'remote'
@@ -72,7 +72,7 @@ action :build_local_data_packs do
       next unless new_resource.data_pack_data[:value]['repository_url'] == entry_path
 
       module_name_data = StringReplaceHelper.prepare_module_names(
-        new_resource.data_pack_data[:value]['name'],
+        new_resource.data_pack_data[:value]['package_name'],
         new_resource.data_pack_vendor,
         new_resource.data_pack_data[:value]['repository_url'],
         'local'
@@ -85,7 +85,7 @@ action :build_local_data_packs do
       module_string = module_name_data[:module_string]
       module_path = 'app/code'
 
-      execute "Clearing fixtures" do
+      execute 'Clearing fixtures' do
         command "rm -rf #{new_resource.web_root}/#{module_path}/#{vendor_string}/#{module_string}/fixtures/*"
       end
 
@@ -105,7 +105,9 @@ action :build_local_data_packs do
           path "#{new_resource.web_root}/#{dir}"
           owner new_resource.user
           group new_resource.group
-          only_if { Dir.exist?("#{new_resource.chef_files_path}/#{new_resource.data_pack_data[:value]['repository_url']}") }
+          only_if do
+            Dir.exist?("#{new_resource.chef_files_path}/#{new_resource.data_pack_data[:value]['repository_url']}")
+          end
         end
       end
       new_resource.data_pack_file_list.each do |file_data|
@@ -138,7 +140,7 @@ action :install_local_data_pack_content do
     next unless new_resource.data_pack_data[:value]['repository_url'] == entry_path
 
     module_name_data = StringReplaceHelper.prepare_module_names(
-      new_resource.data_pack_data[:value]['name'],
+      new_resource.data_pack_data[:value]['package_name'],
       new_resource.data_pack_vendor,
       new_resource.data_pack_data[:value]['repository_url'],
       'local'
@@ -186,7 +188,7 @@ end
 
 action :clean_up_data_packs do
   module_name_data = StringReplaceHelper.prepare_module_names(
-    new_resource.data_pack_data[:value]['name'],
+    new_resource.data_pack_data[:value]['package_name'],
     new_resource.data_pack_vendor,
     new_resource.data_pack_data[:value]['repository_url'],
     !new_resource.data_pack_data[:value]['repository_url'].include?('github') ? 'local' : 'remote'
