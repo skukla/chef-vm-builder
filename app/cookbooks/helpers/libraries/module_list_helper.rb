@@ -69,12 +69,12 @@ module ModuleListHelper
     module_list.each do |_key, value|
       next unless value.is_a? Hash
 
-      value.each do |k, v|
-        if k == 'repository_url' && v.include?('github.com')
-          module_arr << "#{value['package_name']}:#{value['package_version']}"
-        end
+      value.each do
+        package_string = value['package_name']
+        package_string = [package_string, value['package_version']].join(':') unless value['package_version'].nil?
+        module_arr << package_string
       end
     end
-    module_arr.join(' ')
+    module_arr.uniq.join(' ')
   end
 end

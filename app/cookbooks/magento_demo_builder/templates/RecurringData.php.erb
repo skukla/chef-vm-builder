@@ -3,15 +3,11 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-
 namespace <%= @vendor_string %>\<%= @module_string %>\Setup;
-
 use Magento\Framework\Setup\InstallDataInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use MagentoEse\DataInstall\Model\Process;
-use MagentoEse\DataInstall\Helper\Helper;
-
 /**
  * Recurring data install.
  */
@@ -19,16 +15,10 @@ class RecurringData implements InstallDataInterface
 {
     /** @var Process  */
     protected $process;
-
-     /** @var Helper */
-     protected $helper;
-
-    public function __construct(Process $process, Helper $helper)
+    public function __construct(Process $process)
     {
         $this->process = $process;
-        $this->helper = $helper;
     }
-
     /**
      * {@inheritdoc}
      */
@@ -37,15 +27,5 @@ class RecurringData implements InstallDataInterface
         $this->process->loadFiles('<%= @vendor_string %>_<%= @module_string %>','fixtures',['products.csv','products2.csv','msi_inventory.csv','upsells.csv','blocks.csv','dynamic_blocks.csv',
         'pages.csv','templates.csv','reviews.csv','b2b_companies.csv','b2b_shared_catalogs.csv',
         'b2b_shared_catalog_categories.csv','b2b_requisition_lists.csv','advanced_pricing.csv','orders.csv']);
-    }
-
-    /**
-     * Perform full reindex
-     */
-    public function reindex()
-    {
-        foreach ($this->indexerCollectionFactory->create()->getItems() as $indexer) {
-            $indexer->reindexAll();
-        }
     }
 }

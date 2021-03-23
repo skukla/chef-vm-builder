@@ -80,36 +80,16 @@ composer 'Require the B2B modules' do
   end
 end
 
-[data_pack_list, custom_module_list].each do |list|
-  next if list.empty?
+magento_data 'Install data packs' do
+  action :process
+  data_type 'data_packs'
+  data data_pack_list
+end
 
-  list.each do |_key, data|
-    next if data[:repository_url].nil? ||
-            data[:repository_url].empty? ||
-            !data[:repository_url].include?('github.com')
-
-    composer "Adding remote repository: #{data[:module_name]}" do
-      action :add_repository
-      module_name data[:module_name]
-      repository_url data[:repository_url]
-      not_if do
-        build_action == 'reinstall' ||
-          (::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == 'install')
-      end
-    end
-  end
-
-  next if ModuleListHelper.build_require_string(list).empty?
-
-  composer "Adding remote data packs: #{ModuleListHelper.build_require_string(list)}" do
-    action :require
-    package_name ModuleListHelper.build_require_string(list)
-    options ['no-update']
-    not_if do
-      build_action == 'reinstall' ||
-        (::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == 'install')
-    end
-  end
+magento_data 'Install custom modules' do
+  action :process
+  data_type 'custom_modules'
+  data custom_module_list
 end
 
 if (apply_patches && %w[force_install update].include?(build_action)) ||

@@ -110,13 +110,14 @@ end
 
 action :require do
   options_string = "--#{new_resource.options.join(' --')}" unless new_resource.options.nil?
-  package_string = if !new_resource.package_version.nil? && !new_resource.package_version.empty?
-                     [new_resource.package_name, new_resource.package_version].join(' ')
-                   else
-                     new_resource.package_name
-                   end
+  command_string = [
+    "su #{new_resource.user} -c '#{new_resource.install_directory}/#{new_resource.file} require",
+    options_string,
+    "#{new_resource.package_name}'"
+  ].join(' ')
+
   execute new_resource.name do
-    command "su #{new_resource.user} -c '#{new_resource.install_directory}/#{new_resource.file} require #{options_string} #{package_string}'"
+    command command_string
     cwd new_resource.web_root
   end
 end
@@ -129,8 +130,13 @@ action :install do
 end
 
 action :update do
+  command_string = [
+    "su #{new_resource.user} -c '#{new_resource.install_directory}/#{new_resource.file} update",
+    "#{new_resource.package_name}'"
+  ].join(' ')
+
   execute new_resource.name do
-    command "su #{new_resource.user} -c '#{new_resource.install_directory}/#{new_resource.file} update'"
+    command command_string
     cwd new_resource.web_root
   end
 end
