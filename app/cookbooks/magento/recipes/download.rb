@@ -80,13 +80,13 @@ composer 'Require the B2B modules' do
   end
 end
 
-magento_data 'Install data packs' do
+custom_module_data 'Install data packs' do
   action :process
   data_type 'data_packs'
   data data_pack_list
 end
 
-magento_data 'Install custom modules' do
+custom_module_data 'Install custom modules' do
   action :process
   data_type 'custom_modules'
   data custom_module_list

@@ -1,14 +1,14 @@
 #
-# Cookbook:: magento
-# Resource:: magento_data
+# Cookbook:: magento_custom_modules
+# Resource:: custom_module_data
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-resource_name :magento_data
-provides :magento_data
+resource_name :custom_module_data
+provides :custom_module_data
 
-property :build_action,             String, default: node[:magento][:build][:action]
-property :data_type,                String
-property :data,                     Hash
+property :build_action,         String, default: node[:magento_custom_modules][:magento][:build_action]
+property :data_type,            String
+property :data,                 Hash
 
 action :process do
   unless new_resource.data.nil?
