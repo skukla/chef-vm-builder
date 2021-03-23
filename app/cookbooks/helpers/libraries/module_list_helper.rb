@@ -4,11 +4,11 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 module ModuleListHelper
-  def self.get_module_data(supported_settings, configured_custom_modules)
+  def self.get_module_data(supported_settings, configured_modules, data_type)
     module_list = []
     data_hash = {}
-    unless configured_custom_modules.nil?
-      configured_custom_modules.each do |_custom_key, custom_value|
+    unless configured_modules.nil?
+      configured_modules.each do |_custom_key, custom_value|
         custom_module_hash = {}
         if !custom_value.is_a? Hash
           package_name = custom_value
@@ -37,7 +37,7 @@ module ModuleListHelper
                 end
               end
             when :version
-              custom_module_hash[:package_version] = if custom_value[setting].nil?
+              custom_module_hash[:package_version] = if data_type == 'custom_modules' && custom_value[setting].nil?
                                                        'dev-master'
                                                      else
                                                        custom_value[setting]

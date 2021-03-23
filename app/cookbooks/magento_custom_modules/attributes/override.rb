@@ -8,5 +8,6 @@ configured_custom_modules = node[:custom_demo][:custom_modules]
 
 override[:magento_custom_modules][:module_list] = ModuleListHelper.get_module_data(
   supported_settings,
-  configured_custom_modules
+  configured_custom_modules,
+  'custom_modules'
 )

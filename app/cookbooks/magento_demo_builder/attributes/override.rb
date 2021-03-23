@@ -8,5 +8,6 @@ configured_data_packs = node[:custom_demo][:data_packs]
 
 override[:magento_demo_builder][:data_pack_list] = ModuleListHelper.get_module_data(
   supported_settings,
-  configured_data_packs
+  configured_data_packs,
+  'data_packs'
 )
