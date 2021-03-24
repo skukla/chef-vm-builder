@@ -19,53 +19,7 @@ property :data_pack_file_list,              Array,  default: node[:magento_demo_
 property :custom_module_list,               Hash,   default: node[:magento_demo_builder][:custom_modules]
 property :data_pack_data,                   Hash
 
-action :remove_data_patches do
-  module_name_data = StringReplaceHelper.prepare_module_names(
-    new_resource.data_pack_data[:value]['package_name'],
-    new_resource.data_pack_vendor,
-    new_resource.data_pack_data[:value]['repository_url'],
-    !new_resource.data_pack_data[:value]['repository_url'].include?('github') ? 'local' : 'remote'
-  )
-
-  if !new_resource.data_pack_data[:value]['repository_url'].include?('github')
-    module_path = 'app/code'
-    full_path = "#{module_name_data[:vendor_string]}/#{module_name_data[:module_string]}"
-  else
-    module_path = 'vendor'
-    full_path = "#{module_name_data[:vendor_name]}/#{module_name_data[:module_name]}"
-  end
-
-  ruby_block "Remove existing data patch for #{module_name_data[:vendor_name]}/#{module_name_data[:module_name]}" do
-    block do
-      DatabaseHelper.remove_data_patch(module_name_data[:module_string])
-      only_if Dir.exist?("#{new_resource.web_root}/#{module_path}/#{full_path}/fixtures")
-    end
-  end
-end
-
-action :remove_remote_data_patches do
-  module_name_data = StringReplaceHelper.prepare_module_names(
-    new_resource.data_pack_data[:value]['package_name'],
-    new_resource.data_pack_vendor,
-    new_resource.data_pack_data[:value]['repository_url'],
-    'remote'
-  )
-
-  vendor_name = module_name_data[:vendor_name]
-  module_name = module_name_data[:module_name]
-  module_string = module_name_data[:module_string]
-  source = "#{new_resource.web_root}/#{module_path}/#{vendor_name}/#{module_name}/fixtures"
-
-  ruby_block "Remove existing remote data patch for #{vendor_name}/#{module_name}" do
-    block do
-      DatabaseHelper.remove_data_patch(module_string)
-      only_if Dir.exist?(source) &&
-              DatabaseHelper.patch_exists(module_string)
-    end
-  end
-end
-
-action :build_local_data_packs do
+action :build_local_data_pack do
   unless new_resource.data_pack_data[:value]['repository_url'].nil?
     Dir["#{new_resource.chef_files_path}/*"].each do |entry|
       entry_path = [::File.dirname(entry), ::File.basename(entry)].join('/').split('/').pop(1).join
@@ -96,10 +50,7 @@ action :build_local_data_packs do
         "#{module_path}/#{vendor_string}/#{module_string}",
         "#{module_path}/#{vendor_string}/#{module_string}/media",
         "#{module_path}/#{vendor_string}/#{module_string}/fixtures",
-        "#{module_path}/#{vendor_string}/#{module_string}/etc",
-        "#{module_path}/#{vendor_string}/#{module_string}/Setup",
-        "#{module_path}/#{vendor_string}/#{module_string}/Setup/Patch",
-        "#{module_path}/#{vendor_string}/#{module_string}/Setup/Patch/Data"
+        "#{module_path}/#{vendor_string}/#{module_string}/etc"
       ].each do |dir|
         directory "Creating #{dir}" do
           path "#{new_resource.web_root}/#{dir}"
@@ -186,7 +137,7 @@ action :install_local_data_pack_content do
   end
 end
 
-action :clean_up_data_packs do
+action :clean_up_data_pack do
   module_name_data = StringReplaceHelper.prepare_module_names(
     new_resource.data_pack_data[:value]['package_name'],
     new_resource.data_pack_vendor,
@@ -207,5 +158,22 @@ action :clean_up_data_packs do
       ModuleListHelper.clean_up_module_data("#{new_resource.web_root}/#{module_path}/#{full_path}")
     end
     only_if { ::Dir.exist?("#{new_resource.web_root}/#{module_path}/#{full_path}") }
+  end
+end
+
+action :install_data_pack do
+  module_name_data = StringReplaceHelper.prepare_module_names(
+    new_resource.data_pack_data[:value]['package_name'],
+    new_resource.data_pack_vendor,
+    new_resource.data_pack_data[:value]['repository_url'],
+    !new_resource.data_pack_data[:value]['repository_url'].include?('github') ? 'local' : 'remote'
+  )
+
+  vendor_string = module_name_data[:vendor_string]
+  module_string = module_name_data[:module_string]
+
+  magento_cli "Installing the #{module_string} data pack" do
+    action :run
+    command_list "gxd:datainstall #{vendor_string}_#{module_string} -r"
   end
 end

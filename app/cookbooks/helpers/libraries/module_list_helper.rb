@@ -77,4 +77,20 @@ module ModuleListHelper
     end
     module_arr.uniq.join(' ')
   end
+
+  def self.get_remote_data_packs(module_list)
+    return if module_list.nil?
+
+    module_list.select do |_key, data|
+      !data[:repository_url].nil? && data[:repository_url].include?('github')
+    end
+  end
+
+  def self.get_remote_custom_modules(module_list)
+    return if module_list.nil?
+
+    module_list.select do |_key, data|
+      data[:repository_url].nil? || data[:repository_url].include?('github')
+    end
+  end
 end

@@ -1,0 +1,7 @@
+{
+	"name": "main",
+	"description": "VM controller role",
+	"chef_type": "role",
+	"json_class": "Chef::Role",
+	"run_list": ["recipe[app_controller::default]"]
+}

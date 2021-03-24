@@ -82,7 +82,7 @@ class App
   end
 
   def check_for_build_action
-    build_action_list = %w[install force_install restore update reinstall]
+    build_action_list = %w[install force_install reinstall restore update refresh]
     if @settings['application']['build']['action'].nil? || @settings['application']['build']['action'].empty?
       message = %W[
         #{@colors[:magenta]}[OOPS]: #{@colors[:reg]}It looks like your
@@ -135,8 +135,12 @@ class App
         abort(message)
       elsif (!@settings['custom_demo']['custom_modules'].nil? ||
             !@settings['custom_demo']['custom_modules'].empty?) &&
-            @settings['custom_demo']['custom_modules'].select { |_key, value| value.is_a?(Hash) }.find { |_key, value| value['name'].split('/')[1] == 'module-data-install' }.nil? ||
-            @settings['custom_demo']['custom_modules'].select { |_key, value| value.is_a?(Hash) }.find { |_key, value| value['repository_url'] == 'https://github.com/PMET-public/module-data-install.git' }.nil?
+            @settings['custom_demo']['custom_modules'].select do |_key, value|
+              value.is_a?(Hash)
+            end.find { |_key, value| value['name'].split('/')[1] == 'module-data-install' }.nil? ||
+            @settings['custom_demo']['custom_modules'].select do |_key, value|
+              value.is_a?(Hash)
+            end.find { |_key, value| value['repository_url'] == 'https://github.com/PMET-public/module-data-install.git' }.nil?
         message = %W[
           #{@colors[:magenta]}[OOPS]: #{@colors[:reg]}You've specified a data pack but it looks like
           you're missing the #{@colors[:bold]}#{@colors[:cyan]}data install custom module
@@ -157,16 +161,20 @@ class App
         end
       end
 
-      configured_local_data_packs = @settings['custom_demo']['data_packs'].values.reject { |value| value['repository_url'].include?('github') }
+      configured_local_data_packs = @settings['custom_demo']['data_packs'].values.reject do |value|
+        value['repository_url'].include?('github')
+      end
 
       return if configured_local_data_packs.nil?
 
       unless configured_local_data_packs.nil?
-        if @entries[:user_data_packs].empty?
-          missing_data_packs = configured_local_data_packs.map { |value| value['repository_url'] }
-        else
-          missing_data_packs = ((configured_local_data_packs.map { |value| value['repository_url'] }) - @entries[:user_data_packs])
-        end
+        missing_data_packs = if @entries[:user_data_packs].empty?
+                               configured_local_data_packs.map { |value| value['repository_url'] }
+                             else
+                               ((configured_local_data_packs.map do |value|
+                                   value['repository_url']
+                                 end) - @entries[:user_data_packs])
+                             end
         message = %W[
           #{@colors[:magenta]}[OOPS]: #{@colors[:reg]}Make sure the following folders are in your project's workspace and properly configured in your config.json file:
           \n\n#{@colors[:bold]}#{@colors[:cyan]}#{missing_data_packs.join("\n")}\n\n
