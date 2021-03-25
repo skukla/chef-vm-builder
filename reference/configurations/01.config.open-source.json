@@ -2,7 +2,7 @@
 	"vm": {
 		"ip": "192.168.57.12",
 		"name": "Luma Demo",
-		"hypervisor": "vmware_fusion"
+		"hypervisor": "virtualbox"
 	},
 	"custom_demo": {
 		"structure": {
@@ -22,7 +22,7 @@
 		},
 		"options": {
 			"family": "Open Source",
-			"version": "2.4.1"
+			"version": "2.4.2"
 		},
 		"build": {
 			"action": "install",

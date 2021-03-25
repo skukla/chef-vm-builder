@@ -57,11 +57,6 @@
 				}
 			}
 		},
-		"catalog": {
-			"price": {
-				"scope": "1"
-			}
-		},
 		"payment": {
 			"companycredit": {
 				"active": "1"

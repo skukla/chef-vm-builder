@@ -20,6 +20,9 @@
 			}
 		},
 		"catalog": {
+			"price": {
+				"scope": "1"
+			},
 			"magento_catalogpermissions": {
 				"enabled": "1",
 				"grant_checkout_items": "1",
@@ -76,7 +79,11 @@
 			},
 			"ups": {
 				"active": "1",
-				"allowed_methods": ["UPS Ground", "UPS Next Day Air"]
+				"active_rma": "1",
+				"allowed_methods": "01,03",
+				"free_method": "03",
+				"free_shipping_enable": 1,
+				"free_shipping_subtotal": 1000000000
 			}
 		},
 		"payment": {

@@ -2,7 +2,7 @@
 	"vm": {
 		"ip": "192.168.57.12",
 		"name": "Luma Demo",
-		"hypervisor": "vmware_fusion"
+		"hypervisor": "virtualbox"
 	},
 	"custom_demo": {
 		"structure": {
@@ -46,7 +46,7 @@
 		},
 		"options": {
 			"family": "Commerce",
-			"version": "2.4.1"
+			"version": "2.4.2"
 		},
 		"build": {
 			"action": "install",
@@ -64,7 +64,7 @@
 	},
 	"infrastructure": {
 		"php": "7.4",
-		"composer": "1.10.16",
+		"composer": "latest",
 		"database": "magento",
 		"elasticsearch": true,
 		"mailhog": true,
