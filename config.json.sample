@@ -2,7 +2,7 @@
 	"vm": {
 		"ip": "192.168.57.12",
 		"name": "Luma Demo",
-		"hypervisor": "vmware_fusion"
+		"hypervisor": "virtualbox"
 	},
 	"custom_demo": {
 		"structure": {
@@ -17,15 +17,6 @@
 				"name": "magentoese/module-data-install",
 				"repository_url": "https://github.com/PMET-public/module-data-install.git"
 			}
-		},
-		"admin_users": {
-			"Phil": {
-				"first_name": "Phil",
-				"last_name": "Baker",
-				"username": "phil",
-				"password": "Password1",
-				"email": "phil@luma.com"
-			}
 		}
 	},
 	"application": {
@@ -36,7 +27,7 @@
 		},
 		"options": {
 			"family": "Commerce",
-			"version": "2.4.1"
+			"version": "2.4.2"
 		},
 		"build": {
 			"action": "install",
@@ -48,13 +39,13 @@
 				"commands": []
 			}
 		},
-    "settings": {
-      "admin_password": "admin123"
-    }
+		"settings": {
+			"admin_password": "admin123"
+		}
 	},
 	"infrastructure": {
 		"php": "7.4",
-		"composer": "1.10.16",
+		"composer": "latest",
 		"elasticsearch": true,
 		"mailhog": true,
 		"samba": true
@@ -90,8 +81,12 @@
 	},
 	"vagrant": {
 		"plugins": {
-			"all": ["vagrant-hostsupdater"],
-			"vmware": ["vagrant-vmware-desktop"],
+			"all": [
+				"vagrant-hostsupdater"
+			],
+			"vmware": [
+				"vagrant-vmware-desktop"
+			],
 			"virtualbox": []
 		}
 	}

@@ -28,11 +28,6 @@
 				}
 			}
 		},
-		"catalog": {
-			"price": {
-				"scope": "1"
-			}
-		},
 		"web": {
 			"default": {
 				"cms_home_page": {
