@@ -7,59 +7,41 @@ user = node[:magento][:init][:user]
 web_root = node[:magento][:init][:web_root]
 build_action = node[:magento][:build][:action]
 apply_deploy_mode = node[:magento][:build][:deploy_mode][:apply]
+maintenance_mode_flag = "#{web_root}/var/.maintenance.flag"
+first_run_flag = "#{web_root}/var/.first-run-state.flag"
+crontab = "/var/spool/cron/crontabs/#{user}"
 
-magento_app 'Set application mode' do
-  action :set_application_mode
-  not_if { ::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == 'install' }
-  only_if { apply_deploy_mode }
-end
+if %w[install force_install reinstall update restore].include?(build_action)
+  if apply_deploy_mode
+    magento_app 'Set application mode' do
+      action :set_application_mode
+    end
+  end
 
-magento_app 'Enable cron' do
-  action :enable_cron
-  not_if do
-    ::File.exist?("/var/spool/cron/crontabs/#{user}") ||
-      ::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == 'install'
+  magento_app 'Enable cron' do
+    action :enable_cron
+    not_if { ::File.exist?(crontab) }
   end
 end
 
-magento_app 'Start consumers' do
-  action :start_consumers
-  only_if { !::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action != 'update' }
+if %w[install force_install reinstall].include?(build_action)
+  magento_app 'Start consumers and set indexers to On Schedule mode' do
+    action %i[start_consumers set_indexer_mode]
+  end
 end
 
-magento_app 'Set indexers to On Schedule mode' do
-  action :set_indexer_mode
-  only_if { !::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action != 'update' }
-end
-
-magento_app 'Reset indexers' do
-  action :reset_indexers
-  not_if { ::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == 'install' }
-end
-
-magento_app 'Reindex' do
-  action :reindex
-  not_if { ::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == 'install' }
-end
-
-magento_app 'Clean config and full page cache' do
-  action :clean_cache
+magento_app 'Reset indexers, reindex, clean cache, and set permissions' do
+  action %i[reset_indexers reindex clean_cache set_permissions]
   cache_types %w[config full_page]
-  not_if { ::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == 'install' }
-end
-
-magento_app 'Set final permissions' do
-  action :set_permissions
   remove_generated false
-  not_if { ::File.exist?("#{web_root}/var/.first-run-state.flag") && build_action == 'install' }
 end
 
 magento_app 'Disable maintenance mode' do
   action :disable_maintenance_mode
-  only_if { ::File.exist?("#{web_root}/var/.maintenance.flag") }
+  only_if { ::File.exist?(maintenance_mode_flag) }
 end
 
 magento_app 'Set first run flag' do
   action :set_first_run
-  not_if { ::File.exist?("#{web_root}/var/.first-run-state.flag") }
+  not_if { ::File.exist?(first_run_flag) }
 end

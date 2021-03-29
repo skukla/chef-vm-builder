@@ -176,7 +176,7 @@ action :set_permissions do
 end
 
 action :remove_modules do
-  ruby_block new_resource.name.to_s do
+  ruby_block 'Inserting replace block' do
     block do
       StringReplaceHelper.remove_modules(
         new_resource.modules_to_remove,
