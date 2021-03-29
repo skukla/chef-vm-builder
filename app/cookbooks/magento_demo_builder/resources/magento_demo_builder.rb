@@ -16,7 +16,6 @@ property :db_name,                          String, default: node[:magento_demo_
 property :chef_files_path,                  String, default: node[:magento_demo_builder][:chef_files][:path]
 property :data_pack_vendor,                 String, default: node[:magento_demo_builder][:data_pack][:vendor]
 property :data_pack_file_list,              Array,  default: node[:magento_demo_builder][:data_pack][:files]
-property :custom_module_list,               Hash,   default: node[:magento_demo_builder][:custom_modules]
 property :data_pack_data,                   Hash
 
 action :build_local_data_pack do
