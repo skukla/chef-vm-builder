@@ -1,4 +1,9 @@
 {
+	"data-install": {
+		"name": "magentoese/module-data-install",
+		"version": "dev-beta",
+		"repository_url": "https://github.com/PMET-public/module-data-install.git"
+	},
 	"product-badges": {
 		"name": "magentoese/module-productbadge",
 		"repository_url": "git@github.com:PMET-public/module-productbadge.git"

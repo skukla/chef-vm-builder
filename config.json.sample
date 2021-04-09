@@ -15,6 +15,7 @@
 		"custom_modules": {
 			"data-install": {
 				"name": "magentoese/module-data-install",
+				"version": "dev-beta",
 				"repository_url": "https://github.com/PMET-public/module-data-install.git"
 			}
 		}

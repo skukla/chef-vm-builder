@@ -8,14 +8,31 @@
 		"structure": {
 			"website": {
 				"base": "luma.demo",
-				"luma_b2b": "b2b.luma.demo"
+				"custom_b2b_website": "custom-b2b.demo"
+			},
+			"store_view": {
+				"custom_store_view_ca_fr": "ca-fr.luma.demo"
 			}
 		},
 		"backup": "",
-		"data_packs": {},
+		"data_packs": {
+			"base-b2c-website": {
+				"name": "base-b2c-website",
+				"repository_url": "base-b2c-website"
+			},
+			"custom-b2b-website": {
+				"name": "custom-b2b-website",
+				"repository_url": "custom-b2b-website"
+			},
+			"custom-store-view-ca-fr": {
+				"name": "custom-store-view-ca-fr",
+				"repository_url": "custom-store-view-ca-fr"
+			}
+		},
 		"custom_modules": {
 			"data-install": {
 				"name": "magentoese/module-data-install",
+				"version": "dev-beta",
 				"repository_url": "https://github.com/PMET-public/module-data-install.git"
 			},
 			"sctools": {
