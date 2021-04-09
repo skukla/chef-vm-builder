@@ -3,11 +3,18 @@
 # Recipe:: uninstall
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-web_root = node[:magento][:init][:web_root]
 build_action = node[:magento][:build][:action]
+web_root = node[:magento][:init][:web_root]
 
-if ::Dir.exist?(web_root) && !::Dir.empty?(web_root) && %w[force_install restore].include?(build_action)
-  magento_app 'Uninstall Magento' do
-    action :uninstall
+case build_action
+when 'reinstall'
+  magento_app 'Prepare reinstall' do
+    action :prepare_reinstall
+    only_if { ::File.exist?("#{web_root}/app/etc/env.php") }
+  end
+when 'force_install', 'restore'
+  vm_cli 'Clearing the web root' do
+    action :run
+    command_list 'clear-web-root'
   end
 end

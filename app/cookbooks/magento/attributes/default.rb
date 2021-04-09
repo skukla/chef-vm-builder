@@ -4,7 +4,7 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 default[:magento][:options][:family] = 'community'
-default[:magento][:options][:version] = '2.4.0'
+default[:magento][:options][:version] = '2.4.2'
 default[:magento][:options][:minimum_stability] = 'stable'
 default[:magento][:options][:community_consumer_list] = [
   'product_action_attribute.update',
@@ -21,8 +21,7 @@ default[:magento][:options][:community_consumer_list] = [
   'inventory.indexer.stock',
   'media.content.synchronization',
   'media.gallery.synchronization',
-  'media.gallery.renditions.update',
-  'async.operations.all'
+  'media.gallery.renditions.update'
 ]
 
 default[:magento][:options][:enterprise_consumer_list] = [

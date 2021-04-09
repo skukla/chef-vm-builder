@@ -52,7 +52,7 @@ end
 
 action :configure do
   %w[cli fpm].each do |type|
-    template type.to_s do
+    template type do
       source 'php.ini.erb'
       path "/etc/php/#{new_resource.version}/#{type}/php.ini"
       owner 'root'
@@ -68,7 +68,7 @@ action :configure do
     end
     next unless type == 'fpm'
 
-    template type.to_s do
+    template type do
       source 'www.conf.erb'
       path "/etc/php/#{new_resource.version}/#{type}/pool.d/www.conf"
       owner 'root'
@@ -133,9 +133,10 @@ end
 
 action :configure_sendmail do
   %w[cli fpm].each do |php_type|
-    ruby_block new_resource.name.to_s do
+    ruby_block new_resource.name do
       block do
-        StringReplaceHelper.set_php_sendmail_path(php_type.to_s, new_resource.version.to_s, new_resource.sendmail_path.to_s)
+        StringReplaceHelper.set_php_sendmail_path(php_type, new_resource.version,
+                                                  new_resource.sendmail_path)
       end
       only_if { ::File.exist?("/etc/php/#{new_resource.version}/#{php_type}/php.ini") }
     end

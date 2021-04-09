@@ -87,6 +87,15 @@ action :create_database do
   end
 end
 
+action :drop_database do
+  ruby_block "Drop the #{new_resource.db_name} database" do
+    block do
+      `mysql --user=root -e "DROP DATABASE IF EXISTS #{new_resource.db_name};"`
+    end
+    action :create
+  end
+end
+
 action :configure_pre_app_install do
   new_resource.app_install_settings.each do |setting|
     value = 1 ? setting == 'log_bin_trust_function_creators' : value = 0

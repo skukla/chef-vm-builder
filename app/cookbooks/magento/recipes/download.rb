@@ -8,7 +8,6 @@ build_action = node[:magento][:build][:action]
 apply_patches = node[:magento][:patches][:apply]
 install_sample_data = node[:magento][:build][:sample_data]
 sample_data_flag = "#{web_root}/var/.sample-data-state.flag"
-sample_data_installed = ::File.exist?(sample_data_flag)
 
 include_recipe 'magento_patches::default' if apply_patches && %w[install force_install update].include?(build_action)
 
@@ -27,7 +26,7 @@ end
 if install_sample_data
   magento_app 'Add sample data' do
     action :add_sample_data
-    not_if { sample_data_installed }
+    not_if { ::File.exist?(sample_data_flag) }
   end
 end
 

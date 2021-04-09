@@ -17,6 +17,7 @@ property :user,                     String,                  default: node[:mage
 property :group,                    String,                  default: node[:magento][:init][:user]
 property :family,                   String,                  default: node[:magento][:options][:family]
 property :version,                  String,                  default: node[:magento][:options][:version]
+property :build_action,             String,                  default: node[:magento][:build][:action]
 property :modules_to_remove,        [String, Array],         default: node[:magento][:build][:modules_to_remove]
 property :use_elasticsearch,        [TrueClass, FalseClass], default: node[:magento][:elasticsearch][:use]
 property :elasticsearch_host,       String,                  default: node[:magento][:elasticsearch][:host]
@@ -62,7 +63,9 @@ action :install do
   if new_resource.install_settings[:use_secure_frontend] || new_resource.install_settings[:use_secure_admin]
     install_string = [install_string, secure_url_string].join(' ')
   end
-  install_string = [install_string, cleanup_database_string] if new_resource.install_settings[:cleanup_database]
+  if new_resource.install_settings[:cleanup_database] && new_resource.build_action != 'install'
+    install_string = [install_string, cleanup_database_string]
+  end
   install_string = [install_string, session_save_string].join(' ')
   unless new_resource.install_settings[:encryption_key].nil? || new_resource.install_settings[:encryption_key].empty?
     install_string = [install_string, encryption_key_string].join(' ')
@@ -264,9 +267,9 @@ action :set_first_run do
   end
 end
 
-action :uninstall do
-  vm_cli 'Clearing the web root' do
-    action :run
-    command_list 'clear-web-root'
+action :prepare_reinstall do
+  execute 'Remove app/etc/env.php' do
+    command 'rm -rf app/etc/env.php'
+    cwd new_resource.web_root
   end
 end

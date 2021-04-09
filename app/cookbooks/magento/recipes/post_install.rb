@@ -16,12 +16,16 @@ if %w[install force_install reinstall update restore].include?(build_action)
     magento_app 'Set application mode' do
       action :set_application_mode
     end
+  else
+    magento_app 'Compile dependencies and deploy static content' do
+      action %i[di_compile deploy_static_content]
+    end
   end
+end
 
-  magento_app 'Enable cron' do
-    action :enable_cron
-    not_if { ::File.exist?(crontab) }
-  end
+magento_app 'Enable cron' do
+  action :enable_cron
+  not_if { ::File.exist?(crontab) }
 end
 
 if %w[install force_install reinstall].include?(build_action)

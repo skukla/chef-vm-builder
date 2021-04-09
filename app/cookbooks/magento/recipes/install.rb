@@ -9,8 +9,16 @@ mysql 'Configure MySQL settings before installation' do
   action %i[configure_pre_app_install restart]
 end
 
-mysql 'Create the database' do
-  action :create_database
+if %w[install force_install].include?(build_action)
+  mysql 'Create the database' do
+    action :create_database
+  end
+end
+
+if build_action == 'update'
+  magento_app 'Upgrade the Magento database' do
+    action :db_upgrade
+  end
 end
 
 if %w[install force_install reinstall].include?(build_action)
