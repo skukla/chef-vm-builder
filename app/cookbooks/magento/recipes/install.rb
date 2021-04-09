@@ -4,6 +4,7 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 build_action = node[:magento][:build][:action]
+use_elasticsearch = node[:magento][:elasticsearch][:use]
 
 mysql 'Configure MySQL settings before installation' do
   action %i[configure_pre_app_install restart]
@@ -12,6 +13,12 @@ end
 if %w[install force_install].include?(build_action)
   mysql 'Create the database' do
     action :create_database
+  end
+end
+
+if use_elasticsearch
+  service 'elasticsearch' do
+    action :start
   end
 end
 
