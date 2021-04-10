@@ -5,6 +5,12 @@ function www() {
 }
 export -f www
 
+function list-cli() {
+  www
+  ./bin/magento list
+}
+export -f list-cli
+
 function reports() {
   www
   if [ ! -z "$(ls -A ./var/report > /dev/null 2>&1;)" ]; then
@@ -707,3 +713,9 @@ function restore() {
   printf "\nBackup restored in ${MINUTES} minutes, ${SECONDS} seconds.\n"
 }
 export -f restore
+
+function install-data-pack() {
+  www
+  ./bin/magento gxd:datainstall $1 -r
+}
+export -f install-data-pack
