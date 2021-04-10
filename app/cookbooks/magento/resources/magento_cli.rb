@@ -46,7 +46,6 @@ action :reindex do
   execute new_resource.name do
     command "su #{new_resource.user} -c 'bin/magento indexer:reindex #{indexers}'"
     retries 2
-    ignore_failure true
     cwd new_resource.web_root
   end
 end

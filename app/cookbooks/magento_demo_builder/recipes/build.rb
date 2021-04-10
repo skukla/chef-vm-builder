@@ -27,4 +27,5 @@ end
 magento_app 'Set permissions on directories and files' do
   action :set_permissions
   permission_dirs ['var/', 'pub/']
+  remove_generated false
 end
