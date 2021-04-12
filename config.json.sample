@@ -1,6 +1,6 @@
 {
 	"vm": {
-		"ip": "192.168.57.12",
+		"ip": "192.168.56.12",
 		"name": "Luma Demo",
 		"hypervisor": "virtualbox"
 	},
