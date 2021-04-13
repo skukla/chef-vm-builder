@@ -25,7 +25,7 @@ if build_action == 'install' && (::Dir.exist?(web_root) && !::Dir.empty?(web_roo
 end
 
 include_recipe 'init::disable_cron'
-if %w[install force_install].include?(build_action)
+if %w[install force_install restore].include?(build_action)
   include_recipe 'app_controller::base'
   include_recipe 'app_controller::infrastructure'
 end
