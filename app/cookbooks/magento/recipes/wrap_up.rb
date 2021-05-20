@@ -11,10 +11,9 @@ vm_cli_commands = commands.reject { |command| command.include?(':') }
 magento_cli_commands = commands.select { |command| command.include?(':') }
 maintenance_mode_flag = "#{web_root}/var/.maintenance.flag"
 
-media_gallery_commands = "config:set system/media_gallery/enabled #{ValueHelper.process_value(enable_media_gallery)}"
-media_gallery_commands = [media_gallery_commands, 'media-gallery:sync'] if enable_media_gallery
-
 if enable_media_gallery
+  media_gallery_commands = "config:set system/media_gallery/enabled #{ValueHelper.process_value(enable_media_gallery)}"
+  media_gallery_commands = [media_gallery_commands, 'media-gallery:sync']
   magento_cli 'Running the enable_media_gallery hook' do
     action :run
     command_list media_gallery_commands
