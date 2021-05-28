@@ -166,6 +166,7 @@ export -f di-compile
 function deploy-content() {
   printf "\nDeploying static content...\n"
   www
+  rm -rf ./pub/static/*
   ./bin/magento setup:static-content:deploy -f
 }
 export -f deploy-content
