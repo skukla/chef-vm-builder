@@ -11,6 +11,7 @@ project/patches/*
 reference/backups/*
 reference/data-packs/*
 reference/patches/*
+reference/*.pem
 tools/
 !app/backups/.gitignore
 !app/cookbooks/magento_patches/files/default/.gitignore
