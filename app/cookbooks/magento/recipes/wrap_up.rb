@@ -4,6 +4,7 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 web_root = node[:magento][:init][:web_root]
+apply_deploy_mode = node[:magento][:build][:deploy_mode][:apply]
 warm_cache = node[:magento][:build][:hooks][:warm_cache]
 enable_media_gallery = node[:magento][:build][:hooks][:enable_media_gallery]
 commands = node[:magento][:build][:hooks][:commands]
@@ -30,6 +31,10 @@ if !commands.nil? && !commands.empty?
     action :run
     command_list vm_cli_commands
   end
+end
+
+magento_app 'Deploy static content after data pack installation' do
+  action %i[deploy_static_content]
 end
 
 magento_app 'Reset indexers, reindex, clean cache, and set permissions' do
