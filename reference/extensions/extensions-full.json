@@ -40,7 +40,8 @@
 	},
 	"magento": {
 		"product-recommendations": "magento/product-recommendations",
-		"pagebuilder-product-recommendations": "magento/module-page-builder-product-recommendations"
+		"pagebuilder-product-recommendations": "magento/module-page-builder-product-recommendations",
+		"live-search": "magento/live-search"
 	},
 	"smile": {
 		"elasticsuite": {
@@ -56,12 +57,12 @@
 			"repository_url": "git@github.com:skukla/module-bounteous-aem-assets.git"
 		}
 	},
-	"third-party": {
-		"dependent-options": {
+	"miscellaneous-third-party": {
+		"pektsekye-dependent-options": {
 			"name": "pektsekye/module-option-dependent",
 			"repository_url": "git@github.com:skukla/module-dependent-custom-options.git"
 		},
-		"delete-orders": "mageplaza/module-delete-orders"
+		"mageplaza-delete-orders": "mageplaza/module-delete-orders"
 	},
 	"paradox-labs": {
 		"paradoxlabs-tokenbase": {
@@ -145,6 +146,20 @@
 			"name": "amasty/module-store-locator",
 			"version": "2.4.5.x-dev",
 			"repository_url": "git@github.com:PMET-public/amasty-module-store-locator.git"
+		}
+	},
+	"webkul": {
+		"webkul-marketplace-auction": {
+			"name": "webkul/marketplace-auction",
+			"repository_url": "git@github.com:skukla/module-webkul-marketplace-auction.git"
+		},
+		"webkul-multi-vendor-marketplace": {
+			"name": "webkul/module-marketplace",
+			"repository_url": "git@github.com:skukla/module-webkul-multi-vendor-marketplace.git"
+		},
+		"webkul-booking-system": {
+			"name": "webkul/booking-and-reservation-system",
+			"repository_url": "git@github.com:skukla/module-webkul-booking-system.git"
 		}
 	}
 }

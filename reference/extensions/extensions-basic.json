@@ -21,5 +21,6 @@
 		"repository_url": "git@github.com:PMET-public/theme-frontend-custom.git"
 	},
 	"product-recommendations": "magento/product-recommendations",
-	"pagebuilder-product-recommendations": "magento/module-page-builder-product-recommendations"
+	"pagebuilder-product-recommendations": "magento/module-page-builder-product-recommendations",
+	"live-search": "magento/live-search"
 }
