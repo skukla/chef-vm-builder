@@ -451,8 +451,8 @@ export -f clear-cron-schedule
 # Error Reporting / Logs
 function list-reports() {
   www
-  if [ ! -z "$(ls -A ./var/report > /dev/null 2>&1;)" ]; then
-    ll var/report > /dev/null 2>&1;
+  if [ -d "./var/report" ]; then
+    ll ./var/report
   else
     printf "\nThere are no error reports to view.\n\n"
   fi
