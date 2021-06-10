@@ -46,10 +46,16 @@
 	"smile": {
 		"elasticsuite": {
 			"name": "smile/elasticsuite",
-			"version": "~2.8"
+			"version": "2.10.x"
 		},
-		"elasticsuite-shared-catalog": "smile/module-elasticsuite-shared-catalog",
-		"elasticsuite-quick-order": "smile/module-elasticsuite-quick-order"
+		"elasticsuite-shared-catalog": {
+			"name": "smile/module-elasticsuite-shared-catalog",
+			"version": "2.10.x"
+		},
+		"elasticsuite-quick-order": {
+			"name": "smile/module-elasticsuite-quick-order",
+			"version": "2.10.x"
+		}
 	},
 	"adobe-connectors": {
 		"bounteous-aem": {
@@ -156,10 +162,6 @@
 		"webkul-multi-vendor-marketplace": {
 			"name": "webkul/module-marketplace",
 			"repository_url": "git@github.com:skukla/module-webkul-multi-vendor-marketplace.git"
-		},
-		"webkul-booking-system": {
-			"name": "webkul/booking-and-reservation-system",
-			"repository_url": "git@github.com:skukla/module-webkul-booking-system.git"
 		}
 	}
 }
