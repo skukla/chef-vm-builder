@@ -46,6 +46,11 @@ unless node[:magento][:options][:enterprise_consumer_list].empty?
 end
 default[:magento][:options][:consumer_list] = consumer_list
 
+default[:magento][:csc_options][:key_path] = '/var/chef/cache/cookbooks/magento/files/default'
+default[:magento][:csc_options][:production_private_key] = ''
+default[:magento][:csc_options][:project_id] = ''
+default[:magento][:csc_options][:environment_id] = ''
+
 default[:magento][:build][:action] = 'install'
 default[:magento][:build][:modules_to_remove] = [
   'magento/module-csp',

@@ -17,6 +17,7 @@ class App
       backup: 'backup',
       data_packs: 'data_packs',
       patches: 'patches',
+      keys: 'keys',
       certificate: 'certificate'
     }
     @files = {
@@ -27,9 +28,11 @@ class App
       backups: Pathname.new("#{@dirs[:root]}/#{@dirs[:workspace]}/#{@dirs[:backup]}"),
       data_packs: Pathname.new("#{@dirs[:root]}/#{@dirs[:workspace]}/#{@dirs[:data_packs]}"),
       patches: Pathname.new("#{@dirs[:root]}/#{@dirs[:workspace]}/#{@dirs[:patches]}"),
+      keys: Pathname.new("#{@dirs[:root]}/#{@dirs[:workspace]}/#{@dirs[:keys]}"),
       chef_backup_files: Pathname.new("#{@dirs[:app]}/cookbooks/magento_restore/files/default"),
       chef_data_pack_files: Pathname.new("#{@dirs[:app]}/cookbooks/magento_demo_builder/files/default"),
       chef_patch_files: Pathname.new("#{@dirs[:app]}/cookbooks/magento_patches/files/default"),
+      chef_key_files: Pathname.new("#{@dirs[:app]}/cookbooks/magento/files/default"),
       ssl_certificates: Pathname.new("#{@dirs[:app]}/#{@dirs[:certificate]}"),
       environment_file: Pathname.new("#{@dirs[:app]}/#{@dirs[:environments]}/#{@files[:environment]}"),
       config_file: Pathname.new("#{@dirs[:root]}/#{@files[:config]}")
@@ -38,9 +41,11 @@ class App
       user_backups: Dir.entries(@paths[:backups]) - %w[. .. .gitignore .DS_Store],
       user_data_packs: Dir.entries(@paths[:data_packs]) - %w[. .. .gitignore .DS_Store],
       user_patches: Dir.entries(@paths[:patches]) - %w[. .. .gitignore],
+      user_keys: Dir.entries(@paths[:keys]) - %w[. .. .gitignore],
       chef_backup_files: Dir.entries(@paths[:chef_backup_files]) - %w[. .. .gitignore .DS_Store],
       chef_data_pack_files: Dir.entries(@paths[:chef_data_pack_files]) - %w[. .. .gitignore .DS_Store],
-      chef_patch_files: Dir.entries(@paths[:chef_patch_files]) - %w[. .. .gitignore .DS_Store]
+      chef_patch_files: Dir.entries(@paths[:chef_patch_files]) - %w[. .. .gitignore .DS_Store],
+      chef_key_files: Dir.entries(@paths[:chef_key_files]) - %w[. .. .gitignore .DS_Store]
     }
     @colors = {
       bold: `tput bold`,
@@ -60,7 +65,8 @@ class App
       Please check your config.json file.\n\n
     ].join(' ')
     %w[public_key private_key github_token].each do |setting|
-      if @settings['application']['authentication'][setting].nil? || @settings['application']['authentication'][setting].empty?
+      if @settings['application']['authentication']['composer'][setting].nil? ||
+         @settings['application']['authentication']['composer'][setting].empty?
         abort(message)
       end
     end
@@ -184,6 +190,69 @@ class App
     end
   end
 
+  def check_for_saas_values_and_key
+    message = %W[
+      #{@colors[:magenta]}[OOPS]: #{@colors[:reg]}You've specified commerce services credentials but it looks like
+      you're missing either the #{@colors[:bold]}#{@colors[:cyan]}product recommendations\n
+      #{@colors[:reg]}or the #{@colors[:bold]}#{@colors[:cyan]}live search #{@colors[:reg]}custom module in your config.json file.\n\n
+    ].join(' ')
+
+    if @settings['custom_demo']['custom_modules'].nil? || @settings['custom_demo']['custom_modules'].empty?
+      abort(message)
+    end
+
+    result = @settings['custom_demo']['custom_modules'].select do |_key, value|
+      value.include?('magento/product-recommendations') ||
+        value.include?('magento/live-search')
+    end
+    abort(message) if result.empty?
+
+    production_private_key = @entries[:user_keys].include?('privateKey-production.pem')
+    message = %W[
+      #{@colors[:magenta]}[OOPS]: #{@colors[:reg]}It looks like you're trying to configure commerce services
+      but you're missing your #{@colors[:bold]}#{@colors[:cyan]}Saas Production API Key#{@colors[:reg]},\n
+      #{@colors[:bold]}#{@colors[:cyan]}Saas Project ID#{@colors[:reg]}, or
+      #{@colors[:bold]}#{@colors[:cyan]}Saas Data Space ID#{@colors[:reg]}.\n\n
+      Please check your composer.json and make sure these items are configured inside the \n
+      #{@colors[:bold]}#{@colors[:cyan]}application/authentication/commerce_services_connector
+      #{@colors[:reg]}section.\n\n
+    ].join(' ')
+
+    abort(message) unless @settings['application']['authentication']['commerce_services_connector'].is_a? Hash
+
+    %w[production_api_key project_id data_space_id].each do |setting|
+      next unless @settings['application']['authentication']['commerce_services_connector'][setting].nil?
+
+      abort(message)
+    end
+
+    if !@settings['application']['authentication']['commerce_services_connector']['production_api_key'].empty? &&
+       (@settings['application']['authentication']['commerce_services_connector']['project_id'].empty? || @settings['application']['authentication']['commerce_services_connector']['data_space_id'].empty?)
+      abort(message)
+    elsif !@settings['application']['authentication']['commerce_services_connector']['project_id'].empty? &&
+          (@settings['application']['authentication']['commerce_services_connector']['production_api_key'].empty? || @settings['application']['authentication']['commerce_services_connector']['data_space_id'].empty?)
+      abort(message)
+    elsif !@settings['application']['authentication']['commerce_services_connector']['data_space_id'].empty? &&
+          (@settings['application']['authentication']['commerce_services_connector']['production_api_key'].empty? || @settings['application']['authentication']['commerce_services_connector']['project_id'].empty?)
+      abort(message)
+    end
+
+    message = %W[
+      #{@colors[:magenta]}[OOPS]: #{@colors[:reg]}It looks like you're trying to configure commerce services
+      but you're missing your #{@colors[:bold]}#{@colors[:cyan]}saas production key#{@colors[:reg]}.\nPlease
+      make sure a file consisting of your production saas key called
+      #{@colors[:bold]}#{@colors[:cyan]}privateKey-production.pem#{@colors[:reg]}
+      is present\ninside of your project/keys directory.\n\n
+    ].join(' ')
+
+    %w[production_api_key project_id data_space_id].each do |setting|
+      if !@settings['application']['authentication']['commerce_services_connector'][setting].empty? &&
+         production_private_key == false
+        abort(message)
+      end
+    end
+  end
+
   def copy_data_packs
     unless @entries[:chef_data_pack_files].empty?
       @entries[:chef_data_pack_files].each do |entry|
@@ -203,6 +272,17 @@ class App
     end
     @entries[:user_patches].each do |entry|
       FileUtils.cp_r("#{@paths[:patches]}/#{entry}", @paths[:chef_patch_files])
+    end
+  end
+
+  def copy_keys
+    unless @entries[:chef_key_files].empty?
+      @entries[:chef_key_files].each do |entry|
+        FileUtils.rm_r("#{@paths[:chef_key_files]}/#{entry}")
+      end
+    end
+    @entries[:user_keys].each do |entry|
+      FileUtils.cp_r("#{@paths[:keys]}/#{entry}", @paths[:chef_key_files])
     end
   end
 

@@ -6,9 +6,12 @@
 supported_settings = {
   custom_demo: %i[structure],
   installation_options: %i[family version minimum_stability directory consumer_list],
+  csc_options: %i[production_api_key sandbox_api_key project_id data_space_id],
   build_options: [:action, :force_install, :sample_data, :modules_to_remove, { deploy_mode: %i[apply mode] }],
   build_hooks: %i[warm_cache enable_media_gallery commands],
-  installation_settings: %i[backend_frontname language timezone currency admin_firstname admin_lastname admin_email admin_user admin_password use_rewrites use_secure_frontend use_secure_admin cleanup_database session_save encryption_key]
+  installation_settings: %i[backend_frontname language timezone currency admin_firstname admin_lastname
+                            admin_email admin_user admin_password use_rewrites use_secure_frontend
+                            use_secure_admin cleanup_database session_save encryption_key]
 }
 
 supported_settings.each do |setting_key, setting_data|
@@ -23,6 +26,21 @@ supported_settings.each do |setting_key, setting_data|
         end
       else
         override[:magento][:options][option] = node[:application][:options][option]
+      end
+    end
+  when :csc_options
+    next unless node[:application][:authentication][:commerce_services_connector].is_a? Chef::Node::ImmutableMash
+
+    setting_data.each do |option|
+      next if node[:application][:authentication][:commerce_services_connector][option].nil?
+
+      case option
+      when :data_space_id
+        override[:magento][setting_key][:environment_id] =
+          node[:application][:authentication][:commerce_services_connector][:data_space_id]
+      else
+        override[:magento][setting_key][option] =
+          node[:application][:authentication][:commerce_services_connector][option]
       end
     end
   when :build_options
@@ -84,4 +102,13 @@ supported_settings.each do |setting_key, setting_data|
       end
     end
   end
+end
+
+key_file = "#{node[:magento][:csc_options][:key_path]}/privateKey-production.pem"
+key_value = ''
+if File.exist?(key_file)
+  File.readlines(key_file).each do |line|
+    key_value += line
+  end
+  override[:magento][:csc_options][:production_private_key] = key_value
 end
