@@ -197,17 +197,31 @@ class App
       #{@colors[:reg]}or the #{@colors[:bold]}#{@colors[:cyan]}live search #{@colors[:reg]}custom module in your config.json file.\n\n
     ].join(' ')
 
-    if @settings['custom_demo']['custom_modules'].nil? || @settings['custom_demo']['custom_modules'].empty?
-      abort(message)
-    end
+    no_custom_modules = @settings['custom_demo']['custom_modules'].any? { |_k, v| v.nil? || v.empty? }
 
-    result = @settings['custom_demo']['custom_modules'].select do |_key, value|
+    required_modules = @settings['custom_demo']['custom_modules'].select do |_key, value|
       value.include?('magento/product-recommendations') ||
         value.include?('magento/live-search')
     end
-    abort(message) if result.empty?
 
-    production_private_key = @entries[:user_keys].include?('privateKey-production.pem')
+    abort(message) if no_custom_modules || required_modules.empty?
+
+    return unless @settings['application']['authentication']['commerce_services_connector'].is_a?(Hash)
+
+    values_are_nil = @settings['application']['authentication']['commerce_services_connector'].any? do |_k, v|
+      v.nil?
+    end
+    values_are_empty = @settings['application']['authentication']['commerce_services_connector'].any? do |_k, v|
+      v.empty?
+    end
+
+    missing_values = []
+    filled_values = []
+    @settings['application']['authentication']['commerce_services_connector'].each do |_key, value|
+      missing_values << value if value.empty?
+      filled_values << value unless value.empty?
+    end
+
     message = %W[
       #{@colors[:magenta]}[OOPS]: #{@colors[:reg]}It looks like you're trying to configure commerce services
       but you're missing your #{@colors[:bold]}#{@colors[:cyan]}Saas Production API Key#{@colors[:reg]},\n
@@ -218,24 +232,7 @@ class App
       #{@colors[:reg]}section.\n\n
     ].join(' ')
 
-    abort(message) unless @settings['application']['authentication']['commerce_services_connector'].is_a? Hash
-
-    %w[production_api_key project_id data_space_id].each do |setting|
-      next unless @settings['application']['authentication']['commerce_services_connector'][setting].nil?
-
-      abort(message)
-    end
-
-    if !@settings['application']['authentication']['commerce_services_connector']['production_api_key'].empty? &&
-       (@settings['application']['authentication']['commerce_services_connector']['project_id'].empty? || @settings['application']['authentication']['commerce_services_connector']['data_space_id'].empty?)
-      abort(message)
-    elsif !@settings['application']['authentication']['commerce_services_connector']['project_id'].empty? &&
-          (@settings['application']['authentication']['commerce_services_connector']['production_api_key'].empty? || @settings['application']['authentication']['commerce_services_connector']['data_space_id'].empty?)
-      abort(message)
-    elsif !@settings['application']['authentication']['commerce_services_connector']['data_space_id'].empty? &&
-          (@settings['application']['authentication']['commerce_services_connector']['production_api_key'].empty? || @settings['application']['authentication']['commerce_services_connector']['project_id'].empty?)
-      abort(message)
-    end
+    abort(message) if values_are_nil || (!missing_values.empty? && !filled_values.empty?)
 
     message = %W[
       #{@colors[:magenta]}[OOPS]: #{@colors[:reg]}It looks like you're trying to configure commerce services
@@ -245,12 +242,8 @@ class App
       is present\ninside of your project/keys directory.\n\n
     ].join(' ')
 
-    %w[production_api_key project_id data_space_id].each do |setting|
-      if !@settings['application']['authentication']['commerce_services_connector'][setting].empty? &&
-         production_private_key == false
-        abort(message)
-      end
-    end
+    production_private_key = @entries[:user_keys].include?('privateKey-production.pem')
+    abort(message) if values_are_empty && production_private_key == false
   end
 
   def copy_data_packs
