@@ -191,11 +191,7 @@ class App
   end
 
   def check_for_saas_values_and_key
-    message = %W[
-      #{@colors[:magenta]}[OOPS]: #{@colors[:reg]}You've specified commerce services credentials but it looks like
-      you're missing either the #{@colors[:bold]}#{@colors[:cyan]}product recommendations\n
-      #{@colors[:reg]}or the #{@colors[:bold]}#{@colors[:cyan]}live search #{@colors[:reg]}custom module in your config.json file.\n\n
-    ].join(' ')
+    return unless @settings['application']['authentication']['commerce_services_connector'].is_a?(Hash)
 
     no_custom_modules = @settings['custom_demo']['custom_modules'].any? { |_k, v| v.nil? || v.empty? }
 
@@ -203,10 +199,6 @@ class App
       value.include?('magento/product-recommendations') ||
         value.include?('magento/live-search')
     end
-
-    abort(message) if no_custom_modules || required_modules.empty?
-
-    return unless @settings['application']['authentication']['commerce_services_connector'].is_a?(Hash)
 
     values_are_nil = @settings['application']['authentication']['commerce_services_connector'].any? do |_k, v|
       v.nil?
@@ -221,6 +213,14 @@ class App
       missing_values << value if value.empty?
       filled_values << value unless value.empty?
     end
+
+    message = %W[
+      #{@colors[:magenta]}[OOPS]: #{@colors[:reg]}You've specified commerce services credentials but it looks like
+      you're missing either the #{@colors[:bold]}#{@colors[:cyan]}product recommendations\n
+      #{@colors[:reg]}or the #{@colors[:bold]}#{@colors[:cyan]}live search #{@colors[:reg]}custom module in your config.json file.\n\n
+    ].join(' ')
+
+    abort(message) if (no_custom_modules || required_modules.empty?) && !values_are_empty
 
     message = %W[
       #{@colors[:magenta]}[OOPS]: #{@colors[:reg]}It looks like you're trying to configure commerce services
@@ -243,7 +243,7 @@ class App
     ].join(' ')
 
     production_private_key = @entries[:user_keys].include?('privateKey-production.pem')
-    abort(message) if values_are_empty && production_private_key == false
+    abort(message) if !values_are_nil && !values_are_empty && production_private_key == false
   end
 
   def copy_data_packs

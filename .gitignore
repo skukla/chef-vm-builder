@@ -2,6 +2,7 @@
 .vagrant/
 config.json
 app/backups/*
+app/cookbooks/magento/files/default/*
 app/cookbooks/magento_restore/files/default/*
 app/cookbooks/magento_demo_builder/files/default/*
 app/cookbooks/magento_patches/files/default/*
@@ -14,6 +15,7 @@ reference/patches/*
 reference/*.pem
 tools/
 !app/backups/.gitignore
+!app/cookbooks/magento/files/default/.gitignore
 !app/cookbooks/magento_patches/files/default/.gitignore
 !app/cookbooks/magento_restore/files/default/.gitignore
 !app/cookbooks/magento_demo_builder/files/default/.gitignore
