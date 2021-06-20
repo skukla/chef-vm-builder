@@ -48,7 +48,7 @@ action :build_local_data_pack do
         "#{module_path}/#{vendor_string}",
         "#{module_path}/#{vendor_string}/#{module_string}",
         "#{module_path}/#{vendor_string}/#{module_string}/media",
-        "#{module_path}/#{vendor_string}/#{module_string}/fixtures",
+        "#{module_path}/#{vendor_string}/#{module_string}/data",
         "#{module_path}/#{vendor_string}/#{module_string}/etc"
       ].each do |dir|
         directory "Creating #{dir}" do
@@ -107,10 +107,9 @@ action :install_local_data_pack_content do
         next
       end
 
-      dest_path = media_type == 'data' ? 'fixtures' : media_type
       remote_directory "Adding #{media_type} files to #{vendor_name}/#{module_name}" do
         source "#{new_resource.data_pack_data[:value]['repository_url']}/#{media_type}"
-        path "#{new_resource.web_root}/#{module_path}/#{vendor_string}/#{module_string}/#{dest_path}"
+        path "#{new_resource.web_root}/#{module_path}/#{vendor_string}/#{module_string}/#{media_type}"
         owner new_resource.user
         group new_resource.group
         files_owner new_resource.user
