@@ -5,7 +5,7 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 user = node[:magento][:init][:user]
 group = node[:magento][:init][:user]
-web_root = node[:magento][:init][:web_root]
+web_root = node[:magento][:nginx][:web_root]
 unsecure_base_url = node[:magento][:settings][:unsecure_base_url]
 secure_base_url = node[:magento][:settings][:secure_base_url]
 restore_path = node[:magento_restore][:restore_path]

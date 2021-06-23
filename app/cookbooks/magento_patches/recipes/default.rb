@@ -3,7 +3,7 @@
 # Recipe:: default
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-web_root = node[:magento_patches][:init][:web_root]
+web_root = node[:magento_patches][:nginx][:web_root]
 patches_repository = node[:magento_patches][:repository_url]
 directory_in_codebase = node[:magento_patches][:codebase_directory]
 

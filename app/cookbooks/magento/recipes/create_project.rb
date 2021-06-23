@@ -3,7 +3,7 @@
 # Recipe:: create_project
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-web_root = node[:magento][:init][:web_root]
+web_root = node[:magento][:nginx][:web_root]
 version = node[:magento][:options][:version]
 family = node[:magento][:options][:family]
 build_action = node[:magento][:build][:action]

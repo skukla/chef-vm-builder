@@ -1,8 +1,8 @@
-#
 # Cookbook:: mailhog
 # Attribute:: default
-#
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
+# frozen_string_literal: true
+
 default[:mailhog][:use] = true
 default[:mailhog][:port] = 10_000
 default[:mailhog][:smtp_port] = 1025

@@ -1,11 +1,13 @@
-#
 # Cookbook:: magento_restore
 # Attribute:: external
-#
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
+# frozen_string_literal: true
+
 include_attribute 'init::default'
 default[:magento_restore][:init][:user] = node[:init][:os][:user]
-default[:magento_restore][:init][:web_root] = node[:init][:webserver][:web_root]
+
+include_attribute 'nginx::default'
+default[:magento_restore][:nginx][:web_root] = node[:nginx][:web_root]
 
 include_attribute 'mysql::default'
 include_attribute 'mysql::override'

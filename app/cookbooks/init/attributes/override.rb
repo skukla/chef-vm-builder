@@ -1,44 +1,34 @@
-#
 # Cookbook:: init
 # Attribute:: override
-#
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-supported_settings = {
-  os: %i[update timezone],
+#
+# Supported settings:
+# vm: ip, name
+# os: update, timezone
+# custom_demo: structure{}
+#
+# frozen_string_literal: true
+
+settings = {
   vm: %i[ip name],
-  magento_build: :web_root,
-  custom_demo: :structure
+  os: %i[update timezone],
+  custom_demo: %i[structure]
 }
 
-supported_settings.each do |setting_key, setting_data|
-  case setting_key
-  when :os
-    next unless node[:infrastructure][setting_key].is_a? Chef::Node::ImmutableMash
+settings.each do |group, settings_arr|
+  next unless node[group].is_a?(Hash) || node[:infrastructure][group].is_a?(Hash)
 
-    setting_data.each do |option|
-      next if node[:infrastructure][setting_key][option].nil?
-
-      override[:init][setting_key][option] = node[:infrastructure][setting_key][option]
+  settings_arr.each do |setting|
+    case group
+    when :vm, :custom_demo
+      setting_hash = node[group]
+    when :os
+      setting_hash = node[:infrastructure][group]
     end
-  when :vm
-    next unless node[setting_key].is_a? Chef::Node::ImmutableMash
 
-    setting_data.each do |option|
-      next if node[setting_key][option].nil? || node[setting_key][option].empty?
+    next if setting_hash[setting].nil? ||
+            (setting_hash[setting].is_a?(String) && setting_hash[setting].empty?)
 
-      override[:init][setting_key][option] = node[setting_key][option]
-    end
-  when :webserver
-    if node[:infrastructure][setting_key].is_a? Chef::Node::ImmutableMash
-      setting_data.each do |option|
-        next if node[:infrastructure][setting_key][option].nil?
-
-        override[:init][setting_key][option] = node[:infrastructure][setting_key][option].downcase
-      end
-    end
-  when :custom_demo
-    next if node[setting_key][setting_data].nil?
-
-    override[:init][setting_key][setting_data] = node[setting_key][setting_data]
+    override[:init][group][setting] = setting_hash[setting]
   end
 end

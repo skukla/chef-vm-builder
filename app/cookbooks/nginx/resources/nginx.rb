@@ -6,24 +6,26 @@
 resource_name :nginx
 provides :nginx
 
-property :name,                    String,                                   name_property: true
-property :user,                    String,                                   default: node[:nginx][:init][:user]
-property :group,                   String,                                   default: node[:nginx][:init][:user]
-property :package_list,            Array,                                    default: node[:nginx][:package_list]
-property :web_root,                String,                                   default: node[:nginx][:init][:web_root]
-property :http_port,               [String, Integer],                        default: node[:nginx][:http_port]
-property :client_max_body_size,    String,                                   default: node[:nginx][:client_max_body_size]
-property :fastcgi_buffers,         String,                                   default: node[:nginx][:fastcgi_buffers]
-property :fastcgi_buffer_size,     String,                                   default: node[:nginx][:fastcgi_buffer_size]
-property :fpm_backend,             String,                                   default: node[:nginx][:php][:fpm_backend]
-property :fpm_port,                [String, Integer],                        default: node[:nginx][:php][:fpm_port]
-property :ssl_port,                [String, Integer],                        default: node[:nginx][:ssl][:port]
-property :ssl_directory,           String,                                   default: node[:nginx][:ssl][:directory]
-property :ssl_private_key_file,    String,                                   default: node[:nginx][:ssl][:server_private_key_file]
-property :ssl_certificate_file,    String,                                   default: node[:nginx][:ssl][:server_certificate_file]
-property :demo_structure,          Hash,                                     default: node[:nginx][:init][:demo_structure]
-property :use_secure_frontend,     [String, Integer, TrueClass, FalseClass], default: node[:nginx][:magento][:settings][:use_secure_frontend]
-property :use_secure_admin,        [String, Integer, TrueClass, FalseClass], default: node[:nginx][:magento][:settings][:use_secure_admin]
+property :name,                    String,              name_property: true
+property :user,                    String,              default: node[:nginx][:init][:user]
+property :group,                   String,              default: node[:nginx][:init][:user]
+property :package_list,            Array,               default: node[:nginx][:package_list]
+property :web_root,                String,              default: node[:nginx][:web_root]
+property :http_port,               [String, Integer],   default: node[:nginx][:http_port]
+property :client_max_body_size,    String,              default: node[:nginx][:client_max_body_size]
+property :fastcgi_buffers,         String,              default: node[:nginx][:fastcgi_buffers]
+property :fastcgi_buffer_size,     String,              default: node[:nginx][:fastcgi_buffer_size]
+property :fpm_backend,             String,              default: node[:nginx][:php][:fpm_backend]
+property :fpm_port,                [String, Integer],   default: node[:nginx][:php][:fpm_port]
+property :ssl_port,                [String, Integer],   default: node[:nginx][:ssl][:port]
+property :ssl_directory,           String,              default: node[:nginx][:ssl][:directory]
+property :ssl_private_key_file,    String,              default: node[:nginx][:ssl][:server_private_key_file]
+property :ssl_certificate_file, String,                 default: node[:nginx][:ssl][:server_certificate_file]
+property :demo_structure, Hash,                         default: node[:nginx][:init][:demo_structure]
+property :use_secure_frontend, [String, Integer, TrueClass, FalseClass],
+         default: node[:nginx][:magento][:settings][:use_secure_frontend]
+property :use_secure_admin, [String, Integer, TrueClass, FalseClass],
+         default: node[:nginx][:magento][:settings][:use_secure_admin]
 
 action :uninstall do
   execute 'Remove and purge Nginx' do

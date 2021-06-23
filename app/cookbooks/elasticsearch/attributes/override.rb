@@ -1,22 +1,25 @@
-#
 # Cookbook:: elasticsearch
 # Attribute:: override
-#
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-supported_settings = %i[use host version memory port plugins]
+#
+# Supported settings use, version, host, port, memory, plugins
+#
+# frozen_string_literal: true
 
-supported_settings.each do |setting|
-  if node[:infrastructure][:elasticsearch].is_a? Chef::Node::ImmutableMash
-    next if node[:infrastructure][:elasticsearch][setting].nil?
+setting = node[:infrastructure][:elasticsearch]
 
-    override[:elasticsearch][setting] = if setting == :memory
-                                          node[:infrastructure][:elasticsearch][:memory].downcase
-                                        else
-                                          node[:infrastructure][:elasticsearch][setting]
-                                        end
-  elsif node[:infrastructure][:elasticsearch].is_a?(String)
-    override[:elasticsearch][:version] = node[:infrastructure][:elasticsearch]
-  elsif node[:infrastructure][:elasticsearch].is_a?(TrueClass) || node[:infrastructure][:elasticsearch].is_a?(FalseClass)
-    override[:elasticsearch][:use] = node[:infrastructure][:elasticsearch]
+if setting.is_a?(Hash) && !setting.empty?
+  override[:elasticsearch][:version] = setting if setting.is_a?(String)
+  override[:elasticsearch][:use] = setting if setting.is_a?(TrueClass) || setting.is_a?(FalseClass)
+  if setting.is_a?(Hash)
+    setting.each do |key, value|
+      next if value.nil? || (value.is_a?(String) && value.empty?)
+
+      override[:elasticsearch][key] = if key == 'memory'
+                                        setting[key].downcase
+                                      else
+                                        setting[key]
+                                      end
+    end
   end
 end

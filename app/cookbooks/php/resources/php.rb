@@ -21,7 +21,7 @@ property :extension_list,           Array,             default: node[:php][:exte
 property :sendmail_path,            String,            default: node[:php][:sendmail_path]
 property :timezone,                 String,            default: node[:php][:init][:timezone]
 property :apache_package_list,      Array,             default: node[:php][:apache_package_list]
-property :web_root,                 String,            default: node[:php][:init][:web_root]
+property :web_root,                 String,            default: node[:php][:nginx][:web_root]
 property :command_list,             [String, Array]
 
 action :install do

@@ -3,8 +3,8 @@
 # Recipe:: uninstall
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
+web_root = node[:magento][:nginx][:web_root]
 build_action = node[:magento][:build][:action]
-web_root = node[:magento][:init][:web_root]
 
 case build_action
 when 'reinstall'

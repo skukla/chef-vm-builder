@@ -6,18 +6,17 @@
 resource_name :magento_cli
 provides :magento_cli
 
-property :name,                     String,                                   name_property: true
-property :web_root,                 String,                                   default: node[:magento][:init][:web_root]
-property :user,                     String,                                   default: node[:magento][:init][:user]
+property :name,                     String,     name_property: true
+property :web_root,                 String,     default: node[:magento][:nginx][:web_root]
+property :user,                     String,     default: node[:magento][:init][:user]
 property :install_string,           String
 property :config_path,              String
 property :config_value,             [String, Integer, TrueClass, FalseClass]
-property :config_scope,             String,                                   default: 'default'
-property :config_scope_code,        String,                                   default: ''
-property :deploy_mode,              String,
-         default: node[:magento][:build][:deploy_mode][:mode]
-property :cache_types,              Array,                                    default: []
-property :indexers,                 Array,                                    default: []
+property :config_scope,             String,     default: 'default'
+property :config_scope_code,        String,     default: ''
+property :deploy_mode,              String,     default: node[:magento][:build][:deploy_mode][:mode]
+property :cache_types,              Array,      default: []
+property :indexers,                 Array,      default: []
 property :consumer_list,            Array
 property :admin_username,           String
 property :admin_password,           String

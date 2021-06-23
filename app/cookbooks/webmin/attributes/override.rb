@@ -1,18 +1,12 @@
-#
 # Cookbook:: webmin
 # Attribute:: override
 #
+# Supported settings: use, port
+#
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-supported_settings = %i[use port]
+# frozen_string_literal: true
 
-supported_settings.each do |setting|
-  if node[:infrastructure][:webmin].is_a? Chef::Node::ImmutableMash
-    next if node[:infrastructure][:webmin][setting].nil?
+setting = node[:infrastructure][:webmin]
 
-    override[:webmin][setting] = node[:infrastructure][:webmin][setting]
-  else
-    next unless (node[:infrastructure][:webmin].is_a? TrueClass) || (node[:infrastructure][:webmin].is_a? FalseClass)
-
-    override[:webmin][:use] = node[:infrastructure][:webmin]
-  end
-end
+override[:webmin][:use] = setting if setting.is_a?(TrueClass) || setting.is_a?(FalseClass)
+override[:webmin][key] = setting[key] if setting.is_a?(Hash) && !setting.empty?

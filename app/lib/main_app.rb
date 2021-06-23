@@ -89,7 +89,8 @@ class App
 
   def check_for_build_action
     build_action_list = %w[install force_install reinstall restore update refresh]
-    if @settings['application']['build']['action'].nil? || @settings['application']['build']['action'].empty?
+    if @settings['application']['build']['action'].nil? ||
+       @settings['application']['build']['action'].empty?
       message = %W[
         #{@colors[:magenta]}[OOPS]: #{@colors[:reg]}It looks like your
         #{@colors[:bold]}#{@colors[:cyan]}build action#{@colors[:reg]} is

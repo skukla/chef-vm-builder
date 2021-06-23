@@ -6,13 +6,13 @@
 resource_name :composer
 provides :composer
 
-property :name,               String,                  name_property: true
-property :install_directory,  String,                  default: node[:composer][:install_dir]
-property :file,               String,                  default: node[:composer][:file]
-property :version,            String,                  default: node[:composer][:version]
-property :user,               String,                  default: node[:composer][:init][:user]
-property :group,              String,                  default: node[:composer][:init][:user]
-property :web_root,           String,                  default: node[:composer][:init][:web_root]
+property :name,               String, name_property: true
+property :install_directory,  String, default: node[:composer][:install_dir]
+property :file,               String, default: node[:composer][:file]
+property :version,            String, default: node[:composer][:version]
+property :user,               String, default: node[:composer][:init][:user]
+property :group,              String, default: node[:composer][:init][:user]
+property :web_root,           String, default: node[:composer][:nginx][:web_root]
 property :options,            Array
 property :project_name,       String
 property :project_directory,  String

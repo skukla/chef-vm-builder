@@ -9,7 +9,7 @@ chef_version '>= 14.0'
 
 depends 'init'             # Brings in web root and build action
 depends 'ssl'              # Brings in ssl usage
-depends 'nginx'            # Brings in nginx usage
+depends 'nginx'            # Brings in the web root
 depends 'mailhog'          # Brings in mailhog usage
 depends 'webmin'           # Brings in webmin usage
 depends 'magento'          # Brings in Magento usage

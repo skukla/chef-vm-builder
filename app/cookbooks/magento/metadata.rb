@@ -10,7 +10,7 @@ chef_version '>= 14.0'
 depends 'init'                    # This brings in OS/Init configuration options
 depends 'helpers'                 # This brings in helper libraries
 depends 'php'                     # This brings in PHP configuration options
-depends 'nginx'                   # This brings in Nginx configuration options
+depends 'nginx'                   # This brings in the web root
 depends 'mysql'                   # This brings in MySQL configuration options
 depends 'elasticsearch'           # This brings in Elasticsearch configuration options
 depends 'webmin'                  # This brings in Webmin configuration options

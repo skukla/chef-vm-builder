@@ -9,7 +9,7 @@ provides :magento_patch
 property :name,                     String,                  name_property: true
 property :user,                     String,                  default: node[:magento_patches][:init][:user]
 property :group,                    String,                  default: node[:magento_patches][:init][:user]
-property :web_root,                 String,                  default: node[:magento_patches][:init][:web_root]
+property :web_root,                 String,                  default: node[:magento_patches][:nginx][:web_root]
 property :magento_version,          String,                  default: node[:magento_patches][:magento][:version]
 property :sample_data_flag,         [TrueClass, FalseClass], default: node[:magento_patches][:magento][:sample_data]
 property :composer_file,            String,                  default: node[:magento_patches][:composer][:file]

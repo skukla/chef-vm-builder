@@ -9,7 +9,7 @@ provides :magento_demo_builder
 property :name,                             String, name_property: true
 property :user,                             String, default: node[:magento_demo_builder][:init][:user]
 property :group,                            String, default: node[:magento_demo_builder][:init][:user]
-property :web_root,                         String, default: node[:magento_demo_builder][:init][:web_root]
+property :web_root,                         String, default: node[:magento_demo_builder][:nginx][:web_root]
 property :db_user,                          String, default: node[:magento_demo_builder][:mysql][:db_user]
 property :db_password,                      String, default: node[:magento_demo_builder][:mysql][:db_password]
 property :db_name,                          String, default: node[:magento_demo_builder][:mysql][:db_name]

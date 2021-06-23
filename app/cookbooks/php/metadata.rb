@@ -8,6 +8,7 @@ version '0.1.0'
 chef_version '>= 14.0'
 
 depends 'init'           # For user and timezone
+depends 'nginx'          # For web root
 depends 'helpers'        # Brings in string replace helper
 depends 'mailhog'        # Brings in mailhog's sendmail path
 

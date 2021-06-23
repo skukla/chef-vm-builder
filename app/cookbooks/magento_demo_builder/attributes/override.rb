@@ -1,8 +1,8 @@
-#
 # Cookbook:: magento_demo_builder
 # Attribute:: override
-#
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
+# frozen_string_literal: true
+
 supported_settings = %i[name version repository_url]
 configured_data_packs = node[:custom_demo][:data_packs]
 

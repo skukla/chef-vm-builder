@@ -1,18 +1,19 @@
-#
 # Cookbook:: samba
 # Attribute:: override
-#
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-supported_settings = %i[use share_list]
+#
+# Supported settings: use,
+#                     share_fields: {path public browseable writeable force_user force_group comment}
+#
+# frozen_string_literal: true
 
-supported_settings.each do |setting|
-  if node[:infrastructure][:samba].is_a? Chef::Node::ImmutableMash
-    next if node[:infrastructure][:samba][setting].nil?
+setting = node[:infrastructure][:samba]
 
-    override[:samba][setting] = node[:infrastructure][:samba][setting]
-  else
-    next unless (node[:infrastructure][:samba].is_a? TrueClass) || (node[:infrastructure][:samba].is_a? FalseClass)
+override[:samba][:use] = setting if setting.is_a?(TrueClass) || setting.is_a?(FalseClass)
+if setting.is_a?(Hash) && !setting.empty?
+  setting.each do |key, value|
+    next if value.nil? || (value.is_a?(String) && value.empty?)
 
-    override[:samba][:use] = node[:infrastructure][:samba]
+    override[:samba][key] = setting[key]
   end
 end

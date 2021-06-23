@@ -7,7 +7,7 @@ resource_name :magento_app
 provides :magento_app
 
 property :name,                     String,                  name_property: true
-property :web_root,                 String,                  default: node[:magento][:init][:web_root]
+property :web_root,                 String,                  default: node[:magento][:nginx][:web_root]
 property :composer_file,            String,                  default: node[:magento][:composer][:file]
 property :composer_public_key,      String,                  default: node[:magento][:composer][:public_key]
 property :composer_private_key,     String,                  default: node[:magento][:composer][:private_key]
@@ -27,7 +27,7 @@ property :db_user,                  String,                  default: node[:mage
 property :db_password,              String,                  default: node[:magento][:mysql][:db_password]
 property :db_name,                  String,                  default: node[:magento][:mysql][:db_name]
 property :install_settings,         Hash
-property :consumer_list,            Array, default: node[:magento][:options][:consumer_list]
+property :consumer_list,            Array, default: node[:magento][:build][:consumer_list]
 property :cache_types,              Array
 property :indexers,                 Array
 property :remove_generated,         [TrueClass, FalseClass], default: true

@@ -3,7 +3,7 @@
 # Recipe:: download
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-web_root = node[:magento][:init][:web_root]
+web_root = node[:magento][:nginx][:web_root]
 build_action = node[:magento][:build][:action]
 apply_patches = node[:magento][:patches][:apply]
 install_sample_data = node[:magento][:build][:sample_data]

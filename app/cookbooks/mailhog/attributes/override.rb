@@ -1,18 +1,18 @@
-#
 # Cookbook:: mailhog
 # Attribute:: override
-#
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-supported_settings = %i[use port smtp_port]
+#
+# Supported settings: use, port, smtp_port
+#
+# frozen_string_literal: true
 
-supported_settings.each do |setting|
-  if node[:infrastructure][:mailhog].is_a? Chef::Node::ImmutableMash
-    next if node[:infrastructure][:mailhog][setting].nil?
+setting = node[:infrastructure][:mailhog]
 
-    override[:mailhog][setting] = node[:infrastructure][:mailhog][setting]
-  else
-    next unless (node[:infrastructure][:mailhog].is_a? TrueClass) || (node[:infrastructure][:mailhog].is_a? FalseClass)
+override[:mailhog][:use] = setting if setting.is_a?(TrueClass) || setting.is_a?(FalseClass)
+if setting.is_a?(Hash) && !setting.empty?
+  setting.each do |key, value|
+    next if value.nil? || (value.is_a?(String) && value.empty?)
 
-    override[:mailhog][:use] = node[:infrastructure][:mailhog]
+    override[:mailhog][key] = setting[key]
   end
 end

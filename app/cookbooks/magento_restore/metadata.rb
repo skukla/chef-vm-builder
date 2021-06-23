@@ -8,6 +8,7 @@ version '0.1.0'
 chef_version '>= 14.0'
 
 depends 'init'                  # Brings in init attributes
+depends 'nginx'                 # Brings in web root
 depends 'mysql'                 # Brings in mysql attributes
 depends 'magento'               # Brings in Magento resources
 

@@ -1,12 +1,27 @@
-#
 # Cookbook:: magento
 # Attribute:: default
-#
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
+# frozen_string_literal: true
+
 default[:magento][:options][:family] = 'community'
 default[:magento][:options][:version] = '2.4.2'
 default[:magento][:options][:minimum_stability] = 'stable'
-default[:magento][:options][:community_consumer_list] = [
+
+default[:magento][:csc_options][:key_path] = '/var/chef/cache/cookbooks/magento/files/default'
+default[:magento][:csc_options][:production_private_key] = ''
+default[:magento][:csc_options][:project_id] = ''
+default[:magento][:csc_options][:environment_id] = ''
+
+default[:magento][:build][:action] = 'install'
+default[:magento][:build][:modules_to_remove] = [
+  'magento/module-csp',
+  'magento/module-cardinal-commerce',
+  'magento/module-two-factor-auth'
+]
+default[:magento][:build][:sample_data] = true
+default[:magento][:build][:deploy_mode][:apply] = true
+default[:magento][:build][:deploy_mode][:mode] = 'production'
+default[:magento][:build][:community_consumer_list] = [
   'product_action_attribute.update',
   'product_action_attribute.website.update',
   'codegeneratorProcessor',
@@ -23,8 +38,7 @@ default[:magento][:options][:community_consumer_list] = [
   'media.gallery.synchronization',
   'media.gallery.renditions.update'
 ]
-
-default[:magento][:options][:enterprise_consumer_list] = [
+default[:magento][:build][:enterprise_consumer_list] = [
   'negotiableQuotePriceUpdate',
   'sharedCatalogUpdatePrice',
   'sharedCatalogUpdateCategoryPermissions',
@@ -36,30 +50,15 @@ default[:magento][:options][:enterprise_consumer_list] = [
   'matchCustomerSegmentProcessor'
 ]
 consumer_list = []
-node[:magento][:options][:community_consumer_list].each do |consumer|
+node[:magento][:build][:community_consumer_list].each do |consumer|
   consumer_list << consumer
 end
-unless node[:magento][:options][:enterprise_consumer_list].empty?
-  node[:magento][:options][:enterprise_consumer_list].each do |consumer|
+unless node[:magento][:build][:enterprise_consumer_list].empty?
+  node[:magento][:build][:enterprise_consumer_list].each do |consumer|
     consumer_list << consumer
   end
 end
-default[:magento][:options][:consumer_list] = consumer_list
-
-default[:magento][:csc_options][:key_path] = '/var/chef/cache/cookbooks/magento/files/default'
-default[:magento][:csc_options][:production_private_key] = ''
-default[:magento][:csc_options][:project_id] = ''
-default[:magento][:csc_options][:environment_id] = ''
-
-default[:magento][:build][:action] = 'install'
-default[:magento][:build][:modules_to_remove] = [
-  'magento/module-csp',
-  'magento/module-cardinal-commerce',
-  'magento/module-two-factor-auth'
-]
-default[:magento][:build][:sample_data] = true
-default[:magento][:build][:deploy_mode][:apply] = true
-default[:magento][:build][:deploy_mode][:mode] = 'production'
+default[:magento][:build][:consumer_list] = consumer_list
 
 default[:magento][:settings][:backend_frontname] = 'admin'
 default[:magento][:settings][:unsecure_base_url] = "http://#{node[:fqdn]}/"

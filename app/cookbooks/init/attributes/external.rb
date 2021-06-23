@@ -1,10 +1,7 @@
-#
 # Cookbook:: init
 # Attribute:: external
-#
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-include_attribute 'nginx::default'
-default[:init][:webserver][:nginx_package_list] = node[:nginx][:package_list]
+# frozen_string_literal: true
 
 include_attribute 'mailhog::default'
 default[:init][:use_mailhog] = node[:mailhog][:use]

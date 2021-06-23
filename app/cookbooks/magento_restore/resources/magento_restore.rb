@@ -9,7 +9,7 @@ provides :magento_restore
 property :name,                     String, name_property: true
 property :user,                     String, default: node[:magento_restore][:init][:user]
 property :group,                    String, default: node[:magento_restore][:init][:user]
-property :web_root,                 String, default: node[:magento_restore][:init][:web_root]
+property :web_root,                 String, default: node[:magento_restore][:nginx][:web_root]
 property :restore_path,             String, default: node[:magento_restore][:restore_path]
 property :source,                   [String, Array]
 property :destination,              String

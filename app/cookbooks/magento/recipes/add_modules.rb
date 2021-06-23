@@ -5,7 +5,7 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 custom_module_list = node[:magento][:custom_modules]
 data_pack_list = node[:magento][:data_packs]
-web_root = node[:magento][:init][:web_root]
+web_root = node[:magento][:nginx][:web_root]
 composer_json = "#{web_root}/composer.json"
 
 custom_module_data 'Install data packs' do

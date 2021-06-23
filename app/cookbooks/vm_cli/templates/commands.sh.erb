@@ -247,18 +247,18 @@ export -f status-php
 # Web
 function start-web() {
   printf "\nRestarting the web server...\n"
-  sudo systemctl restart <%= @webserver_type %>
+  sudo systemctl restart nginx
 }
 export -f start-web
 
 function stop-web() {
   printf "\nStopping the web server...\n"
-  sudo systemctl stop <%= @webserver_type %>
+  sudo systemctl stop nginx
 }
 export -f stop-web
 
 function status-web() {
-  sudo systemctl status <%= @webserver_type %>
+  sudo systemctl status nginx
 }
 export -f status-web
 

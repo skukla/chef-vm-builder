@@ -1,18 +1,18 @@
-#
 # Cookbook:: php
 # Attribute:: override
 #
+# Supported settings: version, port, memory_limit, upload_max_filesize
+#
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-supported_settings = %i[version port memory_limit upload_max_filesize]
+# frozen_string_literal: true
 
-supported_settings.each do |setting|
-  if node[:infrastructure][:php].is_a? Chef::Node::ImmutableMash
-    next if node[:infrastructure][:php][setting].nil?
+setting = node[:infrastructure][:php]
 
-    override[:php][setting] = node[:infrastructure][:php][setting]
-  else
-    next unless node[:infrastructure][:php].is_a? String
+override[:php][:version] = setting if setting.is_a?(String)
+if setting.is_a?(Hash) && !setting.empty?
+  setting.each do |key, value|
+    next if value.nil? || (value.is_a?(String) && value.empty?)
 
-    override[:php][:version] = node[:infrastructure][:php]
+    override[:php][key] = setting[key]
   end
 end

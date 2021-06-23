@@ -3,8 +3,7 @@
 # Recipe:: wrap_up
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-web_root = node[:magento][:init][:web_root]
-custom_module_list = node[:magento][:custom_modules]
+web_root = node[:magento][:nginx][:web_root]
 warm_cache = node[:magento][:build][:hooks][:warm_cache]
 enable_media_gallery = node[:magento][:build][:hooks][:enable_media_gallery]
 commands = node[:magento][:build][:hooks][:commands]

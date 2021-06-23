@@ -1,13 +1,12 @@
-#
 # Cookbook:: magento
 # Attribute:: external
-#
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
+# frozen_string_literal: true
+
 include_attribute 'init::default'
 include_attribute 'init::override'
 default[:magento][:init][:user] = node[:init][:os][:user]
 default[:magento][:init][:timezone] = node[:init][:os][:timezone]
-default[:magento][:init][:web_root] = node[:init][:webserver][:web_root]
 default[:magento][:init][:demo_structure] = node[:init][:custom_demo][:structure]
 
 include_attribute 'mysql::default'
@@ -21,6 +20,9 @@ default[:magento][:composer][:file] = node[:composer][:file]
 default[:magento][:composer][:public_key] = node[:composer][:public_key]
 default[:magento][:composer][:private_key] = node[:composer][:private_key]
 default[:magento][:composer][:github_token] = node[:composer][:github_token]
+
+include_attribute 'nginx::default'
+default[:magento][:nginx][:web_root] = node[:nginx][:web_root]
 
 include_attribute 'php::default'
 default[:magento][:php][:version] = node[:php][:version]

@@ -1,8 +1,8 @@
-#
 # Cookbook:: elasticsearch
 # Attribute:: default
-#
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
+# frozen_string_literal: true
+
 default[:elasticsearch][:java][:user] = 'root'
 default[:elasticsearch][:java][:group] = 'root'
 default[:elasticsearch][:user] = 'root'

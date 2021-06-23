@@ -6,10 +6,6 @@
 magento_ssl_frontend = node[:ssl][:magento][:settings][:use_secure_frontend]
 magento_ssl_admin = node[:ssl][:magento][:settings][:use_secure_admin]
 
-# ssl 'Remove local ssl certificates' do
-#   action :remove_local_ssl_certificates
-# end
-
 ssl 'Manage ssl certificates' do
   action %i[
     remove_ssl_files
