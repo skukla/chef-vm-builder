@@ -1,5 +1,5 @@
 # Cookbook:: magento
-# Attribute:: installation_options_override
+# Attribute:: application_options_override
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 #
 # Supported settings: family, minimum_stability, version

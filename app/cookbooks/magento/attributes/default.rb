@@ -49,16 +49,7 @@ default[:magento][:build][:enterprise_consumer_list] = [
   'purchaseorder.validation',
   'matchCustomerSegmentProcessor'
 ]
-consumer_list = []
-node[:magento][:build][:community_consumer_list].each do |consumer|
-  consumer_list << consumer
-end
-unless node[:magento][:build][:enterprise_consumer_list].empty?
-  node[:magento][:build][:enterprise_consumer_list].each do |consumer|
-    consumer_list << consumer
-  end
-end
-default[:magento][:build][:consumer_list] = consumer_list
+default[:magento][:build][:consumer_list] = node[:magento][:build][:community_consumer_list]
 
 default[:magento][:settings][:backend_frontname] = 'admin'
 default[:magento][:settings][:unsecure_base_url] = "http://#{node[:fqdn]}/"

@@ -18,8 +18,8 @@ default[:magento_patches][:magento][:sample_data] = node[:magento][:build][:samp
 
 version = node[:magento_patches][:magento][:version]
 use_sample_data = node[:magento_patches][:magento][:sample_data]
-if ValueHelper.process_value(use_sample_data).zero? && VersionHelper.check_version(version, '>=', '2.4.1')
-  default[:magento_patches][:branch] = "pmet-#{VersionHelper.get_base_version(version)}-mc"
+if ValueHelper.process_value(use_sample_data).zero? && MagentoHelper.check_version(version, '>=', '2.4.1')
+  default[:magento_patches][:branch] = "pmet-#{MagentoHelper.get_base_version(version)}-mc"
 else
-  default[:magento_patches][:branch] = "pmet-#{VersionHelper.get_base_version(version)}-ref"
+  default[:magento_patches][:branch] = "pmet-#{MagentoHelper.get_base_version(version)}-ref"
 end

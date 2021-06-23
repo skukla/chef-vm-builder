@@ -42,7 +42,7 @@ action :install do
 
   # Create the master install string
   install_string = [install_string, rewrites_string].join(' ') if new_resource.install_settings[:use_rewrites]
-  if new_resource.use_elasticsearch && VersionHelper.check_version(new_resource.version, '>=', '2.4.0')
+  if new_resource.use_elasticsearch && MagentoHelper.check_version(new_resource.version, '>=', '2.4.0')
     install_string = [install_string, elasticsearch_string].join(' ')
   end
   if new_resource.install_settings[:use_secure_admin]

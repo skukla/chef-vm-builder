@@ -21,7 +21,7 @@ property :db_password,              String,     default: node[:vm_cli][:mysql][:
 property :db_name,                  String,     default: node[:vm_cli][:mysql][:db_name]
 property :vm_cli_directories,       Array,      default: node[:vm_cli][:directories]
 property :vm_cli_files,             Array,      default: node[:vm_cli][:files]
-property :consumer_list,            Array,      default: node[:vm_cli][:magento][:consumer_list]
+property :consumer_list,            Array,      default: MagentoHelper.get_consumer_list
 property :command_list, [String, Array]
 
 action :create_directories do
