@@ -12,13 +12,13 @@ sample_data_flag = "#{web_root}/var/.sample-data-state.flag"
 include_recipe 'magento_patches::default' if apply_patches && %w[install force_install update].include?(build_action)
 
 if %w[install force_install].include?(build_action)
-  magento_app 'Download the codebase' do
-    action :download
+  composer 'Download the codebase' do
+    action :install
   end
 end
 
 if build_action == 'update'
-  magento_app 'Update the codebase' do
+  composer 'Update the codebase' do
     action :update
   end
 end

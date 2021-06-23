@@ -27,16 +27,7 @@ property :db_user,                  String,                  default: node[:mage
 property :db_password,              String,                  default: node[:magento][:mysql][:db_password]
 property :db_name,                  String,                  default: node[:magento][:mysql][:db_name]
 property :install_settings,         Hash
-property :consumer_list,            Array, default: node[:magento][:build][:consumer_list]
-property :cache_types,              Array
-property :indexers,                 Array
 property :remove_generated,         [TrueClass, FalseClass], default: true
-
-action :download do
-  composer new_resource.name.to_s do
-    action :install
-  end
-end
 
 action :install do
   install_string = "--db-host=#{new_resource.db_host} --db-name=#{new_resource.db_name} --db-user=#{new_resource.db_user} --db-password=#{new_resource.db_password} --backend-frontname=#{new_resource.install_settings[:backend_frontname]} --base-url=#{new_resource.install_settings[:unsecure_base_url]} --language=#{new_resource.install_settings[:language]} --timezone=#{new_resource.install_settings[:timezone]} --currency=#{new_resource.install_settings[:currency]} --admin-firstname=#{new_resource.install_settings[:admin_firstname]} --admin-lastname=#{new_resource.install_settings[:admin_lastname]} --admin-email=#{new_resource.install_settings[:admin_email]} --admin-user=#{new_resource.install_settings[:admin_user]} --admin-password=#{new_resource.install_settings[:admin_password]}"
@@ -74,12 +65,6 @@ action :install do
   magento_cli 'Install via the Magento CLI' do
     action :install
     install_string install_string
-  end
-end
-
-action :update do
-  composer new_resource.name do
-    action :update
   end
 end
 
@@ -139,24 +124,6 @@ action :update_version do
   end
 end
 
-action :db_upgrade do
-  magento_cli new_resource.name do
-    action :db_upgrade
-  end
-end
-
-action :di_compile do
-  magento_cli new_resource.name do
-    action :di_compile
-  end
-end
-
-action :deploy_static_content do
-  magento_cli new_resource.name do
-    action :deploy_static_content
-  end
-end
-
 action :set_permissions do
   new_resource.permission_dirs.each do |directory|
     execute "Update #{directory} permissions" do
@@ -189,71 +156,12 @@ action :remove_modules do
   end
 end
 
-action :set_application_mode do
-  magento_cli new_resource.name do
-    action :set_application_mode
-  end
-end
-
-action :set_indexer_mode do
-  magento_cli new_resource.name do
-    action :set_indexer_mode
-    indexers new_resource.indexers
-  end
-end
-
-action :reset_indexers do
-  magento_cli new_resource.name do
-    action :reset_indexers
-    indexers new_resource.indexers
-  end
-end
-
-action :reindex do
-  magento_cli new_resource.name do
-    action :reindex
-    indexers new_resource.indexers
-  end
-end
-
-action :clean_cache do
-  magento_cli new_resource.name do
-    action :clean_cache
-    cache_types new_resource.cache_types
-  end
-end
-
-action :enable_cron do
-  magento_cli new_resource.name do
-    action :enable_cron
-  end
-end
-
-action :disable_cron do
-  magento_cli new_resource.name do
-    action :disable_cron
-  end
-end
-
 action :clear_cron_schedule do
   ruby_block 'Clear the cron schedule table' do
     block do
       `mysql -uroot -e "USE #{new_resource.db_name};DELETE FROM cron_schedule;"`
     end
     action :create
-  end
-end
-
-action :start_consumers do
-  magento_cli new_resource.name do
-    action :start_consumers
-    consumer_list new_resource.consumer_list
-  end
-end
-
-action :disable_maintenance_mode do
-  magento_cli new_resource.name do
-    action :disable_maintenance_mode
   end
 end
 

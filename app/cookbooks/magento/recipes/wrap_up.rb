@@ -59,16 +59,20 @@ if !commands.nil? && !commands.empty?
   end
 end
 
-magento_app 'Deploy static content after data pack installation' do
-  action %i[deploy_static_content]
+magento_cli 'Deploy static content after data pack installation' do
+  action :deploy_static_content
 end
 
-magento_app 'Reset indexers, reindex, clean cache, and set permissions' do
-  action %i[reset_indexers reindex clean_cache set_permissions]
+magento_cli 'Reset indexers, reindex, and clean cache' do
+  action %i[reset_indexers reindex clean_cache]
+end
+
+magento_app 'Set permissions' do
+  action :set_permissions
   remove_generated false
 end
 
-magento_app 'Disable maintenance mode' do
+magento_cli 'Disable maintenance mode' do
   action :disable_maintenance_mode
   only_if { ::File.exist?(maintenance_mode_flag) }
 end

@@ -7,7 +7,7 @@ user = node[:magento][:init][:user]
 crontab = "/var/spool/cron/crontabs/#{user}"
 enable_media_gallery = node[:magento][:build][:hooks][:enable_media_gallery]
 
-magento_app 'Enable cron' do
+magento_cli 'Enable cron' do
   action :enable_cron
   not_if { ::File.exist?(crontab) }
 end
@@ -21,7 +21,11 @@ if enable_media_gallery
   end
 end
 
-magento_app 'Reset indexers, reindex, clean cache, and set permissions' do
+magento_cli 'Reset indexers, reindex, and clean cache' do
   action %i[reset_indexers reindex clean_cache set_permissions]
+end
+
+magento_app 'Set permissions' do
+  action :set_permissions
   remove_generated false
 end

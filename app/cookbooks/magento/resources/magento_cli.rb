@@ -17,7 +17,7 @@ property :config_scope_code,        String,     default: ''
 property :deploy_mode,              String,     default: node[:magento][:build][:deploy_mode][:mode]
 property :cache_types,              Array,      default: []
 property :indexers,                 Array,      default: []
-property :consumer_list,            Array
+property :consumer_list,            Array,      default: node[:magento][:build][:consumer_list]
 property :admin_username,           String
 property :admin_password,           String
 property :admin_email,              String
