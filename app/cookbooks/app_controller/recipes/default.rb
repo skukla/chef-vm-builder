@@ -3,8 +3,8 @@
 # Recipe:: default
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-build_action = node[:app_controller][:init][:magento][:build_action]
-web_root = node[:app_controller][:init][:web_root]
+build_action = node[:app_controller][:magento][:build_action]
+web_root = node[:app_controller][:nginx][:web_root]
 first_run_flag = "#{web_root}/var/.first-run-state.flag"
 first_run_install = !::File.exist?(first_run_flag) && build_action == 'install'
 after_first_run_install = ::File.exist?(first_run_flag) && build_action == 'install'

@@ -1,50 +1,42 @@
-#
 # Cookbook:: magento_custom_modules
 # Resource:: custom_module_data
-#
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
+# frozen_string_literal: true
+
 resource_name :custom_module_data
 provides :custom_module_data
 
-property :build_action,         String, default: node[:magento_custom_modules][:magento][:build_action]
-property :data_type,            String
-property :data,                 Hash
+property :module_list, Array
+property :data_type, String
 
 action :process do
-  unless new_resource.data.nil?
-    if new_resource.data_type == 'data_packs'
-      title_string = 'remote data packs'
-      module_list = ModuleListHelper.get_remote_data_packs(new_resource.data)
-    else
-      title_string = 'custom modules'
-      module_list = ModuleListHelper.get_remote_custom_modules(new_resource.data)
+  unless new_resource.module_list.empty?
+
+    modules_from_github = new_resource.module_list.select do |module_data|
+      module_data.key?(:repository_url) && module_data[:repository_url].include?('github')
     end
 
-    unless module_list.empty?
-      module_list.each do |_key, data|
-        next if data[:repository_url].nil?
+    modules_from_github.each do |module_data|
+      next if module_data.nil? || (module_data.is_a?(String) && module_data.empty?)
 
-        composer "Adding remote repository: #{data[:module_name]}" do
-          action :add_repository
-          module_name data[:module_name]
-          repository_url data[:repository_url]
-          not_if do
-            new_resource.build_action == 'reinstall' ||
-              (::File.exist?("#{web_root}/var/.first-run-state.flag") && new_resource.build_action == 'install')
-          end
-        end
+      composer "Adding #{new_resource.data_type} github repository: #{module_data[:name]}" do
+        action :add_repository
+        module_name module_data[:name]
+        repository_url module_data[:repository_url]
       end
+    end
 
-      unless ModuleListHelper.build_require_string(module_list).empty?
-        composer "Adding #{title_string}: #{ModuleListHelper.build_require_string(module_list)}" do
-          action :require
-          package_name ModuleListHelper.build_require_string(module_list)
-          options ['no-update']
-          not_if do
-            new_resource.build_action == 'reinstall' ||
-              (::File.exist?("#{web_root}/var/.first-run-state.flag") && new_resource.build_action == 'install')
-          end
-        end
+    modules_from_packagist = new_resource.module_list.select do |module_data|
+      module_data[:repository_url].nil?
+    end
+
+    require_string = ModuleListHelper.build_require_string(modules_from_github.concat(modules_from_packagist))
+
+    unless require_string.empty?
+      composer "Adding #{new_resource.data_type}s: #{require_string}" do
+        action :require
+        package_name require_string
+        options ['no-update']
       end
     end
   end

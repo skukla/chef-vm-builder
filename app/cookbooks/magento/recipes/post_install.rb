@@ -32,9 +32,8 @@ if %w[install force_install reinstall update restore].include?(build_action)
 end
 
 if %w[install force_install reinstall restore].include?(build_action)
-
-  magento_cli 'Start consumers and set indexers to On Schedule mode' do
-    action %i[start_consumers set_indexer_mode]
+  magento_cli 'Start consumers' do
+    action :start_consumers
   end
 end
 

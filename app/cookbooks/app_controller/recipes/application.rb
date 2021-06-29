@@ -1,9 +1,9 @@
-#
 # Cookbook:: app_controller
 # Recipe:: application
-#
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-build_action = node[:app_controller][:init][:magento][:build_action]
+# frozen_string_literal: true
+
+build_action = node[:app_controller][:magento][:build_action]
 
 case build_action
 when 'install', 'force_install', 'restore', 'reinstall', 'update'

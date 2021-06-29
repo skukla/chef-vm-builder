@@ -23,7 +23,7 @@ if use_elasticsearch
 end
 
 if build_action == 'update'
-  magento_app 'Upgrade the Magento database' do
+  magento_cli 'Upgrade the Magento database' do
     action :db_upgrade
   end
 end

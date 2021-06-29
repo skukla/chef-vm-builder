@@ -236,6 +236,15 @@ class App
     abort(message) if values_are_nil || (!missing_values.empty? && !filled_values.empty?)
 
     message = %W[
+      #{@colors[:magenta]}[OOPS]: #{@colors[:reg]}You've added the live search or product recommendations extension(s)
+      but it looks like #{@colors[:bold]}#{@colors[:cyan]}commerce services credentials\n
+      #{@colors[:reg]}are either empty or missing in your config.json file. If you'd like to configure commerce
+      services manually,\nremove the commerce services section from config.json.\n\n
+    ].join(' ')
+
+    abort(message) if !no_custom_modules && (values_are_nil || values_are_empty)
+
+    message = %W[
       #{@colors[:magenta]}[OOPS]: #{@colors[:reg]}It looks like you're trying to configure commerce services
       but you're missing your #{@colors[:bold]}#{@colors[:cyan]}saas production key#{@colors[:reg]}.\nPlease
       make sure a file consisting of your production saas key called

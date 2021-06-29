@@ -4,6 +4,7 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 web_root = node[:magento][:nginx][:web_root]
+build_action = node[:magento][:build][:action]
 warm_cache = node[:magento][:build][:hooks][:warm_cache]
 enable_media_gallery = node[:magento][:build][:hooks][:enable_media_gallery]
 commands = node[:magento][:build][:hooks][:commands]
@@ -14,7 +15,7 @@ production_private_key = node[:magento][:csc_options][:production_private_key].c
 maintenance_mode_flag = "#{web_root}/var/.maintenance.flag"
 
 csc_options.each do |key, value|
-  next if %w[key_path production_private_key].include?(key) || value.empty?
+  next if value.empty? || %w[key_path production_private_key].include?(key)
 
   path = key.include?('api') ? 'services_connector_integration' : 'services_id'
   magento_cli "Configuring Commerce Services Connector setting : #{key}" do
@@ -30,10 +31,10 @@ unless production_private_key.empty?
   mysql 'Insert commerce services production key' do
     action :run_query
     db_query query
-    only_if do
-      !csc_options[:production_api_key].empty? &&
-        !csc_options[:project_id].empty? &&
-        !csc_options[:environment_id].empty?
+    not_if do
+      csc_options[:production_api_key].empty? &&
+        csc_options[:project_id].empty? &&
+        csc_options[:environment_id].empty?
     end
   end
 end
@@ -61,6 +62,12 @@ end
 
 magento_cli 'Deploy static content after data pack installation' do
   action :deploy_static_content
+end
+
+if %w[install force_install reinstall restore].include?(build_action)
+  magento_cli 'Set indexers to On Schedule mode' do
+    action %i[set_indexer_mode]
+  end
 end
 
 magento_cli 'Reset indexers, reindex, and clean cache' do

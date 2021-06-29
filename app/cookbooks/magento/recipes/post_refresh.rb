@@ -22,7 +22,7 @@ if enable_media_gallery
 end
 
 magento_cli 'Reset indexers, reindex, and clean cache' do
-  action %i[reset_indexers reindex clean_cache set_permissions]
+  action %i[reset_indexers reindex clean_cache]
 end
 
 magento_app 'Set permissions' do

@@ -8,7 +8,7 @@ default[:magento][:options][:version] = '2.4.2'
 default[:magento][:options][:minimum_stability] = 'stable'
 
 default[:magento][:csc_options][:key_path] = '/var/chef/cache/cookbooks/magento/files/default'
-default[:magento][:csc_options][:production_private_key] = ''
+default[:magento][:csc_options][:production_api_key] = ''
 default[:magento][:csc_options][:project_id] = ''
 default[:magento][:csc_options][:environment_id] = ''
 
