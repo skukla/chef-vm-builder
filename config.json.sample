@@ -26,11 +26,6 @@
 				"public_key": "",
 				"private_key": "",
 				"github_token": ""
-			},
-			"commerce_services_connector": {
-				"production_api_key": "",
-				"project_id": "",
-				"data_space_id": ""
 			}
 		},
 		"options": {
