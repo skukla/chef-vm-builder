@@ -29,4 +29,9 @@ if %w[install force_install restore].include?(build_action)
   include_recipe 'app_controller::base'
   include_recipe 'app_controller::infrastructure'
 end
+if %w[refresh update].include?(build_action)
+  include_recipe 'init::motd'
+  include_recipe 'vm_cli::install'
+  include_recipe 'nginx::configure'
+end
 include_recipe 'app_controller::application' if first_run_install || !after_first_run_install

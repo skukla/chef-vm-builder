@@ -1,16 +1,8 @@
 #
 # Cookbook:: nginx
-# Recipe:: default
+# Recipe:: configure
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-nginx 'Install Nginx' do
-  action :install
-end
-
-nginx 'Create web root and clear existing sites' do
-  action %i[create_web_root clear_sites]
-end
-
 nginx 'Configure Nginx and enable multisite operation' do
   action %i[configure_nginx configure_multisite enable_multisite]
 end

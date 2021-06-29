@@ -13,7 +13,3 @@ end
 os 'Configure OS' do
   action %i[configure add_os_packages]
 end
-
-init 'Install MOTD and update hosts file' do
-  action %i[install_motd update_hosts]
-end
