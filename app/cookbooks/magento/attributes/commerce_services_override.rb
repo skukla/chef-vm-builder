@@ -9,7 +9,7 @@
 setting = node[:application][:authentication][:commerce_services_connector]
 
 if setting.is_a?(Hash) && !setting.empty?
-  setting.each do |_key, value|
+  setting.each do |key, value|
     next if value.is_a?(String) && value.empty?
 
     if key == 'data_space_id'
@@ -25,5 +25,5 @@ if File.exist?(key_file)
   File.readlines(key_file).each do |line|
     key_value += line
   end
-  override[:magento][:csc_options][:production_private_key] = key_value
+  override[:magento][:csc_options][:production_private_key] = key_value.chomp
 end

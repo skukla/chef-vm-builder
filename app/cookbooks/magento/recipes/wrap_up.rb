@@ -11,7 +11,6 @@ commands = node[:magento][:build][:hooks][:commands]
 vm_cli_commands = commands.reject { |command| command.include?(':') }
 magento_cli_commands = commands.select { |command| command.include?(':') }
 csc_options = node[:magento][:csc_options]
-production_private_key = node[:magento][:csc_options][:production_private_key].chomp
 maintenance_mode_flag = "#{web_root}/var/.maintenance.flag"
 
 csc_options.each do |key, value|
@@ -25,9 +24,9 @@ csc_options.each do |key, value|
   end
 end
 
-unless production_private_key.empty?
+unless csc_options[:production_private_key].nil?
   path = 'services_connector/services_connector_integration/production_private_key'
-  query = "INSERT INTO core_config_data (path, value) VALUES('#{path}', '#{production_private_key}') ON DUPLICATE KEY UPDATE path='#{path}', value='#{production_private_key}'"
+  query = "INSERT INTO core_config_data (path, value) VALUES('#{path}', '#{csc_options[:production_private_key]}') ON DUPLICATE KEY UPDATE path='#{path}', value='#{csc_options[:production_private_key]}'"
   mysql 'Insert commerce services production key' do
     action :run_query
     db_query query
