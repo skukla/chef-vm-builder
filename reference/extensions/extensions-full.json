@@ -100,12 +100,12 @@
 	"amasty": {
 		"amasty-base": {
 			"name": "amasty/base",
-			"version": "1.11.0.x-dev",
+			"version": "1.12.0.x-dev",
 			"repository_url": "git@github.com:PMET-public/amasty-module-base.git"
 		},
 		"amasty-advanced-conditions": {
 			"name": "amasty/module-advanced-conditions",
-			"version": "1.5.1.x-dev",
+			"version": "1.5.2.x-dev",
 			"repository_url": "git@github.com:PMET-public/amasty-module-advanced-conditions.git"
 		},
 		"amasty-banners-lite": {
@@ -115,7 +115,7 @@
 		},
 		"amasty-free-gift": {
 			"name": "amasty/promo",
-			"version": "2.9.6.x-dev",
+			"version": "2.10.0.x-dev",
 			"repository_url": "git@github.com:PMET-public/amasty-module-free-gift.git"
 		},
 		"amasty-rules-grid": {
@@ -125,12 +125,12 @@
 		},
 		"amasty-sales-rule-wizard": {
 			"name": "amasty/module-salesrulewizard",
-			"version": "1.0.1.x-dev",
+			"version": "1.0.2.x-dev",
 			"repository_url": "git@github.com:PMET-public/amasty-module-salesrulewizard.git"
 		},
 		"amasty-special-promotions": {
 			"name": "amasty/module-special-promo",
-			"version": "2.7.17.x-dev",
+			"version": "2.7.18.x-dev",
 			"repository_url": "git@github.com:PMET-public/amasty-module-special-promotions.git"
 		},
 		"amasty-special-promotions-pro": {
@@ -140,17 +140,17 @@
 		},
 		"amasty-geoip": {
 			"name": "amasty/geoip",
-			"version": "1.5.4.x-dev",
+			"version": "1.5.5.x-dev",
 			"repository_url": "git@github.com:PMET-public/amasty-module-geoip.git"
 		},
 		"amasty-product-attachment": {
 			"name": "amasty/product-attachment",
-			"version": "2.3.10.x-dev",
+			"version": "2.4.1.x-dev",
 			"repository_url": "git@github.com:PMET-public/amasty-module-product-attachments.git"
 		},
 		"amasty-store-locator": {
 			"name": "amasty/module-store-locator",
-			"version": "2.4.5.x-dev",
+			"version": "2.4.0.x-dev",
 			"repository_url": "git@github.com:PMET-public/amasty-module-store-locator.git"
 		}
 	},
