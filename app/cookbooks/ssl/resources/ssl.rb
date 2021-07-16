@@ -9,7 +9,6 @@ provides :ssl
 property :name,                              String,            name_property: true
 property :user,                              String,            default: node[:ssl][:init][:user]
 property :group,                             String,            default: node[:ssl][:init][:user]
-property :demo_structure,                    Hash,              default: node[:ssl][:init][:demo_structure]
 property :ssl_directory,                     String,            default: node[:ssl][:directory]
 property :ca_private_key_file,               String,            default: node[:ssl][:ca_private_key_file]
 property :ca_certificate_file,               String,            default: node[:ssl][:ca_certificate_file]
@@ -117,7 +116,7 @@ action :generate_certificate_signing_request do
 end
 
 action :generate_server_extension_file do
-  vhost_urls_array = DemoStructureHelper.get_vhost_urls(new_resource.demo_structure)
+  vhost_urls_array = DemoStructureHelper.get_vhost_urls
   template 'Create server extension file for Subject Alternative Names' do
     source "#{new_resource.server_extension_file}.erb"
     path "#{new_resource.ssl_directory}/#{new_resource.server_extension_file}"

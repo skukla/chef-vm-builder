@@ -10,7 +10,6 @@ property :name,                     String,     name_property: true
 property :user,                     String,     default: node[:vm_cli][:init][:user]
 property :group,                    String,     default: node[:vm_cli][:init][:user]
 property :web_root,                 String,     default: node[:vm_cli][:nginx][:web_root]
-property :demo_structure,           Hash,       default: node[:vm_cli][:init][:demo_structure]
 property :php_version,              String,     default: node[:vm_cli][:php][:version]
 property :magento_version,          String,     default: node[:vm_cli][:magento][:version]
 property :use_secure_frontend, [Integer, TrueClass, FalseClass, String],
@@ -52,7 +51,7 @@ action :install do
     group new_resource.group
     variables({
                 user: new_resource.user,
-                urls: DemoStructureHelper.get_vhost_urls(new_resource.demo_structure).map do |url|
+                urls: DemoStructureHelper.get_vhost_urls.map do |url|
                         "\"#{protocol}://#{url}/\""
                       end.join(' '),
                 web_root: new_resource.web_root,

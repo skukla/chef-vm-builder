@@ -5,7 +5,6 @@
 
 include_attribute 'init::default'
 default[:vm_cli][:init][:user] = node[:init][:os][:user]
-default[:vm_cli][:init][:demo_structure] = node[:init][:custom_demo][:structure]
 
 include_attribute 'nginx::default'
 default[:vm_cli][:nginx][:web_root] = node[:nginx][:web_root]

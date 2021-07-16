@@ -1,6 +1,8 @@
 .DS_Store
 .vagrant/
 config.json
+app/nodes/*
+app/environments/*
 app/backups/*
 app/cookbooks/magento/files/default/*
 app/cookbooks/magento_restore/files/default/*
@@ -14,6 +16,13 @@ reference/data-packs/*
 reference/patches/*
 reference/*.pem
 tools/
+node_modules/
+Gemfile
+Gemfile.lock
+package-lock.json
+package.json
+!app/nodes/.gitignore
+!app/environments/.gitignore
 !app/backups/.gitignore
 !app/cookbooks/magento/files/default/.gitignore
 !app/cookbooks/magento_patches/files/default/.gitignore

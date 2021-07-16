@@ -21,7 +21,6 @@ property :ssl_port,                [String, Integer],   default: node[:nginx][:s
 property :ssl_directory,           String,              default: node[:nginx][:ssl][:directory]
 property :ssl_private_key_file,    String,              default: node[:nginx][:ssl][:server_private_key_file]
 property :ssl_certificate_file, String,                 default: node[:nginx][:ssl][:server_certificate_file]
-property :demo_structure, Hash,                         default: node[:nginx][:init][:demo_structure]
 property :use_secure_frontend, [String, Integer, TrueClass, FalseClass],
          default: node[:nginx][:magento][:settings][:use_secure_frontend]
 property :use_secure_admin, [String, Integer, TrueClass, FalseClass],
@@ -111,7 +110,7 @@ action :configure_multisite do
     only_if { ::Dir.exist?('/etc/nginx/sites-available/conf') }
   end
 
-  vhost_data = DemoStructureHelper.get_vhost_data(new_resource.demo_structure)
+  vhost_data = DemoStructureHelper.get_vhost_data
 
   template 'Configure multisite' do
     source '01-multisite.conf.erb'

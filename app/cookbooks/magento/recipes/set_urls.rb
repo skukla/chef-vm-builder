@@ -5,31 +5,30 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 use_secure_frontend = node[:magento][:settings][:use_secure_frontend]
 use_secure_admin = node[:magento][:settings][:use_secure_admin]
-demo_structure = node[:magento][:init][:demo_structure]
+additional_entries = DemoStructureHelper.get_additional_entries
 
-DemoStructureHelper.get_vhost_data(demo_structure).each do |vhost|
-  next if (vhost[:scope] == 'website' && vhost[:code] == 'base') ||
-          (vhost[:scope] == 'store_view' && vhost[:code] == 'default')
+unless additional_entries.empty?
+  additional_entries.each do |vhost|
+    scope_value = vhost[:scope] == 'store' ? 'store view' : vhost[:scope]
 
-  scope_value = vhost[:scope] == 'store' ? 'store view' : vhost[:scope]
-
-  if use_secure_frontend.zero? || use_secure_admin.zero?
-    magento_cli "Configuring additional unsecure URL for the #{vhost[:code]} #{scope_value}" do
-      action :config_set
-      config_path 'web/unsecure/base_url'
-      config_value "http://#{vhost[:url]}/"
-      config_scope vhost[:scope]
-      config_scope_code vhost[:code]
-      only_if { DatabaseHelper.check_code_exists(vhost[:code]) }
-    end
-  else
-    magento_cli "Configuring additional secure URL for the #{vhost[:code]} #{scope_value}" do
-      action :config_set
-      config_path 'web/secure/base_url'
-      config_value "https://#{vhost[:url]}/"
-      config_scope vhost[:scope]
-      config_scope_code vhost[:code]
-      only_if { DatabaseHelper.check_code_exists(vhost[:code]) }
+    if use_secure_frontend.zero? || use_secure_admin.zero?
+      magento_cli "Configuring additional unsecure URL for the #{vhost[:code]} #{scope_value}" do
+        action :config_set
+        config_path 'web/unsecure/base_url'
+        config_value "http://#{vhost[:url]}/"
+        config_scope vhost[:scope]
+        config_scope_code vhost[:code]
+        only_if { DatabaseHelper.check_code_exists(vhost[:code]) }
+      end
+    else
+      magento_cli "Configuring additional secure URL for the #{vhost[:code]} #{scope_value}" do
+        action :config_set
+        config_path 'web/secure/base_url'
+        config_value "https://#{vhost[:url]}/"
+        config_scope vhost[:scope]
+        config_scope_code vhost[:code]
+        only_if { DatabaseHelper.check_code_exists(vhost[:code]) }
+      end
     end
   end
 end

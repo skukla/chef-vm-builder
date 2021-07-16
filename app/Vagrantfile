@@ -1,154 +1,65 @@
-# frozen_string_literal: true
+require_relative 'lib/config'
+require_relative 'lib/demo_structure'
+require_relative 'handlers/system_handler'
+require_relative 'handlers/validation_handler'
+require_relative 'handlers/entry_handler'
 
-#
-# Vagrantfile
-#
-# Copyright 2020, Steve Kukla, All Rights Reserved.
-require 'json'
-require_relative 'lib/main_app'
-app = App.new
-
-system('clear')
-
-app.check_for_plugins
-app.check_for_authentication
-app.check_for_structure
-app.check_for_build_action
-app.check_for_data_pack_errors
-app.check_for_backup_errors
-app.check_for_saas_values_and_key
+SystemHandler.clear_screen
+ValidationHandler.config_json_structure
+ValidationHandler.composer_credentials
+ValidationHandler.base_website
+ValidationHandler.build_action
+ValidationHandler.plugins
+ValidationHandler.data_packs
+ValidationHandler.csc_credentials
 
 Vagrant.configure('2') do |config|
-  # SSH, Box, and URLs
-  config.ssh.insert_key = false
-  config.ssh.forward_agent = true
-  config.vm.box = app.settings['remote_machine']['box']
-  config.vm.define app.settings['remote_machine']['name'] do |machine|
-    machine.vm.network 'private_network', ip: app.settings['vm']['ip']
-    machine.vm.hostname = app.define_urls[:hostname]
-  end
-  config.hostsupdater.aliases = app.define_urls[:demo_urls]
+	config.ssh.insert_key = false
+	config.ssh.forward_agent = true
+	config.vm.box = Config.setting('remote_machine/box')
+	config.vm.define Config.setting('remote_machine/name') do |machine|
+		machine.vm.network 'private_network', ip: Config.setting('vm/ip')
+		machine.vm.hostname = DemoStructure.base_url
+	end
+	config.hostsupdater.aliases = DemoStructure.additional_urls
 
-  # Configure VM machine based on hypervisor
-  config.vm.provider app.settings['vm']['hypervisor'] do |machine|
-    if app.settings['vm']['hypervisor'] == 'virtualbox'
-      machine.gui = app.settings['hypervisor']['virtualbox']['gui']
-      machine.linked_clone = app.settings['hypervisor']['virtualbox']['linked_clones']
-      machine.default_nic_type = app.settings['hypervisor']['virtualbox']['default_nic_type']
-      machine.customize [
-        'modifyvm', :id,
-        '--name', app.settings['vm']['name'],
-        '--memory', app.settings['remote_machine']['memory'],
-        '--cpus', app.settings['remote_machine']['cpus'],
-        '--vram', app.settings['remote_machine']['vram'],
-        '--vrde', app.settings['hypervisor']['virtualbox']['remote_display']
+	config.vm.provider 'virtualbox' do |machine|
+		machine.gui = false
+		machine.linked_clone = false
+		machine.default_nic_type = '82543GC'
+		machine.customize [
+				'modifyvm',
+				:id,
+				'--name',
+				Config.setting('vm/name'),
+				'--memory',
+				Config.setting('remote_machine/memory'),
+				'--cpus',
+				Config.setting('remote_machine/cpus'),
+				'--vram',
+				Config.setting('remote_machine/vram'),
+				'--vrde',
+				Config.setting('remote_machine/remote_display'),
+		                  ]
+	end
 
-      ]
-    # VMWare-specific settings
-    elsif app.settings['vm']['hypervisor'].include?('vmware')
-      machine.gui = app.settings['hypervisor']['vmware']['gui']
-      machine.linked_clone = app.settings['hypervisor']['vmware']['linked_clones']
-      machine.vmx['displayName'] = app.settings['vm']['name']
-      machine.vmx['memsize'] = app.settings['remote_machine']['memory']
-      machine.vmx['numvcpus'] = app.settings['remote_machine']['cpus']
-      machine.vmx['ethernet0.pcislotnumber'] = app.settings['hypervisor']['vmware']['eth0_pcislotnumber']
-      machine.vmx['ethernet1.pcislotnumber'] = app.settings['hypervisor']['vmware']['eth1_pcislotnumber']
-    end
-  end
+	config.trigger.before %i[up reload provision] do |trigger|
+		trigger.name = 'Copying items to VM and creating environment file'
+		trigger.ruby do
+			EntryHandler.copy_entries
+			EntryHandler.clean_up_hidden_files
+			EntryHandler.create_environment_file
+		end
+	end
 
-  # Copy selected data packs
-  if !app.entries[:user_data_packs].empty? &&
-     !app.settings['custom_demo']['data_packs'].empty? &&
-     !app.settings['custom_demo']['data_packs'].find { |_key, value| !value['repository_url'].include?('github') }.nil?
-    config.trigger.before %i[up reload provision] do |trigger|
-      trigger.name = 'Copying local data packs to VM'
-      trigger.ruby do
-        app.copy_data_packs
-      end
-    end
-  end
-
-  # Copy patches
-  unless app.entries[:user_patches].empty?
-    config.trigger.before [:up, :reload, :provision] do |trigger|
-      trigger.name = 'Copying patches to the VM'
-      trigger.ruby do
-        app.copy_patches
-      end
-    end
-  end
-
-  # Copy saas keys
-  unless app.entries[:user_keys].empty?
-    config.trigger.before [:up, :reload, :provision] do |trigger|
-      trigger.name = 'Copying keys to the VM'
-      trigger.ruby do
-        app.copy_keys
-      end
-    end
-  end
-
-  # Handle backups
-  if app.settings['application']['build']['action'] == 'restore' &&
-     !app.entries[:user_backups].empty? &&
-     ['.zip', '.tgz', '.sql'].any? { |type| app.entries[:user_backups].find { |file| file.include?(type) } }
-    config.trigger.before %i[up provision] do |trigger|
-      trigger.name = 'Copying local backup files'
-      trigger.ruby do
-        app.copy_local_backup_files
-      end
-    end
-  end
-
-  # Write out chef environment file from configuration
-  config.trigger.before %i[up reload provision] do |trigger|
-    trigger.name = 'Creating environment file'
-    trigger.ruby do
-      app.create_environment_file
-    end
-  end
-
-  # Run Chef provisioner
-  config.vm.provision app.settings['provisioner']['type'] do |chef|
-    chef.version = app.settings['provisioner']['version'].chomp
-    chef.nodes_path = (app.settings['provisioner']['nodes_path'])
-    chef.environments_path = (app.settings['provisioner']['environments_path'])
-    chef.roles_path = (app.settings['provisioner']['roles_path'])
-    chef.cookbooks_path = (app.settings['provisioner']['cookbooks_path'])
-    chef.environment = 'vm'
-    chef.add_role 'main'
-    chef.arguments = '--chef-license accept'
-  end
-
-  # Post-build clean-up
-  config.trigger.after %i[up provision] do |trigger|
-    trigger.name = 'Cleaning up application cache'
-    trigger.ruby do
-      app.clean_up_chef_cache
-    end
-  end
-
-  # SSL certificates triggers
-  config.trigger.after :destroy do |trigger|
-    trigger.name = 'Cleaning up ssl certificate'
-    trigger.ruby do
-      app.remove_all_keychain_ssl_certificates
-      app.remove_all_ssl_certificates
-    end
-  end
-
-  if app.settings['application'].key?('settings') &&
-     (app.settings['application']['settings'].key?('use_secure_frontend') || app.settings['application']['settings'].key?('use_secure_backend')) &&
-     (!app.settings['application']['settings']['use_secure_frontend'].nil? || !app.settings['application']['settings']['use_secure_admin'].nil?) &&
-     (app.settings['application']['settings']['use_secure_frontend'] == true || app.settings['application']['settings']['use_secure_admin'] == true)
-
-    config.trigger.after %i[up provision] do |trigger|
-      trigger.name = 'Setting up ssl certificate'
-      trigger.ruby do
-        app.remove_old_keychain_ssl_certificates
-        app.set_up_ssl_certificates
-        app.remove_old_ssl_certificates
-      end
-    end
-  end
+	config.vm.provision 'chef_zero' do |chef|
+		chef.version = Config.setting('provisioner/version').chomp
+		chef.nodes_path = 'nodes'
+		chef.environments_path = 'environments'
+		chef.roles_path = 'roles'
+		chef.cookbooks_path = 'cookbooks'
+		chef.environment = 'vm'
+		chef.add_role 'main'
+		chef.arguments = '--chef-license accept'
+	end
 end
