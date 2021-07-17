@@ -8,8 +8,20 @@ class Config
 	@app_root = "/#{File.join(Pathname.new(__dir__).each_filename.to_a[0...-3])}"
 	@build_action_arr = %i[install force_install restore reinstall update refresh]
 
+	def Config.remove_blanks(hash_or_array)
+		p =
+			proc do |*args|
+				v = args.last
+				v.delete_if(&p) if v.respond_to? :delete_if
+				v.nil? || v.respond_to?(:'empty?') && v.empty?
+			end
+		hash_or_array.delete_if(&p)
+	end
+
 	def Config.json
-		JSON.parse(File.read(File.join(@app_root, 'config.json')))
+		Config.remove_blanks(
+			JSON.parse(File.read(File.join(@app_root, 'config.json'))),
+		)
 	end
 
 	def Config.build_action_list
