@@ -19,6 +19,10 @@ class DataPack
 			.map { |record| record['source'] }
 	end
 
+	def DataPack.missing_value?
+		list.select { |pack| required_fields.include?(pack) && value.nil? }.any?
+	end
+
 	def DataPack.missing_folder?
 		(local_list - @folder_list).any?
 	end
