@@ -1,6 +1,0 @@
-{
-	"Base Commerce": {
-		"summary": "A baseline Magento 2.4.1 installation",
-		"backup": "base-commerce"
-	}
-}
