@@ -57,7 +57,6 @@ class ValidationHandler
 		unless CustomModule.data_installer_found?
 			abort(ErrorMsg.show(:data_pack_installer_missing))
 		end
-		abort(ErrorMsg.show(:data_pack_value_missing)) if DataPack.missing_value?
 		abort(ErrorMsg.show(:data_pack_folder_missing)) if DataPack.missing_folder?
 	end
 

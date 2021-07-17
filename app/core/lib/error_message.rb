@@ -59,14 +59,6 @@ class ErrorMsg < Message
 		TEXT
 	end
 
-	def ErrorMsg.data_pack_value_missing
-		msg = <<~TEXT
-		#{@oops}It looks like you're missing a \
-		#{@bold}#{@cyan}#{DataPack.required_fields.join("#{@reg} or #{@bold}#{@cyan}")} \
-		#{@reg}for a #{@bold}#{@cyan}data pack #{@reg}in your config.json file.
-		TEXT
-	end
-
 	def ErrorMsg.data_pack_folder_missing
 		msg = <<~TEXT
 		#{@oops}It looks like you're missing a #{@bold}#{@cyan}folder#{@reg} for a \
