@@ -5,8 +5,8 @@ class DemoStructure
 		attr_accessor :data
 	end
 	@@data = { result: '' }
-	@@website_fields = %w[site_code site_url]
-	@@store_view_fields = %w[store_view_code store_view_url]
+	@@website_fields = %w[site_code site_url scope]
+	@@store_view_fields = %w[store_view_code store_view_url scope]
 
 	def DemoStructure.json
 		@@data[:result] = Config.setting('custom_demo/structure/websites')

@@ -9,7 +9,7 @@
 # frozen_string_literal: true
 
 setting = node[:application][:settings]
-base_entry = DemoStructureHelper.get_base_entry
+base_url = DemoStructureHelper.base_url
 
 if setting.is_a?(Hash) && !setting.empty?
 	setting.each do |key, value|
@@ -18,10 +18,8 @@ if setting.is_a?(Hash) && !setting.empty?
 		override[:magento][:settings][key] = setting[key]
 	end
 end
-unless base_entry.empty?
-	override[:magento][:settings][:admin_email] = "admin@#{base_entry[:url]}"
-	override[:magento][:settings][:unsecure_base_url] =
-		"http://#{base_entry[:url]}/"
-	override[:magento][:settings][:secure_base_url] =
-		"https://#{base_entry[:url]}/"
+unless base_url.empty?
+	override[:magento][:settings][:admin_email] = "admin@#{base_url}"
+	override[:magento][:settings][:unsecure_base_url] = "http://#{base_url}/"
+	override[:magento][:settings][:secure_base_url] = "https://#{base_url}/"
 end

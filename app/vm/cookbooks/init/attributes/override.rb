@@ -9,22 +9,30 @@
 #
 # frozen_string_literal: true
 
-settings = [
-	{ path: %w[vm ip], value: ConfigHelper.setting('vm/ip') },
-	{
-		path: %w[os update],
-		value: ConfigHelper.setting('infrastructure/os/update'),
-	},
-	{
-		path: %w[os timezone],
-		value: ConfigHelper.setting('infrastructure/os/timezone'),
-	},
-	{
-		path: %w[custom_demo structure],
-		value: ConfigHelper.setting('custom_demo/structure'),
-	},
-]
+settings = {
+	vm: %i[ip name],
+	os: %i[update timezone],
+	custom_demo: %i[structure],
+}
 
-settings
-	.reject { |s| s[:value].to_s.empty? }
-	.each { |s| override[:init][s[:path][0]][s[:path][1]] = s[:value] }
+settings.each do |group, settings_arr|
+	unless node[group].is_a?(Hash) || node[:infrastructure][group].is_a?(Hash)
+		next
+	end
+
+	settings_arr.each do |setting|
+		case group
+		when :vm, :custom_demo
+			setting_hash = node[group]
+		when :os
+			setting_hash = node[:infrastructure][group]
+		end
+
+		if setting_hash[setting].nil? ||
+				(setting_hash[setting].is_a?(String) && setting_hash[setting].empty?)
+			next
+		end
+
+		override[:init][group][setting] = setting_hash[setting]
+	end
+end

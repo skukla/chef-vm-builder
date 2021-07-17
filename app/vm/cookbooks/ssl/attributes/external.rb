@@ -14,5 +14,4 @@ default[:ssl][:magento][:settings][:use_secure_frontend] =
 default[:ssl][:magento][:settings][:use_secure_admin] =
 	node[:magento][:settings][:use_secure_admin]
 
-base_entry = DemoStructureHelper.get_base_entry
-default[:ssl][:common_name] = base_entry[:url]
+default[:ssl][:common_name] = DemoStructureHelper.base_url

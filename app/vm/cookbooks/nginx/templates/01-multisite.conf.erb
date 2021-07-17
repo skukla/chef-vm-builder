@@ -4,16 +4,16 @@ upstream fastcgi_backend {
 
 map $http_host $MAGE_RUN_CODE {
     <% @vhost_data.each do |site| %>
-    <%= site[:url] %> <%= site[:code] %>;
+    <%= site['url'] %> <%= site['code'] %>;
     <% end %>
 }
 
 map $MAGE_RUN_CODE $MAGE_RUN_TYPE {
     <% @vhost_data.each do |site| %>
-    <%= site[:code] %> <%= site[:scope] %>;
+    <%= site['code'] %> <%= site['scope'] %>;
     <% end %>
 }
 
 <% @vhost_data.each do |site| %>
-include /etc/nginx/sites-enabled/<%= site[:url] %>;
+include /etc/nginx/sites-enabled/<%= site['url'] %>;
 <% end %>
