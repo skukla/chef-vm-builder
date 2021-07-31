@@ -44,7 +44,7 @@ class ErrorMsg < Message
 	end
 
 	def ErrorMsg.build_action_incorrect
-		build_action = Config.setting('application/build/action')
+		build_action = Config.value('application/build/action')
 		build_action_list = Config.build_action_list
 		msg = <<~TEXT
     It looks like you've got an incorrect build action: #{@bold}#{@cyan}#{build_action}#{@reg}.\n\n\

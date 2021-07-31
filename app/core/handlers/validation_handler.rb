@@ -10,7 +10,7 @@ require_relative '../lib/entry'
 require_relative '../lib/commerce_services'
 
 class ValidationHandler
-	@build_action = Config.setting('application/build/action')
+	@build_action = Config.value('application/build/action')
 
 	def ValidationHandler.config_json_structure
 		if DemoStructure.website_structure_missing?

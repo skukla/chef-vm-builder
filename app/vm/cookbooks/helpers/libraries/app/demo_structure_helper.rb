@@ -1,47 +1,47 @@
-require_relative 'config'
+require_relative 'config_helper'
 
-class DemoStructure
+class DemoStructureHelper
 	class << self
 		attr_accessor :data
 	end
 	@data = {}
-	@@website_fields = %w[site_code site_url scope]
-	@@store_view_fields = %w[store_view_code store_view_url scope]
+	@website_fields = %w[site_code site_url scope]
+	@store_view_fields = %w[store_view_code store_view_url scope]
 
-	def DemoStructure.json
-		@data = Config.value('custom_demo/structure/websites')
+	def DemoStructureHelper.json
+		@data = ConfigHelper.value('custom_demo/structure/websites')
 		self
 	end
 
-	def DemoStructure.website_structure_missing?
+	def DemoStructureHelper.website_structure_missing?
 		json.output.nil?
 	end
 
-	def DemoStructure.add_scope(scope)
+	def DemoStructureHelper.add_scope(scope)
 		@data = @data.map { |site_hash| site_hash.merge({ 'scope' => scope }) }
 		self
 	end
 
-	def DemoStructure.website_data
+	def DemoStructureHelper.website_data
 		json.add_scope('website')
 		self
 	end
 
-	def DemoStructure.store_data
+	def DemoStructureHelper.store_data
 		website_data.find_field('stores')
 		self
 	end
 
-	def DemoStructure.store_view_data
+	def DemoStructureHelper.store_view_data
 		store_data.find_field('store_views').add_scope('stores')
 		self
 	end
 
-	def DemoStructure.vhost_data
+	def DemoStructureHelper.vhost_data
 		@data =
 			website_data
-				.pull_fields(@@website_fields)
-				.concat(store_view_data.pull_fields(@@store_view_fields))
+				.pull_fields(@website_fields)
+				.concat(store_view_data.pull_fields(@store_view_fields))
 				.map do |record|
 					record.transform_keys do |key|
 						(key.gsub(key, 'code') if key.include?('code')) ||
@@ -52,11 +52,11 @@ class DemoStructure
 		self
 	end
 
-	def DemoStructure.output
+	def DemoStructureHelper.output
 		@data
 	end
 
-	def DemoStructure.find_field(key)
+	def DemoStructureHelper.find_field(key)
 		@data =
 			@data
 				.flat_map { |tmp_data| tmp_data[key] }
@@ -64,21 +64,21 @@ class DemoStructure
 		self
 	end
 
-	def DemoStructure.pull_fields(fields_arr)
+	def DemoStructureHelper.pull_fields(fields_arr)
 		@data
 			.each_with_object([]) { |hash, arr| arr << hash.slice(*fields_arr) }
 			.reject(&:empty?)
 	end
 
-	def DemoStructure.vhost_entries
+	def DemoStructureHelper.vhost_entries
 		vhost_data.output
 	end
 
-	def DemoStructure.vm_urls
+	def DemoStructureHelper.vm_urls
 		vhost_data.find_field('url').output
 	end
 
-	def DemoStructure.base_url
+	def DemoStructureHelper.base_url
 		vhost_data
 			.output
 			.select { |record| record['code'] == 'base' }
@@ -86,15 +86,15 @@ class DemoStructure
 			.first
 	end
 
-	def DemoStructure.base_website_missing?
+	def DemoStructureHelper.base_website_missing?
 		base_url.to_s.empty?
 	end
 
-	def DemoStructure.additional_entries
+	def DemoStructureHelper.additional_entries
 		vhost_entries.reject { |entry| %w[base default].include?(entry['code']) }
 	end
 
-	def DemoStructure.additional_urls
+	def DemoStructureHelper.additional_urls
 		additional_entries.map { |entry| entry['url'] }
 	end
 end

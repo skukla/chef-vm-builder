@@ -8,15 +8,11 @@
 #
 # frozen_string_literal: true
 
-setting = node[:application][:settings]
+setting = ConfigHelper.value('application/settings')
 base_url = DemoStructureHelper.base_url
 
-if setting.is_a?(Hash) && !setting.empty?
-	setting.each do |key, value|
-		next if value.nil? || (value.is_a?(String) && value.empty?)
-
-		override[:magento][:settings][key] = setting[key]
-	end
+unless setting.nil?
+	setting.each { |key, value| override[:magento][:settings][key] = value }
 end
 unless base_url.empty?
 	override[:magento][:settings][:admin_email] = "admin@#{base_url}"

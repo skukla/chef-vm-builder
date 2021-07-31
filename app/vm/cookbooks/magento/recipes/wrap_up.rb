@@ -8,10 +8,8 @@ build_action = node[:magento][:build][:action]
 warm_cache = node[:magento][:build][:hooks][:warm_cache]
 enable_media_gallery = node[:magento][:build][:hooks][:enable_media_gallery]
 commands = node[:magento][:build][:hooks][:commands]
-vm_cli_commands =
-	commands.reject { |command| command.include?(':') } unless commands.nil?
-magento_cli_commands =
-	commands.select { |command| command.include?(':') } unless commands.nil?
+vm_cli_commands = MagentoHelper.build_command_list(:vm_cli)
+magento_cli_commands = MagentoHelper.build_command_list(:magento_cli)
 csc_options = node[:magento][:csc_options]
 maintenance_mode_flag = "#{web_root}/var/.maintenance.flag"
 

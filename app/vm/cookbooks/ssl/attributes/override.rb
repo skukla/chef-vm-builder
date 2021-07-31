@@ -6,12 +6,12 @@
 #
 # frozen_string_literal: true
 
-setting = node[:infrastructure][:ssl]
+setting = ConfigHelper.value('infrastructure/ssl')
 
 if setting.is_a?(Hash) && !setting.empty?
-  setting.each do |key, value|
-    next if value.nil? || (value.is_a?(String) && value.empty?)
+	setting.each do |key, value|
+		next if value.nil? || (value.is_a?(String) && value.empty?)
 
-    override[:ssl][key] = setting[key]
-  end
+		override[:ssl][key] = setting[key]
+	end
 end

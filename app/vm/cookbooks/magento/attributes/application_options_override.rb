@@ -6,16 +6,11 @@
 #
 # frozen_string_literal: true
 
-setting = node[:application][:options]
+setting = ConfigHelper.value('application/options')
 
-if setting.is_a?(Hash) && !setting.empty?
-  setting.each do |key, value|
-    next if value.nil? || (value.is_a?(String) && value.empty?)
-
-    override[:magento][:options][key] = if key == 'family' && value.to_s.downcase == 'commerce'
-                                          'enterprise'
-                                        else
-                                          setting[key]
-                                        end
-  end
+unless setting.nil?
+	setting.each do |key, value|
+		value = 'enterprise' if key == 'family' && value.downcase == 'commerce'
+		override[:magento][:options][key] = value
+	end
 end

@@ -6,13 +6,9 @@
 #
 # frozen_string_literal: true
 
-setting = node[:infrastructure][:database]
+setting = ConfigHelper.value('infrastructure/database')
 
 override[:mysql][:db_name] = setting if setting.is_a?(String)
 if setting.is_a?(Hash)
-  setting.each do |key, value|
-    next if value.nil? || (value.is_a?(String) && value.empty?)
-
-    override[:mysql][key] = setting[key]
-  end
+	setting.each { |key, value| override[:mysql][key] = value }
 end

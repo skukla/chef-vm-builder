@@ -8,19 +8,13 @@
 #
 # frozen_string_literal: true
 
-settings_arr = [
-  node[:application][:authentication][:composer],
-  node[:infrastructure][:composer]
-]
+composer_auth = ConfigHelper.value('application/authentication/composer')
+composer_app = ConfigHelper.value('infrastructure/composer')
+settings_arr = [composer_auth, composer_app]
 
-override[:composer][:version] = node[:infrastructure][:composer] if node[:infrastructure][:composer].is_a?(String)
-
+override[:composer][:version] = composer_app if composer_app.is_a?(String)
 settings_arr.each do |setting|
-  next if !setting.is_a?(Hash) || setting.empty?
-
-  setting.each do |key, value|
-    next if value.nil? || (value.is_a?(String) && value.empty?)
-
-    override[:composer][key] = setting[key]
-  end
+	if setting.is_a?(Hash)
+		setting.each { |key, value| override[:composer][key] = value }
+	end
 end

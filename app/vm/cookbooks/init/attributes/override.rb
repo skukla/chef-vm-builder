@@ -9,30 +9,15 @@
 #
 # frozen_string_literal: true
 
-settings = {
-	vm: %i[ip name],
-	os: %i[update timezone],
-	custom_demo: %i[structure],
-}
+settings = [
+	{ cfg_path: 'vm/ip', cbk_path: 'vm/ip' },
+	{ cfg_path: 'infrastructure/os/update', cbk_path: 'os/update' },
+	{ cfg_path: 'infrastructure/os/timezone', cbk_path: 'os/timezone' },
+	{ cfg_path: 'custom_demo/structure', cbk_path: 'custom_demo/structure' },
+]
 
-settings.each do |group, settings_arr|
-	unless node[group].is_a?(Hash) || node[:infrastructure][group].is_a?(Hash)
-		next
-	end
-
-	settings_arr.each do |setting|
-		case group
-		when :vm, :custom_demo
-			setting_hash = node[group]
-		when :os
-			setting_hash = node[:infrastructure][group]
-		end
-
-		if setting_hash[setting].nil? ||
-				(setting_hash[setting].is_a?(String) && setting_hash[setting].empty?)
-			next
-		end
-
-		override[:init][group][setting] = setting_hash[setting]
-	end
+settings.each do |setting|
+	path = setting[:cbk_path].split('/')
+	value = ConfigHelper.value(setting[:cfg_path])
+	override[:init][path[0]][path[1]] = value unless value.nil?
 end

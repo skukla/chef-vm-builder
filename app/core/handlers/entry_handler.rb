@@ -13,30 +13,25 @@ class EntryHandler
 	@app_root = Config.app_root
 	@entries = [
 		{
-			name: 'classes',
-			src: 'app/core/lib',
+			src: '',
 			dest: 'app/vm/cookbooks/helpers/libraries/app',
-			file: %w[config.rb demo_structure.rb],
+			file: %w[config.json],
 		},
 		{
-			name: 'data packs',
 			src: 'project/data_packs',
 			dest: 'app/vm/cookbooks/magento_demo_builder/files/default',
 		},
 		{
-			name: 'backups',
 			src: 'project/backup',
 			dest: 'app/vm/cookbooks/magento_restore/files/default',
 			exts: %w[.zip .tgz .sql],
 		},
 		{
-			name: 'patches',
 			src: 'project/patches',
 			dest: 'app/vm/cookbooks/magento_patches/files/default',
 			exts: %w[.patch],
 		},
 		{
-			name: 'keys',
 			src: 'project/keys',
 			dest: 'app/vm/cookbooks/magento/files/default',
 			exts: %w[.pem],
@@ -62,7 +57,12 @@ class EntryHandler
 
 			unless dest_files.empty?
 				dest_files.each do |file|
-					FileUtils.rm_r(File.join(@app_root, type[:dest], file))
+					if File.directory?(file)
+						FileUtils.rm_r(File.join(@app_root, type[:dest], file))
+					end
+					if File.file?(file)
+						FileUtils.rm(File.join(@app_root, type[:dest], file))
+					end
 				end
 			end
 

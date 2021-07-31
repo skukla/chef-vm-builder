@@ -8,7 +8,7 @@ class Composer
 	@required_fields = %w[public_key private_key github_token]
 
 	def Composer.credentials_missing?
-		setting = Config.setting(@setting_path)
+		setting = Config.value(@setting_path)
 		return true if setting.to_s.empty?
 
 		setting.select do |key, value|

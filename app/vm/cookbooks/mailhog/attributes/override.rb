@@ -6,7 +6,7 @@
 #
 # frozen_string_literal: true
 
-setting = node[:infrastructure][:mailhog]
+setting = ConfigHelper.value('infrastructure/mailhog')
 
 override[:mailhog][:use] = setting if setting.is_a?(TrueClass) ||
 	setting.is_a?(FalseClass)

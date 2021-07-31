@@ -10,7 +10,7 @@ class DataPack
 	@required_fields = %w[name source]
 
 	def DataPack.list
-		Config.setting('custom_demo/data_packs')
+		Config.value('custom_demo/data_packs')
 	end
 
 	def DataPack.local_list

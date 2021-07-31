@@ -6,24 +6,15 @@
 #
 # frozen_string_literal: true
 
-setting = node[:application][:authentication][:commerce_services_connector]
+setting = ConfigHelper.value('application/authentication/commerce_services')
 
-if setting.is_a?(Hash) && !setting.empty?
-  setting.each do |key, value|
-    next if value.is_a?(String) && value.empty?
-
-    if key == 'data_space_id'
-      override[:magento][:csc_options][:environment_id] = setting[key]
-    else
-      override[:magento][:csc_options][key] = setting[key]
-    end
-  end
+unless setting.nil?
+	setting.each do |key, value|
+		if key == 'data_space_id'
+			override[:magento][:csc_options][:environment_id] = value
+		end
+		override[:magento][:csc_options][key] = value unless key == 'data_space_id'
+	end
 end
-key_file = "#{node[:magento][:csc_options][:key_path]}/privateKey-production.pem"
-key_value = ''
-if File.exist?(key_file)
-  File.readlines(key_file).each do |line|
-    key_value += line
-  end
-  override[:magento][:csc_options][:production_private_key] = key_value.chomp
-end
+override[:magento][:csc_options][:production_private_key] =
+	CscHelper.read_production_key

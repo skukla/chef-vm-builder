@@ -6,118 +6,123 @@
 resource_name :samba
 provides :samba
 
-property :name,                    String, name_property: true
-property :hostname,                String, default: node[:hostname]
-property :user,                    String, default: node[:samba][:init][:user]
-property :group,                   String, default: node[:samba][:init][:user]
-property :service_file,            String, default: node[:samba][:service_file]
-property :configuration_directory, String, default: node[:samba][:configuration_directory]
-property :share_fields,            Array,  default: node[:samba][:share_fields]
-property :share_list,              Hash,   default: node[:samba][:share_list]
+property :name, String, name_property: true
+property :hostname, String, default: node[:hostname]
+property :user, String, default: node[:samba][:init][:user]
+property :group, String, default: node[:samba][:init][:user]
+property :service_file, String, default: node[:samba][:service_file]
+property :configuration_directory,
+         String,
+         default: node[:samba][:configuration_directory]
+property :share_fields, Array, default: node[:samba][:share_fields]
+property :share_list, Hash, default: node[:samba][:share_list]
 
 action :install do
-  apt_package 'samba' do
-    action :install
-    not_if { ::File.exist?(new_resource.service_file) }
-  end
+	apt_package 'samba' do
+		action :install
+		not_if { ::File.exist?(new_resource.service_file) }
+	end
 
-  directory 'Samba configuration' do
-    path new_resource.configuration_directory
-    not_if { ::Dir.exist?(new_resource.configuration_directory) }
-  end
+	directory 'Samba configuration' do
+		path new_resource.configuration_directory
+		not_if { ::Dir.exist?(new_resource.configuration_directory) }
+	end
 end
 
 action :configure do
-  # Prepare share data - selected_shares here is an Autovivified hash
-  selected_shares = Hash.new { |h, k| h[k] = Hash.new(0) }
-  new_resource.share_list.each do |share_name, share_record|
-    share_data = {}
-    new_resource.share_fields.each do |field|
-      case field
-      when :path
-        if share_record.is_a? String
-          share_data[:path] = share_record
-        else
-          share_data[field] = ValueHelper.process_value(share_record[field])
-        end
-      when :public, :browseable, :writeable
-        share_data[field] = 'Yes' if share_record[field.to_s].nil?
-      when :force_user, :force_group
-        share_data[field] = if share_record[field.to_s].nil?
-                              new_resource.user.to_s
-                            else
-                              ValueHelper.process_value(share_record[field])
-                            end
-      else
-        share_data[field] = ValueHelper.process_value(share_record[field]) unless share_record[field.to_s].nil?
-      end
-    end
-    selected_shares[share_name] = share_data
-  end
+	# Prepare share data - selected_shares here is an Autovivified hash
+	selected_shares = Hash.new { |h, k| h[k] = Hash.new(0) }
+	new_resource.share_list.each do |share_name, share_record|
+		share_data = {}
+		new_resource.share_fields.each do |field|
+			case field
+			when :path
+				if share_record.is_a? String
+					share_data[:path] = share_record
+				else
+					share_data[field] = ValueHelper.process_value(share_record[field])
+				end
+			when :public, :browseable, :writeable
+				share_data[field] = 'Yes' if share_record[field.to_s].nil?
+			when :force_user, :force_group
+				share_data[field] =
+					if share_record[field.to_s].nil?
+						new_resource.user.to_s
+					else
+						ValueHelper.process_value(share_record[field])
+					end
+			else
+				share_data[field] =
+					ValueHelper.process_value(share_record[field]) unless share_record[
+					field.to_s
+				].nil?
+			end
+		end
+		selected_shares[share_name] = share_data
+	end
 
-  # Configure Samba
-  template 'Configure Samba' do
-    source 'smb.conf.erb'
-    path '/etc/samba/smb.conf'
-    owner new_resource.user
-    group new_resource.group
-    mode '644'
-    variables({
-                hostname: new_resource.hostname,
-                share_list: selected_shares
-              })
-    only_if { ::Dir.exist?(new_resource.configuration_directory) }
-  end
+	# Configure Samba
+	template 'Configure Samba' do
+		source 'smb.conf.erb'
+		path '/etc/samba/smb.conf'
+		owner new_resource.user
+		group new_resource.group
+		mode '644'
+		variables({ hostname: new_resource.hostname, share_list: selected_shares })
+		only_if { ::Dir.exist?(new_resource.configuration_directory) }
+	end
 end
 
 action :create_magento_shares do
-  %i[product_media_share content_media_share backups_share].each do |drop_directory|
-    next unless new_resource.share_list.key?(drop_directory)
+	%i[
+		product_media_share
+		content_media_share
+		backups_share
+	].each do |drop_directory|
+		next unless new_resource.share_list.key?(drop_directory)
 
-    if (new_resource.share_list[drop_directory].is_a? String) && !new_resource.share_list[drop_directory].empty?
-      media_drop_path = new_resource.share_list[drop_directory]
-    elsif new_resource.share_list[drop_directory].key?(:path) && !new_resource.share_list[drop_directory][:path].empty?
-      media_drop_path = new_resource.share_list[drop_directory][:path]
-    end
-    directory 'Media Drop' do
-      path media_drop_path
-      owner new_resource.user
-      group new_resource.group
-      mode '777'
-      recursive true
-    end
-  end
+		if (new_resource.share_list[drop_directory].is_a? String) &&
+				!new_resource.share_list[drop_directory].empty?
+			media_drop_path = new_resource.share_list[drop_directory]
+		elsif new_resource.share_list[drop_directory].key?(:path) &&
+				!new_resource.share_list[drop_directory][:path].empty?
+			media_drop_path = new_resource.share_list[drop_directory][:path]
+		end
+		directory 'Media Drop' do
+			path media_drop_path
+			owner new_resource.user
+			group new_resource.group
+			mode '777'
+			recursive true
+		end
+	end
 end
 
 action :restart do
-  service 'smbd' do
-    action :restart
-  end
+	service 'smbd' do
+		action :restart
+	end
 end
 
 action :enable do
-  service 'smbd' do
-    action :enable
-  end
+	service 'smbd' do
+		action :enable
+	end
 end
 
 action :uninstall do
-  package 'samba' do
-    action %i[purge remove]
-    only_if { ::File.exist?(new_resource.service_file) }
-  end
+	package 'samba' do
+		action %i[purge remove]
+		only_if { ::File.exist?(new_resource.service_file) }
+	end
 
-  execute 'Remove Samba service' do
-    command lazy {
-      "rm -rf #{service_file}"
-    }
-    only_if { ::File.exist?(new_resource.service_file) }
-  end
+	execute 'Remove Samba service' do
+		command lazy { "rm -rf #{service_file}" }
+		only_if { ::File.exist?(new_resource.service_file) }
+	end
 
-  execute 'Remove Samba configuration' do
-    command lazy {
-      "rm -rf #{configuration_directory}"
-    }
-    only_if { ::Dir.exist?(new_resource.configuration_directory) }
-  end
+	execute 'Remove Samba configuration' do
+		command lazy { "rm -rf #{new_resource.configuration_directory}" }
+		only_if { ::Dir.exist?(new_resource.configuration_directory) }
+	end
 end

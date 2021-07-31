@@ -6,12 +6,6 @@
 #
 # frozen_string_literal: true
 
-setting = node[:infrastructure][:webserver]
+setting = ConfigHelper.value('infrastructure/webserver')
 
-if setting.is_a?(Hash) && !setting.empty?
-  setting.each do |key, value|
-    next if value.nil? || (value.is_a?(String) && value.empty?)
-
-    override[:nginx][key] = setting[key]
-  end
-end
+setting.each { |key, value| override[:nginx][key] = value } unless setting.nil?

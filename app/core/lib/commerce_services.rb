@@ -9,7 +9,7 @@ class CommerceServices
 	@required_modules = %w[magento/product-recommendations magento/live-search]
 
 	def CommerceServices.credentials_missing?
-		setting = Config.setting(@setting_path)
+		setting = Config.value(@setting_path)
 		return nil if setting.nil?
 		return true if setting.empty?
 

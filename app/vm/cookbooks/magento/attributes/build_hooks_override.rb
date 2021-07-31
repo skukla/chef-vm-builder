@@ -6,12 +6,8 @@
 #
 # frozen_string_literal: true
 
-setting = node[:application][:build][:hooks]
+setting = ConfigHelper.value('application/build/hooks')
 
-if setting.is_a?(Hash) && !setting.empty?
-  setting.each do |key, value|
-    next if value.nil? || (value.is_a?(String) && value.empty?)
-
-    override[:magento][:build][:hooks][key] = setting[key]
-  end
+unless setting.nil?
+	setting.each { |key, value| override[:magento][:build][:hooks][key] = value }
 end

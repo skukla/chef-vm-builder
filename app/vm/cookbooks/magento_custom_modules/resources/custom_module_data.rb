@@ -10,34 +10,34 @@ property :module_list, Array
 property :data_type, String
 
 action :process do
-  unless new_resource.module_list.empty?
+	unless new_resource.module_list.nil?
+		modules_from_github =
+			new_resource.module_list.select do |md|
+				md.key?('source') && md['source'].include?('github')
+			end
 
-    modules_from_github = new_resource.module_list.select do |module_data|
-      module_data.key?(:repository_url) && module_data[:repository_url].include?('github')
-    end
+		modules_from_github.each do |md|
+			composer "Adding #{new_resource.data_type} github repository: #{md['name']}" do
+				action :add_repository
+				module_name md['name']
+				repository_url md['source']
+			end
+		end
 
-    modules_from_github.each do |module_data|
-      next if module_data.nil? || (module_data.is_a?(String) && module_data.empty?)
+		modules_from_packagist =
+			new_resource.module_list.select { |md| md['source'].nil? }
 
-      composer "Adding #{new_resource.data_type} github repository: #{module_data[:name]}" do
-        action :add_repository
-        module_name module_data[:name]
-        repository_url module_data[:repository_url]
-      end
-    end
+		require_string =
+			ComposerHelper.build_require_string(
+				modules_from_github.concat(modules_from_packagist),
+			)
 
-    modules_from_packagist = new_resource.module_list.select do |module_data|
-      module_data[:repository_url].nil?
-    end
-
-    require_string = ModuleListHelper.build_require_string(modules_from_github.concat(modules_from_packagist))
-
-    unless require_string.empty?
-      composer "Adding #{new_resource.data_type}s: #{require_string}" do
-        action :require
-        package_name require_string
-        options ['no-update']
-      end
-    end
-  end
+		unless require_string.empty?
+			composer "Adding #{new_resource.data_type}s: #{require_string}" do
+				action :require
+				package_name require_string
+				options ['no-update']
+			end
+		end
+	end
 end

@@ -9,33 +9,33 @@ use_samba = node[:app_controller][:samba][:use]
 use_webmin = node[:app_controller][:webmin][:use]
 
 mysql 'Restart Mysql' do
-  action :restart
+	action :restart
 end
 
 nginx 'Restart Nginx' do
-  action :restart
+	action :restart
 end
 
 if use_mailhog
-  mailhog 'Restart Mailhog' do
-    action :restart
-  end
+	mailhog 'Restart Mailhog' do
+		action :restart
+	end
 end
 
 if use_samba
-  samba 'Restart Samba' do
-    action :restart
-  end
+	samba 'Restart Samba' do
+		action :restart
+	end
 end
 
 if use_webmin
-  webmin 'Restart Webmin' do
-    action :restart
-  end
+	webmin 'Restart Webmin' do
+		action :restart
+	end
 end
 
 if use_elasticsearch
-  elasticsearch 'Restart Elasticsearch' do
-    action :restart
-  end
+	elasticsearch 'Restart Elasticsearch' do
+		action :restart
+	end
 end

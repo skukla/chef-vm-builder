@@ -5,7 +5,7 @@ class VagrantPlugin
 		attr_accessor :list
 		attr_reader :required_plugins
 	end
-	@list = Config.setting('vagrant/plugins')
+	@list = Config.value('vagrant/plugins')
 	@required_plugins = %w[vagrant-hostsupdater]
 
 	def VagrantPlugin.installed_plugins

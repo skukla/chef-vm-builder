@@ -1,7 +1,7 @@
 require_relative 'config'
 class CustomModule
 	def CustomModule.list
-		Config.setting('custom_demo/custom_modules')
+		Config.value('custom_demo/custom_modules')
 	end
 
 	def CustomModule.module_found?(module_arr)

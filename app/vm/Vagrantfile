@@ -16,9 +16,9 @@ ValidationHandler.csc_credentials
 Vagrant.configure('2') do |config|
 	config.ssh.insert_key = false
 	config.ssh.forward_agent = true
-	config.vm.box = Config.setting('remote_machine/box')
-	config.vm.define Config.setting('remote_machine/name') do |machine|
-		machine.vm.network 'private_network', ip: Config.setting('vm/ip')
+	config.vm.box = Config.value('remote_machine/box')
+	config.vm.define Config.value('remote_machine/name') do |machine|
+		machine.vm.network 'private_network', ip: Config.value('vm/ip')
 		machine.vm.hostname = DemoStructure.base_url
 	end
 	config.hostsupdater.aliases = DemoStructure.additional_urls
@@ -31,15 +31,15 @@ Vagrant.configure('2') do |config|
 				'modifyvm',
 				:id,
 				'--name',
-				Config.setting('vm/name'),
+				Config.value('vm/name'),
 				'--memory',
-				Config.setting('remote_machine/memory'),
+				Config.value('remote_machine/memory'),
 				'--cpus',
-				Config.setting('remote_machine/cpus'),
+				Config.value('remote_machine/cpus'),
 				'--vram',
-				Config.setting('remote_machine/vram'),
+				Config.value('remote_machine/vram'),
 				'--vrde',
-				Config.setting('remote_machine/remote_display'),
+				Config.value('remote_machine/remote_display'),
 		                  ]
 	end
 
@@ -53,7 +53,7 @@ Vagrant.configure('2') do |config|
 	end
 
 	config.vm.provision 'chef_zero' do |chef|
-		chef.version = Config.setting('provisioner/version').chomp
+		chef.version = Config.value('provisioner/version').chomp
 		chef.nodes_path = 'nodes'
 		chef.environments_path = 'environments'
 		chef.roles_path = 'roles'

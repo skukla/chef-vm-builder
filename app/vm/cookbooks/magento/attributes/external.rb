@@ -34,11 +34,13 @@ default[:magento][:elasticsearch][:host] = node[:elasticsearch][:host]
 default[:magento][:elasticsearch][:port] = node[:elasticsearch][:port]
 default[:magento][:elasticsearch][:node_name] = node[:elasticsearch][:node_name]
 
-include_attribute 'magento_custom_modules::default'
-default[:magento][:custom_modules][:module_list] = node[:magento_custom_modules][:module_list]
+include_attribute 'magento_custom_modules::override'
+default[:magento][:custom_modules][:module_list] =
+	node[:magento_custom_modules][:module_list]
 
-include_attribute 'magento_demo_builder::default'
-default[:magento][:data_packs][:data_pack_list] = node[:magento_demo_builder][:data_pack_list]
+include_attribute 'magento_demo_builder::override'
+default[:magento][:data_packs][:data_pack_list] =
+	node[:magento_demo_builder][:data_pack_list]
 
 include_attribute 'magento_patches::default'
 default[:magento][:patches][:apply] = node[:magento_patches][:apply]

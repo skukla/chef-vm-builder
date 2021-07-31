@@ -1,14 +1,14 @@
 require 'pathname'
 require 'json'
 
-class Config
+class ConfigHelper
 	class << self
 		attr_reader :app_root, :build_action_arr
 	end
-	@app_root = "/#{File.join(Pathname.new(__dir__).each_filename.to_a[0...-3])}"
+	@app_root = '/var/chef/cache/cookbooks'
 	@build_action_arr = %i[install force_install restore reinstall update refresh]
 
-	def Config.remove_blanks(hash_or_array)
+	def ConfigHelper.remove_blanks(hash_or_array)
 		p =
 			proc do |*args|
 				v = args.last
@@ -18,17 +18,21 @@ class Config
 		hash_or_array.delete_if(&p)
 	end
 
-	def Config.json
-		Config.remove_blanks(
-			JSON.parse(File.read(File.join(@app_root, 'config.json'))),
+	def ConfigHelper.json
+		self.remove_blanks(
+			JSON.parse(
+				File.read(
+					File.join("#{@app_root}/helpers/libraries/app", 'config.json'),
+				),
+			),
 		)
 	end
 
-	def Config.build_action_list
+	def ConfigHelper.build_action_list
 		@build_action_arr.map { |build_action| build_action.to_s }
 	end
 
-	def Config.setting(value)
-		json.dig(*value.split('/'))
+	def ConfigHelper.value(setting_path)
+		json.dig(*setting_path.split('/'))
 	end
 end

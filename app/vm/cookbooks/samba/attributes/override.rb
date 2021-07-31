@@ -7,13 +7,14 @@
 #
 # frozen_string_literal: true
 
-setting = node[:infrastructure][:samba]
+setting = ConfigHelper.value('infrastructure/samba')
 
-override[:samba][:use] = setting if setting.is_a?(TrueClass) || setting.is_a?(FalseClass)
+override[:samba][:use] = setting if setting.is_a?(TrueClass) ||
+	setting.is_a?(FalseClass)
 if setting.is_a?(Hash) && !setting.empty?
-  setting.each do |key, value|
-    next if value.nil? || (value.is_a?(String) && value.empty?)
+	setting.each do |key, value|
+		next if value.nil? || (value.is_a?(String) && value.empty?)
 
-    override[:samba][key] = setting[key]
-  end
+		override[:samba][key] = setting[key]
+	end
 end
