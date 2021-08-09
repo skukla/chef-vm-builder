@@ -22,6 +22,6 @@ default[:elasticsearch][:node_name] = 'elasticsearch'
 default[:elasticsearch][:use] = true
 default[:elasticsearch][:version] = '7.x'
 default[:elasticsearch][:host] = '127.0.0.1'
-default[:elasticsearch][:memory] = '2g'
+default[:elasticsearch][:memory] = '3g'
 default[:elasticsearch][:port] = 9200
 default[:elasticsearch][:plugin_list] = %w[analysis-phonetic analysis-icu]
