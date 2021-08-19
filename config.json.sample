@@ -55,7 +55,7 @@
 	},
 	"provisioner": {
 		"type": "chef_zero",
-		"version": "latest",
+		"version": "16.13.16",
 		"nodes_path": "nodes",
 		"environments_path": "environments",
 		"roles_path": "roles",
