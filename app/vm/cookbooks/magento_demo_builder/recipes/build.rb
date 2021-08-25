@@ -22,9 +22,11 @@ unless data_pack_list.empty?
 			end
 		end
 
-		magento_demo_builder "Cleaning up the #{data_pack['module_name']} data pack" do
-			action :clean_up
-			data_pack_data data_pack
+		if data_pack['source'].include?('github')
+			magento_demo_builder "Cleaning up the #{data_pack['module_name']} data pack" do
+				action :clean_up
+				data_pack_data data_pack
+			end
 		end
 	end
 end

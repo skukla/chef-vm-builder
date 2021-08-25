@@ -35,8 +35,11 @@ action :clear_fixtures do
 	module_path =
 		"app/code/#{data_pack['vendor_string']}/#{data_pack['module_string']}"
 
-	execute 'Clearing fixtures' do
-		command "rm -rf #{new_resource.web_root}/#{module_path}/fixtures/*"
+	if Dir.exist?("#{module_path}/fixtures") &&
+			!Dir.empty?("#{module_path}/fixtures")
+		execute "Clearing fixtures from #{data_pack['vendor_string']}/#{data_pack['module_string']}" do
+			command "rm -rf #{new_resource.web_root}/#{module_path}/fixtures/*"
+		end
 	end
 end
 
@@ -50,6 +53,7 @@ action :create_folders do
 		"app/code/#{data_pack['vendor_string']}/#{data_pack['module_string']}",
 		"app/code/#{data_pack['vendor_string']}/#{data_pack['module_string']}/media",
 		"app/code/#{data_pack['vendor_string']}/#{data_pack['module_string']}/data",
+		"app/code/#{data_pack['vendor_string']}/#{data_pack['module_string']}/data/fixtures",
 		"app/code/#{data_pack['vendor_string']}/#{data_pack['module_string']}/etc",
 	]
 
@@ -122,11 +126,7 @@ action :clean_up do
 	data_pack = new_resource.data_pack_data
 
 	module_path =
-		if data_pack['source'].include?('github')
-			"vendor/#{data_pack['vendor_string']}/#{data_pack['module_string']}"
-		else
-			"app/code/#{data_pack['vendor_string']}/#{data_pack['module_string']}"
-		end
+		"vendor/#{data_pack['vendor_string']}/#{data_pack['module_string']}"
 
 	ruby_block "Remove unwanted hidden files from the #{data_pack['module_name']} data pack" do
 		block { DataPackHelper.clean_up("#{new_resource.web_root}/#{module_path}") }
