@@ -17,4 +17,4 @@ unless setting.nil?
 	end
 end
 override[:magento][:csc_options][:production_private_key] =
-	CscHelper.read_production_key
+	ServicesHelper.read_production_key

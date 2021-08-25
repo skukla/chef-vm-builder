@@ -1,33 +1,23 @@
-#
 # Cookbook:: helpers
 # Library:: magento_helper
-#
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
+# frozen_string_literal: true
+
 module MagentoHelper
 	def self.get_consumer_list
-		@family_override = Chef.node.override['magento']['options']['family']
-		@family_default = Chef.node.default['magento']['options']['family']
+		@family = Chef.node[:magento][:options][:family]
 		@community_consumer_list =
-			Chef.node.default['magento']['build']['community_consumer_list']
+			Chef.node[:magento][:build][:community_consumer_list]
 		@enterprise_consumer_list =
-			Chef.node.default['magento']['build']['enterprise_consumer_list']
-		@user_consumer_list =
-			Chef.node.override['magento']['build']['consumer_list']
-		@consumer_list = []
+			Chef.node[:magento][:build][:enterprise_consumer_list]
+		@user_consumer_list = Chef.node[:magento][:build][:consumer_list]
 
-		@family =
-			if @family_override.nil? || @family_override.empty?
-				@family_default
-			else
-				@family_override
-			end
-
+		@consumer_list =
+			@community_consumer_list.each_with_object([]) { |item, arr| arr << item }
 		if @family == 'enterprise'
-			@community_consumer_list.each { |consumer| @consumer_list << consumer }
 			@enterprise_consumer_list.each { |consumer| @consumer_list << consumer }
-		else
-			@user_consumer_list.each { |consumer| @consumer_list << consumer }
 		end
+		@user_consumer_list.each { |consumer| @consumer_list << consumer }
 
 		@consumer_list
 	end
@@ -44,6 +34,7 @@ module MagentoHelper
 
 	def self.build_command_list(type)
 		return if Chef.node[:magento][:build][:hooks][:commands].nil?
+
 		commands = Chef.node[:magento][:build][:hooks][:commands]
 		case type
 		when :vm_cli
