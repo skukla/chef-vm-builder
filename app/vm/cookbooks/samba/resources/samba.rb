@@ -109,20 +109,3 @@ action :enable do
 		action :enable
 	end
 end
-
-action :uninstall do
-	package 'samba' do
-		action %i[purge remove]
-		only_if { ::File.exist?(new_resource.service_file) }
-	end
-
-	execute 'Remove Samba service' do
-		command lazy { "rm -rf #{service_file}" }
-		only_if { ::File.exist?(new_resource.service_file) }
-	end
-
-	execute 'Remove Samba configuration' do
-		command lazy { "rm -rf #{new_resource.configuration_directory}" }
-		only_if { ::Dir.exist?(new_resource.configuration_directory) }
-	end
-end

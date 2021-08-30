@@ -5,7 +5,7 @@
 
 data_pack_list = DataPackHelper.local_list
 
-unless data_pack_list.empty?
+unless data_pack_list.nil?
 	data_pack_list.each do |data_pack|
 		data_pack = DataPackHelper.prepare_names(data_pack)
 

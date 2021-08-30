@@ -5,7 +5,7 @@
 
 data_pack_list = DataPackHelper.local_list
 
-unless data_pack_list.empty?
+unless data_pack_list.nil?
 	data_pack_list.each do |data_pack|
 		magento_demo_builder 'Install data pack via the CLI' do
 			action :install

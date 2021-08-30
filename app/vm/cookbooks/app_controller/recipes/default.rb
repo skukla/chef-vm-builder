@@ -38,5 +38,6 @@ if %w[refresh update].include?(build_action)
 	include_recipe 'nginx::configure'
 end
 if first_run_install || !after_first_run_install
+	include_recipe 'app_controller::service_launcher'
 	include_recipe 'app_controller::application'
 end

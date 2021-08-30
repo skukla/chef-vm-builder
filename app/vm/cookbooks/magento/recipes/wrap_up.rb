@@ -5,6 +5,7 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 web_root = node[:magento][:nginx][:web_root]
 build_action = node[:magento][:build][:action]
+use_elasticsearch = node[:magento][:elasticsearch][:use]
 warm_cache = node[:magento][:build][:hooks][:warm_cache]
 enable_media_gallery = node[:magento][:build][:hooks][:enable_media_gallery]
 commands = node[:magento][:build][:hooks][:commands]
@@ -68,6 +69,12 @@ end
 if %w[install force_install reinstall restore].include?(build_action)
 	magento_cli 'Set indexers to On Schedule mode' do
 		action %i[set_indexer_mode]
+	end
+end
+
+if use_elasticsearch
+	service 'elasticsearch' do
+		action :start
 	end
 end
 

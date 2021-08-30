@@ -5,7 +5,7 @@
 
 data_pack_list = DataPackHelper.remote_list
 
-unless data_pack_list.empty?
+unless data_pack_list.nil?
 	composer 'Update remote data pack code' do
 		action :update
 		package_name ComposerHelper.build_require_string(data_pack_list)
