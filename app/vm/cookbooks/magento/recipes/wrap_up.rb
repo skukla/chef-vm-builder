@@ -72,12 +72,6 @@ if %w[install force_install reinstall restore].include?(build_action)
 	end
 end
 
-if use_elasticsearch
-	service 'elasticsearch' do
-		action :start
-	end
-end
-
 magento_cli 'Reset indexers, reindex, and clean cache' do
 	action %i[reset_indexers reindex clean_cache]
 end

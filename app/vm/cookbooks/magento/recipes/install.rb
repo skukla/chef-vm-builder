@@ -12,12 +12,6 @@ if %w[install force_install].include?(build_action)
 	end
 end
 
-if use_elasticsearch
-	service 'elasticsearch' do
-		action :start
-	end
-end
-
 if build_action == 'update'
 	magento_cli 'Upgrade the Magento database' do
 		action :db_upgrade
@@ -48,12 +42,6 @@ if %w[install force_install reinstall].include?(build_action)
 				encryption_key: node[:magento][:settings][:encryption_key],
 			},
 		)
-	end
-end
-
-if use_elasticsearch
-	service 'elasticsearch' do
-		action :stop
 	end
 end
 
