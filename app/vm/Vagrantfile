@@ -1,8 +1,8 @@
-require_relative '../core/lib/config'
-require_relative '../core/lib/demo_structure'
-require_relative '../core/handlers/system_handler'
-require_relative '../core/handlers/validation_handler'
-require_relative '../core/handlers/entry_handler'
+require_relative '../core/ruby/lib/config'
+require_relative '../core/ruby/lib/demo_structure'
+require_relative '../core/ruby/handlers/system_handler'
+require_relative '../core/ruby/handlers/validation_handler'
+require_relative '../core/ruby/handlers/entry_handler'
 
 SystemHandler.clear_screen
 ValidationHandler.config_json_structure

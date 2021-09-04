@@ -5,7 +5,7 @@ class Config
 	class << self
 		attr_reader :app_root, :build_action_arr
 	end
-	@app_root = "/#{File.join(Pathname.new(__dir__).each_filename.to_a[0...-3])}"
+	@app_root = "/#{File.join(Pathname.new(__dir__).each_filename.to_a[0...-4])}"
 
 	def Config.remove_blanks(hash_or_array)
 		p =
