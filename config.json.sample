@@ -6,26 +6,69 @@
 	},
 	"custom_demo": {
 		"structure": {
-			"website": {
-				"base": "luma.demo"
-			}
+			"websites": [
+				{
+					"site_code": "base",
+					"site_url": "luma.demo",
+					"stores": [
+						{
+							"store_code": "main_website_store",
+							"root_category": "Default Category",
+							"store_views": [
+								{
+									"store_view_code": "ca_fr",
+									"store_view_url": "luma.ca"
+								}
+							]
+						},
+						{
+							"store_code": "venia_store",
+							"root_category": "Venia Catalog",
+							"store_views": [
+								{
+									"store_view_code": "venia_us_en"
+								}
+							]
+						}
+					]
+				},
+				{
+					"site_code": "b2b",
+					"site_url": "b2b.luma.demo",
+					"stores": [
+						{
+							"store_code": "b2b_store",
+							"root_category": "B2B Catalog",
+							"store_views": [
+								{
+									"store_view_code": "b2b_us_en"
+								}
+							]
+						}
+					]
+				}
+			]
 		},
 		"backup": "",
-		"data_packs": {},
-		"custom_modules": {
-			"data-install": {
-				"name": "magentoese/module-data-install",
-				"version": "dev-beta",
-				"repository_url": "https://github.com/PMET-public/module-data-install.git"
+		"data_packs": [
+			{
+				"source": "base-b2c-website"
 			}
-		}
+		],
+		"custom_modules": [
+			{
+				"name": "magentoese/module-data-install",
+				"version": "dev-master",
+				"source": "https://github.com/PMET-public/module-data-install.git"
+			}
+		]
 	},
 	"application": {
 		"authentication": {
 			"composer": {
-				"public_key": "",
-				"private_key": "",
-				"github_token": ""
+				"public_key": "b17aa908c13768cef2a5a3a043bb3c54",
+				"private_key": "93f1f71fd779eb46af01fd7587e5fdba",
+				"github_token": "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"
 			}
 		},
 		"options": {
@@ -33,11 +76,11 @@
 			"version": "2.4.2-p1"
 		},
 		"build": {
-			"action": "install",
+			"action": "force_install",
 			"sample_data": false,
 			"patches": true,
 			"hooks": {
-				"warm_cache": true,
+				"warm_cache": false,
 				"enable_media_gallery": true,
 				"commands": []
 			}
@@ -66,31 +109,15 @@
 		"box": "bento/ubuntu-18.04",
 		"cpus": 2,
 		"memory": 8192,
-		"vram": 16
+		"vram": 16,
+		"remote_display": "off"
 	},
 	"hypervisor": {
-		"vmware": {
-			"gui": true,
-			"linked_clones": true,
-			"eth0_pcislotnumber": "32",
-			"eth1_pcislotnumber": "33"
-		},
-		"virtualbox": {
-			"gui": false,
-			"linked_clones": false,
-			"remote_display": "off",
-			"default_nic_type": "82543GC"
-		}
+		"gui": false,
+		"linked_clones": false,
+		"default_nic_type": "82543GC"
 	},
 	"vagrant": {
-		"plugins": {
-			"all": [
-				"vagrant-hostsupdater"
-			],
-			"vmware": [
-				"vagrant-vmware-desktop"
-			],
-			"virtualbox": []
-		}
+		"plugins": ["vagrant-hostsupdater"]
 	}
 }
