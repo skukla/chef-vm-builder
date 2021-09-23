@@ -8,6 +8,7 @@ require_relative '../lib/data_pack'
 require_relative '../lib/custom_module'
 require_relative '../lib/entry'
 require_relative '../lib/commerce_services'
+require_relative '../lib/service_dependencies'
 
 class ValidationHandler
 	@build_action = Config.value('application/build/action')
@@ -49,6 +50,13 @@ class ValidationHandler
 
 		system("vagrant plugin install #{vagrant_plugin.list.join(' ')}")
 		abort(SuccessMsg.show(:plugins_installed))
+	end
+
+	def ValidationHandler.service_dependencies
+		abort(ErrorMsg.show(:xcode_missing)) if ServiceDependencies.xcode_missing?
+		if ServiceDependencies.homebrew_missing?
+			abort(ErrorMsg.show(:homebrew_missing))
+		end
 	end
 
 	def ValidationHandler.data_packs

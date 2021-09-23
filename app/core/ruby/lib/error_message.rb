@@ -52,6 +52,18 @@ class ErrorMsg < Message
     TEXT
 	end
 
+	def ErrorMsg.xcode_missing
+		msg = <<~TEXT
+		#{@oops}It looks #{@bold}#{@cyan}Xcode tools#{@reg} are not installed.
+    TEXT
+	end
+
+	def ErrorMsg.homebrew_missing
+		msg = <<~TEXT
+		#{@oops}It looks #{@bold}#{@cyan}Homebrew#{@reg} is not installed.
+    TEXT
+	end
+
 	def ErrorMsg.data_pack_installer_missing
 		msg = <<~TEXT
 		#{@oops}You've specified a data pack but it looks like you're missing the \

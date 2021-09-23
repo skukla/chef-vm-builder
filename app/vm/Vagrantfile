@@ -3,12 +3,14 @@ require_relative '../core/ruby/lib/demo_structure'
 require_relative '../core/ruby/handlers/system_handler'
 require_relative '../core/ruby/handlers/validation_handler'
 require_relative '../core/ruby/handlers/entry_handler'
+require_relative '../core/ruby/handlers/elasticsearch_handler'
 
 SystemHandler.clear_screen
 ValidationHandler.config_json_structure
 ValidationHandler.composer_credentials
 ValidationHandler.base_website
 ValidationHandler.build_action
+ValidationHandler.service_dependencies
 ValidationHandler.plugins
 ValidationHandler.data_packs
 ValidationHandler.csc_credentials
@@ -41,6 +43,19 @@ Vagrant.configure('2') do |config|
 				'--vrde',
 				Config.value('remote_machine/remote_display'),
 		                  ]
+	end
+
+	config.trigger.before %i[up reload provision] do |trigger|
+		trigger.name = 'Confirming Elasticsearch is present'
+		trigger.ruby do
+			ElasticsearchHandler.install
+			ElasticsearchHandler.start
+		end
+	end
+
+	config.trigger.before %i[up reload provision] do |trigger|
+		trigger.name = 'Wiping Elasticsearch'
+		trigger.ruby { ElasticsearchHandler.wipe }
 	end
 
 	config.trigger.before %i[up reload provision] do |trigger|
