@@ -54,13 +54,20 @@ class ErrorMsg < Message
 
 	def ErrorMsg.xcode_missing
 		msg = <<~TEXT
-		#{@oops}It looks #{@bold}#{@cyan}Xcode tools#{@reg} are not installed.
+		#{@oops}It looks like #{@bold}#{@cyan}Xcode tools#{@reg} are not installed.
     TEXT
 	end
 
 	def ErrorMsg.homebrew_missing
 		msg = <<~TEXT
-		#{@oops}It looks #{@bold}#{@cyan}Homebrew#{@reg} is not installed.
+		#{@oops}It looks like #{@bold}#{@cyan}Homebrew#{@reg} is not installed.
+    TEXT
+	end
+
+	def ErrorMsg.elasticsearch_unavailable
+		msg = <<~TEXT
+		#{@oops}It looks like #{@bold}#{@cyan}Elasticsearch #{@reg} isn't available yet. \
+		Please try your build again.
     TEXT
 	end
 

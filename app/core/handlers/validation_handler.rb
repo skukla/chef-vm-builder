@@ -1,5 +1,5 @@
-require_relative '../lib/config.rb'
-require_relative '../lib/composer.rb'
+require_relative '../lib/config'
+require_relative '../lib/composer'
 require_relative '../lib/error_message'
 require_relative '../lib/success_message'
 require_relative '../lib/demo_structure'

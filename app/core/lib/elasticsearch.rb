@@ -29,23 +29,12 @@ class Elasticsearch
 		)
 	end
 
-	# def Elasticsearch.wait_until_available(secs)
-	# 	puts 'Waiting for elasticsearch to start...'
-	# 	secs.times do
-	# 		print '.'
-	# 		sleep 1
-	# 	end
-	# 	print "\n"
-	# end
-
-	def Elasticsearch.wait_until_available
-		shell_lib_path = Entry.path('app/core/shell/lib')
-
-		puts 'Waiting for Elasticsearch to become available...'
-		Dir.chdir(shell_lib_path)
-		System.cmd(
-			'source ./functions.sh && wait_for_elasticsearch_to_become_available',
-		)
+	def Elasticsearch.wait_until_available(secs)
+		secs.times do
+			print '.'
+			sleep 1
+		end
+		print "\n"
 	end
 
 	def Elasticsearch.stop

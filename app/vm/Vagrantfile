@@ -1,9 +1,9 @@
-require_relative '../core/ruby/lib/config'
-require_relative '../core/ruby/lib/demo_structure'
-require_relative '../core/ruby/handlers/system_handler'
-require_relative '../core/ruby/handlers/validation_handler'
-require_relative '../core/ruby/handlers/entry_handler'
-require_relative '../core/ruby/handlers/elasticsearch_handler'
+require_relative '../core/lib/config'
+require_relative '../core/lib/demo_structure'
+require_relative '../core/handlers/system_handler'
+require_relative '../core/handlers/validation_handler'
+require_relative '../core/handlers/entry_handler'
+require_relative '../core/handlers/elasticsearch_handler'
 
 SystemHandler.clear_screen
 ValidationHandler.config_json_structure
@@ -46,6 +46,15 @@ Vagrant.configure('2') do |config|
 	end
 
 	config.trigger.before %i[up reload provision] do |trigger|
+		trigger.name = 'Copying items to VM and creating environment file'
+		trigger.ruby do
+			EntryHandler.copy_entries
+			EntryHandler.clean_up_hidden_files
+			EntryHandler.create_environment_file
+		end
+	end
+
+	config.trigger.before %i[up reload provision] do |trigger|
 		trigger.name = 'Confirming Elasticsearch is present'
 		trigger.ruby do
 			ElasticsearchHandler.install
@@ -53,17 +62,11 @@ Vagrant.configure('2') do |config|
 		end
 	end
 
-	config.trigger.before %i[up reload provision] do |trigger|
-		trigger.name = 'Wiping Elasticsearch'
-		trigger.ruby { ElasticsearchHandler.wipe }
-	end
-
-	config.trigger.before %i[up reload provision] do |trigger|
-		trigger.name = 'Copying items to VM and creating environment file'
-		trigger.ruby do
-			EntryHandler.copy_entries
-			EntryHandler.clean_up_hidden_files
-			EntryHandler.create_environment_file
+	if Config.value('infrastructure/elasticsearch').is_a?(Hash) &&
+			Config.value('infrastructure/elasticsearch/wipe')
+		config.trigger.before %i[up reload provision] do |trigger|
+			trigger.name = 'Wiping Elasticsearch'
+			trigger.ruby { ElasticsearchHandler.wipe }
 		end
 	end
 

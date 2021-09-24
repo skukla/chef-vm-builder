@@ -19,6 +19,12 @@ class SuccessMsg < Message
     TEXT
 	end
 
+	def SuccessMsg.elasticsearch_available
+		msg = <<~TEXT
+    #{@success}Elasticsearch is available.
+    TEXT
+	end
+
 	def SuccessMsg.ssl_keys_removed_from_keychain; end
 
 	def SuccessMsg.ssl_keys_removed_from_system; end
