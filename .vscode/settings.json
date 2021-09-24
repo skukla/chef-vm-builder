@@ -5,7 +5,9 @@
     "csv-edit.initiallyFixedRowsTop": 1,
     "files.exclude": {
         "**/.gitignore": true,
-        "**/.vscode": true
+        "**/.vscode": true,
+        "**/node_modules": true,
+        "**/package*.json": true
     },
     "terminal.integrated.automationShell.linux": ""
 }
