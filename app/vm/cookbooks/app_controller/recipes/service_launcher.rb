@@ -33,9 +33,3 @@ if use_webmin
 		action :restart
 	end
 end
-
-if use_elasticsearch
-	elasticsearch 'Restart Elasticsearch' do
-		action :restart
-	end
-end

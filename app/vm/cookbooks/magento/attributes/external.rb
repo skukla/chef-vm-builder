@@ -32,7 +32,6 @@ include_attribute 'elasticsearch::default'
 default[:magento][:elasticsearch][:use] = node[:elasticsearch][:use]
 default[:magento][:elasticsearch][:host] = node[:elasticsearch][:host]
 default[:magento][:elasticsearch][:port] = node[:elasticsearch][:port]
-default[:magento][:elasticsearch][:node_name] = node[:elasticsearch][:node_name]
 
 include_attribute 'magento_custom_modules::override'
 default[:magento][:custom_modules][:module_list] =
