@@ -4,7 +4,7 @@ require_relative 'entry'
 
 class Elasticsearch
 	def Elasticsearch.is_missing?
-		!Dir.exist?('/usr/local/var/homebrew/linked/elasticsearch-full')
+		!Dir.exist?('/usr/local/var/lib/elasticsearch')
 	end
 
 	def Elasticsearch.is_running?
