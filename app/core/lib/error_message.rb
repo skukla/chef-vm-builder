@@ -93,6 +93,13 @@ class ErrorMsg < Message
 		TEXT
 	end
 
+	def ErrorMsg.data_pack_refresh
+		msg = <<~TEXT
+		#{@oops}You have a #{@bold}#{@cyan}refresh#{@reg} build action \
+		but no #{@bold}#{@cyan}data packs#{@reg} configured in your config.json file.
+		TEXT
+	end
+
 	def ErrorMsg.csc_extensions_missing
 		msg = <<~TEXT
 		#{@oops}You've specified commerce services credentials but it looks like you're missing either the \
