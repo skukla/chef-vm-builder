@@ -79,7 +79,7 @@ class EntryHandler
 		EntryHandler
 			.entries
 			.map { |entry| "#{File.join(Config.app_root, entry[:dest])}" }
-			.each { |path| `find #{path} -name '.DS_Store' -type f -delete` }
+			.each { |path| SystemHandler.remove_ds_store_files(path) }
 	end
 
 	def EntryHandler.create_environment_file
