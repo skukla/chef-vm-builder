@@ -32,7 +32,7 @@ class ValidationHandler
 	end
 
 	def ValidationHandler.build_action
-		abort(ErrorMsg.show(:build_action_missing)) if @build_action.to_s.empty?
+		abort(ErrorMsg.show(:build_action_missing)) if @build_action.nil?
 
 		unless Config.build_action_list.include?(@build_action)
 			abort(ErrorMsg.show(:build_action_incorrect))
@@ -42,7 +42,7 @@ class ValidationHandler
 	def ValidationHandler.plugins
 		vagrant_plugin = VagrantPlugin
 
-		if vagrant_plugin.list.to_s.empty?
+		if vagrant_plugin.list.nil?
 			vagrant_plugin.list = vagrant_plugin.required_plugins
 		end
 
