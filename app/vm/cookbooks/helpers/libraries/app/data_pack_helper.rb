@@ -18,12 +18,14 @@ class DataPackHelper
 
 	def DataPackHelper.local_list
 		return if list.nil?
-		list.reject { |pack| pack['source'].include?('github') }
+		result = list.reject { |pack| pack['source'].include?('github') }
+		result.empty? ? nil : result
 	end
 
 	def DataPackHelper.remote_list
 		return if list.nil?
-		list.select { |pack| pack['source'].include?('github') }
+		result = list.select { |pack| pack['source'].include?('github') }
+		result.empty? ? nil : result
 	end
 
 	def DataPackHelper.missing_value?
