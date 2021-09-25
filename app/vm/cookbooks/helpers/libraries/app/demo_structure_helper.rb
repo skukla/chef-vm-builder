@@ -91,7 +91,9 @@ class DemoStructureHelper
 	end
 
 	def DemoStructureHelper.additional_entries
-		vhost_entries.reject { |entry| %w[base default].include?(entry['code']) }
+		result =
+			vhost_entries.reject { |entry| %w[base default].include?(entry['code']) }
+		result.empty? ? nil : result
 	end
 
 	def DemoStructureHelper.additional_urls
