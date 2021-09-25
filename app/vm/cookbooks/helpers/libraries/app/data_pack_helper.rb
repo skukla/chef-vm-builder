@@ -1,14 +1,16 @@
 require_relative 'config_helper'
 require_relative 'demo_structure_helper'
 require_relative 'entry_helper'
+require_relative 'system_helper'
 
 class DataPackHelper
 	class << self
 		attr_accessor :folder_list
-		attr_reader :required_fields
+		attr_reader :required_fields, :files_to_remove
 	end
 	@folder_list = EntryHelper.files_from('magento_demo_builder/files/default')
 	@required_fields = %w[name source]
+	@files_to_remove = %w[.gitignore .DS_Store]
 
 	def DataPackHelper.list
 		ConfigHelper.value('custom_demo/data_packs')
@@ -46,11 +48,10 @@ class DataPackHelper
 		hash
 	end
 
-	def DataPackHelper.clean_up(dir)
-		`cd #{dir} && find . -name '.DS_Store' -type f -delete`
-		puts '.DS_Store files removed'
-
-		`cd #{dir} && find . -name '.gitignore' -type f -delete`
-		puts '.gitignore files removed'
+	def DataPackHelper.clean_up(path)
+		@files_to_remove.each do |file_type|
+			SystemHelper.cmd("find #{path} -name '#{file_type}' -type f -delete")
+			puts "#{file_type} files removed"
+		end
 	end
 end

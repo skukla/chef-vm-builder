@@ -124,9 +124,8 @@ end
 
 action :clean_up do
 	data_pack = new_resource.data_pack_data
-
 	module_path =
-		"vendor/#{data_pack['vendor_string']}/#{data_pack['module_string']}"
+		"app/code/#{data_pack['vendor_string']}/#{data_pack['module_string']}"
 
 	ruby_block "Remove unwanted hidden files from the #{data_pack['module_name']} data pack" do
 		block { DataPackHelper.clean_up("#{new_resource.web_root}/#{module_path}") }
