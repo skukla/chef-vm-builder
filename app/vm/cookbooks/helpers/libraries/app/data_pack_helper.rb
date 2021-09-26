@@ -39,6 +39,12 @@ class DataPackHelper
 	end
 
 	def DataPackHelper.prepare_names(hash)
+		unless hash['name'].nil?
+			hash['package_name'] = hash['name']
+			hash['vendor_string'] = hash['package_name'].split('/')[0]
+			hash['module_string'] = hash['package_name'].split('/')[1]
+		end
+
 		if hash['name'].nil?
 			hash['vendor'] = Chef.node[:magento_demo_builder][:data_pack][:vendor]
 			hash['module_name'] = hash['source']

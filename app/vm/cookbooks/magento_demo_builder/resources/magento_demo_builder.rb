@@ -135,9 +135,13 @@ end
 
 action :install do
 	data_pack = new_resource.data_pack_data
+	module_prefix = 'app/code'
+	module_prefix = 'vendor' if data_pack['source'].include?('github')
+	data_pack_string =
+		"#{module_prefix}/#{data_pack['vendor_string']}/#{data_pack['module_string']}"
 
 	magento_cli "Installing the #{data_pack['module_string']} data pack" do
 		action :run
-		command_list "gxd:datainstall #{data_pack['vendor_string']}_#{data_pack['module_string']} -r"
+		command_list "gxd:datainstall #{data_pack_string} -r"
 	end
 end

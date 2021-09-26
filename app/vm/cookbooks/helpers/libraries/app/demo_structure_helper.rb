@@ -48,6 +48,11 @@ class DemoStructureHelper
 							(key.gsub(key, 'url') if key.include?('url')) || key
 					end
 				end
+				.map do |record|
+					record.transform_values do |value|
+						(value.gsub(value, 'store') if value.include?('stores')) || value
+					end
+				end
 				.reject { |entry| entry['url'].to_s.empty? }
 		self
 	end

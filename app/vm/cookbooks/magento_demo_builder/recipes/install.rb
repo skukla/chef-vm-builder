@@ -3,7 +3,7 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 # frozen_string_literal: true
 
-data_pack_list = DataPackHelper.local_list
+data_pack_list = DataPackHelper.list
 build_action = node[:magento_demo_builder][:magento][:build][:action]
 
 unless data_pack_list.nil?
