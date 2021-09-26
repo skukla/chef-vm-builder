@@ -66,9 +66,9 @@
 	"application": {
 		"authentication": {
 			"composer": {
-				"public_key": "b17aa908c13768cef2a5a3a043bb3c54",
-				"private_key": "93f1f71fd779eb46af01fd7587e5fdba",
-				"github_token": "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"
+				"public_key": "",
+				"private_key": "",
+				"github_token": ""
 			}
 		},
 		"options": {
@@ -76,7 +76,7 @@
 			"version": "2.4.2-p1"
 		},
 		"build": {
-			"action": "force_install",
+			"action": "install",
 			"sample_data": false,
 			"patches": true,
 			"hooks": {
