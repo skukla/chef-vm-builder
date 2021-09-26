@@ -141,7 +141,7 @@ action :install do
 	data_pack_string =
 		"#{module_prefix}/#{data_pack['vendor_string']}/#{data_pack['module_string']}"
 
-	magento_cli "Installing the #{data_pack['module_string']} data pack" do
+	magento_cli "Installing the #{data_pack['module_name']} data pack" do
 		action :run
 		command_list "gxd:datainstall #{data_pack_string} -r"
 	end
