@@ -4,7 +4,6 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 
-# data_pack_list = node[:magento][:data_packs]
 web_root = node[:magento][:nginx][:web_root]
 build_action = node[:magento][:build][:action]
 composer_json = "#{web_root}/composer.json"

@@ -1,7 +1,7 @@
 .DS_Store
 backup/*
-data_packs/*
+data-packs/*
 patches/*
 !backup/.gitignore
-!data_packs/.gitignore
+!data-packs/.gitignore
 !patches/.gitignore

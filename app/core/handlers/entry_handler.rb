@@ -18,7 +18,7 @@ class EntryHandler
 			file: %w[config.json],
 		},
 		{
-			src: 'project/data_packs',
+			src: 'project/data-packs',
 			dest: 'app/vm/cookbooks/magento_demo_builder/files/default',
 		},
 		{

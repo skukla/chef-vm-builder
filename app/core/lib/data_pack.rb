@@ -6,7 +6,7 @@ class DataPack
 	class << self
 		attr_reader :folder_list, :required_fields
 	end
-	@folder_list = Entry.files_from('project/data_packs')
+	@folder_list = Entry.files_from('project/data-packs')
 	@required_fields = %w[name source]
 
 	def DataPack.list
