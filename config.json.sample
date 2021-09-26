@@ -49,7 +49,6 @@
 				}
 			]
 		},
-		"backup": "",
 		"data_packs": [
 			{
 				"source": "base-b2c-website"
