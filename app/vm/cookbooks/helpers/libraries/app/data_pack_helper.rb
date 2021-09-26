@@ -43,16 +43,19 @@ class DataPackHelper
 			hash['package_name'] = hash['name']
 			hash['vendor_string'] = hash['package_name'].split('/')[0]
 			hash['module_string'] = hash['package_name'].split('/')[1]
+			hash['module_name'] =
+				hash['module_string'].split('-').map(&:capitalize).join(' ')
 		end
 
 		if hash['name'].nil?
 			hash['vendor'] = Chef.node[:magento_demo_builder][:data_pack][:vendor]
-			hash['module_name'] = hash['source']
-			hash['package_name'] = "#{hash['vendor']}/#{hash['module_name']}"
+			hash['package_name'] = "#{hash['vendor']}/#{hash['source']}"
 			hash['vendor_string'] = hash['vendor'].split('-').map(&:capitalize).join
-			hash['module_string'] =
-				hash['module_name'].split('-').map(&:capitalize).join
+			hash['module_string'] = hash['source'].split('-').map(&:capitalize).join
+			hash['module_name'] =
+				hash['source'].split('-').map(&:capitalize).join(' ')
 		end
+
 		hash
 	end
 

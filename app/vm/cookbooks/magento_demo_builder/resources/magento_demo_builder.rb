@@ -86,7 +86,6 @@ action :create_module_files do
 				{
 					package_name: data_pack['package_name'],
 					module_name: data_pack['module_name'],
-					vendor_name: data_pack['vendor_name'],
 					vendor_string: data_pack['vendor_string'],
 					module_string: data_pack['module_string'],
 				},
@@ -124,8 +123,10 @@ end
 
 action :clean_up do
 	data_pack = new_resource.data_pack_data
+	module_prefix = 'app/code'
+	module_prefix = 'vendor' if data_pack['source'].include?('github')
 	module_path =
-		"app/code/#{data_pack['vendor_string']}/#{data_pack['module_string']}"
+		"#{module_prefix}/#{data_pack['vendor_string']}/#{data_pack['module_string']}"
 
 	ruby_block "Remove unwanted hidden files from the #{data_pack['module_name']} data pack" do
 		block { DataPackHelper.clean_up("#{new_resource.web_root}/#{module_path}") }
