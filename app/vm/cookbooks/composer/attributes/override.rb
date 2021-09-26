@@ -4,7 +4,7 @@
 #
 # Supported settings:
 # authentication: public_key, private_key, github_token
-# infrastructure: version
+# infrastructure: version, clear_cache
 #
 # frozen_string_literal: true
 
