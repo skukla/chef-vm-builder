@@ -4,13 +4,19 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 sendmail_path = node[:mailhog][:sendmail_path]
+service_file = node[:mailhog][:service_file]
 
 golang 'Install golang' do
 	action :install
 end
 
-mailhog 'Stop, uninstall, configure, enable, reload, and stop mailhog' do
-	action %i[install configure enable reload stop]
+mailhog 'Stop mailhog' do
+	action :stop
+	only_if { ::File.exist?(service_file) }
+end
+
+mailhog 'Install, configure, enable, and reload mailhog' do
+	action %i[install configure enable reload]
 end
 
 php 'Configure mailhog sendmail path and restart PHP' do

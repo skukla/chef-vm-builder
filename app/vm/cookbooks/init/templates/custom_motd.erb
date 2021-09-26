@@ -5,7 +5,6 @@ export TERM=xterm-256color
 BOLD=$(tput bold)
 REG=$(tput sgr0)
 CYAN=$(tput setaf 6)
-WEBMIN_PORT=$(netstat -tulpn | grep "LISTEN" | grep "perl" | awk '{print $4}' | sed -e 's/.*://')
 MAILHOG_PORT=$(netstat -tulpn | grep "LISTEN" | grep "mailhog" | sort -n | awk '{print $4;exit;}' | sed -e 's/.*://')
 if [ $MAILHOG_PORT == 1025 ]; then
     MAILHOG_PORT=$(netstat -tulpn | grep "LISTEN" | grep "mailhog" | sort -r | awk '{print $4;exit;}' | sed -e 's/.*://')
@@ -28,19 +27,13 @@ rulem ()  {
 figlet BOOM.
 printf "\n${BOLD}Welcome to the Kukla VM!${REG}\n\n"
 
-# Hosts Entry, Mailhog, and Webmin
-rulem "[ ${CYAN}Hosts Entry, Mailhog, and Webmin${REG} ]"
+# Hosts Entry and Mailhog
+rulem "[ ${CYAN}Hosts Entry and Mailhog${REG} ]"
 printf '\n%23s : %s %s %s\n' "${BOLD}Host Entry" "${REG}<%= @ip %>" "<%= "#{@urls.join(" ")}" %>"
 
 if [ $MAILHOG_PORT != "" ]; then 
     printf '%23s : %s  \n' "${BOLD}Mailhog Inbox" "${REG}http://<%= @urls[0] %>:$MAILHOG_PORT"
 fi
-
-<% if @use_webmin %>
-if [ $WEBMIN_PORT != "" ]; then 
-    printf '%23s : %s  \n\t\t %7s : %s\n\t %15s : %s\n' "${BOLD}Webmin Console" "${REG}http://<%= @hostname %>:${WEBMIN_PORT}" "User" "<%= @webmin_user %>" "Password" "<%= @webmin_password %>"
-fi
-<% end %>
 
 printf "\n"
 

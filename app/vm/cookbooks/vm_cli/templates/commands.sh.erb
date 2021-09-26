@@ -384,36 +384,6 @@ function disable-mailhog() {
 }
 export -f disable-mailhog
 
-# Webmin
-function enable-webmin() {
-  printf "\nEnabling Webmin...\n"
-  sudo systemctl enable webmin
-}
-export -f enable-webmin
-
-function start-webmin() {
-  printf "\nRestarting Webmin...\n"
-  sudo systemctl restart webmin
-}
-export -f start-webmin
-
-function stop-webmin() {
-  printf "\nStopping Webmin...\n"
-  sudo systemctl stop webmin
-}
-export -f stop-webmin
-
-function status-webmin() {
-  sudo systemctl status webmin
-}
-export -f status-webmin
-
-function disable-webmin() {
-  printf "\nDisabling Webmin...\n"
-  sudo systemctl disable webmin
-}
-export -f disable-webmin
-
 # Tools
 function warm-cache() {
   clear

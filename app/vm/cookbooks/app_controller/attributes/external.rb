@@ -15,9 +15,6 @@ default[:app_controller][:mailhog][:use] = node[:mailhog][:use]
 include_attribute 'samba::default'
 default[:app_controller][:samba][:use] = node[:samba][:use]
 
-include_attribute 'webmin::default'
-default[:app_controller][:webmin][:use] = node[:webmin][:use]
-
 include_attribute 'magento::default'
 default[:app_controller][:magento][:build_action] =
 	node[:magento][:build][:action]
