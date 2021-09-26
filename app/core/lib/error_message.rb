@@ -47,7 +47,7 @@ class ErrorMsg < Message
 		build_action = Config.value('application/build/action')
 		build_action_list = Config.build_action_list
 		msg = <<~TEXT
-    It looks like you've got an incorrect build action: #{@bold}#{@cyan}#{build_action}#{@reg}.\n\n\
+    #{@oops}It looks like you've got an incorrect build action: #{@bold}#{@cyan}#{build_action}#{@reg}.\n\n\
     Acceptable values are:\n\n#{build_action_list.join("\n")}\n\nPlease check your config.json file.
     TEXT
 	end
