@@ -4,6 +4,7 @@
 # frozen_string_literal: true
 
 data_pack_list = DataPackHelper.local_list
+build_action = node[:magento_demo_builder][:magento][:build][:action]
 
 unless data_pack_list.nil?
 	data_pack_list.each do |data_pack|
@@ -27,10 +28,16 @@ unless data_pack_list.nil?
 			data_pack_data data_pack
 		end
 	end
-end
 
-magento_app 'Set permissions on directories and files' do
-	action :set_permissions
-	permission_dirs %w[var/ pub/]
-	remove_generated false
+	if %w[refresh].include?(build_action)
+		magento_cli 'Compiling dependencies after data pack creation' do
+			action :di_compile
+		end
+	end
+
+	magento_app 'Set permissions on directories and files' do
+		action :set_permissions
+		permission_dirs %w[var/ pub/]
+		remove_generated false
+	end
 end
