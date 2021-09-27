@@ -2,7 +2,7 @@
 # Attribute:: override
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 #
-# Supported settings: apply, repository_url, repository_directory, branch, codebase_directory
+# Supported settings: apply, source, repository_directory, branch, codebase_directory
 #
 # frozen_string_literal: true
 

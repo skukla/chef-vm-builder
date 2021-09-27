@@ -79,7 +79,7 @@ module StringReplaceHelper
 			File.foreach("#{web_root}/#{composer_json}") do |line|
 				if line.include?("product-#{family}-edition") ||
 						line.include?('version')
-					output.write(line.gsub(/(\d{1})\.(\d{1})\.(\d{1})('-'.)?/, version))
+					output.write(line.gsub(/(?<=: ")[^\"]+/, version))
 				else
 					output.write(line)
 				end

@@ -1,7 +1,7 @@
 require_relative 'config'
 
 class Entry
-	@entries_to_remove = %w[. .. .DS_Store .gitignore]
+	@entries_to_remove = %w[. .. .DS_Store .gitignore .git .vscode]
 
 	def Entry.path(path_str)
 		File.join(Config.app_root, path_str)

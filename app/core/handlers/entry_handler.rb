@@ -43,7 +43,7 @@ class EntryHandler
 			src_files = Entry.files_from(type[:src])
 			dest_files = Entry.files_from(type[:dest])
 
-			return if src_files.empty?
+			next if src_files.empty?
 
 			unless type[:exts].nil?
 				src_files =
