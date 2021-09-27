@@ -88,8 +88,7 @@ action :add_custom_patches do
 		::Dir.entries(new_resource.chef_patches_directory) - %w[. .. .gitignore]
 	unless custom_patches.empty?
 		custom_patches.each do |entry|
-			cookbook_file "Copy patch: #{entry}" do
-				source entry
+			cookbook_file entry do
 				path "#{new_resource.patches_holding_area}/#{entry}"
 			end
 		end
