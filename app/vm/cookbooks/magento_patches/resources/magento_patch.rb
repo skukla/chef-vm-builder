@@ -115,6 +115,13 @@ action :move_into_web_root do
 	end
 end
 
+action :revert_patches do
+	php 'Revert patches using ECE Tools' do
+		action :run
+		command_list './vendor/bin/ece-patches revert'
+	end
+end
+
 action :apply_patches do
 	php 'Apply patches using ECE Tools' do
 		action :run
