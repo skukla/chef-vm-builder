@@ -1,9 +1,10 @@
 # Cookbook:: magento_patches
-# Recipe:: apply
+# Recipe:: default
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 # frozen_string_literal: true
 
 web_root = node[:magento_patches][:nginx][:web_root]
+vendor_path = node[:magento_patches][:vendor_path]
 directory_in_codebase = node[:magento_patches][:codebase_directory]
 
 magento_patch 'Apply patches' do
@@ -11,6 +12,6 @@ magento_patch 'Apply patches' do
 	ignore_failure :quiet
 	only_if do
 		::Dir.exist?("#{web_root}/#{directory_in_codebase}") &&
-			!::Dir.empty?("#{web_root}/#{directory_in_codebase}")
+			::Dir.exist?("#{web_root}/vendor/#{vendor_path}")
 	end
 end

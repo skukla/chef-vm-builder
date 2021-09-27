@@ -5,7 +5,8 @@
 
 web_root = node[:magento_patches][:nginx][:web_root]
 build_action = node[:magento][:build][:action]
-patches_repository = node[:magento_patches][:repository_url]
+patches_source = node[:magento_patches][:source]
+repository_directory = node[:magento_patches][:repository_directory]
 directory_in_codebase = node[:magento_patches][:codebase_directory]
 
 composer 'Add ECE Tools' do
@@ -21,13 +22,18 @@ end
 magento_patch 'Prepare for Magento patches' do
 	action %i[remove_holding_area remove_from_web_root]
 end
+
 magento_patch 'Create holding area' do
 	action :create_holding_area
 end
 
-if patches_repository.empty? || patches_repository != 'local'
+if patches_source != 'local'
 	magento_patch 'Clone and filter patches repository' do
-		action %i[clone_patches_repository filter_directory]
+		action :clone_patches_repository
+	end
+
+	magento_patch 'Filter patches' do
+		action :filter_directory
 	end
 end
 
@@ -43,7 +49,7 @@ magento_patch 'Move patches into web root' do
 	action :move_into_web_root
 end
 
-magento_app 'Update patch permissions' do
+magento_app 'Update patch permissions in codebase' do
 	action :set_permissions
 	permission_dirs [directory_in_codebase]
 	remove_generated false

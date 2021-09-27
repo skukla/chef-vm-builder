@@ -19,9 +19,7 @@ property :sample_data_flag,
 property :composer_file,
          String,
          default: node[:magento_patches][:composer][:file]
-property :patches_repository_url,
-         String,
-         default: node[:magento_patches][:repository_url]
+property :patches_source, String, default: node[:magento_patches][:source]
 property :patches_branch, String, default: node[:magento_patches][:branch]
 property :directory_in_repository,
          String,
@@ -65,8 +63,8 @@ action :remove_from_web_root do
 end
 
 action :clone_patches_repository do
-	bash "Cloning the #{new_resource.patches_branch} branch from the #{new_resource.patches_repository_url} repository" do
-		code "git clone --single-branch --branch #{new_resource.patches_branch} #{new_resource.patches_repository_url} ."
+	bash "Cloning the #{new_resource.patches_branch} branch from the #{new_resource.patches_source} repository" do
+		code "git clone --single-branch --branch #{new_resource.patches_branch} #{new_resource.patches_source} ."
 		cwd new_resource.patches_holding_area
 		ignore_failure :quiet
 		only_if do
