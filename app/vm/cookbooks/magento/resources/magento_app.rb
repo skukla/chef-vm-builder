@@ -47,7 +47,7 @@ action :install do
 	install_string =
 		"--db-host=#{new_resource.db_host} --db-name=#{new_resource.db_name} --db-user=#{new_resource.db_user} --db-password=#{new_resource.db_password} --backend-frontname=#{new_resource.install_settings[:backend_frontname]} --base-url=#{new_resource.install_settings[:unsecure_base_url]} --language=#{new_resource.install_settings[:language]} --timezone=#{new_resource.install_settings[:timezone]} --currency=#{new_resource.install_settings[:currency]} --admin-firstname=#{new_resource.install_settings[:admin_firstname]} --admin-lastname=#{new_resource.install_settings[:admin_lastname]} --admin-email=#{new_resource.install_settings[:admin_email]} --admin-user=#{new_resource.install_settings[:admin_user]} --admin-password=#{new_resource.install_settings[:admin_password]}"
 	elasticsearch_string =
-		"--elasticsearch-host=#{new_resource.elasticsearch_host} --elasticsearch-port=#{new_resource.elasticsearch_port}"
+		"--elasticsearch-host=#{new_resource.install_settings[:elasticsearch_host]} --elasticsearch-port=#{new_resource.install_settings[:elasticsearch_port]} --elasticsearch-index-prefix=#{new_resource.install_settings[:elasticsearch_prefix]}"
 	rewrites_string =
 		"--use-rewrites=#{ValueHelper.process_value(new_resource.install_settings[:use_rewrites])}"
 	use_secure_frontend_string =
