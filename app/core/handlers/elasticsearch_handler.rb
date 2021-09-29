@@ -3,6 +3,8 @@ require_relative '../lib/service_dependencies'
 require_relative '../lib/error_message'
 require_relative '../lib/success_message'
 require_relative '../lib/elasticsearch'
+require_relative '../lib/demo_structure'
+require_relative '../lib/string_replace'
 
 class ElasticsearchHandler
 	def ElasticsearchHandler.install
@@ -18,7 +20,7 @@ class ElasticsearchHandler
 		result = false
 		num = 0
 		while num <= 1
-			puts "Waiting for elasticsearch to start...(Try #{num + 1} of 2)"
+			puts "Waiting for elasticsearch to become available... (Try #{num + 1} of 2)"
 			result = Elasticsearch.is_running?
 			Elasticsearch.wait_until_available(wait_time) unless result
 			num += 1
@@ -36,7 +38,7 @@ class ElasticsearchHandler
 		end
 	end
 
-	def ElasticsearchHandler.wipe
+	def ElasticsearchHandler.wipe_all
 		build_action = Config.value('application/build/action')
 		if %w[install force_install restore].include?(build_action)
 			unless Elasticsearch.is_running?
@@ -44,5 +46,13 @@ class ElasticsearchHandler
 			end
 			Elasticsearch.wipe
 		end
+	end
+
+	def ElasticsearchHandler.wipe_index
+		index = StringReplace.sanitize_base_url(DemoStructure.base_url)
+		unless Elasticsearch.is_running?
+			abort(ErrorMsg.show(:elasticsearch_unavailable))
+		end
+		Elasticsearch.wipe(index)
 	end
 end

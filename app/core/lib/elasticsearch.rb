@@ -44,7 +44,10 @@ class Elasticsearch
 		)
 	end
 
-	def Elasticsearch.wipe
-		System.cmd('curl -Ss -XDELETE localhost:9200/_all > /dev/null')
+	def Elasticsearch.wipe(index = nil)
+		if index.nil?
+			return System.cmd('curl -Ss -XDELETE localhost:9200/_all > /dev/null')
+		end
+		System.cmd("curl -Ss -XDELETE \"localhost:9200/#{index}*\" > /dev/null")
 	end
 end
