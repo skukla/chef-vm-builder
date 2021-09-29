@@ -20,11 +20,10 @@ property :composer_file,
          String,
          default: node[:magento_patches][:composer][:file]
 property :patches_source, String, default: node[:magento_patches][:source]
-property :patches_branch, String, default: node[:magento_patches][:branch]
 property :directory_in_repository,
          String,
          default: node[:magento_patches][:repository_directory]
-property :directory_in_codebase,
+property :codebase_directory,
          String,
          default: node[:magento_patches][:codebase_directory]
 property :patches_holding_area,
@@ -53,25 +52,34 @@ end
 
 action :remove_from_web_root do
 	execute 'Remove patches from web root' do
-		command "rm -rf #{new_resource.web_root}/#{new_resource.directory_in_codebase}"
+		command "rm -rf #{new_resource.web_root}/#{new_resource.codebase_directory}"
 		only_if do
 			::Dir.exist?(
-				"#{new_resource.web_root}/#{new_resource.directory_in_codebase}",
+				"#{new_resource.web_root}/#{new_resource.codebase_directory}",
 			)
 		end
 	end
 end
 
 action :clone_patches_repository do
-	bash "Cloning the #{new_resource.patches_branch} branch from the #{new_resource.patches_source} repository" do
-		code "git clone --single-branch --branch #{new_resource.patches_branch} #{new_resource.patches_source} ."
+	base_version = MagentoHelper.get_base_version(new_resource.magento_version)
+	mc_branch = "pmet-#{base_version}-mc"
+	ref_branch = "pmet-#{base_version}-ref"
+	bash "Cloning patches from the #{new_resource.patches_source} repository" do
+		code <<-EOH
+		PATCHES_BRANCH=#{ref_branch}
+		if git ls-remote #{new_resource.patches_source} | grep -sw "#{mc_branch}" 2>&1>/dev/null; then 
+			PATCHES_BRANCH=#{mc_branch}
+		fi
+		echo "Using the ${PATCHES_BRANCH} branch..."
+		git clone --single-branch --branch ${PATCHES_BRANCH} #{new_resource.patches_source} .
+  EOH
 		cwd new_resource.patches_holding_area
-		ignore_failure :quiet
 		only_if do
 			::Dir.exist?(new_resource.patches_holding_area) &&
 				::Dir.empty?(new_resource.patches_holding_area)
 		end
-		not_if { ::Dir.exist?(new_resource.directory_in_codebase) }
+		not_if { ::Dir.exist?(new_resource.codebase_directory) }
 	end
 end
 
@@ -108,7 +116,7 @@ end
 
 action :move_into_web_root do
 	execute 'Move patches into hotfixes directory' do
-		command "mv #{new_resource.patches_holding_area} #{new_resource.web_root}/#{new_resource.directory_in_codebase}"
+		command "mv #{new_resource.patches_holding_area} #{new_resource.web_root}/#{new_resource.codebase_directory}"
 	end
 end
 

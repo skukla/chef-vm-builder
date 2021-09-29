@@ -3,7 +3,7 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 # frozen_string_literal: true
 
-module PatchHelper
+class PatchHelper
 	def self.define_sample_data_patches(patch_file_directory, sample_data_flag)
 		files = Dir.entries(patch_file_directory) - %w[.. . .git]
 		file_list =

@@ -4,10 +4,11 @@
 # frozen_string_literal: true
 
 web_root = node[:magento_patches][:nginx][:web_root]
-build_action = node[:magento][:build][:action]
+version = node[:magento_patches][:magento][:version]
+use_sample_data = node[:magento_patches][:magento][:sample_data]
 patches_source = node[:magento_patches][:source]
 repository_directory = node[:magento_patches][:repository_directory]
-directory_in_codebase = node[:magento_patches][:codebase_directory]
+codebase_directory = node[:magento_patches][:codebase_directory]
 
 composer 'Add ECE Tools' do
 	action :require
@@ -28,7 +29,7 @@ magento_patch 'Create holding area' do
 end
 
 if patches_source != 'local'
-	magento_patch 'Clone and filter patches repository' do
+	magento_patch 'Clone patches repository' do
 		action :clone_patches_repository
 	end
 
@@ -51,7 +52,7 @@ end
 
 magento_app 'Update patch permissions in codebase' do
 	action :set_permissions
-	permission_dirs [directory_in_codebase]
+	permission_dirs [codebase_directory]
 	remove_generated false
-	not_if { ::Dir.empty?("#{web_root}/#{directory_in_codebase}") }
+	not_if { ::Dir.empty?("#{web_root}/#{codebase_directory}") }
 end

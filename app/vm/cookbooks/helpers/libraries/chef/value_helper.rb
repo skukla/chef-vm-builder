@@ -7,9 +7,9 @@ module ValueHelper
 	def self.process_value(value)
 		case value.to_s
 		when 'true'
-			return 1
+			return true
 		when 'false'
-			return 0
+			return false
 		end
 		value
 	end

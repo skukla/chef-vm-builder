@@ -11,7 +11,7 @@ unless additional_entries.nil?
 	additional_entries.each do |vhost|
 		scope_value = vhost['scope'] == 'store' ? 'store view' : vhost['scope']
 
-		if use_secure_frontend.zero? || use_secure_admin.zero?
+		if !use_secure_frontend || !use_secure_admin
 			magento_cli "Configuring additional unsecure URL for the #{vhost['code']} #{scope_value}" do
 				action :config_set
 				config_path 'web/unsecure/base_url'
