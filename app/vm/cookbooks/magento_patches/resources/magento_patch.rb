@@ -75,6 +75,7 @@ action :clone_patches_repository do
 		git clone --single-branch --branch ${PATCHES_BRANCH} #{new_resource.patches_source} .
   EOH
 		cwd new_resource.patches_holding_area
+		ignore_failure :quiet
 		only_if do
 			::Dir.exist?(new_resource.patches_holding_area) &&
 				::Dir.empty?(new_resource.patches_holding_area)
