@@ -68,13 +68,13 @@ Vagrant.configure('2') do |config|
 	if Config.wipe_elasticsearch?
 		config.trigger.before %i[up reload provision destroy] do |trigger|
 			trigger.name = 'Wiping Elasticsearch'
-			trigger.ruby { ElasticsearchHandler.wipe_all }
+			trigger.ruby { ElasticsearchHandler.wipe }
 		end
 	end
 
 	config.trigger.before :destroy do |trigger|
 		trigger.name = "Wiping Elasticsearch indices for #{DemoStructure.base_url}"
-		trigger.ruby { ElasticsearchHandler.wipe_index }
+		trigger.ruby { ElasticsearchHandler.wipe(DemoStructure.base_url) }
 	end
 
 	config.vm.provision 'chef_zero' do |chef|

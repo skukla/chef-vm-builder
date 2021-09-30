@@ -4,7 +4,6 @@ require_relative '../lib/error_message'
 require_relative '../lib/success_message'
 require_relative '../lib/elasticsearch'
 require_relative '../lib/demo_structure'
-require_relative '../lib/string_replace'
 
 class ElasticsearchHandler
 	def ElasticsearchHandler.install
@@ -36,21 +35,17 @@ class ElasticsearchHandler
 		end
 	end
 
-	def ElasticsearchHandler.wipe_all
+	def ElasticsearchHandler.wipe(index = nil)
 		build_action = Config.value('application/build/action')
-		if %w[install force_install restore].include?(build_action)
-			unless Elasticsearch.is_running?
-				abort(ErrorMsg.show(:elasticsearch_unavailable))
-			end
-			Elasticsearch.wipe
-		end
-	end
 
-	def ElasticsearchHandler.wipe_index
-		index = StringReplace.sanitize_base_url(DemoStructure.base_url)
 		unless Elasticsearch.is_running?
 			abort(ErrorMsg.show(:elasticsearch_unavailable))
 		end
-		Elasticsearch.wipe(index)
+
+		if index.nil? && %w[install force_install restore].include?(build_action)
+			Elasticsearch.wipe
+		end
+
+		Elasticsearch.wipe(index) unless index.nil?
 	end
 end

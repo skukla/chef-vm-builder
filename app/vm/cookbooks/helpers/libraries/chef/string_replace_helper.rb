@@ -89,9 +89,4 @@ module StringReplaceHelper
 		FileUtils.chmod(0o664, "#{web_root}/#{composer_json}")
 		FileUtils.chown(user, user, "#{web_root}/#{composer_json}")
 	end
-
-	def self.sanitize_base_url(url)
-		%w[. -].each { |char| url = url.gsub(char, '_') }
-		url
-	end
 end

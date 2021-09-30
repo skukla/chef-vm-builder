@@ -18,8 +18,6 @@ if build_action == 'update'
 end
 
 if %w[install force_install reinstall].include?(build_action)
-	elasticsearch_prefix =
-		StringReplaceHelper.sanitize_base_url(DemoStructureHelper.base_url)
 	magento_app 'Install Magento' do
 		action :install
 		install_settings(
@@ -37,7 +35,7 @@ if %w[install force_install reinstall].include?(build_action)
 				admin_password: node[:magento][:settings][:admin_password],
 				elasticsearch_host: node[:magento][:search_engine][:host],
 				elasticsearch_port: node[:magento][:search_engine][:port],
-				elasticsearch_prefix: elasticsearch_prefix,
+				elasticsearch_prefix: DemoStructureHelper.base_url,
 				use_rewrites: node[:magento][:settings][:use_rewrites],
 				use_secure_frontend: node[:magento][:settings][:use_secure_frontend],
 				use_secure_admin: node[:magento][:settings][:use_secure_admin],
