@@ -3,6 +3,7 @@
 # Recipe:: wrap_up
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
+user = node[:magento][:init][:user]
 web_root = node[:magento][:nginx][:web_root]
 build_action = node[:magento][:build][:action]
 warm_cache = node[:magento][:build][:hooks][:warm_cache]
@@ -12,6 +13,7 @@ vm_cli_commands = MagentoHelper.build_command_list(:vm_cli)
 magento_cli_commands = MagentoHelper.build_command_list(:magento_cli)
 csc_options = node[:magento][:csc_options]
 maintenance_mode_flag = "#{web_root}/var/.maintenance.flag"
+crontab = "/var/spool/cron/crontabs/#{user}"
 
 csc_options.each do |key, value|
 	next if value.empty? || %w[key_path production_private_key].include?(key)
@@ -68,6 +70,17 @@ end
 if %w[install force_install reinstall restore].include?(build_action)
 	magento_cli 'Set indexers to On Schedule mode' do
 		action %i[set_indexer_mode]
+	end
+
+	magento_cli 'Start consumers' do
+		action :start_consumers
+	end
+end
+
+if %w[install force_install reinstall update restore].include?(build_action)
+	magento_cli 'Enable cron' do
+		action :enable_cron
+		not_if { ::File.exist?(crontab) }
 	end
 end
 
