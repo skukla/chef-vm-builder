@@ -12,7 +12,7 @@ depends 'helpers' # This brings in helper libraries
 depends 'php' # This brings in PHP configuration options
 depends 'nginx' # This brings in the web root
 depends 'mysql' # This brings in MySQL configuration options
-depends 'elasticsearch' # This brings in Elasticsearch configuration options
+depends 'search_engine' # This brings in Elasticsearch configuration options
 depends 'samba' # This brings in Samba configuration options
 depends 'composer' # This brings in Composer configuration options
 depends 'magento_restore' # This brings in the ability to restore a Magento backup

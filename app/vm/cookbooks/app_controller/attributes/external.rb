@@ -6,8 +6,8 @@
 include_attribute 'nginx::default'
 default[:app_controller][:nginx][:web_root] = node[:nginx][:web_root]
 
-include_attribute 'elasticsearch::default'
-default[:app_controller][:elasticsearch][:use] = node[:elasticsearch][:use]
+include_attribute 'search_engine::default'
+default[:app_controller][:search_engine][:type] = node[:search_engine][:type]
 
 include_attribute 'mailhog::default'
 default[:app_controller][:mailhog][:use] = node[:mailhog][:use]

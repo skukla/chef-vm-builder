@@ -4,7 +4,6 @@
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 build_action = node[:magento][:build][:action]
-use_elasticsearch = node[:magento][:elasticsearch][:use]
 
 if %w[install force_install].include?(build_action)
 	mysql 'Create the database' do
@@ -36,8 +35,8 @@ if %w[install force_install reinstall].include?(build_action)
 				admin_email: node[:magento][:settings][:admin_email],
 				admin_user: node[:magento][:settings][:admin_user],
 				admin_password: node[:magento][:settings][:admin_password],
-				elasticsearch_host: node[:magento][:elasticsearch][:host],
-				elasticsearch_port: node[:magento][:elasticsearch][:port],
+				elasticsearch_host: node[:magento][:search_engine][:host],
+				elasticsearch_port: node[:magento][:search_engine][:port],
 				elasticsearch_prefix: elasticsearch_prefix,
 				use_rewrites: node[:magento][:settings][:use_rewrites],
 				use_secure_frontend: node[:magento][:settings][:use_secure_frontend],

@@ -289,41 +289,6 @@ function status-db() {
 }
 export -f status-db
 
-# Elasticsearch
-function enable-elasticsearch() {
-  printf "\nEnabling Elasticsearch...\n"
-  sudo /bin/systemctl enable elasticsearch.service
-}
-export -f enable-elasticsearch
-
-function start-elasticsearch() {
-  printf "\nRestarting Elasticsearch...\n"
-  sudo service elasticsearch restart
-}
-export -f start-elasticsearch
-
-function stop-elasticsearch() {
-  printf "\nStopping Elasticsearch...\n"
-  sudo service elasticsearch stop
-}
-export -f stop-elasticsearch
-
-function status-elasticsearch() {
-  sudo service elasticsearch status
-}
-export -f status-elasticsearch
-
-function log-elasticsearch() {
-  sudo journalctl --unit elasticsearch
-}
-export -f log-elasticsearch
-
-function disable-elasticsearch() {
-  printf "\nDisabling Elasticsearch...\n"
-  sudo systemctl disable elasticsearch
-}
-export -f disable-elasticsearch
-
 # Samba
 function enable-samba() {
   printf "\nEnabling Samba...\n"
@@ -645,7 +610,6 @@ function restore() {
   mysql -u ${DB_USER} -p${DB_PASSWORD} ${DB_NAME} < ${BACKUP_HOLDING_AREA}/${DATABASE_FILENAME}
   printf "done.\n"
   
-  start-elasticsearch
   db-upgrade
   
   printf "\nReplacing backups..." 

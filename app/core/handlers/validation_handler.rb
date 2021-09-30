@@ -9,9 +9,11 @@ require_relative '../lib/custom_module'
 require_relative '../lib/entry'
 require_relative '../lib/commerce_services'
 require_relative '../lib/service_dependencies'
+require_relative '../lib/elasticsearch'
 
 class ValidationHandler
 	@build_action = Config.value('application/build/action')
+	@search_engine_type = Config.search_engine_type
 
 	def ValidationHandler.config_json_structure
 		if DemoStructure.website_structure_missing?
@@ -50,6 +52,12 @@ class ValidationHandler
 
 		system("vagrant plugin install #{vagrant_plugin.list.join(' ')}")
 		abort(SuccessMsg.show(:plugins_installed))
+	end
+
+	def ValidationHandler.search_engine_type
+		unless Config.search_engine_type_list.include?(@search_engine_type)
+			abort(ErrorMsg.show(:search_engine_type_incorrect))
+		end
 	end
 
 	def ValidationHandler.service_dependencies

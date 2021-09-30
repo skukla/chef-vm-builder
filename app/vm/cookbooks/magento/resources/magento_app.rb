@@ -27,15 +27,15 @@ property :build_action, String, default: node[:magento][:build][:action]
 property :modules_to_remove,
          [String, Array],
          default: node[:magento][:build][:modules_to_remove]
-property :use_elasticsearch,
-         [TrueClass, FalseClass],
-         default: node[:magento][:elasticsearch][:use]
+property :search_engine_type,
+         String,
+         default: node[:magento][:search_engine][:type]
 property :elasticsearch_host,
          String,
-         default: node[:magento][:elasticsearch][:host]
+         default: node[:magento][:search_engine][:host]
 property :elasticsearch_port,
          [String, Integer],
-         default: node[:magento][:elasticsearch][:port]
+         default: node[:magento][:search_engine][:port]
 property :db_host, String, default: node[:magento][:mysql][:db_host]
 property :db_user, String, default: node[:magento][:mysql][:db_user]
 property :db_password, String, default: node[:magento][:mysql][:db_password]
@@ -67,7 +67,7 @@ action :install do
 		.install_settings[
 		:use_rewrites
 	]
-	if new_resource.use_elasticsearch &&
+	if new_resource.search_engine_type == 'elastic' &&
 			MagentoHelper.check_version(new_resource.version, '>=', '2.4.0')
 		install_string = [install_string, elasticsearch_string].join(' ')
 	end

@@ -3,7 +3,6 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 # frozen_string_literal: true
 
-use_elasticsearch = node[:app_controller][:elasticsearch][:use]
 use_mailhog = node[:app_controller][:mailhog][:use]
 use_samba = node[:app_controller][:samba][:use]
 

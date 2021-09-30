@@ -47,8 +47,17 @@ class ErrorMsg < Message
 		build_action = Config.value('application/build/action')
 		build_action_list = Config.build_action_list
 		msg = <<~TEXT
-    #{@oops}It looks like you've got an incorrect build action: #{@bold}#{@cyan}#{build_action}#{@reg}.\n\n\
+    #{@oops}It looks like you've got an incorrect build action setting: #{@bold}#{@cyan}#{build_action}#{@reg}.\n\n\
     Acceptable values are:\n\n#{build_action_list.join("\n")}\n\nPlease check your config.json file.
+    TEXT
+	end
+
+	def ErrorMsg.search_engine_type_incorrect
+		search_engine_type = Config.search_engine_type
+		search_engine_type_list = Config.search_engine_type_list
+		msg = <<~TEXT
+    #{@oops}It looks like you've got an incorrect search engine setting: #{@bold}#{@cyan}#{search_engine_type}#{@reg}.\n\n\
+    Acceptable values are:\n\n#{search_engine_type_list.join("\n")}\n\nPlease check the #{@bold}#{@cyan}search_engine #{@reg}section in your config.json file.
     TEXT
 	end
 

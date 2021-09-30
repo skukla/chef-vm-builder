@@ -28,10 +28,12 @@ default[:magento][:php][:version] = node[:php][:version]
 default[:magento][:php][:fpm_backend] = node[:php][:backend]
 default[:magento][:php][:fpm_port] = node[:php][:port]
 
-include_attribute 'elasticsearch::default'
-default[:magento][:elasticsearch][:use] = node[:elasticsearch][:use]
-default[:magento][:elasticsearch][:host] = node[:elasticsearch][:host]
-default[:magento][:elasticsearch][:port] = node[:elasticsearch][:port]
+include_attribute 'search_engine::default'
+default[:magento][:search_engine][:type] = node[:search_engine][:type]
+default[:magento][:search_engine][:host] =
+	node[:search_engine][:elasticsearch][:host]
+default[:magento][:search_engine][:port] =
+	node[:search_engine][:elasticsearch][:port]
 
 include_attribute 'magento_custom_modules::override'
 default[:magento][:custom_modules][:module_list] =

@@ -1,9 +1,9 @@
-name 'elasticsearch'
+name 'search_engine'
 maintainer 'Steve Kukla'
 maintainer_email 'kukla@adobe.com'
 license 'All Rights Reserved'
-description 'Installs/Configures elasticsearch'
-long_description 'Installs/Configures elasticsearch'
+description 'Installs/configures elasticsearch or live search'
+long_description 'Installs/configures elasticsearch or live search'
 version '0.1.0'
 chef_version '>= 14.0'
 

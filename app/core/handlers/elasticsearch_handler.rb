@@ -12,9 +12,7 @@ class ElasticsearchHandler
 	end
 
 	def ElasticsearchHandler.is_available?
-		if Config.value('infrastructure/elasticsearch').is_a?(Hash)
-			wait_time = Config.value('infrastructure/elasticsearch/wait_time')
-		end
+		wait_time = @search_setting['wait_time'] if @search_setting.is_a?(Hash)
 
 		wait_time = 30 if wait_time.to_s.empty?
 		result = false
