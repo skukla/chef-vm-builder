@@ -1,5 +1,5 @@
 class SystemHelper
 	def SystemHelper.cmd(command)
-		print `#{command}`
+		`#{command}`
 	end
 end

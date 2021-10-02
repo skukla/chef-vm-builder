@@ -5,10 +5,4 @@
 
 setting = DataPackHelper.list
 
-unless setting.nil?
-	list =
-		setting.each_with_object([]) do |m, arr|
-			arr << DataPackHelper.prepare_names(m)
-		end
-	override[:magento_demo_builder][:data_pack_list] = list
-end
+override[:magento_demo_builder][:data_pack_list] = setting unless setting.nil?

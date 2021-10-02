@@ -17,9 +17,12 @@ action :process do
 			end
 
 		modules_from_github.each do |md|
-			composer "Adding #{new_resource.data_type} github repository: #{md['name']}" do
+			module_name = md['module_string'] if new_resource.data_type == 'data pack'
+			module_name = md['name'] if new_resource.data_type == 'custom module'
+
+			composer "Adding #{new_resource.data_type} github repository: #{module_name}" do
 				action :add_repository
-				module_name md['name']
+				module_name module_name
 				repository_url md['source']
 			end
 		end

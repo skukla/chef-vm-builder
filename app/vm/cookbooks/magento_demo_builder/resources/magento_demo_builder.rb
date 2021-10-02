@@ -30,15 +30,15 @@ property :data_pack_file_list,
          default: node[:magento_demo_builder][:data_pack][:files]
 property :data_pack_data, Hash
 
-action :clear_fixtures do
+action :clear_data_and_media do
 	data_pack = new_resource.data_pack_data
 	module_path =
 		"app/code/#{data_pack['vendor_string']}/#{data_pack['module_string']}"
 
-	if Dir.exist?("#{module_path}/fixtures") &&
-			!Dir.empty?("#{module_path}/fixtures")
-		execute "Clearing fixtures from #{data_pack['vendor_string']}/#{data_pack['module_string']}" do
-			command "rm -rf #{new_resource.web_root}/#{module_path}/fixtures/*"
+	if Dir.exist?("#{module_path}/#{new_resource.media_type}") &&
+			!Dir.empty?("#{module_path}/#{new_resource.media_type}")
+		execute "Clearing #{new_resource.media_type} from #{data_pack['vendor_string']}/#{data_pack['module_string']}" do
+			command "rm -rf #{new_resource.web_root}/#{module_path}/#{new_resource.media_type}/*"
 		end
 	end
 end
@@ -51,10 +51,9 @@ action :create_folders do
 		'app/code',
 		"app/code/#{data_pack['vendor_string']}",
 		"app/code/#{data_pack['vendor_string']}/#{data_pack['module_string']}",
-		"app/code/#{data_pack['vendor_string']}/#{data_pack['module_string']}/media",
-		"app/code/#{data_pack['vendor_string']}/#{data_pack['module_string']}/data",
-		"app/code/#{data_pack['vendor_string']}/#{data_pack['module_string']}/data/fixtures",
 		"app/code/#{data_pack['vendor_string']}/#{data_pack['module_string']}/etc",
+		"app/code/#{data_pack['vendor_string']}/#{data_pack['module_string']}/data",
+		"app/code/#{data_pack['vendor_string']}/#{data_pack['module_string']}/media",
 	]
 
 	folders_arr.each do |dir|
@@ -85,7 +84,6 @@ action :create_module_files do
 			variables(
 				{
 					package_name: data_pack['package_name'],
-					module_name: data_pack['module_name'],
 					vendor_string: data_pack['vendor_string'],
 					module_string: data_pack['module_string'],
 				},
@@ -107,7 +105,7 @@ action :add_media_and_data do
 	if Dir.exist?(
 			"#{new_resource.chef_files_path}/#{data_pack['source']}/#{new_resource.media_type}",
 	   )
-		remote_directory "Adding #{new_resource.media_type} files to the #{data_pack['module_name']} module" do
+		remote_directory "Adding #{new_resource.media_type} files to the #{data_pack['module_string']} module" do
 			source "#{data_pack['source']}/#{new_resource.media_type}"
 			path "#{new_resource.web_root}/#{module_path}/#{new_resource.media_type}"
 			owner new_resource.user
@@ -128,7 +126,7 @@ action :clean_up do
 	module_path =
 		"#{module_prefix}/#{data_pack['vendor_string']}/#{data_pack['module_string']}"
 
-	ruby_block "Remove unwanted hidden files from the #{data_pack['module_name']} data pack" do
+	ruby_block "Remove unwanted hidden files from the #{data_pack['module_string']} data pack" do
 		block { DataPackHelper.clean_up("#{new_resource.web_root}/#{module_path}") }
 		only_if { ::Dir.exist?("#{new_resource.web_root}/#{module_path}") }
 	end
@@ -136,13 +134,25 @@ end
 
 action :install do
 	data_pack = new_resource.data_pack_data
+	load_dirs = DataPackHelper.get_load_dirs(data_pack)
 	module_prefix = 'app/code'
 	module_prefix = 'vendor' if data_pack['source'].include?('github')
-	data_pack_string =
+	data_pack_str =
 		"#{module_prefix}/#{data_pack['vendor_string']}/#{data_pack['module_string']}"
 
-	magento_cli "Installing the #{data_pack['module_name']} data pack" do
-		action :run
-		command_list "gxd:datainstall #{data_pack_string} -r"
+	if load_dirs.nil? || load_dirs.empty?
+		magento_cli "Installing the #{data_pack['module_string']} data pack" do
+			action :run
+			command_list "gxd:datainstall #{data_pack_str} -r"
+		end
+	end
+
+	unless load_dirs.nil? || load_dirs.empty?
+		load_dirs.each do |dir|
+			magento_cli "Installing the #{data_pack['module_string']} data pack" do
+				action :run
+				command_list "gxd:datainstall --load=#{dir} #{data_pack_str} -r"
+			end
+		end
 	end
 end

@@ -9,7 +9,7 @@ unless data_pack_list.nil?
 	data_pack_list.each do |data_pack|
 		magento_demo_builder 'Install data pack via the CLI' do
 			action :install
-			data_pack_data DataPackHelper.prepare_names(data_pack)
+			data_pack_data data_pack
 		end
 	end
 end

@@ -13,4 +13,5 @@ default[:init][:os][:install_package_list] = %w[
 	unattended-upgrades
 	zlibc
 	tree
+	jq
 ]

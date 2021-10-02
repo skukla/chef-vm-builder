@@ -89,4 +89,9 @@ module StringReplaceHelper
 		FileUtils.chmod(0o664, "#{web_root}/#{composer_json}")
 		FileUtils.chown(user, user, "#{web_root}/#{composer_json}")
 	end
+
+	def self.parse_source_url(url)
+		url_segment = url.split(':')[1].split('/')
+		{ org: url_segment[0], module: url_segment[1].sub('.git', '') }
+	end
 end

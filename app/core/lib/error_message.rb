@@ -87,11 +87,36 @@ class ErrorMsg < Message
 		TEXT
 	end
 
-	def ErrorMsg.data_pack_value_missing
+	def ErrorMsg.data_pack_source_missing
 		msg = <<~TEXT
 		#{@oops}It looks like you're missing a \
-		#{@bold}#{@cyan}#{DataPack.required_fields.join("#{@reg} or #{@bold}#{@cyan}")} \
-		#{@reg}for a #{@bold}#{@cyan}data pack #{@reg}in your config.json file.
+		#{@bold}#{@cyan}source#{@reg} for a #{@bold}#{@cyan}data pack #{@reg}in your config.json file.
+		TEXT
+	end
+
+	def ErrorMsg.data_pack_bad_format
+		msg = <<~TEXT
+		#{@oops}It looks like one of your #{@bold}#{@cyan}data packs#{@reg} isn't \
+		formatted correctly. \n\n\
+		Each data pack definition should have \
+		#{@bold}#{@cyan}source#{@reg} and #{@bold}#{@cyan}path#{@reg} fields with optional\n\
+		#{@bold}#{@cyan}site_code#{@reg}, #{@bold}#{@cyan}store_code#{@reg}, and \
+		#{@bold}#{@cyan}store_view_code#{@reg} fields like: \
+		\n\n"source":\s"value",\
+		\n"data":\s[\n\s\s{\
+		\n\s\s\s\s"path": "value",\
+		\n\s\s\s\s"site_code": "value",\
+		\n\s\s\s\s"store_code": "value",\
+		\n\s\s\s\s"store_view_code": "value",\
+		\n\s\s}\
+		\n]
+		TEXT
+	end
+
+	def ErrorMsg.data_pack_bad_fields
+		msg = <<~TEXT
+		#{@oops}It looks like you're missing a #{@bold}#{@cyan}folder#{@reg} for a \
+		#{@bold}#{@cyan}data pack #{@reg}in your #{@bold}#{@cyan}projects #{@reg}directory.
 		TEXT
 	end
 

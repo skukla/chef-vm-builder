@@ -3,6 +3,8 @@ require_relative 'demo_structure_helper'
 require_relative 'entry_helper'
 require_relative 'system_helper'
 
+require 'json'
+
 class DataPackHelper
 	class << self
 		attr_accessor :folder_list
@@ -13,7 +15,9 @@ class DataPackHelper
 	@files_to_remove = %w[.gitignore .DS_Store]
 
 	def DataPackHelper.list
-		ConfigHelper.value('custom_demo/data_packs')
+		ConfigHelper
+			.value('custom_demo/data_packs')
+			.map { |md| DataPackHelper.prepare_data(md) }
 	end
 
 	def DataPackHelper.local_list
@@ -28,32 +32,58 @@ class DataPackHelper
 		result.empty? ? nil : result
 	end
 
-	def DataPackHelper.missing_value?
-		return if list.nil?
-		list.select { |pack| required_fields.include?(pack) && value.nil? }.any?
+	def DataPackHelper.get_load_dirs(data_pack)
+		return nil if data_pack['data'].nil? || data_pack['data'].empty?
+
+		data_pack['data'].each_with_object([]) do |item, arr|
+			next if item['path'].nil?
+
+			arr << item['path']
+		end
 	end
 
-	def DataPackHelper.missing_folder?
-		return if local_list.nil?
-		(local_list.map { |record| record['source'] } - @folder_list).any?
+	def DataPackHelper.set_version(version_str)
+		return 'dev-master' if version_str.nil?
+		version_str
 	end
 
-	def DataPackHelper.prepare_names(hash)
-		unless hash['name'].nil?
-			hash['package_name'] = hash['name']
-			hash['vendor_string'] = hash['package_name'].split('/')[0]
-			hash['module_string'] = hash['package_name'].split('/')[1]
-			hash['module_name'] =
-				hash['module_string'].split('-').map(&:capitalize).join(' ')
+	def DataPackHelper.strip_version(version_str)
+		version_str.sub('dev-', '')
+	end
+
+	def DataPackHelper.get_remote_package_name(source, version_str)
+		return nil if source.nil? || !source.include?('github')
+
+		tok = ConfigHelper.value('application/authentication/composer/github_token')
+		github_raw_url = "https://#{tok}@raw.githubusercontent.com"
+		segment = StringReplaceHelper.parse_source_url(source)
+		url_str =
+			[
+				github_raw_url,
+				segment[:org],
+				segment[:module],
+				version_str,
+				'composer.json',
+			].join('/')
+
+		JSON.parse(SystemHelper.cmd("curl -s #{url_str} | jq .name"))
+	end
+
+	def DataPackHelper.prepare_data(hash)
+		unless hash['source'].include?('github')
+			hash['vendor_string'] =
+				Chef.node[:magento_demo_builder][:data_pack][:vendor]
+			hash['package_name'] = "#{hash['vendor_string']}/#{hash['source']}"
+			hash['module_string'] = hash['source']
 		end
 
-		if hash['name'].nil?
-			hash['vendor'] = Chef.node[:magento_demo_builder][:data_pack][:vendor]
-			hash['package_name'] = "#{hash['vendor']}/#{hash['source']}"
-			hash['vendor_string'] = hash['vendor'].split('-').map(&:capitalize).join
-			hash['module_string'] = hash['source'].split('-').map(&:capitalize).join
-			hash['module_name'] =
-				hash['source'].split('-').map(&:capitalize).join(' ')
+		if hash['source'].include?('github')
+			hash['version'] = DataPackHelper.set_version(hash['version'])
+			stripped_version = DataPackHelper.strip_version(hash['version'])
+			hash['package_name'] =
+				DataPackHelper.get_remote_package_name(hash['source'], stripped_version)
+			hash['vendor_string'] = hash['package_name'].split('/')[0]
+			hash['module_string'] = hash['package_name'].split('/')[1]
 		end
 
 		hash

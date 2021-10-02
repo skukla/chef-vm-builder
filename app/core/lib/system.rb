@@ -1,5 +1,5 @@
 class System
 	def System.cmd(command)
-		print `#{command}`
+		`#{command}`
 	end
 end

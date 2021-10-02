@@ -3,7 +3,7 @@ class ComposerHelper
 		module_list
 			.select { |m| m['source'].nil? || m['source'].include?('github') }
 			.each_with_object([]) do |m, arr|
-				req_str = m['name']
+				req_str = m['name'].nil? ? m['package_name'] : m['name']
 				req_str = [req_str, m['version']].join(':') unless m['version'].nil?
 				arr << req_str
 			end
