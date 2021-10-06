@@ -91,7 +91,10 @@ module StringReplaceHelper
 	end
 
 	def self.parse_source_url(url)
-		url_segment = url.split(':')[1].split('/')
+		url = url.sub('https://github.com/', '') if url.include?('https://')
+		url = url.sub('git@github.com:', '') if url.include?('git@github.com')
+		url_segment = url.split(':')[1].split('/') if url.include?('git@github.com')
+		url_segment = url.split('/') unless url.include?('git@github.com')
 		{ org: url_segment[0], module: url_segment[1].sub('.git', '') }
 	end
 end

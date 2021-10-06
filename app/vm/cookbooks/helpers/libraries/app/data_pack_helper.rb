@@ -1,9 +1,7 @@
 require_relative 'config_helper'
-require_relative 'demo_structure_helper'
-require_relative 'entry_helper'
 require_relative 'system_helper'
-
-require 'json'
+require_relative 'entry_helper'
+require_relative 'module_shared_helper'
 
 class DataPackHelper
 	class << self
@@ -11,13 +9,12 @@ class DataPackHelper
 		attr_reader :required_fields, :files_to_remove
 	end
 	@folder_list = EntryHelper.files_from('magento_demo_builder/files/default')
-	@required_fields = %w[name source]
 	@files_to_remove = %w[.gitignore .DS_Store]
 
 	def DataPackHelper.list
 		ConfigHelper
 			.value('custom_demo/data_packs')
-			.map { |md| DataPackHelper.prepare_data(md) }
+			.map { |md| ModuleSharedHelper.prepare_data(md, 'data pack') }
 	end
 
 	def DataPackHelper.local_list
@@ -40,53 +37,6 @@ class DataPackHelper
 
 			arr << item['path']
 		end
-	end
-
-	def DataPackHelper.set_version(version_str)
-		return 'dev-master' if version_str.nil?
-		version_str
-	end
-
-	def DataPackHelper.strip_version(version_str)
-		version_str.sub('dev-', '')
-	end
-
-	def DataPackHelper.get_remote_package_name(source, version_str)
-		return nil if source.nil? || !source.include?('github')
-
-		tok = ConfigHelper.value('application/authentication/composer/github_token')
-		github_raw_url = "https://#{tok}@raw.githubusercontent.com"
-		segment = StringReplaceHelper.parse_source_url(source)
-		url_str =
-			[
-				github_raw_url,
-				segment[:org],
-				segment[:module],
-				version_str,
-				'composer.json',
-			].join('/')
-
-		JSON.parse(SystemHelper.cmd("curl -s #{url_str} | jq .name"))
-	end
-
-	def DataPackHelper.prepare_data(hash)
-		unless hash['source'].include?('github')
-			hash['vendor_string'] =
-				Chef.node[:magento_demo_builder][:data_pack][:vendor]
-			hash['package_name'] = "#{hash['vendor_string']}/#{hash['source']}"
-			hash['module_string'] = hash['source']
-		end
-
-		if hash['source'].include?('github')
-			hash['version'] = DataPackHelper.set_version(hash['version'])
-			stripped_version = DataPackHelper.strip_version(hash['version'])
-			hash['package_name'] =
-				DataPackHelper.get_remote_package_name(hash['source'], stripped_version)
-			hash['vendor_string'] = hash['package_name'].split('/')[0]
-			hash['module_string'] = hash['package_name'].split('/')[1]
-		end
-
-		hash
 	end
 
 	def DataPackHelper.clean_up(path)

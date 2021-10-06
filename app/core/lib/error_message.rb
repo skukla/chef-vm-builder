@@ -83,7 +83,8 @@ class ErrorMsg < Message
 	def ErrorMsg.data_pack_installer_missing
 		msg = <<~TEXT
 		#{@oops}You've specified a data pack but it looks like you're missing the \
-		#{@bold}#{@cyan}data install custom module #{@reg}or have the wrong values for it \nin your config.json file.
+		#{@bold}#{@cyan}data install custom module #{@reg}\nor have the wrong values for it \
+		in your config.json file.
 		TEXT
 	end
 
