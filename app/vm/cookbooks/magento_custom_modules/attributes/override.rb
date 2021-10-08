@@ -3,6 +3,4 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 # frozen_string_literal: true
 
-setting = CustomModuleHelper.list
-
-override[:magento_custom_modules][:module_list] = setting unless setting.nil?
+override[:magento_custom_modules][:module_list] = CustomModuleHelper.list

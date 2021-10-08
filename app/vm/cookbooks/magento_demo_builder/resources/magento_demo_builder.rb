@@ -49,11 +49,11 @@ action :create_folders do
 	folders_arr = [
 		'app',
 		'app/code',
-		"app/code/#{data_pack['vendor_string']}",
-		"app/code/#{data_pack['vendor_string']}/#{data_pack['module_string']}",
-		"app/code/#{data_pack['vendor_string']}/#{data_pack['module_string']}/etc",
-		"app/code/#{data_pack['vendor_string']}/#{data_pack['module_string']}/data",
-		"app/code/#{data_pack['vendor_string']}/#{data_pack['module_string']}/media",
+		"app/code/#{data_pack['vendor_name']}",
+		"app/code/#{data_pack['vendor_name']}/#{data_pack['module_name']}",
+		"app/code/#{data_pack['vendor_name']}/#{data_pack['module_name']}/etc",
+		"app/code/#{data_pack['vendor_name']}/#{data_pack['module_name']}/data",
+		"app/code/#{data_pack['vendor_name']}/#{data_pack['module_name']}/media",
 	]
 
 	folders_arr.each do |dir|
@@ -72,7 +72,7 @@ action :create_module_files do
 	data_pack = new_resource.data_pack_data
 
 	module_path =
-		"app/code/#{data_pack['vendor_string']}/#{data_pack['module_string']}"
+		"app/code/#{data_pack['vendor_name']}/#{data_pack['module_name']}"
 
 	new_resource.data_pack_file_list.each do |file_data|
 		template "Creating #{file_data[:source]}" do
@@ -100,12 +100,12 @@ action :add_media_and_data do
 	data_pack = new_resource.data_pack_data
 
 	module_path =
-		"app/code/#{data_pack['vendor_string']}/#{data_pack['module_string']}"
+		"app/code/#{data_pack['vendor_name']}/#{data_pack['module_name']}"
 
 	if Dir.exist?(
 			"#{new_resource.chef_files_path}/#{data_pack['source']}/#{new_resource.media_type}",
 	   )
-		remote_directory "Adding #{new_resource.media_type} files to the #{data_pack['module_string']} module" do
+		remote_directory "Adding #{new_resource.media_type} files to the #{data_pack['module_name']} module" do
 			source "#{data_pack['source']}/#{new_resource.media_type}"
 			path "#{new_resource.web_root}/#{module_path}/#{new_resource.media_type}"
 			owner new_resource.user
@@ -122,11 +122,12 @@ end
 action :clean_up do
 	data_pack = new_resource.data_pack_data
 	module_prefix = 'app/code'
-	module_prefix = 'vendor' if data_pack['source'].include?('github')
+	github_url = StringReplaceHelper.parse_source_url(data_pack['source'])
+	module_prefix = 'vendor' if github_url
 	module_path =
-		"#{module_prefix}/#{data_pack['vendor_string']}/#{data_pack['module_string']}"
+		"#{module_prefix}/#{data_pack['vendor_name']}/#{data_pack['module_name']}"
 
-	ruby_block "Remove unwanted hidden files from the #{data_pack['module_string']} data pack" do
+	ruby_block "Remove unwanted hidden files from the #{data_pack['module_name']} data pack" do
 		block { DataPackHelper.clean_up("#{new_resource.web_root}/#{module_path}") }
 		only_if { ::Dir.exist?("#{new_resource.web_root}/#{module_path}") }
 	end
@@ -136,20 +137,21 @@ action :install do
 	data_pack = new_resource.data_pack_data
 	load_dirs = DataPackHelper.get_load_dirs(data_pack)
 	module_prefix = 'app/code'
-	module_prefix = 'vendor' if data_pack['source'].include?('github')
+	github_url = StringReplaceHelper.parse_source_url(data_pack['source'])
+	module_prefix = 'vendor' if github_url
 	data_pack_str =
-		"#{module_prefix}/#{data_pack['vendor_string']}/#{data_pack['module_string']}"
+		"#{module_prefix}/#{data_pack['vendor_name']}/#{data_pack['module_name']}"
 
-	if load_dirs.nil? || load_dirs.empty?
+	if load_dirs.empty?
 		magento_cli "Installing the #{data_pack['module_string']} data pack" do
 			action :run
 			command_list "gxd:datainstall #{data_pack_str} -r"
 		end
 	end
 
-	unless load_dirs.nil? || load_dirs.empty?
+	unless load_dirs.empty?
 		load_dirs.each do |dir|
-			magento_cli "Installing the #{data_pack['module_string']} data pack" do
+			magento_cli "Installing the #{data_pack['module_name']} data pack" do
 				action :run
 				command_list "gxd:datainstall --load=#{dir} #{data_pack_str} -r"
 			end

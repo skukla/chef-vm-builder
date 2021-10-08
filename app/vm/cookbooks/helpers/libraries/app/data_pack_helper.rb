@@ -12,25 +12,26 @@ class DataPackHelper
 	@files_to_remove = %w[.gitignore .DS_Store]
 
 	def DataPackHelper.list
-		ConfigHelper
-			.value('custom_demo/data_packs')
-			.map { |md| ModuleSharedHelper.prepare_data(md, 'data pack') }
+		list = ConfigHelper.value('custom_demo/data_packs')
+		return [] if list.nil? || list.empty?
+
+		list.map { |md| ModuleSharedHelper.prepare_data(md, 'data pack') }
 	end
 
 	def DataPackHelper.local_list
-		return if list.nil?
+		return [] if list.empty?
 		result = list.reject { |pack| pack['source'].include?('github') }
-		result.empty? ? nil : result
+		result.empty? ? [] : result
 	end
 
 	def DataPackHelper.remote_list
-		return if list.nil?
+		return [] if list.empty?
 		result = list.select { |pack| pack['source'].include?('github') }
-		result.empty? ? nil : result
+		result.empty? ? [] : result
 	end
 
 	def DataPackHelper.get_load_dirs(data_pack)
-		return nil if data_pack['data'].nil? || data_pack['data'].empty?
+		return [] if data_pack['data'].nil? || data_pack['data'].empty?
 
 		data_pack['data'].each_with_object([]) do |item, arr|
 			next if item['path'].nil?

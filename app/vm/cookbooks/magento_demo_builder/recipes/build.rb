@@ -3,12 +3,13 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 # frozen_string_literal: true
 
-data_pack_list = DataPackHelper.list
+data_pack_list = node[:magento_demo_builder][:data_pack_list]
 build_action = node[:magento_demo_builder][:magento][:build][:action]
 
-unless data_pack_list.nil?
+unless data_pack_list.empty?
 	data_pack_list.each do |data_pack|
-		unless data_pack['source'].include?('github')
+		github_url = StringReplaceHelper.parse_source_url(data_pack['source'])
+		unless github_url
 			%w[data media].each do |media_type|
 				magento_demo_builder "Clearing #{media_type} for the #{data_pack['module_string']} data pack" do
 					action :clear_data_and_media

@@ -63,7 +63,13 @@ module StringReplaceHelper
 		file.write_file
 	end
 
+	def self.to_camel(string)
+		string.split('-').map { |e| e.capitalize }.join
+	end
+
 	def self.parse_source_url(url)
+		return nil unless url.include?('github')
+
 		url = url.sub('https://github.com/', '') if url.include?('https://')
 		url = url.sub('git@github.com:', '') if url.include?('git@github.com')
 		url_segment = url.split(':')[1].split('/') if url.include?('git@github.com')

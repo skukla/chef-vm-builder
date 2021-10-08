@@ -68,11 +68,11 @@ class ValidationHandler
 	end
 
 	def ValidationHandler.data_packs
-		if DataPack.list.nil? && @build_action == 'update_data'
+		if DataPack.list.empty? && @build_action == 'update_data'
 			abort(ErrorMsg.show(:data_pack_update))
 		end
 		return if @build_action == 'restore'
-		return if DataPack.list.nil?
+		return if DataPack.list.empty?
 
 		unless CustomModule.data_installer_found?
 			abort(ErrorMsg.show(:data_pack_installer_missing))

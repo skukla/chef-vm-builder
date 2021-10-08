@@ -651,6 +651,6 @@ export -f restore
 
 function install-data-pack() {
   www
-  ./bin/magento gxd:datainstall $1 -r
+  ./bin/magento gxd:datainstall --load=$1 $2 -r
 }
 export -f install-data-pack

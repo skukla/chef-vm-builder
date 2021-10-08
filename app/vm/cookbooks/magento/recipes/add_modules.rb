@@ -10,7 +10,7 @@ composer_json = "#{web_root}/composer.json"
 data_pack_list = node[:magento][:data_packs][:data_pack_list]
 custom_module_list = node[:magento][:custom_modules][:module_list]
 
-unless build_action == 'update_data'
+unless build_action == 'update_data' && custom_module_list.empty?
 	custom_module_data 'Add custom modules to composer.json' do
 		action :process
 		data_type 'custom module'
@@ -19,9 +19,11 @@ unless build_action == 'update_data'
 	end
 end
 
-custom_module_data 'Add data packs to composer.json' do
-	action :process
-	data_type 'data pack'
-	module_list data_pack_list
-	only_if { ::File.exist?(composer_json) }
+unless data_pack_list.empty?
+	custom_module_data 'Add data packs to composer.json' do
+		action :process
+		data_type 'data pack'
+		module_list data_pack_list
+		only_if { ::File.exist?(composer_json) }
+	end
 end
