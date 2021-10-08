@@ -37,7 +37,7 @@ unless data_pack_list.nil?
 		end
 	end
 
-	if %w[refresh].include?(build_action)
+	if %w[update_data].include?(build_action)
 		magento_cli 'Compiling dependencies after data pack creation' do
 			action :di_compile
 		end

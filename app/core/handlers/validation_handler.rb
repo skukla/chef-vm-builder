@@ -68,8 +68,8 @@ class ValidationHandler
 	end
 
 	def ValidationHandler.data_packs
-		if DataPack.list.nil? && @build_action == 'refresh'
-			abort(ErrorMsg.show(:data_pack_refresh))
+		if DataPack.list.nil? && @build_action == 'update_data'
+			abort(ErrorMsg.show(:data_pack_update))
 		end
 		return if @build_action == 'restore'
 		return if DataPack.list.nil?

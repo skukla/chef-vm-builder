@@ -8,7 +8,7 @@ build_action = node[:magento][:build][:action]
 vendor_path = node[:magento_patches][:vendor_path]
 codebase_directory = node[:magento_patches][:codebase_directory]
 
-if build_action == 'update'
+if %w[update_all update_app].include?(build_action)
 	magento_patch 'Revert existing patches' do
 		action :revert_patches
 		ignore_failure :quiet
@@ -19,6 +19,6 @@ if build_action == 'update'
 	end
 end
 
-if %w[install force_install update].include?(build_action)
+if %w[install force_install update_all update_app].include?(build_action)
 	include_recipe 'magento_patches::setup'
 end

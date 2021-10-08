@@ -9,7 +9,9 @@ apply_deploy_mode = node[:magento][:build][:deploy_mode][:apply]
 deploy_mode = node[:magento][:build][:deploy_mode][:mode]
 first_run_flag = "#{web_root}/var/.first-run-state.flag"
 
-if %w[install force_install reinstall update restore].include?(build_action)
+if %w[install force_install reinstall update_all update_app restore].include?(
+		build_action,
+   )
 	if apply_deploy_mode && %w[production developer].include?(deploy_mode)
 		magento_cli "Set application mode to #{deploy_mode}" do
 			action :set_application_mode

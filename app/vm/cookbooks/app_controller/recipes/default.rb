@@ -10,7 +10,7 @@ first_run_install = !::File.exist?(first_run_flag) && build_action == 'install'
 after_first_run_install =
 	::File.exist?(first_run_flag) && build_action == 'install'
 
-if %w[reinstall update refresh].include?(build_action) &&
+if %w[reinstall update_all update_app update_data].include?(build_action) &&
 		(!::Dir.exist?(web_root) || ::Dir.empty?(web_root))
 	raise "You're using an #{build_action} build action but Magento hasn't been installed yet.
   Use install, force_install or restore from a backup first."
@@ -32,7 +32,7 @@ if %w[install force_install restore].include?(build_action)
 	include_recipe 'app_controller::base'
 	include_recipe 'app_controller::infrastructure'
 end
-if %w[refresh update].include?(build_action)
+if %w[update_all update_app update_data].include?(build_action)
 	include_recipe 'init::motd'
 	include_recipe 'vm_cli::install'
 	include_recipe 'nginx::default'

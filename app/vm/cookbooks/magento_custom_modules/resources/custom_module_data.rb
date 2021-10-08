@@ -27,16 +27,15 @@ action :process do
 		modules_from_packagist =
 			new_resource.module_list.select { |md| md['source'].nil? }
 
-		require_string =
-			ComposerHelper.build_require_string(
-				modules_from_github.concat(modules_from_packagist),
-			)
+		module_list = modules_from_github.concat(modules_from_packagist)
 
-		unless require_string.empty?
-			composer "Adding #{new_resource.data_type}s: #{require_string}" do
+		unless module_list.nil? && module_list.empty?
+			require_str = ComposerHelper.build_require_string(module_list)
+
+			composer "Adding #{new_resource.data_type}s: #{require_str}" do
 				action :require
-				package_name require_string
-				options ['no-update']
+				package_name require_str
+				options %w[no-update]
 			end
 		end
 	end

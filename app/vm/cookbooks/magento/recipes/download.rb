@@ -17,7 +17,7 @@ if %w[install force_install].include?(build_action)
 	end
 end
 
-if %w[update].include?(build_action)
+if %w[update_all update_app].include?(build_action)
 	composer 'Updating the codebase' do
 		action :update
 	end
@@ -30,7 +30,8 @@ if install_sample_data
 	end
 end
 
-if apply_patches && %w[install force_install update].include?(build_action)
+if apply_patches &&
+		%w[install force_install update_all update_app].include?(build_action)
 	include_recipe 'magento_patches::apply'
 end
 

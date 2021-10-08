@@ -1,6 +1,6 @@
 #
 # Cookbook:: magento
-# Recipe:: post_refresh
+# Recipe:: post_data_update
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 user = node[:magento][:init][:user]
