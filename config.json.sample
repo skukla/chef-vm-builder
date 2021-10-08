@@ -9,58 +9,10 @@
 			"websites": [
 				{
 					"site_code": "base",
-					"site_url": "luma.demo",
-					"stores": [
-						{
-							"store_code": "main_website_store",
-							"root_category": "Default Category",
-							"store_views": [
-								{
-									"store_view_code": "ca_fr",
-									"store_view_url": "luma.ca"
-								}
-							]
-						},
-						{
-							"store_code": "venia_store",
-							"root_category": "Venia Catalog",
-							"store_views": [
-								{
-									"store_view_code": "venia_us_en"
-								}
-							]
-						}
-					]
-				},
-				{
-					"site_code": "b2b",
-					"site_url": "b2b.luma.demo",
-					"stores": [
-						{
-							"store_code": "b2b_store",
-							"root_category": "B2B Catalog",
-							"store_views": [
-								{
-									"store_view_code": "b2b_us_en"
-								}
-							]
-						}
-					]
+					"site_url": "luma.demo"
 				}
 			]
-		},
-		"data_packs": [
-			{
-				"source": "base-b2c-website"
-			}
-		],
-		"custom_modules": [
-			{
-				"name": "magentoese/module-data-install",
-				"version": "dev-master",
-				"source": "https://github.com/PMET-public/module-data-install.git"
-			}
-		]
+		}
 	},
 	"application": {
 		"authentication": {
