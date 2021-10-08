@@ -22,6 +22,7 @@ default[:magento][:composer][:github_token] = node[:composer][:github_token]
 
 include_attribute 'nginx::default'
 default[:magento][:nginx][:web_root] = node[:nginx][:web_root]
+default[:magento][:nginx][:tmp_dir] = node[:nginx][:tmp_dir]
 
 include_attribute 'php::default'
 default[:magento][:php][:version] = node[:php][:version]

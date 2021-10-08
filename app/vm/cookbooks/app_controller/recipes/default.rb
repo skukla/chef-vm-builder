@@ -35,7 +35,7 @@ end
 if %w[refresh update].include?(build_action)
 	include_recipe 'init::motd'
 	include_recipe 'vm_cli::install'
-	include_recipe 'nginx::configure'
+	include_recipe 'nginx::default'
 end
 if first_run_install || !after_first_run_install
 	include_recipe 'app_controller::service_launcher'

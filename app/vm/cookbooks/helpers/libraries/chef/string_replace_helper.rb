@@ -63,33 +63,6 @@ module StringReplaceHelper
 		file.write_file
 	end
 
-	def self.update_sort_packages(composer_json)
-		replace_string_format = '%8s"sort-packages": false'
-		file = Chef::Util::FileEdit.new(composer_json.to_s)
-		file.search_file_replace_line(
-			'sort-packages',
-			format(replace_string_format, "\s"),
-		)
-		file.write_file
-	end
-
-	def self.update_app_version(version, family, user, web_root, composer_json)
-		output_file = "#{web_root}/new_composer.json"
-		File.open(output_file, 'a') do |output|
-			File.foreach("#{web_root}/#{composer_json}") do |line|
-				if line.include?("product-#{family}-edition") ||
-						line.include?('version')
-					output.write(line.gsub(/(?<=: ")[^\"]+/, version))
-				else
-					output.write(line)
-				end
-			end
-		end
-		FileUtils.mv(output_file, "#{web_root}/#{composer_json}")
-		FileUtils.chmod(0o664, "#{web_root}/#{composer_json}")
-		FileUtils.chown(user, user, "#{web_root}/#{composer_json}")
-	end
-
 	def self.parse_source_url(url)
 		url = url.sub('https://github.com/', '') if url.include?('https://')
 		url = url.sub('git@github.com:', '') if url.include?('git@github.com')

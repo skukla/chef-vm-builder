@@ -84,8 +84,8 @@ action :create_project do
 	execute new_resource.name do
 		options_string = "--#{new_resource.options.join(' --')}" unless new_resource
 			.options.nil?
-		command "su #{new_resource.user} -c '#{new_resource.install_directory}/#{new_resource.file} create-project #{options_string} --stability #{new_resource.project_stability} --repository-url=#{new_resource.repository_url} #{new_resource.project_name}:#{new_resource.package_version} #{new_resource.web_root}'"
-		cwd new_resource.web_root
+		command "su #{new_resource.user} -c '#{new_resource.install_directory}/#{new_resource.file} create-project #{options_string} --stability #{new_resource.project_stability} --repository-url=#{new_resource.repository_url} #{new_resource.project_name}:#{new_resource.package_version} #{new_resource.project_directory}'"
+		cwd new_resource.project_directory
 	end
 end
 
@@ -141,14 +141,11 @@ action :install do
 end
 
 action :update do
-	command_string =
-		[
-			"su #{new_resource.user} -c '#{new_resource.install_directory}/#{new_resource.file} update",
-			"#{new_resource.package_name}'",
-		].join(' ')
+	options_string = "--#{new_resource.options.join(' --')}" unless new_resource
+		.options.nil?
 
 	execute new_resource.name do
-		command command_string
+		command "su #{new_resource.user} -c '#{new_resource.install_directory}/#{new_resource.file} update #{options_string}'"
 		cwd new_resource.web_root
 	end
 end

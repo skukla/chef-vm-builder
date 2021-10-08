@@ -3,36 +3,45 @@
 # Recipe:: project_setup
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
+user = node[:magento][:init][:user]
+group = node[:magento][:init][:user]
+tmp_dir = node[:magento][:nginx][:tmp_dir]
 web_root = node[:magento][:nginx][:web_root]
 version = node[:magento][:options][:version]
 family = node[:magento][:options][:family]
 build_action = node[:magento][:build][:action]
+install_dir = build_action == 'update' ? tmp_dir : web_root
+tmp_composer_json = "#{tmp_dir}/composer.json"
 composer_json = "#{web_root}/composer.json"
 
-if %w[install force_install].include?(build_action)
-	composer "Create Magento #{family.capitalize} #{version} project" do
-		action :create_project
-		repository_url 'https://repo.magento.com/'
-		options ['no-install']
-		package_version version
-		project_name "magento/project-#{family}-edition"
-		project_directory web_root
+if %w[update].include?(build_action)
+	execute 'Clearing the temporary download directory' do
+		command "rm -rf #{tmp_dir}/*"
+		only_if { ::File.exist?("#{web_root}/composer.json") }
 	end
 end
 
-if build_action == 'update'
-	magento_app 'Update the Magento version' do
-		action :update_version
-		only_if do
-			::File.exist?(composer_json) &&
-				::File.foreach(composer_json).grep(version).none?
-		end
+if %w[install force_install update].include?(build_action)
+	composer "Create Magento #{family.capitalize} #{version} project" do
+		action :create_project
+		repository_url 'https://repo.magento.com/'
+		options %w[no-install]
+		package_version version
+		project_name "magento/project-#{family}-edition"
+		project_directory install_dir
+	end
+end
+
+if %w[update].include?(build_action)
+	execute 'Moving composer.json into web root' do
+		command "mv #{tmp_composer_json} #{composer_json}"
+		only_if { ::File.exist?(tmp_composer_json) }
 	end
 end
 
 if %w[install force_install update].include?(build_action)
 	composer 'Set the project stability and update sort-packages setting' do
-		action %i[set_project_stability update_sort_packages]
+		action :set_project_stability
 		only_if { ::File.exist?(composer_json) }
 	end
 
@@ -49,7 +58,7 @@ if %w[install force_install update].include?(build_action)
 			action :require
 			package_name 'magento/extension-b2b'
 			package_version '^1.0'
-			options ['no-update']
+			options %w[no-update]
 			only_if do
 				::File.exist?(composer_json) &&
 					::File.foreach(composer_json).grep(%r{magento/extension-b2b}).none?

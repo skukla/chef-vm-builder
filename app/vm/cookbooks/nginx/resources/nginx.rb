@@ -11,6 +11,7 @@ property :user, String, default: node[:nginx][:init][:user]
 property :group, String, default: node[:nginx][:init][:user]
 property :package_list, Array, default: node[:nginx][:package_list]
 property :web_root, String, default: node[:nginx][:web_root]
+property :tmp_dir, String, default: node[:nginx][:tmp_dir]
 property :http_port, [String, Integer], default: node[:nginx][:http_port]
 property :client_max_body_size,
          String,
@@ -74,8 +75,19 @@ action :configure_nginx do
 	end
 end
 
+action :create_tmp_dir do
+	directory 'Creating the temporary download directory' do
+		path new_resource.tmp_dir
+		owner user
+		group group
+		mode '0770'
+		recursive true
+		not_if { ::Dir.exist?(new_resource.tmp_dir) }
+	end
+end
+
 action :create_web_root do
-	directory 'Web root directory' do
+	directory 'Creating the web root' do
 		path new_resource.web_root
 		owner new_resource.user
 		group new_resource.group

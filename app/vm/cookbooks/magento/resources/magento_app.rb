@@ -147,20 +147,6 @@ action :add_sample_data do
 	end
 end
 
-action :update_version do
-	ruby_block new_resource.name do
-		block do
-			StringReplaceHelper.update_app_version(
-				new_resource.version,
-				new_resource.family,
-				new_resource.user,
-				new_resource.web_root,
-				'composer.json',
-			)
-		end
-	end
-end
-
 action :set_permissions do
 	new_resource.permission_dirs.each do |directory|
 		execute "Update #{directory} permissions" do
