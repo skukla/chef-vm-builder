@@ -6,7 +6,15 @@ class ConfigHelper
 		attr_reader :app_root, :build_action_arr
 	end
 	@app_root = '/var/chef/cache/cookbooks'
-	@build_action_arr = %i[install force_install restore reinstall update refresh]
+	@build_action_arr = %i[
+		install
+		force_install
+		restore
+		reinstall
+		update_all
+		update_app
+		update_data
+	]
 
 	def ConfigHelper.remove_blanks(hash_or_array)
 		p =

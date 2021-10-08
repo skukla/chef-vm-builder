@@ -30,8 +30,9 @@ class Config
 			force_install
 			restore
 			reinstall
-			update
-			refresh
+			update_all
+			update_app
+			update_data
 		]
 		@build_action_arr.map { |build_action| build_action.to_s }
 	end

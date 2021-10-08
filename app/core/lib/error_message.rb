@@ -128,9 +128,9 @@ class ErrorMsg < Message
 		TEXT
 	end
 
-	def ErrorMsg.data_pack_refresh
+	def ErrorMsg.data_pack_update
 		msg = <<~TEXT
-		#{@oops}You have a #{@bold}#{@cyan}refresh#{@reg} build action \
+		#{@oops}You have a #{@bold}#{@cyan}update_data#{@reg} build action \
 		but no #{@bold}#{@cyan}data packs#{@reg} configured in your config.json file.
 		TEXT
 	end

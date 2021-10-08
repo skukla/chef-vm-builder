@@ -10,18 +10,19 @@ web_root = node[:magento][:nginx][:web_root]
 version = node[:magento][:options][:version]
 family = node[:magento][:options][:family]
 build_action = node[:magento][:build][:action]
-install_dir = build_action == 'update' ? tmp_dir : web_root
+install_dir =
+	%w[update_all update_app].include?(build_action) ? tmp_dir : web_root
 tmp_composer_json = "#{tmp_dir}/composer.json"
 composer_json = "#{web_root}/composer.json"
 
-if %w[update].include?(build_action)
+if %w[update_all update_app].include?(build_action)
 	execute 'Clearing the temporary download directory' do
 		command "rm -rf #{tmp_dir}/*"
 		only_if { ::File.exist?("#{web_root}/composer.json") }
 	end
 end
 
-if %w[install force_install update].include?(build_action)
+if %w[install force_install update_all update_app].include?(build_action)
 	composer "Create Magento #{family.capitalize} #{version} project" do
 		action :create_project
 		repository_url 'https://repo.magento.com/'
@@ -32,14 +33,14 @@ if %w[install force_install update].include?(build_action)
 	end
 end
 
-if %w[update].include?(build_action)
+if %w[update_all update_app].include?(build_action)
 	execute 'Moving composer.json into web root' do
 		command "mv #{tmp_composer_json} #{composer_json}"
 		only_if { ::File.exist?(tmp_composer_json) }
 	end
 end
 
-if %w[install force_install update].include?(build_action)
+if %w[install force_install update_all update_app].include?(build_action)
 	composer 'Set the project stability and update sort-packages setting' do
 		action :set_project_stability
 		only_if { ::File.exist?(composer_json) }
