@@ -64,7 +64,10 @@ module StringReplaceHelper
 	end
 
 	def self.to_camel(string)
-		string.split('-').map { |e| e.capitalize }.join
+		if string.include?('-')
+			return string.split('-').map { |e| e.capitalize }.join
+		end
+		string
 	end
 
 	def self.parse_source_url(url)
