@@ -1,8 +1,7 @@
 {
 	"vm": {
 		"ip": "192.168.56.12",
-		"name": "Luma Demo",
-		"hypervisor": "virtualbox"
+		"name": "Luma Demo"
 	},
 	"custom_demo": {
 		"structure": {
@@ -43,7 +42,7 @@
 	"infrastructure": {
 		"php": "7.4",
 		"composer": "latest",
-		"elasticsearch": true,
+		"search_engine": 'elastic',
 		"mailhog": true,
 		"samba": true
 	},
