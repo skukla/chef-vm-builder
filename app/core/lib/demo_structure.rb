@@ -78,12 +78,26 @@ class DemoStructure
 		vhost_data.find_field('url').output
 	end
 
+	def DemoStructure.vm_urls_with_protocol
+		protocol = Config.url_protocol
+		return if protocol.nil?
+
+		vm_urls.map { |url| "#{protocol}#{url}" }
+	end
+
 	def DemoStructure.base_url
 		vhost_data
 			.output
 			.select { |record| record['code'] == 'base' }
 			.map { |value| value['url'] }
 			.first
+	end
+
+	def DemoStructure.base_url_with_protocol
+		protocol = Config.url_protocol
+		return if protocol.nil?
+
+		"#{protocol}#{base_url}"
 	end
 
 	def DemoStructure.base_website_missing?

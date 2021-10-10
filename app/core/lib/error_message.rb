@@ -1,13 +1,13 @@
 require_relative 'config'
-require_relative 'color'
+require_relative 'text_formatter'
 require_relative 'message'
 require_relative 'data_pack'
 
 class ErrorMsg < Message
-	@bold = Color.value[:bold]
-	@reg = Color.value[:reg]
-	@magenta = Color.value[:magenta]
-	@cyan = Color.value[:cyan]
+	@bold = TextFormatter.value[:bold]
+	@reg = TextFormatter.value[:reg]
+	@magenta = TextFormatter.value[:magenta]
+	@cyan = TextFormatter.value[:cyan]
 	@oops = "#{@bold}#{@magenta}[OOPS]: #{@reg}"
 
 	def ErrorMsg.show(message_code)

@@ -1,11 +1,11 @@
-require_relative 'color'
+require_relative 'text_formatter'
 require_relative 'message'
 
 class SuccessMsg < Message
-	@bold = Color.value[:bold]
-	@reg = Color.value[:reg]
-	@cyan = Color.value[:cyan]
-	@green = Color.value[:green]
+	@bold = TextFormatter.value[:bold]
+	@reg = TextFormatter.value[:reg]
+	@cyan = TextFormatter.value[:cyan]
+	@green = TextFormatter.value[:green]
 	@success = "#{@bold}#{@green}[SUCCESS]: #{@reg}"
 
 	def SuccessMsg.show(message_code)

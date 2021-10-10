@@ -1,9 +1,11 @@
 require_relative '../core/lib/config'
+require_relative '../core/lib/info_message'
 require_relative '../core/lib/demo_structure'
 require_relative '../core/handlers/system_handler'
 require_relative '../core/handlers/validation_handler'
 require_relative '../core/handlers/entry_handler'
 require_relative '../core/handlers/elasticsearch_handler'
+require_relative '../core/handlers/message_handler'
 
 SystemHandler.clear_screen
 ValidationHandler.config_json_structure
@@ -75,6 +77,11 @@ Vagrant.configure('2') do |config|
 	config.trigger.before :destroy do |trigger|
 		trigger.name = "Wiping Elasticsearch indices for #{DemoStructure.base_url}"
 		trigger.ruby { ElasticsearchHandler.wipe(DemoStructure.base_url) }
+	end
+
+	config.trigger.after :provision do |trigger|
+		trigger.name = 'Fetching info'
+		trigger.ruby { MessageHandler.after_run_info }
 	end
 
 	config.vm.provision 'chef_zero' do |chef|

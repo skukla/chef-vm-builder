@@ -73,4 +73,11 @@ class Config
 			search_setting['wipe']
 		end
 	end
+
+	def Config.url_protocol
+		usf = Config.value('application/settings/use_secure_frontend')
+		usa = Config.value('application/settings/use_secure_admin')
+		return 'http://' if usf.nil? || usa.nil?
+		!usf.zero? || usa.zero? ? 'https://' : 'http://'
+	end
 end
