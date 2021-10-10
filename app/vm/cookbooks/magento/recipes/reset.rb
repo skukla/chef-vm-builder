@@ -1,6 +1,6 @@
 #
 # Cookbook:: magento
-# Recipe:: uninstall
+# Recipe:: reset
 #
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 web_root = node[:magento][:nginx][:web_root]
