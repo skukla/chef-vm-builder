@@ -77,7 +77,9 @@ if %w[install force_install reinstall restore].include?(build_action)
 	end
 end
 
-if %w[install force_install reinstall update restore].include?(build_action)
+if %w[install force_install reinstall restore update_all update_app].include?(
+		build_action,
+   )
 	magento_cli 'Enable cron' do
 		action :enable_cron
 		not_if { ::File.exist?(crontab) }
