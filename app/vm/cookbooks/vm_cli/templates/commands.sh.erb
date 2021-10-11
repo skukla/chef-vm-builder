@@ -463,12 +463,12 @@ export -f backup
 
 function export-backup() {
   USER=<%= @user %>
-  EXPORT_DIR="/${USER}/backups"
+  EXPORT_DIR="/${USER}/backup"
   BACKUP_DIR="/var/www/magento/var/backups"
 
   list-backups
   if [ -d "${BACKUP_DIR}" ]; then
-    printf "\nExporting all backups to the VM app/backups directory..."
+    printf "\nExporting all backups to the VM app/vm/backup directory..."
     if [ ! -d "${EXPORT_DIR}" ]; then
       mkdir -p ${EXPORT_DIR}
     fi

@@ -2,14 +2,14 @@
 .vagrant/
 nodes/*
 environments/*
-backups/*
+backup/*
 cookbooks/magento/files/default/*
 cookbooks/magento_restore/files/default/*
 cookbooks/magento_demo_builder/files/default/*
 cookbooks/magento_patches/files/default/*
 !nodes/.gitignore
 !environments/.gitignore
-!backups/.gitignore
+!backup/.gitignore
 !cookbooks/magento/files/default/.gitignore
 !cookbooks/magento_patches/files/default/.gitignore
 !cookbooks/magento_restore/files/default/.gitignore
