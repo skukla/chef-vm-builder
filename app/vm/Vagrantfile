@@ -79,10 +79,9 @@ Vagrant.configure('2') do |config|
 		trigger.ruby { ElasticsearchHandler.wipe(DemoStructure.base_url) }
 	end
 
-	config.trigger.after :provision do |trigger|
-		trigger.name = 'Fetching info'
-		trigger.ruby { MessageHandler.after_run_info }
-	end
+	config.vm.provision 'shell',
+	                    name: 'Installing packages',
+	                    path: 'scripts/install_packages.sh'
 
 	config.vm.provision 'chef_zero' do |chef|
 		chef.version = Config.value('provisioner/version').chomp
@@ -93,5 +92,10 @@ Vagrant.configure('2') do |config|
 		chef.environment = 'vm'
 		chef.add_role 'main'
 		chef.arguments = '--chef-license accept'
+	end
+
+	config.trigger.after :provision do |trigger|
+		trigger.name = 'Fetching info'
+		trigger.ruby { MessageHandler.after_run_info }
 	end
 end

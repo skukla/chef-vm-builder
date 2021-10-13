@@ -1,5 +1,3 @@
-require_relative 'config_helper'
-
 require 'json'
 class ModuleSharedHelper
 	def ModuleSharedHelper.define_github_url(source)

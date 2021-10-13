@@ -1,8 +1,8 @@
-#
 # Cookbook:: magento
 # Recipe:: project_setup
-#
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
+# frozen_string_literal: true
+
 user = node[:magento][:init][:user]
 group = node[:magento][:init][:user]
 tmp_dir = node[:magento][:nginx][:tmp_dir]

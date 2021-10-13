@@ -1,8 +1,8 @@
-#
 # Cookbook:: magento
 # Recipe:: post_install
-#
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
+# frozen_string_literal: true
+
 web_root = node[:magento][:nginx][:web_root]
 build_action = node[:magento][:build][:action]
 apply_deploy_mode = node[:magento][:build][:deploy_mode][:apply]
@@ -24,9 +24,9 @@ if %w[install force_install reinstall update_all update_app restore].include?(
 			action %i[di_compile deploy_static_content]
 		end
 	end
-end
 
-magento_app 'Set first run flag' do
-	action :set_first_run
-	not_if { ::File.exist?(first_run_flag) }
+	magento_app 'Set first run flag' do
+		action :set_first_run
+		not_if { ::File.exist?(first_run_flag) }
+	end
 end

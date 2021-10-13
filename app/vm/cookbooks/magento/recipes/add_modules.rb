@@ -1,8 +1,7 @@
-#
 # Cookbook:: magento
 # Recipe:: add_modules
-#
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
+# frozen_string_literal: true
 
 web_root = node[:magento][:nginx][:web_root]
 build_action = node[:magento][:build][:action]

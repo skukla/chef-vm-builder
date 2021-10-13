@@ -1,3 +1,4 @@
+require_relative '../lib/system'
 require_relative '../lib/config'
 require_relative '../lib/composer'
 require_relative '../lib/error_message'
@@ -50,7 +51,8 @@ class ValidationHandler
 
 		return if (vagrant_plugin.list - vagrant_plugin.installed_plugins).empty?
 
-		system("vagrant plugin install #{vagrant_plugin.list.join(' ')}")
+		System.install_vagrant_plugins(vagrant_plugin.list)
+
 		abort(SuccessMsg.show(:plugins_installed))
 	end
 
@@ -103,4 +105,6 @@ class ValidationHandler
 			abort(ErrorMsg.show(:csc_key_missing))
 		end
 	end
+
+	def ValidationHandler.check_for_existing_build; end
 end

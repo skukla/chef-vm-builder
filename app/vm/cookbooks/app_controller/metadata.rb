@@ -12,6 +12,7 @@ depends 'ssl' # Brings in ssl usage
 depends 'nginx' # Brings in the web root
 depends 'mailhog' # Brings in mailhog usage
 depends 'magento' # Brings in Magento usage
+depends 'magento_demo_builder' # Brings in Magento Demo Builder usage
 depends 'magento_restore' # Brings in the backup holding area
 
 # The `issues_url` points to the location where issues for this cookbook are

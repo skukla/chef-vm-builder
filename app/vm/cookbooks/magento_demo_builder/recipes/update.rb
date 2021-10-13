@@ -4,8 +4,9 @@
 # frozen_string_literal: true
 
 data_pack_list = node[:magento_demo_builder][:remote_data_pack_list]
+build_action = node[:magento_demo_builder][:magento][:build][:action]
 
-unless data_pack_list.empty?
+if build_action == 'update_data' && !data_pack_list.empty?
 	require_str = ComposerHelper.build_require_string(data_pack_list)
 
 	composer "Updating #{require_str} code" do

@@ -1,10 +1,9 @@
-#
 # Cookbook:: magento
 # Recipe:: reset
-#
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
+# frozen_string_literal: true
+
 web_root = node[:magento][:nginx][:web_root]
-tmp_dir = node[:magento][:nginx][:tmp_dir]
 build_action = node[:magento][:build][:action]
 
 case build_action

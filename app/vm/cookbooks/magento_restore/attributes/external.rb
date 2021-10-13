@@ -17,9 +17,20 @@ default[:magento_restore][:mysql][:db_name] = node[:mysql][:db_name]
 
 include_attribute 'composer::default'
 include_attribute 'composer::override'
-default[:magento_restore][:composer][:github_token] = node[:composer][:github_token]
+default[:magento_restore][:composer][:github_token] =
+	node[:composer][:github_token]
 
 include_attribute 'magento::default'
 include_attribute 'magento::override'
-default[:magento_restore][:magento][:settings][:use_secure_frontend] = node[:magento][:settings][:use_secure_frontend]
-default[:magento_restore][:magento][:settings][:use_secure_admin] = node[:magento][:settings][:use_secure_admin]
+default[:magento_restore][:magento][:build][:action] =
+	node[:magento][:build][:action]
+default[:magento_restore][:magento][:build][:deploy_mode] =
+	node[:magento][:build][:deploy_mode][:apply]
+default[:magento_restore][:magento][:settings][:unsecure_base_url] =
+	node[:magento][:settings][:unsecure_base_url]
+default[:magento_restore][:magento][:settings][:secure_base_url] =
+	node[:magento][:settings][:secure_base_url]
+default[:magento_restore][:magento][:settings][:use_secure_frontend] =
+	node[:magento][:settings][:use_secure_frontend]
+default[:magento_restore][:magento][:settings][:use_secure_admin] =
+	node[:magento][:settings][:use_secure_admin]

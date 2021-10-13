@@ -1,8 +1,8 @@
-#
 # Cookbook:: magento
 # Recipe:: install
-#
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
+# frozen_string_literal: true
+
 build_action = node[:magento][:build][:action]
 
 if %w[install force_install].include?(build_action)
@@ -47,6 +47,10 @@ if %w[update_all update_app].include?(build_action)
 	end
 end
 
-magento_app 'Set permissions after installation or database upgrade' do
-	action :set_permissions
+if %w[install force_install reinstall update_all update_app].include?(
+		build_action,
+   )
+	magento_app 'Set permissions after installation or database upgrade' do
+		action :set_permissions
+	end
 end
