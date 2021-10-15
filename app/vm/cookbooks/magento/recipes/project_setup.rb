@@ -15,6 +15,12 @@ install_dir =
 tmp_composer_json = "#{tmp_dir}/composer.json"
 composer_json = "#{web_root}/composer.json"
 
+if %w[install force_install].include?(build_action)
+	mysql 'Create the database' do
+		action :create_database
+	end
+end
+
 if %w[update_all update_app].include?(build_action)
 	execute 'Clearing the temporary download directory' do
 		command "rm -rf #{tmp_dir}/*"
