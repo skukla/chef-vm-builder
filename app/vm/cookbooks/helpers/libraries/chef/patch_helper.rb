@@ -1,10 +1,13 @@
 # Cookbook:: helpers
-# Library:: patch_helper
+# Library:: chef/patch_helper
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 # frozen_string_literal: true
 
 class PatchHelper
-	def self.define_sample_data_patches(patch_file_directory, sample_data_flag)
+	def PatchHelper.define_sample_data_patches(
+		patch_file_directory,
+		sample_data_flag
+	)
 		files = Dir.entries(patch_file_directory) - %w[.. . .git]
 		file_list =
 			files.each_with_object([]) do |file, arr|

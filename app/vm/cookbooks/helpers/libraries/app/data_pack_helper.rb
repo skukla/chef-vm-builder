@@ -1,14 +1,13 @@
-require_relative 'config_helper'
-require_relative 'system_helper'
-require_relative 'entry_helper'
-require_relative 'module_shared_helper'
+# Cookbook:: helpers
+# Library:: app/data_pack_helper
+# Copyright:: 2020, Steve Kukla, All Rights Reserved.
+# frozen_string_literal: true
 
 class DataPackHelper
 	class << self
 		attr_accessor :folder_list
 		attr_reader :required_fields, :files_to_remove
 	end
-	@folder_list = EntryHelper.files_from('magento_demo_builder/files/default')
 	@files_to_remove = %w[.gitignore .DS_Store]
 
 	def DataPackHelper.list

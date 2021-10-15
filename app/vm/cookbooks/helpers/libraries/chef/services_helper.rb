@@ -1,5 +1,5 @@
 # Cookbook:: helpers
-# Library:: services_helper
+# Library:: chef/services_helper
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 # frozen_string_literal: true
 

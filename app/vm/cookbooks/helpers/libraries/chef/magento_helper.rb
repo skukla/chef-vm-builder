@@ -1,9 +1,9 @@
 # Cookbook:: helpers
-# Library:: magento_helper
+# Library:: chef/magento_helper
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 # frozen_string_literal: true
 
-module MagentoHelper
+class MagentoHelper
 	def self.get_consumer_list
 		@family = Chef.node[:magento][:options][:family]
 		@community_consumer_list =

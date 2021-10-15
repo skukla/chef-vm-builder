@@ -1,4 +1,7 @@
-require_relative 'config_helper'
+# Cookbook:: helpers
+# Library:: app/entry_helper
+# Copyright:: 2020, Steve Kukla, All Rights Reserved.
+# frozen_string_literal: true
 
 class EntryHelper
 	@entries_to_remove = %w[. .. .DS_Store .gitignore]

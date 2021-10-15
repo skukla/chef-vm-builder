@@ -1,10 +1,10 @@
 # Cookbook:: helpers
-# Library:: database_helper
+# Library:: chef/database_helper
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 # frozen_string_literal: true
 
 module DatabaseHelper
-	def self.execute_query(query)
+	def DatabaseHelper.execute_query(query)
 		@db_user = Chef.node[:mysql][:db_user]
 		@db_password = Chef.node[:mysql][:db_password]
 		@db_name = Chef.node[:mysql][:db_name]
@@ -15,7 +15,7 @@ module DatabaseHelper
 		`#{[connection_string, query_string].join(' -N -s -e ')}`
 	end
 
-	def self.check_code_exists(code)
+	def DatabaseHelper.check_code_exists(code)
 		website_result =
 			execute_query(
 				"SELECT COUNT\(*\) FROM store_website WHERE code = '#{code}'",

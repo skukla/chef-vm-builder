@@ -19,9 +19,7 @@ class Config
 	end
 
 	def Config.json
-		Config.remove_blanks(
-			JSON.parse(File.read(File.join(@app_root, 'config.json'))),
-		)
+		remove_blanks(JSON.parse(File.read(File.join(@app_root, 'config.json'))))
 	end
 
 	def Config.build_action_list
@@ -47,7 +45,7 @@ class Config
 	end
 
 	def Config.search_engine_type
-		search_setting = Config.value(@search_setting_path)
+		search_setting = value(@search_setting_path)
 
 		if search_setting.nil? ||
 				(search_setting.is_a?(Hash) && search_setting['type'].nil?)
@@ -62,21 +60,19 @@ class Config
 	end
 
 	def Config.elasticsearch_requested?
-		return true if Config.search_engine_type == 'elastic'
+		return true if search_engine_type == 'elastic'
 		false
 	end
 
 	def Config.wipe_elasticsearch?
-		search_setting = Config.value(@search_setting_path)
+		search_setting = value(@search_setting_path)
 
-		if Config.elasticsearch_requested? && search_setting['wipe']
-			search_setting['wipe']
-		end
+		search_setting['wipe'] if elasticsearch_requested? && search_setting['wipe']
 	end
 
 	def Config.url_protocol
-		usf = Config.value('application/settings/use_secure_frontend')
-		usa = Config.value('application/settings/use_secure_admin')
+		usf = value('application/settings/use_secure_frontend')
+		usa = value('application/settings/use_secure_admin')
 		return 'http://' if usf.nil? || usa.nil?
 		!usf.zero? || usa.zero? ? 'https://' : 'http://'
 	end

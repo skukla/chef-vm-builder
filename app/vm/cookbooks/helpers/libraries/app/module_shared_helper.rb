@@ -1,3 +1,8 @@
+# Cookbook:: helpers
+# Library:: app/module_shared_helper
+# Copyright:: 2020, Steve Kukla, All Rights Reserved.
+# frozen_string_literal: true
+
 require 'json'
 class ModuleSharedHelper
 	def ModuleSharedHelper.define_github_url(source)
@@ -6,7 +11,7 @@ class ModuleSharedHelper
 	end
 
 	def ModuleSharedHelper.get_remote_package_name(source, version_str)
-		github_raw_url = ModuleSharedHelper.define_github_url(source)
+		github_raw_url = define_github_url(source)
 		segment = StringReplaceHelper.parse_source_url(source)
 		return nil if segment.nil?
 
@@ -48,14 +53,10 @@ class ModuleSharedHelper
 		end
 
 		if github_url
-			hash['version'] =
-				ModuleSharedHelper.set_dev_master_version(hash['version'])
-			stripped_version = ModuleSharedHelper.strip_version(hash['version'])
+			hash['version'] = set_dev_master_version(hash['version'])
+			stripped_version = strip_version(hash['version'])
 			hash['package_name'] =
-				ModuleSharedHelper.get_remote_package_name(
-					hash['source'],
-					stripped_version,
-				)
+				get_remote_package_name(hash['source'], stripped_version)
 			hash['vendor_string'] = hash['package_name'].split('/')[0]
 			hash['vendor_name'] = hash['vendor_string']
 			hash['module_string'] = hash['package_name'].split('/')[1]

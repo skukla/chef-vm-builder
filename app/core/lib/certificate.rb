@@ -15,5 +15,3 @@ class Certificate
 			)
 	end
 end
-
-print Certificate.exists?

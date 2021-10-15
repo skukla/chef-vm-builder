@@ -1,3 +1,8 @@
+# Cookbook:: helpers
+# Library:: app/composer_helper
+# Copyright:: 2020, Steve Kukla, All Rights Reserved.
+# frozen_string_literal: true
+
 class ComposerHelper
 	def ComposerHelper.build_require_string(module_list)
 		module_list

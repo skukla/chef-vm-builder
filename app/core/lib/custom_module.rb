@@ -15,6 +15,6 @@ class CustomModule
 		https = 'https://github.com/PMET-public/module-data-install.git'
 		ssh = 'github.com:PMET-public/module-data-install.git'
 
-		CustomModule.module_found?(https) || CustomModule.module_found?(ssh)
+		module_found?(https) || module_found?(ssh)
 	end
 end

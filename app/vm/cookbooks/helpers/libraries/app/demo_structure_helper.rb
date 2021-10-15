@@ -1,4 +1,7 @@
-require_relative 'config_helper'
+# Cookbook:: helpers
+# Library:: app/demo_structure_helper
+# Copyright:: 2020, Steve Kukla, All Rights Reserved.
+# frozen_string_literal: true
 
 class DemoStructureHelper
 	class << self

@@ -1,3 +1,8 @@
+# Cookbook:: helpers
+# Library:: app/custom_module_helper
+# Copyright:: 2020, Steve Kukla, All Rights Reserved.
+# frozen_string_literal: true
+
 require_relative 'config_helper'
 
 class CustomModuleHelper

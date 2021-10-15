@@ -40,18 +40,15 @@ class DataPack
 	end
 
 	def DataPack.missing_data_path?
-		data_dir_list = DataPack.data_dir_list
 		return true if list.empty? || data_dir_list.nil?
 
-		DataPack
-			.data_dir_list
+		data_dir_list
 			.flat_map { |item| item.keys }
 			.each_with_object([]) { |key, arr| arr << key if key == 'path' }
 			.empty?
 	end
 
 	def DataPack.missing_data_code?
-		data_dir_list = DataPack.data_dir_list
 		return true if list.empty? || data_dir_list.nil?
 
 		data_dir_list

@@ -1,10 +1,14 @@
 # Cookbook:: helpers
-# Library:: string_replace_helper
+# Library:: chef/string_replace_helper
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 # frozen_string_literal: true
 
 module StringReplaceHelper
-	def self.set_php_sendmail_path(php_type, php_version, sendmail_path)
+	def StringReplaceHelper.set_php_sendmail_path(
+		php_type,
+		php_version,
+		sendmail_path
+	)
 		line_to_insert =
 			if sendmail_path.empty?
 				';sendmail_path ='
@@ -19,7 +23,7 @@ module StringReplaceHelper
 		file.write_file
 	end
 
-	def self.remove_modules(selected_modules, composer_json)
+	def StringReplaceHelper.remove_modules(selected_modules, composer_json)
 		modules_to_remove = []
 
 		return if selected_modules.nil? || selected_modules.empty?
@@ -53,7 +57,7 @@ module StringReplaceHelper
 		file.write_file
 	end
 
-	def self.set_project_stability(stability_level, composer_json)
+	def StringReplaceHelper.set_project_stability(stability_level, composer_json)
 		replace_string_format = "%4s\"minimum-stability\": \"#{stability_level}\","
 		file = Chef::Util::FileEdit.new(composer_json.to_s)
 		file.search_file_replace_line(
@@ -63,14 +67,14 @@ module StringReplaceHelper
 		file.write_file
 	end
 
-	def self.to_camel(string)
+	def StringReplaceHelper.to_camel(string)
 		if string.include?('-')
 			return string.split('-').map { |e| e.capitalize }.join
 		end
 		string
 	end
 
-	def self.parse_source_url(url)
+	def StringReplaceHelper.parse_source_url(url)
 		return nil unless url.include?('github')
 
 		url = url.sub('https://github.com/', '') if url.include?('https://')
