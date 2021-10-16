@@ -5,30 +5,32 @@
 
 web_root = node[:magento][:nginx][:web_root]
 build_action = node[:magento][:build][:action]
+separate_restore = node[:magento][:restore][:mode] == 'separate'
 apply_patches = node[:magento][:patches][:apply]
 install_sample_data = node[:magento][:build][:sample_data]
-restore_mode = node[:magento][:restore][:mode]
 sample_data_flag = "#{web_root}/var/.sample-data-state.flag"
 
 if apply_patches &&
-		(
-			%w[install force_install update_all update_app].include?(build_action) ||
-				(build_action == 'restore' && restore_mode == 'merge')
+		%w[install force_install update_all update_app restore].include?(
+			build_action,
 		)
-	include_recipe 'magento_patches::default'
-end
-
-if %w[install force_install].include?(build_action) ||
-		(build_action == 'restore' && restore_mode == 'separate')
-	composer 'Downloading the codebase' do
-		action :install
+	ruby_block 'Include patches' do
+		block { run_context.include_recipe 'magento_patches::default' }
+		not_if { separate_restore }
 	end
 end
 
-if %w[update_all update_app].include?(build_action) ||
-		(build_action == 'restore' && restore_mode == 'merge')
+if %w[install force_install restore].include?(build_action)
+	composer 'Downloading the codebase' do
+		action :install
+		only_if { separate_restore }
+	end
+end
+
+if %w[update_all update_app restore].include?(build_action)
 	composer 'Updating the codebase' do
 		action :update
+		not_if { separate_restore }
 	end
 end
 
@@ -41,11 +43,13 @@ if install_sample_data &&
 end
 
 if apply_patches &&
-		(
-			%w[install force_install update_all update_app].include?(build_action) ||
-				(build_action == 'restore' && restore_mode == 'merge')
+		%w[install force_install update_all update_app restore].include?(
+			build_action,
 		)
-	include_recipe 'magento_patches::apply'
+	ruby_block 'Apply patches' do
+		block { run_context.include_recipe 'magento_patches::apply' }
+		not_if { separate_restore }
+	end
 end
 
 if %w[install force_install update_all update_app].include?(build_action)
