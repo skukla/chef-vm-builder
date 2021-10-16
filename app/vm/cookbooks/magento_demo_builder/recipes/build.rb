@@ -6,10 +6,11 @@
 data_pack_list = node[:magento_demo_builder][:data_pack_list]
 build_action = node[:magento_demo_builder][:magento][:build][:action]
 restore_mode = node[:magento_demo_builder][:restore][:mode]
+merge_restore = (build_action == 'restore' && restore_mode == 'merge')
 
 unless data_pack_list.empty?
 	if %w[install force_install update_all update_data].include?(build_action) ||
-			(build_action == 'restore' && restore_mode == 'merge')
+			merge_restore
 		data_pack_list.each do |data_pack|
 			github_url = StringReplaceHelper.parse_source_url(data_pack['source'])
 			unless github_url
@@ -49,7 +50,7 @@ unless data_pack_list.empty?
 	end
 
 	if %w[install force_install update_all update_data].include?(build_action) ||
-			(build_action == 'restore' && restore_mode == 'merge')
+			merge_restore
 		magento_app 'Set permissions on directories and files' do
 			action :set_permissions
 			permission_dirs %w[var/ pub/]
