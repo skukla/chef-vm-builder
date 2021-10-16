@@ -15,7 +15,7 @@ install_dir =
 tmp_composer_json = "#{tmp_dir}/composer.json"
 composer_json = "#{web_root}/composer.json"
 
-if %w[install force_install].include?(build_action)
+if %w[install force_install restore].include?(build_action)
 	mysql 'Create the database' do
 		action :create_database
 	end

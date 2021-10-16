@@ -9,12 +9,6 @@ default[:magento_restore][:init][:user] = node[:init][:os][:user]
 include_attribute 'nginx::default'
 default[:magento_restore][:nginx][:web_root] = node[:nginx][:web_root]
 
-include_attribute 'mysql::default'
-include_attribute 'mysql::override'
-default[:magento_restore][:mysql][:db_user] = node[:mysql][:db_user]
-default[:magento_restore][:mysql][:db_password] = node[:mysql][:db_password]
-default[:magento_restore][:mysql][:db_name] = node[:mysql][:db_name]
-
 include_attribute 'composer::default'
 include_attribute 'composer::override'
 default[:magento_restore][:composer][:github_token] =
@@ -24,13 +18,3 @@ include_attribute 'magento::default'
 include_attribute 'magento::override'
 default[:magento_restore][:magento][:build][:action] =
 	node[:magento][:build][:action]
-default[:magento_restore][:magento][:build][:deploy_mode] =
-	node[:magento][:build][:deploy_mode][:apply]
-default[:magento_restore][:magento][:settings][:unsecure_base_url] =
-	node[:magento][:settings][:unsecure_base_url]
-default[:magento_restore][:magento][:settings][:secure_base_url] =
-	node[:magento][:settings][:secure_base_url]
-default[:magento_restore][:magento][:settings][:use_secure_frontend] =
-	node[:magento][:settings][:use_secure_frontend]
-default[:magento_restore][:magento][:settings][:use_secure_admin] =
-	node[:magento][:settings][:use_secure_admin]

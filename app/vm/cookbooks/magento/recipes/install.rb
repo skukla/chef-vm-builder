@@ -41,7 +41,7 @@ if %w[install force_install reinstall].include?(build_action)
 	end
 end
 
-if %w[update_all update_app].include?(build_action)
+if %w[update_all update_app restore].include?(build_action)
 	magento_cli 'Upgrade the Magento database' do
 		action :db_upgrade
 	end

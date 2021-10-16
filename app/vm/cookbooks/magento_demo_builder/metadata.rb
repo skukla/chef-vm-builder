@@ -11,6 +11,7 @@ depends 'helpers' # Brings in the various helpers
 depends 'nginx' # Brings in web root
 depends 'magento' # Brings in Magento settings
 depends 'magento_patches' # Brings in Magento patch settings
+depends 'magento_restore' # Brings in Magento restore settings
 
 # The `issues_url` points to the location where issues for this cookbook are
 # tracked.  A `View Issues` link will be displayed on this cookbook's page when

@@ -5,12 +5,16 @@
 
 web_root = node[:magento][:nginx][:web_root]
 build_action = node[:magento][:build][:action]
+restore_mode = node[:magento][:restore][:mode]
 composer_json = "#{web_root}/composer.json"
 data_pack_list = node[:magento][:data_packs][:data_pack_list]
 custom_module_list = node[:magento][:custom_modules][:module_list]
 
-if %w[install force_install update_all update_app].include?(build_action) &&
-		!custom_module_list.empty?
+if !custom_module_list.empty? &&
+		(
+			%w[install force_install update_all update_app].include?(build_action) ||
+				(build_action == 'restore' && restore_mode == 'merge')
+		)
 	custom_module_data 'Add custom modules to composer.json' do
 		action :process
 		data_type 'custom module'
@@ -19,8 +23,11 @@ if %w[install force_install update_all update_app].include?(build_action) &&
 	end
 end
 
-if %w[install force_install update_all update_data].include?(build_action) &&
-		!data_pack_list.empty?
+if !data_pack_list.empty? &&
+		(
+			%w[install force_install update_all update_data].include?(build_action) ||
+				(build_action == 'restore' && restore_mode == 'merge')
+		)
 	custom_module_data 'Add data packs to composer.json' do
 		action :process
 		data_type 'data pack'

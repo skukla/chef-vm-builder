@@ -46,3 +46,7 @@ default[:magento][:data_packs][:data_pack_list] =
 
 include_attribute 'magento_patches::default'
 default[:magento][:patches][:apply] = node[:magento_patches][:apply]
+
+include_attribute 'magento_restore::default'
+include_attribute 'magento_restore::override'
+default[:magento][:restore][:mode] = node[:magento_restore][:mode]

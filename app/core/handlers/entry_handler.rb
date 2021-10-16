@@ -38,31 +38,36 @@ class EntryHandler
 		},
 	]
 
+	def EntryHandler.filter_entries(entry_list, filter_arr, filter_type)
+		case filter_type
+		when 'ext'
+			entry_list.select { |entry| filter_arr.include?(File.extname(entry)) }
+		when 'file'
+			entry_list.select { |entry| filter_arr.include?(File.basename(entry)) }
+		end
+	end
+
 	def EntryHandler.copy_entries
 		@entries.each do |type|
 			src_files = Entry.files_from(type[:src])
 			dest_files = Entry.files_from(type[:dest])
 
-			next if src_files.empty?
+			next if src_files.empty? && dest_files.empty?
 
 			unless type[:exts].nil?
-				src_files =
-					src_files.select { |file| type[:exts].include?(File.extname(file)) }
+				src_files = filter_entries(src_files, type[:exts], 'ext')
 			end
 
 			unless type[:file].nil?
-				src_files =
-					src_files.select { |file| type[:file].include?(File.basename(file)) }
+				src_files = filter_entries(src_files, type[:file], 'file')
+				dest_files = filter_entries(dest_files, type[:file], 'file')
 			end
 
 			unless dest_files.empty?
 				dest_files.each do |file|
-					if File.directory?(file)
-						FileUtils.rm_r(File.join(@app_root, type[:dest], file))
-					end
-					if File.file?(file)
-						FileUtils.rm(File.join(@app_root, type[:dest], file))
-					end
+					path = File.join(@app_root, type[:dest], file)
+					FileUtils.rm_r(path) if File.directory?(path)
+					FileUtils.rm(path) if File.file?(path)
 				end
 			end
 
@@ -96,3 +101,5 @@ class EntryHandler
 		) { |file| file.puts(environment_file_content.to_json) }
 	end
 end
+
+EntryHandler.copy_entries
