@@ -81,8 +81,8 @@ Vagrant.configure('2') do |config|
 	end
 
 	config.vm.provision 'shell',
-	                    name: 'Installing packages',
-	                    path: 'scripts/install_packages.sh'
+	                    name: 'Installing pre-build packages',
+	                    path: 'scripts/install_prebuild_packages.sh'
 
 	config.vm.provision 'chef_zero' do |chef|
 		chef.version = Config.value('provisioner/version').chomp
@@ -96,7 +96,7 @@ Vagrant.configure('2') do |config|
 	end
 
 	config.trigger.after :provision do |trigger|
-		trigger.name = 'Fetching info'
+		trigger.name = 'Displaying VM URLs'
 		trigger.ruby { MessageHandler.after_run_info }
 	end
 end
