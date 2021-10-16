@@ -47,6 +47,12 @@ class EntryHandler
 		end
 	end
 
+	def EntryHandler.prefer_zip(entry_list)
+		zip_file_arr = entry_list.select { |file| file.include?('.zip') }
+		return zip_file_arr unless zip_file_arr.empty?
+		entry_list
+	end
+
 	def EntryHandler.copy_entries
 		@entries.each do |type|
 			src_files = Entry.files_from(type[:src])
@@ -56,6 +62,7 @@ class EntryHandler
 
 			unless type[:exts].nil?
 				src_files = filter_entries(src_files, type[:exts], 'ext')
+				src_files = prefer_zip(src_files)
 			end
 
 			unless type[:file].nil?
