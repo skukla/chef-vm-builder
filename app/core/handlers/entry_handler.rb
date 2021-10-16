@@ -81,8 +81,7 @@ class EntryHandler
 	end
 
 	def EntryHandler.clean_up_hidden_files
-		EntryHandler
-			.entries
+		entries
 			.map { |entry| "#{File.join(Config.app_root, entry[:dest])}" }
 			.each { |path| SystemHandler.remove_ds_store_files(path) }
 	end
@@ -101,5 +100,3 @@ class EntryHandler
 		) { |file| file.puts(environment_file_content.to_json) }
 	end
 end
-
-EntryHandler.copy_entries

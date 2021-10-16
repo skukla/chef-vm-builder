@@ -37,11 +37,33 @@ class ErrorMsg < Message
 	end
 
 	def ErrorMsg.build_action_incorrect
-		build_action = Config.value('application/build/action')
+		build_action = Config.build_action
 		build_action_list = Config.build_action_list
 		msg = <<~TEXT
     #{@@oops}It looks like you've got an incorrect build action setting: #{@@bold}#{@@cyan}#{build_action}#{@@reg}.\n\n\
     Acceptable values are:\n\n#{build_action_list.join("\n")}\n\nPlease check your config.json file.
+    TEXT
+	end
+
+	def ErrorMsg.restore_mode_incorrect
+		restore_mode = Config.restore_mode
+		restore_mode_list = Config.restore_mode_list
+		msg = <<~TEXT
+    #{@@oops}It looks like you've got an incorrect restore mode setting: #{@@bold}#{@@cyan}#{restore_mode}#{@@reg}.\n\n\
+    Acceptable values are:\n\n#{restore_mode_list.join("\n")}\n\nPlease check your config.json file.
+    TEXT
+	end
+
+	def ErrorMsg.nothing_to_restore
+		msg = <<~TEXT
+    #{@@oops}It looks like you're trying to #{@@bold}#{@@cyan}restore a backup#{@@reg}, but there are #{@@bold}#{@@cyan}no backup files#{@@reg}\nin your #{@@bold}#{@@cyan}project/backup#{@@reg} folder.
+    TEXT
+	end
+
+	def ErrorMsg.search_engine_type_missing
+		msg = <<~TEXT
+		#{@@oops}It looks like your #{@@bold}#{@@cyan}search engine type#{@@reg} is \
+		#{@@bold}#{@@cyan}missing #{@@reg}or #{@@bold}#{@@cyan}empty#{@@reg}. Please check your config.json file.
     TEXT
 	end
 

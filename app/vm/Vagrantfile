@@ -12,8 +12,9 @@ ValidationHandler.config_json_structure
 ValidationHandler.composer_credentials
 ValidationHandler.base_website
 ValidationHandler.build_action
-ValidationHandler.service_dependencies
+ValidationHandler.restore_mode
 ValidationHandler.search_engine_type
+ValidationHandler.service_dependencies
 ValidationHandler.plugins
 ValidationHandler.data_packs
 ValidationHandler.csc_credentials

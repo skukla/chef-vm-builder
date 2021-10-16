@@ -3,10 +3,15 @@ require 'json'
 
 class Config
 	class << self
-		attr_reader :app_root, :build_action_arr, :search_engine_type_arr
+		attr_reader :app_root,
+		            :build_action_arr,
+		            :search_engine_type_arr,
+		            :restore_mode_arr
 	end
 	@app_root = "/#{File.join(Pathname.new(__dir__).each_filename.to_a[0...-3])}"
-	@search_setting_path = 'infrastructure/search_engine'
+	@build_action_setting = 'application/build/action'
+	@search_setting = 'infrastructure/search_engine'
+	@restore_setting = 'application/build/restore'
 
 	def Config.remove_blanks(hash_or_array)
 		p =
@@ -20,6 +25,39 @@ class Config
 
 	def Config.json
 		remove_blanks(JSON.parse(File.read(File.join(@app_root, 'config.json'))))
+	end
+
+	def Config.value(setting_path)
+		json.dig(*setting_path.split('/'))
+	end
+
+	def Config.setting(path, key = nil)
+		setting = value(path)
+
+		if setting.nil? || setting.empty? ||
+				(setting.is_a?(Hash) && setting[key].nil?)
+			return nil
+		end
+
+		return setting[key] if (setting.is_a?(Hash) && !setting[key].to_s.empty?)
+
+		setting if setting.is_a?(String)
+	end
+
+	def Config.build_action
+		setting(@build_action_setting)
+	end
+
+	def Config.search_engine_type
+		setting(@search_setting, 'type')
+	end
+
+	def Config.restore_mode
+		if value(@restore_setting).to_s.empty? ||
+				value(@restore_setting).is_a?(Hash) && @restore_setting['mode'].to_s?
+			return nil
+		end
+		value(@restore_setting)
 	end
 
 	def Config.build_action_list
@@ -40,23 +78,9 @@ class Config
 		@search_engine_type_arr.map { |search_engine_type| search_engine_type.to_s }
 	end
 
-	def Config.value(setting_path)
-		json.dig(*setting_path.split('/'))
-	end
-
-	def Config.search_engine_type
-		search_setting = value(@search_setting_path)
-
-		if search_setting.nil? ||
-				(search_setting.is_a?(Hash) && search_setting['type'].nil?)
-			return nil
-		end
-
-		if (search_setting.is_a?(Hash) && search_setting['type'] == 'elastic')
-			return search_setting['type']
-		end
-
-		search_setting if search_setting.is_a?(String)
+	def Config.restore_mode_list
+		@restore_mode_arr = %i[separate merge]
+		@restore_mode_arr.map { |restore_mode| restore_mode.to_s }
 	end
 
 	def Config.elasticsearch_requested?
@@ -65,7 +89,7 @@ class Config
 	end
 
 	def Config.wipe_elasticsearch?
-		search_setting = value(@search_setting_path)
+		search_setting = value(@search_setting)
 
 		search_setting['wipe'] if elasticsearch_requested? && search_setting['wipe']
 	end

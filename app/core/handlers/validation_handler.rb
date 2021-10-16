@@ -13,8 +13,9 @@ require_relative '../lib/service_dependencies'
 require_relative '../lib/elasticsearch'
 
 class ValidationHandler
-	@build_action = Config.value('application/build/action')
+	@build_action = Config.build_action
 	@search_engine_type = Config.search_engine_type
+	@restore_mode = Config.restore_mode
 
 	def ValidationHandler.config_json_structure
 		if DemoStructure.website_structure_missing?
@@ -42,6 +43,31 @@ class ValidationHandler
 		end
 	end
 
+	def ValidationHandler.restore_mode
+		if @build_action != 'restore' ||
+				(@build_action == 'restore' && @restore_mode.nil?)
+			return
+		end
+
+		unless Config.restore_mode_list.include?(@restore_mode)
+			abort(ErrorMsg.show(:restore_mode_incorrect))
+		end
+
+		if Entry.files_from('project/backup').empty?
+			abort(ErrorMsg.show(:nothing_to_restore))
+		end
+	end
+
+	def ValidationHandler.search_engine_type
+		if @search_engine_type.nil?
+			abort(ErrorMsg.show(:search_engine_type_missing))
+		end
+
+		unless Config.search_engine_type_list.include?(@search_engine_type)
+			abort(ErrorMsg.show(:search_engine_type_incorrect))
+		end
+	end
+
 	def ValidationHandler.plugins
 		vagrant_plugin = VagrantPlugin
 
@@ -54,12 +80,6 @@ class ValidationHandler
 		System.install_vagrant_plugins(vagrant_plugin.list)
 
 		abort(SuccessMsg.show(:plugins_installed))
-	end
-
-	def ValidationHandler.search_engine_type
-		unless Config.search_engine_type_list.include?(@search_engine_type)
-			abort(ErrorMsg.show(:search_engine_type_incorrect))
-		end
 	end
 
 	def ValidationHandler.service_dependencies
