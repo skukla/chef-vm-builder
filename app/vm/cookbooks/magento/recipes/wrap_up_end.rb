@@ -59,3 +59,8 @@ if !warm_cache.nil? && warm_cache
 		command_list 'warm-cache'
 	end
 end
+
+ruby_block 'Displaying URLs' do
+	block { MessageHelper.displayUrls }
+	sensitive true
+end

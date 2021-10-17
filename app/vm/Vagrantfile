@@ -94,9 +94,4 @@ Vagrant.configure('2') do |config|
 		chef.add_role 'main'
 		chef.arguments = '--chef-license accept'
 	end
-
-	config.trigger.after :provision do |trigger|
-		trigger.name = 'Displaying VM URLs'
-		trigger.ruby { MessageHandler.after_run_info }
-	end
 end

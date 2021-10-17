@@ -41,11 +41,18 @@ class ConfigHelper
 		)
 	end
 
+	def ConfigHelper.value(setting_path)
+		json.dig(*setting_path.split('/'))
+	end
+
 	def ConfigHelper.build_action_list
 		@build_action_arr.map { |build_action| build_action.to_s }
 	end
 
-	def ConfigHelper.value(setting_path)
-		json.dig(*setting_path.split('/'))
+	def ConfigHelper.url_protocol
+		usf = value('application/settings/use_secure_frontend')
+		usa = value('application/settings/use_secure_admin')
+		return 'http://' if usf.nil? || usa.nil?
+		!usf.zero? || usa.zero? ? 'https://' : 'http://'
 	end
 end
