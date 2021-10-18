@@ -6,17 +6,16 @@
 user = node[:magento][:init][:user]
 web_root = node[:magento][:nginx][:web_root]
 build_action = node[:magento][:build][:action]
-separate_restore = node[:magento][:restore][:mode] == 'separate'
+restore_mode = node[:magento][:restore][:mode]
+merge_restore = (build_action == 'restore' && restore_mode == 'merge')
 warm_cache = node[:magento][:build][:hooks][:warm_cache]
 maintenance_mode_flag = "#{web_root}/var/.maintenance.flag"
 crontab = "/var/spool/cron/crontabs/#{user}"
 
-if %w[install force_install update_all update_data restore].include?(
-		build_action,
-   )
+if %w[install force_install update_all update_data].include?(build_action) ||
+		merge_restore
 	magento_cli 'Deploy static content for data packs' do
 		action :deploy_static_content
-		not_if { separate_restore }
 	end
 end
 
