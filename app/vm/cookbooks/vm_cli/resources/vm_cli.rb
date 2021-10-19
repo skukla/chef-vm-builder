@@ -21,7 +21,6 @@ property :db_password, String, default: node[:vm_cli][:mysql][:db_password]
 property :db_name, String, default: node[:vm_cli][:mysql][:db_name]
 property :vm_cli_directories, Array, default: node[:vm_cli][:directories]
 property :vm_cli_files, Array, default: node[:vm_cli][:files]
-property :consumer_list, Array, default: MagentoHelper.get_consumer_list
 property :command_list, [String, Array]
 
 action :create_directories do
@@ -61,7 +60,6 @@ action :install do
 				db_user: new_resource.db_user,
 				db_password: new_resource.db_password,
 				db_name: new_resource.db_name,
-				consumer_list: new_resource.consumer_list,
 			},
 		)
 		only_if { ::Dir.exist?("/home/#{new_resource.user}/cli") }

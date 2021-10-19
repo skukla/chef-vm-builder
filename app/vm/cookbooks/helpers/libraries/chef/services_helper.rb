@@ -11,6 +11,6 @@ class ServicesHelper
 		if File.exist?(key_file)
 			File.readlines(key_file).each { |line| key_value += line }
 		end
-		key_value.chomp
+		key_value
 	end
 end
