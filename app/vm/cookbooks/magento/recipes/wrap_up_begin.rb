@@ -21,6 +21,7 @@ csc_options.each do |key, value|
 		action :config_set
 		config_path "services_connector/#{path}/#{key}"
 		config_value value
+		ignore_failure true
 	end
 end
 
