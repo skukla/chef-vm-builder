@@ -152,9 +152,8 @@ class ErrorMsg < Message
 
 	def ErrorMsg.csc_extensions_missing
 		msg = <<~TEXT
-		#{@@oops}You've specified commerce services credentials but it looks like you're missing either the \
-		#{@@bold}#{@@cyan}product recommendations\n #{@@reg}or the #{@@bold}#{@@cyan}live search #{@@reg}custom module \
-		in your config.json file.
+		#{@@oops}You've specified #{@@bold}#{@@cyan}commerce services credentials#{@@reg} but it looks like you're missing one of the \
+		\nrequired custom modules in your config.json file:\n\n#{CommerceServices.required_modules.join("\n")}
 		TEXT
 	end
 
