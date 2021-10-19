@@ -15,11 +15,8 @@ class CommerceServices
 
 	def CommerceServices.credentials_missing?
 		setting = Config.value(@setting_path)
-		return nil if setting.nil?
-		return true if setting.empty?
+		return true if setting.nil? || setting.empty?
 
-		setting.select do |key, value|
-			(@required_fields.include?(key) && value.to_s.empty?)
-		end.any?
+		(@required_fields - setting.keys).any?
 	end
 end
