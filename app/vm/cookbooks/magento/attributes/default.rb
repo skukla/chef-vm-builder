@@ -23,36 +23,6 @@ default[:magento][:build][:modules_to_remove] = %w[
 default[:magento][:build][:sample_data] = true
 default[:magento][:build][:deploy_mode][:apply] = true
 default[:magento][:build][:deploy_mode][:mode] = 'production'
-default[:magento][:build][:community_consumer_list] = %w[
-	product_action_attribute.update
-	product_action_attribute.website.update
-	codegeneratorProcessor
-	exportProcessor
-	media.storage.catalog.image.resize
-	inventory.source.items.cleanup
-	inventory.mass.update
-	inventory.reservations.cleanup
-	inventory.reservations.update
-	inventory.reservations.updateSalabilityStatus
-	inventory.indexer.sourceItem
-	inventory.indexer.stock
-	media.content.synchronization
-	media.gallery.synchronization
-	media.gallery.renditions.update
-]
-default[:magento][:build][:enterprise_consumer_list] = %w[
-	negotiableQuotePriceUpdate
-	sharedCatalogUpdatePrice
-	sharedCatalogUpdateCategoryPermissions
-	quoteItemCleaner
-	inventoryQtyCounter
-	purchaseorder.toorder
-	purchaseorder.transactional.email
-	purchaseorder.validation
-	matchCustomerSegmentProcessor
-]
-default[:magento][:build][:consumer_list] =
-	node[:magento][:build][:community_consumer_list]
 
 default[:magento][:settings][:backend_frontname] = 'admin'
 default[:magento][:settings][:unsecure_base_url] = "http://#{node[:fqdn]}/"
