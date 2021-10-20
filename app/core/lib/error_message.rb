@@ -78,13 +78,17 @@ class ErrorMsg < Message
 
 	def ErrorMsg.xcode_missing
 		msg = <<~TEXT
-		#{@@oops}It looks like #{@@bold}#{@@cyan}Xcode tools#{@@reg} are not installed.
+		#{@@oops}It looks like #{@@bold}#{@@cyan}Xcode tools#{@@reg} are not installed.\n\n\
+		Run the following in a terminal and then follow the GUI to install it:\n\n\
+		xcode-select --install
     TEXT
 	end
 
 	def ErrorMsg.homebrew_missing
 		msg = <<~TEXT
-		#{@@oops}It looks like #{@@bold}#{@@cyan}Homebrew#{@@reg} is not installed.
+		#{@@oops}It looks like #{@@bold}#{@@cyan}Homebrew#{@@reg} is not installed.\n\n\
+		Run the following in a terminal to install it:\n\n\
+		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     TEXT
 	end
 
