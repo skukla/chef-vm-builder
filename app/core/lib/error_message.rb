@@ -150,17 +150,27 @@ class ErrorMsg < Message
 		TEXT
 	end
 
+	def ErrorMsg.backup_files_missing
+		msg = <<~TEXT
+		#{@@oops}It looks like you're trying to #{@@bold}#{@@cyan}restore a backup#{@@reg} but you're \
+		#{@@bold}#{@@cyan}missing backup files#{@@reg}. You either need a zip file or a\ncombination of\
+		 a database dump, codebase file, and media file like this: \n\n\
+		1634001153_db.sql
+		1634001153_code.tgz
+		1634001153_media.tgz
+		TEXT
+	end
+
 	def ErrorMsg.csc_extensions_missing
 		msg = <<~TEXT
-		#{@@oops}You've specified commerce services credentials but it looks like you're missing either the \
-		#{@@bold}#{@@cyan}product recommendations\n #{@@reg}or the #{@@bold}#{@@cyan}live search #{@@reg}custom module \
-		in your config.json file.
+		#{@@oops}You've specified #{@@bold}#{@@cyan}commerce services credentials#{@@reg} but it looks like you're missing one of the \
+		\nrequired custom modules in your config.json file:\n\n#{CommerceServices.required_modules.join("\n")}
 		TEXT
 	end
 
 	def ErrorMsg.csc_credentials_missing
 		msg = <<~TEXT
-		It looks like you're trying to configure commerce services but you're missing your \
+		#{@@oops}It looks like you're trying to configure commerce services but you're missing your \
 		#{@@bold}#{@@cyan}Production API Key#{@@reg},\n#{@@bold}#{@@cyan}Project ID#{@@reg}, or \
 		#{@@bold}#{@@cyan}Data Space ID#{@@reg}. Please check your composer.json and make sure these items \
 		are configured\ninside the #{@@bold}#{@@cyan}application/authentication/commerce_services #{@@reg}section.
@@ -175,6 +185,4 @@ class ErrorMsg < Message
 		your\n#{@@bold}#{@@cyan}project/keys directory#{@@reg}.
 		TEXT
 	end
-
-	def ErrorMsg.backup_files_missing; end
 end
