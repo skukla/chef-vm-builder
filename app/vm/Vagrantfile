@@ -8,14 +8,15 @@ require_relative '../core/handlers/elasticsearch_handler'
 require_relative '../core/handlers/message_handler'
 
 SystemHandler.clear_screen
+ValidationHandler.plugins
 ValidationHandler.config_json_structure
 ValidationHandler.composer_credentials
 ValidationHandler.base_website
 ValidationHandler.build_action
-ValidationHandler.restore_mode
-ValidationHandler.search_engine_type
 ValidationHandler.service_dependencies
-ValidationHandler.plugins
+ValidationHandler.search_engine_type
+ValidationHandler.backups
+ValidationHandler.restore_mode
 ValidationHandler.data_packs
 ValidationHandler.csc_credentials
 

@@ -150,6 +150,17 @@ class ErrorMsg < Message
 		TEXT
 	end
 
+	def ErrorMsg.backup_files_missing
+		msg = <<~TEXT
+		#{@@oops}It looks like you're trying to #{@@bold}#{@@cyan}restore a backup#{@@reg} but you're \
+		#{@@bold}#{@@cyan}missing backup files#{@@reg}. You either need a zip file or a\ncombination of\
+		 a database dump, codebase file, and media file like this: \n\n\
+		1634001153_db.sql
+		1634001153_code.tgz
+		1634001153_media.tgz
+		TEXT
+	end
+
 	def ErrorMsg.csc_extensions_missing
 		msg = <<~TEXT
 		#{@@oops}You've specified #{@@bold}#{@@cyan}commerce services credentials#{@@reg} but it looks like you're missing one of the \
@@ -174,6 +185,4 @@ class ErrorMsg < Message
 		your\n#{@@bold}#{@@cyan}project/keys directory#{@@reg}.
 		TEXT
 	end
-
-	def ErrorMsg.backup_files_missing; end
 end

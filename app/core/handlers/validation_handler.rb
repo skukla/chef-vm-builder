@@ -1,4 +1,5 @@
 require_relative '../lib/system'
+require_relative '../lib/entry'
 require_relative '../lib/config'
 require_relative '../lib/composer'
 require_relative '../lib/error_message'
@@ -7,7 +8,7 @@ require_relative '../lib/demo_structure'
 require_relative '../lib/vagrant_plugin'
 require_relative '../lib/data_pack'
 require_relative '../lib/custom_module'
-require_relative '../lib/entry'
+require_relative '../lib/backup'
 require_relative '../lib/commerce_services'
 require_relative '../lib/service_dependencies'
 require_relative '../lib/elasticsearch'
@@ -51,10 +52,6 @@ class ValidationHandler
 
 		unless Config.restore_mode_list.include?(@restore_mode)
 			abort(ErrorMsg.show(:restore_mode_incorrect))
-		end
-
-		if Entry.files_from('project/backup').empty?
-			abort(ErrorMsg.show(:nothing_to_restore))
 		end
 	end
 
@@ -107,6 +104,16 @@ class ValidationHandler
 		abort(ErrorMsg.show(:data_pack_folder_missing)) if DataPack.missing_folder?
 	end
 
+	def ValidationHandler.backups
+		return unless @build_action == 'restore'
+
+		if Entry.files_from('project/backup').empty?
+			abort(ErrorMsg.show(:nothing_to_restore))
+		end
+
+		abort(ErrorMsg.show(:backup_files_missing)) if !Backup.files_found?
+	end
+
 	def ValidationHandler.csc_credentials
 		csc_credentials_missing = CommerceServices.credentials_missing?
 
@@ -125,6 +132,4 @@ class ValidationHandler
 			abort(ErrorMsg.show(:csc_key_missing))
 		end
 	end
-
-	def ValidationHandler.check_for_existing_build; end
 end
