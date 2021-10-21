@@ -32,8 +32,7 @@ if %w[install force_install reinstall update_all update_app].include?(
 	end
 
 	if !csc_options[:production_private_key].nil? &&
-			!csc_options[:production_api_key].empty? &&
-			!csc_options[:project_id].empty? && !csc_options[:environment_id].empty?
+			!csc_options[:production_api_key].empty?
 		path =
 			'services_connector/services_connector_integration/production_private_key'
 		query =
