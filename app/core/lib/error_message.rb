@@ -175,9 +175,13 @@ class ErrorMsg < Message
 	def ErrorMsg.csc_credentials_missing
 		msg = <<~TEXT
 		#{@@oops}It looks like you're trying to configure commerce services but you're missing your \
-		#{@@bold}#{@@cyan}Production API Key#{@@reg},\n#{@@bold}#{@@cyan}Project ID#{@@reg}, or \
-		#{@@bold}#{@@cyan}Data Space ID#{@@reg}. Please check your composer.json and make sure these items \
-		are configured\ninside the #{@@bold}#{@@cyan}application/authentication/commerce_services #{@@reg}section.
+		#{@@bold}#{@@cyan}Production API Key#{@@reg} \nor it's not formmatted properly. \
+		\n\nPlease check your composer.json and make sure you have at least the following \
+		configured beneath the composer\nconfiguration in your \
+		#{@@bold}#{@@cyan}application/authentication#{@@reg} section:\n\n\
+		commerce_services: {\n\
+		\s\sproduction_api_key: "123456..."\n\
+		}\n
 		TEXT
 	end
 
