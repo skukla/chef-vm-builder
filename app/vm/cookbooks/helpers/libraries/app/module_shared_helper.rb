@@ -33,7 +33,11 @@ class ModuleSharedHelper
 	end
 
 	def ModuleSharedHelper.strip_version(version_str)
-		version_str.sub('dev-', '')
+		slugs = %w[dev- .x-dev]
+		slugs.each do |slug|
+			version_str = version_str.sub(slug, '') if version_str.include?(slug)
+		end
+		version_str
 	end
 
 	def ModuleSharedHelper.prepare_data(hash, data_type)
@@ -44,8 +48,8 @@ class ModuleSharedHelper
 		package_vendor = hash['source'].split('/')[0]
 
 		unless github_url
-			hash['vendor_string'] = default_vendor if data_type == 'data pack'
-			hash['vendor_string'] = package_vendor if data_type == 'custom module'
+			hash['vendor_string'] = default_vendor if data_type == 'dp'
+			hash['vendor_string'] = package_vendor if data_type == 'cm'
 			hash['package_name'] = "#{hash['vendor_string']}/#{hash['source']}"
 			hash['module_string'] = hash['source']
 			hash['vendor_name'] = StringReplaceHelper.to_camel(hash['vendor_string'])
