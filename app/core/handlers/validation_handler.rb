@@ -87,20 +87,15 @@ class ValidationHandler
 	end
 
 	def ValidationHandler.data_packs
+		return if @build_action == 'restore'
+		return if DataPack.list.empty?
 		if DataPack.list.empty? && @build_action == 'update_data'
 			abort(ErrorMsg.show(:data_pack_update))
 		end
-		return if @build_action == 'restore'
-		return if DataPack.list.empty?
-
 		unless CustomModule.data_installer_found?
 			abort(ErrorMsg.show(:data_pack_installer_missing))
 		end
-		abort(ErrorMsg.show(:data_pack_source_missing)) if DataPack.missing_source?
-		if DataPack.data_format_error? || DataPack.missing_data_path? ||
-				DataPack.missing_data_code?
-			abort(ErrorMsg.show(:data_pack_bad_format))
-		end
+		abort(ErrorMsg.show(:data_pack_bad_format)) if DataPack.data_format_error?
 		abort(ErrorMsg.show(:data_pack_folder_missing)) if DataPack.missing_folder?
 	end
 

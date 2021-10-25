@@ -25,6 +25,11 @@ class DataPack
 		list.select { |item| item['source'].to_s.empty? }.any?
 	end
 
+	def DataPack.missing_data_path?
+		return if list.empty?
+		list.reject { |item| item.key?('data') }.any?
+	end
+
 	def DataPack.data_dir_list
 		return [] if list.empty?
 		list
@@ -32,34 +37,19 @@ class DataPack
 			.flat_map { |rec| rec['data'] }
 	end
 
-	def DataPack.data_format_error?
-		return nil if list.empty?
-		list.select do |item|
-			!item['data'].to_s.empty? && !item['data'].is_a?(Array)
-		end.any?
-	end
-
-	def DataPack.missing_data_path?
-		return true if list.empty? || data_dir_list.nil?
-
-		data_dir_list
-			.flat_map { |item| item.keys }
-			.each_with_object([]) { |key, arr| arr << key if key == 'path' }
-			.empty?
-	end
-
 	def DataPack.missing_data_code?
 		return true if list.empty? || data_dir_list.nil?
 
 		data_dir_list
-			.flat_map { |item| item.keys }
-			.each_with_object([]) do |key, arr|
-				if key.include?('code') &&
-						!%w[site_code store_code store_view_code].include?(key)
-					arr << key
-				end
+			.each_with_object([]) do |item, arr|
+				arr << item if (item['site_code'].nil? && item['store_view_code'].nil?)
 			end
 			.any?
+	end
+
+	def DataPack.data_format_error?
+		return if list.empty?
+		(missing_source? || missing_data_path?)
 	end
 
 	def DataPack.missing_folder?

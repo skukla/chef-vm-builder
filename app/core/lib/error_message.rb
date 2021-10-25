@@ -107,10 +107,10 @@ class ErrorMsg < Message
 		TEXT
 	end
 
-	def ErrorMsg.data_pack_source_missing
+	def ErrorMsg.data_pack_update
 		msg = <<~TEXT
-		#{@@oops}It looks like you're missing a \
-		#{@@bold}#{@@cyan}source#{@@reg} for a #{@@bold}#{@@cyan}data pack #{@@reg}in your config.json file.
+		#{@@oops}You have a #{@@bold}#{@@cyan}update_data#{@@reg} build action \
+		but no #{@@bold}#{@@cyan}data packs#{@@reg} configured in your config.json file.
 		TEXT
 	end
 
@@ -120,23 +120,15 @@ class ErrorMsg < Message
 		formatted correctly. \n\n\
 		Each data pack definition should have \
 		#{@@bold}#{@@cyan}source#{@@reg} and #{@@bold}#{@@cyan}path#{@@reg} fields with optional\n\
-		#{@@bold}#{@@cyan}site_code#{@@reg}, #{@@bold}#{@@cyan}store_code#{@@reg}, and \
+		#{@@bold}#{@@cyan}site_code#{@@reg}, and/or \
 		#{@@bold}#{@@cyan}store_view_code#{@@reg} fields like: \
 		\n\n"source":\s"value",\
 		\n"data":\s[\n\s\s{\
 		\n\s\s\s\s"path": "value",\
 		\n\s\s\s\s"site_code": "value",\
-		\n\s\s\s\s"store_code": "value",\
 		\n\s\s\s\s"store_view_code": "value",\
 		\n\s\s}\
 		\n]
-		TEXT
-	end
-
-	def ErrorMsg.data_pack_bad_fields
-		msg = <<~TEXT
-		#{@@oops}It looks like you're missing a #{@@bold}#{@@cyan}folder#{@@reg} for a \
-		#{@@bold}#{@@cyan}data pack #{@@reg}in your #{@@bold}#{@@cyan}projects #{@@reg}directory.
 		TEXT
 	end
 
@@ -144,13 +136,6 @@ class ErrorMsg < Message
 		msg = <<~TEXT
 		#{@@oops}It looks like you're missing a #{@@bold}#{@@cyan}folder#{@@reg} for a \
 		#{@@bold}#{@@cyan}data pack #{@@reg}in your #{@@bold}#{@@cyan}projects #{@@reg}directory.
-		TEXT
-	end
-
-	def ErrorMsg.data_pack_update
-		msg = <<~TEXT
-		#{@@oops}You have a #{@@bold}#{@@cyan}update_data#{@@reg} build action \
-		but no #{@@bold}#{@@cyan}data packs#{@@reg} configured in your config.json file.
 		TEXT
 	end
 
@@ -180,7 +165,7 @@ class ErrorMsg < Message
 		configured beneath the composer\nconfiguration in your \
 		#{@@bold}#{@@cyan}application/authentication#{@@reg} section:\n\n\
 		commerce_services: {\n\
-		\s\sproduction_api_key: "123456..."\n\
+		\s\sproduction_api_key: "value"\n\
 		}\n
 		TEXT
 	end
