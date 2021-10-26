@@ -1,8 +1,6 @@
 # Cookbook:: php
 # Attribute:: override
-#
-# Supported settings: version, port, memory_limit, upload_max_filesize
-#
+# Supported settings: version, fpm_port, memory_limit, upload_max_filesize
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 # frozen_string_literal: true
 

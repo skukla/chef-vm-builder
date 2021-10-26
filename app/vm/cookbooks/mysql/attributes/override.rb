@@ -5,6 +5,7 @@
 # frozen_string_literal: true
 
 setting = ConfigHelper.value('infrastructure/database')
+
 override[:mysql][:db_name] = setting if setting.is_a?(String)
 if setting.is_a?(Hash)
 	setting.each { |key, value| override[:mysql][key] = value }

@@ -11,10 +11,8 @@ property :php_user, String, default: node[:php][:user]
 property :vm_user, String, default: node[:php][:init][:user]
 property :vm_group, String, default: node[:php][:init][:user]
 property :version, String, default: node[:php][:version]
-property :port, [String, Integer], default: node[:php][:port]
-property :max_execution_time,
-         [String, Integer],
-         default: node[:php][:max_execution_time]
+property :fpm_port, [String], default: node[:php][:fpm_port]
+property :max_execution_time, [String], default: node[:php][:max_execution_time]
 property :memory_limit, String, default: node[:php][:memory_limit]
 property :upload_max_filesize, String, default: node[:php][:upload_max_filesize]
 property :zlib_output_compression,
@@ -88,7 +86,7 @@ action :configure do
 					user: new_resource.vm_user,
 					group: new_resource.vm_user,
 					backend: new_resource.backend,
-					port: new_resource.port,
+					port: new_resource.fpm_port,
 				},
 			)
 		end

@@ -27,7 +27,7 @@ default[:magento][:nginx][:tmp_dir] = node[:nginx][:tmp_dir]
 include_attribute 'php::default'
 default[:magento][:php][:version] = node[:php][:version]
 default[:magento][:php][:fpm_backend] = node[:php][:backend]
-default[:magento][:php][:fpm_port] = node[:php][:port]
+default[:magento][:php][:fpm_port] = node[:php][:fpm_port]
 
 include_attribute 'search_engine::default'
 default[:magento][:search_engine][:type] = node[:search_engine][:type]
