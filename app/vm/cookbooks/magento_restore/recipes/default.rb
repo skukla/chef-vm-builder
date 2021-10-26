@@ -1,8 +1,8 @@
-#
 # Cookbook:: magento_restore
 # Recipe:: default
-#
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
+# frozen_string_literal: true
+
 user = node[:magento_restore][:init][:user]
 group = node[:magento_restore][:init][:user]
 build_action = node[:magento_restore][:magento][:build][:action]
@@ -10,8 +10,10 @@ restore_mode = node[:magento_restore][:mode]
 restore_source = node[:magento_restore][:source]
 restore_version = node[:magento_restore][:version]
 web_root = node[:magento_restore][:nginx][:web_root]
+env_file = "#{web_root}/app/etc/env.php"
 restore_path = node[:magento_restore][:restore_path]
 backup_holding_area = node[:magento_restore][:holding_area]
+db_settings = node[:magento_restore][:mysql]
 
 if build_action == 'restore'
 	directory 'Backup holding area' do

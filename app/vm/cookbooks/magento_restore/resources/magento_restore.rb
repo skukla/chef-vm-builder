@@ -18,6 +18,7 @@ property :source, String, default: node[:magento_restore][:source]
 property :github_token,
          String,
          default: node[:magento_restore][:composer][:github_token]
+property :db_settings, Hash, default: node[:magento_restore][:mysql]
 
 action :transfer_backup_files do
 	Dir["#{new_resource.source_path}/*"].each do |file|

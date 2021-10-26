@@ -74,6 +74,10 @@ module StringReplaceHelper
 		string
 	end
 
+	def StringReplaceHelper.replace_new_lines(string)
+		string.gsub(/\n/, ',').split(',')
+	end
+
 	def StringReplaceHelper.parse_source_url(url)
 		return nil unless url.include?('github')
 

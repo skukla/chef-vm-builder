@@ -18,7 +18,7 @@ unless additional_entries.nil?
 				config_value "http://#{vhost['url']}/"
 				config_scope vhost['scope']
 				config_scope_code vhost['code']
-				only_if { DatabaseHelper.check_code_exists(vhost['code']) }
+				only_if { DatabaseHelper.code_exists?(vhost['code']) }
 			end
 		end
 
@@ -29,7 +29,7 @@ unless additional_entries.nil?
 				config_value "https://#{vhost['url']}/"
 				config_scope vhost['scope']
 				config_scope_code vhost['code']
-				only_if { DatabaseHelper.check_code_exists(vhost['code']) }
+				only_if { DatabaseHelper.code_exists?(vhost['code']) }
 			end
 		end
 	end

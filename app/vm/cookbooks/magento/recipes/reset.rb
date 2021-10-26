@@ -6,13 +6,21 @@
 web_root = node[:magento][:nginx][:web_root]
 build_action = node[:magento][:build][:action]
 
-case build_action
-when 'reinstall'
-	magento_app 'Preparing reinstall' do
-		action :prepare_reinstall
-		only_if { ::File.exist?("#{web_root}/app/etc/env.php") }
+if ::Dir.exist?('/etc/mysql')
+	if build_action == 'force_install'
+		mysql 'Dropping extra databases' do
+			action :drop_extra_databases
+		end
 	end
-when 'force_install', 'restore'
+
+	if build_action == 'restore'
+		mysql 'Dropping all databases' do
+			action :drop_all_databases
+		end
+	end
+end
+
+if %w[force_install restore].include?(build_action)
 	vm_cli 'Clearing the web root' do
 		action :run
 		command_list 'clear-web-root'

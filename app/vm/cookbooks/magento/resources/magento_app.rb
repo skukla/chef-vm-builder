@@ -81,7 +81,7 @@ action :install do
 			new_resource.install_settings[:use_secure_admin]
 		install_string = [install_string, secure_url_string].join(' ')
 	end
-	if new_resource.install_settings[:cleanup_database] &&
+	if new_resource.install_settings[:cleanup_database] == 1 &&
 			new_resource.build_action != 'install'
 		install_string = [install_string, cleanup_database_string]
 	end
@@ -202,5 +202,14 @@ action :prepare_reinstall do
 	execute 'Remove app/etc/env.php' do
 		command 'rm -rf app/etc/env.php'
 		cwd new_resource.web_root
+	end
+end
+
+action :prepare_restore do
+	directory 'Create pub/static directory' do
+		path "#{new_resource.web_root}/pub/static"
+		owner new_resource.user
+		group new_resource.group
+		mode '0777'
 	end
 end
