@@ -1,0 +1,810 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "VM Configuration",
+  "required": [
+    "vm",
+    "custom_demo",
+    "application",
+    "infrastructure",
+    "provisioner",
+    "remote_machine",
+    "hypervisor",
+    "vagrant"
+  ],
+  "type": "object",
+  "properties": {
+    "vm": {
+      "type": "object",
+      "description": "VM details, including a unique VM IP and name.",
+      "required": [
+        "ip",
+        "name"
+      ],
+      "properties": {
+        "ip": {
+          "type": "string",
+          "description": "The unique IP address of the virtual machine. Format: 192.168.xx.xx.\n\nThe first 'xx' is defined by your Virtualbox network adapter. Find it by opening virtualbox and navigating to: File > Host Network Manager > IPv4 Address/Mask.\n\n",
+          "pattern": "^\\d{3}.\\d{3}.\\d{2}.\\d{2}$",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "description": "Unique virtual machine name.",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "custom_demo": {
+      "type": "object",
+      "description": "Object which defines application structure, and optional data packs and custom modules.",
+      "required": [
+        "structure"
+      ],
+      "properties": {
+        "structure": {
+          "type": "object",
+          "description": "Object which defines application structure.",
+          "required": [
+            "websites"
+          ],
+          "properties": {
+            "websites": {
+              "type": "array",
+              "description": "Array of website objects.",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "description": "Website object which expects a required site code, site url, and an array of stores for the website.",
+                "required": [
+                  "site_code",
+                  "site_url"
+                ],
+                "properties": {
+                  "site_code": {
+                    "type": "string",
+                    "description": "Site code used in the Magento application."
+                  },
+                  "site_url": {
+                    "type": "string",
+                    "description": "Site url used to access the website."
+                  },
+                  "stores": {
+                    "type": "array",
+                    "description": "Array of store objects.",
+                    "minItems": 1,
+                    "items": [
+                      {
+                        "type": "object",
+                        "description": "Store object which has an array of store views for the store.",
+                        "required": [
+                          "store_views"
+                        ],
+                        "properties": {
+                          "store_views": {
+                            "type": "array",
+                            "description": "Array of store views",
+                            "minItems": 1,
+                            "items": {
+                              "type": "object",
+                              "description": "Store view object which expects a required store view code and an optional store view url.",
+                              "required": [
+                                "store_view_code"
+                              ],
+                              "properties": {
+                                "store_view_code": {
+                                  "type": "string",
+                                  "description": "Store view code used by Magento."
+                                },
+                                "store_view_url": {
+                                  "type": "string",
+                                  "description": "URL used to access the store view."
+                                }
+                              },
+                              "additionalProperties": false
+                            }
+                          }
+                        },
+                        "additionalProperties": false
+                      }
+                    ]
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "data_packs": {
+          "type": "array",
+          "description": "Array of data pack objects.",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "description": "Data pack object that expects a source and an array of data paths.",
+            "required": [
+              "source",
+              "data"
+            ],
+            "properties": {
+              "source": {
+                "type": "string",
+                "description": "The data pack folder name or github url of the data pack."
+              },
+              "data": {
+                "type": "array",
+                "description": "Array of data objects which contain data pack details.",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "description": "Data path object that defines the folder names that contain data pack csv files.",
+                  "required": [
+                    "path"
+                  ],
+                  "properties": {
+                    "path": {
+                      "type": "string",
+                      "description": "Folder that contains data pack csv files."
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "custom_modules": {
+          "type": "array",
+          "description": "Array of custom module objects.",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "description": "Custom module object that expects a source and an optional version.",
+            "required": [
+              "source"
+            ],
+            "properties": {
+              "source": {
+                "type": "string",
+                "description": "Github url or package name (vendor/module) of the module."
+              },
+              "version": {
+                "type": "string",
+                "description": "The version of the module."
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "application": {
+      "type": "object",
+      "description": "Object for all application-related settings.",
+      "required": [
+        "authentication"
+      ],
+      "properties": {
+        "authentication": {
+          "type": "object",
+          "description": "Object for composer and commerce services credentials.",
+          "required": [
+            "composer"
+          ],
+          "properties": {
+            "composer": {
+              "type": "object",
+              "description": "Composer credentials object.",
+              "required": [
+                "public_key",
+                "private_key",
+                "github_token"
+              ],
+              "properties": {
+                "public_key": {
+                  "type": "string",
+                  "description": "Composer public key.",
+                  "minLength": 1
+                },
+                "private_key": {
+                  "type": "string",
+                  "description": "Composer private key.",
+                  "minLength": 1
+                },
+                "github_token": {
+                  "type": "string",
+                  "description": "Github OAuth token.",
+                  "minLength": 1
+                }
+              },
+              "additionalProperties": false
+            },
+            "commerce_services": {
+              "type": "object",
+              "description": "Commerce services credentials object.",
+              "required": [
+                "production_api_key"
+              ],
+              "properties": {
+                "production_api_key": {
+                  "type": "string",
+                  "description": "Commerce services production api key.",
+                  "minLength": 1
+                },
+                "project_id": {
+                  "type": "string",
+                  "description": "Commerce services project ID.",
+                  "minLength": 1
+                },
+                "data_space_id": {
+                  "type": "string",
+                  "description": "Commerce services data space ID.",
+                  "minLength": 1
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "options": {
+          "type": "object",
+          "description": "Object for application options including: family, version, and minimum stability.",
+          "properties": {
+            "family": {
+              "type": "string",
+              "description": "The family of Adobe Commerce to install.  Either Commerce or Open Source.",
+              "pattern": "(^Commerce$|^Open Source$)",
+              "minLength": 1
+            },
+            "version": {
+              "type": "string",
+              "description": "The version of Adobe Commerce to install.",
+              "pattern": "^\\d.\\d.\\d(-p\\d+)?$",
+              "minLength": 1
+            },
+            "minimum_stability": {
+              "type": "string",
+              "description": "The minimum stability setting to install. (alpha, beta, or stable)",
+              "pattern": "(^alpha$|^beta$|^stable$)",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "build": {
+          "type": "object",
+          "description": "Object for build-specific settings including: action, restore, sample data, patches, and hooks.",
+          "minLength": 1,
+          "required": [
+            "action"
+          ],
+          "properties": {
+            "action": {
+              "type": "string",
+              "description": "Build action for the project.\ninstall: First-time install.\nforce_install: Complete VM re-build.\nreinstall: Reinstall the application.\nupdate_all: Update application and data packs.\nupdate_app: Update the application only.\nupdate_data: Update data packs only.\nrestore: Restore backup.",
+              "pattern": "(^install$|^force_install$|^reinstall$|^update_all$|^update_app$|^update_data$|^restore$)"
+            },
+            "restore": {
+              "type": [
+                "object",
+                "string"
+              ],
+              "description": "Restore mode for a backup.\n\nseparate: Restores a backup and ignores config.json settings.\nmerge: Restores a backup and includes everything in config.json.",
+              "required": [
+                "mode"
+              ],
+              "minLength": 1,
+              "pattern": "(^merge$|^separate$)",
+              "properties": {
+                "mode": {
+                  "type": "string",
+                  "description": "Restore mode for a backup.\n\nseparate: Restores a backup and ignores config.json settings.\nmerge: Restores a backup and includes everything in config.json.",
+                  "minLength": 1,
+                  "pattern": "(^merge$|^separate$)"
+                },
+                "source": {
+                  "type": "string",
+                  "description": "Github url for a remote backup.",
+                  "minLength": 1
+                }
+              },
+              "additionalProperties": false
+            },
+            "modules_to_remove": {
+              "type": "array",
+              "description": "Array of module package names to remove from the codebase.",
+              "minItems": 1,
+              "items": {
+                "type": "string",
+                "description": "Package name of module to remove (vendor/module).",
+                "pattern": "^[a-z0-9]([_.-]?[a-z0-9]+)*/[a-z0-9](([_.]?|-{0,2})[a-z0-9]+)*$"
+              }
+            },
+            "sample_data": {
+              "type": "boolean",
+              "description": "Include sample data or not?"
+            },
+            "deploy_mode": {
+              "type": [
+                "string",
+                "boolean",
+                "object"
+              ],
+              "description": "Deploy mode for the build.  (Either a string (production or developer), a boolean (true for production, false to skip), or an object with additional settings.",
+              "required": [
+                "apply",
+                "mode"
+              ],
+              "minLength": 1,
+              "pattern": "(^production$|^developer$)",
+              "properties": {
+                "apply": {
+                  "type": "boolean",
+                  "description": "Apply deploy mode?"
+                },
+                "mode": {
+                  "type": "string",
+                  "description": "Deploy mode. Either production or developer. Defaults to production.",
+                  "minLength": 1,
+                  "pattern": "(^production$|^developer$)"
+                }
+              },
+              "additionalProperties": false
+            },
+            "patches": {
+              "type": [
+                "object",
+                "boolean"
+              ],
+              "description": "Whether to install patches and/or patches settings.  Either true, false, or an object with additional settings.",
+              "required": [
+                "apply"
+              ],
+              "properties": {
+                "apply": {
+                  "type": "boolean",
+                  "description": "Apply patches?"
+                },
+                "source": {
+                  "type": "string",
+                  "description": "Github url for a personal patches repository.",
+                  "minLength": 1
+                },
+                "branch": {
+                  "type": "string",
+                  "description": "Personal patches respository branch.",
+                  "minLength": 1
+                },
+                "repository_directory": {
+                  "type": "string",
+                  "description": "Directory in the personal patches repository that contains patches.",
+                  "minLength": 1
+                },
+                "codebase_directory": {
+                  "type": "string",
+                  "description": "Directory in the codebase where patches will be stored.  Usually m2-hotfixes.",
+                  "minLength": 1
+                }
+              },
+              "additionalProperties": false
+            },
+            "hooks": {
+              "type": "object",
+              "description": "Build hooks which run at the end of the build.  Includes: warm_cache, enable_media_gallery, and an array of custom VM or Magento CLI commands.",
+              "properties": {
+                "warm_cache": {
+                  "type": "boolean",
+                  "description": "Warm the cache?"
+                },
+                "enable_media_gallery": {
+                  "type": "boolean",
+                  "description": "Enable the media gallery?"
+                },
+                "commands": {
+                  "type": "array",
+                  "description": "An array of custom VM or Magento CLI commands.",
+                  "minItems": 0
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "settings": {
+          "type": "object",
+          "description": "Object for Adobe Commerce installation setting overrides.",
+          "properties": {
+            "backend_frontname": {
+              "type": "string",
+              "description": "Custom admin path for Adobe Commerce admin panel."
+            },
+            "language": {
+              "type": "string",
+              "description": "Default language country code. (Defaults to en_US).",
+              "pattern": "[a-z]{2}_[A-Z]{2}",
+              "minLength": 5,
+              "maxLength": 5
+            },
+            "currency": {
+              "type": "string",
+              "description": "Default currency (USD).",
+              "pattern": "[A-Z]{3}",
+              "minLength": 3,
+              "maxLength": 3
+            },
+            "admin_user": {
+              "type": "string",
+              "description": "Admin username.",
+              "minLength": 1
+            },
+            "admin_password": {
+              "type": "string",
+              "description": "Admin password.",
+              "minLength": 1
+            },
+            "admin_email": {
+              "type": "string",
+              "description": "Admin email.",
+              "minLength": 1,
+              "format": "email"
+            },
+            "admin_firstname": {
+              "type": "string",
+              "description": "Admin user's first name.",
+              "minLength": 1
+            },
+            "admin_lastname": {
+              "type": "string",
+              "description": "Admin user's last name.",
+              "minLength": 1
+            },
+            "use_secure_frontend": {
+              "type": "boolean",
+              "description": "Use https:// for the storefront?"
+            },
+            "use_secure_admin": {
+              "type": "boolean",
+              "description": "Use https:// for the admin panel?"
+            },
+            "encryption_key": {
+              "type": "string",
+              "description": "32 character AES-256 encryption key.",
+              "minLength": 32,
+              "maxLength": 32
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "infrastructure": {
+      "type": "object",
+      "description": "Infrastructure settings for PHP, Composer, a Search Engine, and Samba.",
+      "required": [
+        "php",
+        "search_engine"
+      ],
+      "properties": {
+        "php": {
+          "type": [
+            "string",
+            "object"
+          ],
+          "description": "PHP version or an object containing PHP settings.",
+          "minLength": 3,
+          "required": [
+            "version"
+          ],
+          "pattern": "^\\d.\\d$",
+          "properties": {
+            "version": {
+              "type": [
+                "string"
+              ],
+              "description": "PHP version.",
+              "minLength": 3,
+              "pattern": "^\\d.[0-9]$"
+            },
+            "fpm_port": {
+              "type": "string",
+              "description": "PHP FPM port.  Defaults to 9200."
+            },
+            "memory_limit": {
+              "type": "string",
+              "description": "PHP memory limit.",
+              "minLength": 2,
+              "pattern": "^\\d+(M|G)$"
+            },
+            "upload_max_filesize": {
+              "type": "string",
+              "description": "PHP maximum upload file size limit.  Increase this to upload larger images via the Adobe Commerce admin panel.",
+              "minLength": 2,
+              "pattern": "^\\d+(M|G)$"
+            }
+          },
+          "additionalProperties": false
+        },
+        "composer": {
+          "type": [
+            "string",
+            "object"
+          ],
+          "description": "Composer version or an object containing Composer settings.",
+          "minLength": 1,
+          "required": [
+            "version"
+          ],
+          "pattern": "^(\\d.\\d.\\d+)|latest$",
+          "properties": {
+            "version": {
+              "type": "string",
+              "description": "Composer version."
+            },
+            "clear_cache": {
+              "type": "boolean",
+              "description": "Clear composer cache?"
+            }
+          },
+          "additionalProperties": false
+        },
+        "database": {
+          "type": [
+            "string",
+            "object"
+          ],
+          "description": "Database name (defaults to magento) or an object with database settings.",
+          "minLength": 1,
+          "properties": {
+            "db_host": {
+              "type": "string",
+              "description": "Database host.",
+              "minLength": 1
+            },
+            "db_user": {
+              "type": "string",
+              "description": "Database user. Defaults to magento.",
+              "minLength": 1
+            },
+            "db_password": {
+              "type": "string",
+              "description": "Database password. Defaults to password.",
+              "minLength": 1
+            },
+            "db_name": {
+              "type": "string",
+              "description": "Database name. Defaults to magento.",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "web_server": {
+          "type": [
+            "string",
+            "object"
+          ],
+          "description": "Web server port (defaults to 80) or an object containing web server settings.",
+          "minLength": 2,
+          "properties": {
+            "http_port": {
+              "type": "string",
+              "description": "Web server port.  Defaults to 80.",
+              "minLength": 2
+            },
+            "client_max_body_size": {
+              "type": "string",
+              "description": "Web server client max body size. Defaults to 100M.  (Change this if you need to upload very large images).",
+              "minLength": 2,
+              "pattern": "^\\d+(M)$"
+            }
+          },
+          "additionalProperties": false
+        },
+        "search_engine": {
+          "type": "string",
+          "description": "Search engine. Either elasticsearch or live_search.",
+          "minLength": 1,
+          "pattern": "^elasticsearch$|^live_search$"
+        },
+        "mailbox": {
+          "type": [
+            "boolean",
+            "object"
+          ],
+          "description": "Whether to use Mailhog (either true or false) or an object containing Mailbox settings.",
+          "required": [
+            "use"
+          ],
+          "minLength": 1,
+          "properties": {
+            "use": {
+              "type": "boolean",
+              "description": "Use Mailhog?"
+            },
+            "mh_port": {
+              "type": "string",
+              "description": "Mailhog service port. Defaults to 10000.",
+              "minLength": 1
+            },
+            "smtp_port": {
+              "type": "string",
+              "description": "Mailhog smtp port. Defaults to 1025.",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "file_share": {
+          "type": [
+            "boolean",
+            "object"
+          ],
+          "description": "Whether to use Samba (either true or false) or an object containing file sharing settings.",
+          "required": [
+            "use"
+          ],
+          "minLength": 1,
+          "properties": {
+            "use": {
+              "type": "boolean",
+              "description": "Use Samba?"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "provisioner": {
+      "type": "object",
+      "description": "Object containing settings for Chef inside the VM.",
+      "required": [
+        "type",
+        "version",
+        "nodes_path",
+        "environments_path",
+        "roles_path",
+        "cookbooks_path"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Provisioner type. Defaults to chef_zero.",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "description": "Provisioner version. Either 'latest' or a specific version number. Suggested: 16.13.16.",
+          "minLength": 1,
+          "pattern": "(^latest$|^\\d{2}.\\d{2}.\\d{2}$)"
+        },
+        "nodes_path": {
+          "type": "string",
+          "description": "The folder on the VM where chef node data is stored. Suggested: nodes.",
+          "minLength": 1
+        },
+        "environments_path": {
+          "type": "string",
+          "description": "The folder on the VM where chef environment data is stored. Suggested: environments.",
+          "minLength": 1
+        },
+        "roles_path": {
+          "type": "string",
+          "description": "The folder on the VM where chef role data is stored. Suggested: roles.",
+          "minLength": 1
+        },
+        "cookbooks_path": {
+          "type": "string",
+          "description": "The folder on the VM where chef cookbook data is stored. Suggested: cookbooks.",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "remote_machine": {
+      "type": "object",
+      "description": "Object containing settings for VM machine.",
+      "required": [
+        "name",
+        "box",
+        "cpus",
+        "memory",
+        "vram",
+        "remote_display"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Machine name. Only Uppercase and lowercase letters and spaces are allowed.",
+          "minLength": 1,
+          "pattern": "^[A-Z]|[a-z]$"
+        },
+        "box": {
+          "type": "string",
+          "description": "Base VM OS box image used to create the VM. Suggested: bento/ubuntu-18.04",
+          "minLength": 1,
+          "pattern": "^(.+)/(.+)$"
+        },
+        "cpus": {
+          "type": "string",
+          "description": "The number of host machine cpu cores that a VM can access.  Recommended is 2. Maximum should be half the number of total cpus.",
+          "minLength": 1,
+          "maxLength": 1
+        },
+        "memory": {
+          "type": "string",
+          "description": "The amount of host memory the VM can use in megabytes. Suggested: 8192.",
+          "minLength": 4,
+          "maxLength": 4
+        },
+        "vram": {
+          "type": "string",
+          "description": "The amount of video memory the VM can use in megabytes. Suggested: 16.",
+          "minLength": 2,
+          "maxLength": 2
+        },
+        "remote_display": {
+          "type": "string",
+          "description": " Suggested: off.",
+          "minLength": 1,
+          "pattern": "(^on$|^off$)"
+        }
+      },
+      "additionalProperties": false
+    },
+    "hypervisor": {
+      "type": "object",
+      "description": "An object ",
+      "required": [
+        "gui",
+        "linked_clones",
+        "default_nic_type"
+      ],
+      "properties": {
+        "gui": {
+          "type": "boolean",
+          "description": "Should the VM start with a window showing or not? Suggested: false"
+        },
+        "linked_clones": {
+          "type": "boolean",
+          "description": "Should the VM use linked clones or full machines? Suggested: false"
+        },
+        "default_nic_type": {
+          "type": "string",
+          "description": "VM NIC type. Required: 82543GC",
+          "pattern": "^82543GC$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "vagrant": {
+      "type": "object",
+      "description": "Object containing Vagrant settings.",
+      "required": [
+        "plugins"
+      ],
+      "properties": {
+        "plugins": {
+          "type": "array",
+          "description": "Array of Vagrant plugins. 'vagrant-hostsupdater' is required at minimum.",
+          "minItems": 1,
+          "contains": {
+            "type": "string",
+            "pattern": "^vagrant-hostsupdater$"
+          },
+          "items": {
+            "type": "string",
+            "description": "Vagrant plugin."
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

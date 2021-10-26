@@ -9,5 +9,13 @@
         "**/node_modules": true,
         "**/package*.json": true
     },
-    "terminal.integrated.automationShell.linux": ""
+    "terminal.integrated.automationShell.linux": "",
+    "json.schemas": [
+        {
+            "fileMatch": [
+                "/config.json"
+            ],
+            "url": "./app/core/schemas/config.schema.json"
+        }
+    ]
 }
