@@ -1,8 +1,8 @@
-#
 # Cookbook:: nginx
 # Resource:: nginx
-#
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
+# frozen_string_literal: true
+
 resource_name :nginx
 provides :nginx
 
@@ -12,7 +12,7 @@ property :group, String, default: node[:nginx][:init][:user]
 property :package_list, Array, default: node[:nginx][:package_list]
 property :web_root, String, default: node[:nginx][:web_root]
 property :tmp_dir, String, default: node[:nginx][:tmp_dir]
-property :http_port, [String, Integer], default: node[:nginx][:http_port]
+property :http_port, [String], default: node[:nginx][:http_port]
 property :client_max_body_size,
          String,
          default: node[:nginx][:client_max_body_size]
@@ -21,8 +21,8 @@ property :fastcgi_buffer_size,
          String,
          default: node[:nginx][:fastcgi_buffer_size]
 property :fpm_backend, String, default: node[:nginx][:php][:fpm_backend]
-property :fpm_port, [String, Integer], default: node[:nginx][:php][:fpm_port]
-property :ssl_port, [String, Integer], default: node[:nginx][:ssl][:port]
+property :fpm_port, [String], default: node[:nginx][:php][:fpm_port]
+property :ssl_port, [String], default: node[:nginx][:ssl][:ssl_port]
 property :ssl_directory, String, default: node[:nginx][:ssl][:directory]
 property :ssl_private_key_file,
          String,

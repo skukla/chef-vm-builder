@@ -1,8 +1,8 @@
-#
 # Cookbook:: nginx
 # Recipe:: install
-#
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
+# frozen_string_literal: true
+
 nginx 'Install Nginx' do
 	action :install
 end
