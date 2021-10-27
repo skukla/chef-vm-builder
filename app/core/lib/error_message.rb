@@ -60,13 +60,6 @@ class ErrorMsg < Message
     TEXT
 	end
 
-	def ErrorMsg.search_engine_type_missing
-		msg = <<~TEXT
-		#{@@oops}It looks like your #{@@bold}#{@@cyan}search engine type#{@@reg} is \
-		#{@@bold}#{@@cyan}missing #{@@reg}or #{@@bold}#{@@cyan}empty#{@@reg}. Please check your config.json file.
-    TEXT
-	end
-
 	def ErrorMsg.search_engine_type_incorrect
 		search_engine_type = Config.search_engine_type
 		search_engine_type_list = Config.search_engine_type_list

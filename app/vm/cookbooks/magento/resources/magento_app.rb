@@ -67,7 +67,7 @@ action :install do
 		.install_settings[
 		:use_rewrites
 	]
-	if new_resource.search_engine_type == 'elastic' &&
+	if new_resource.search_engine_type == 'elasticsearch' &&
 			MagentoHelper.check_version(new_resource.version, '>=', '2.4.0')
 		install_string = [install_string, elasticsearch_string].join(' ')
 	end
