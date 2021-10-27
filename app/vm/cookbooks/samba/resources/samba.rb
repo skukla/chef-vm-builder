@@ -1,8 +1,8 @@
-#
 # Cookbook:: samba
 # Resource:: samba
-#
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
+# frozen_string_literal: true
+
 resource_name :samba
 provides :samba
 

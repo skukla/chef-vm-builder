@@ -1,9 +1,7 @@
 # Cookbook:: magento
 # Attribute:: application_options_override
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-#
 # Supported settings: family, minimum_stability, version
-#
 # frozen_string_literal: true
 
 setting = ConfigHelper.value('application/options')

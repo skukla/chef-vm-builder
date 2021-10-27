@@ -1,8 +1,8 @@
-#
 # Cookbook:: composer
 # Resource:: composer
-#
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
+# frozen_string_literal: true
+
 resource_name :composer
 provides :composer
 

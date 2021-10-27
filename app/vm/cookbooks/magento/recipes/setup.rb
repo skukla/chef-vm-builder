@@ -1,8 +1,8 @@
-#
 # Cookbook:: magento
 # Recipe:: default
-#
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
+# frozen_string_literal: true
+
 user = node[:magento][:init][:user]
 build_action = node[:magento][:build][:action]
 crontab = "/var/spool/cron/crontabs/#{user}"

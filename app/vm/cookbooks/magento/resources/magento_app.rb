@@ -1,8 +1,8 @@
-#
 # Cookbook:: magento
 # Resource:: magento_app
-#
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
+# frozen_string_literal: true
+
 resource_name :magento_app
 provides :magento_app
 
@@ -62,7 +62,6 @@ action :install do
 	encryption_key_string =
 		"--key=#{new_resource.install_settings[:encryption_key]}"
 
-	# Create the master install string
 	install_string = [install_string, rewrites_string].join(' ') if new_resource
 		.install_settings[
 		:use_rewrites

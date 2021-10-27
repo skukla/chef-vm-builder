@@ -1,8 +1,8 @@
-#
 # Cookbook:: magento_patches
 # Resource:: magento_patch
-#
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
+# frozen_string_literal: true
+
 resource_name :magento_patch
 provides :magento_patch
 

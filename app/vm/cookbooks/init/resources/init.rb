@@ -1,8 +1,8 @@
-#
 # Cookbook:: init
 # Resource:: init
-#
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
+# frozen_string_literal: true
+
 resource_name :init
 provides :init
 

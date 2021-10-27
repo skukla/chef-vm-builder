@@ -1,8 +1,8 @@
-#
 # Cookbook:: composer
 # Recipe:: default
-#
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
+# frozen_string_literal: true
+
 composer_file = node[:composer][:file]
 install_dir = node[:composer][:install_dir]
 
