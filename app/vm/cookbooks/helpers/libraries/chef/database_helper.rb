@@ -38,9 +38,14 @@ class DatabaseHelper
 	end
 
 	def DatabaseHelper.extra_db_list
-		return [] if db_list.empty? || Chef.node.override[:mysql][:db_name].nil?
+		default_db = Chef.node.default[:mysql][:db_name]
+		override_db = Chef.node.override[:mysql][:db_name]
 
-		db_list.reject { |db| db == Chef.node.override[:mysql][:db_name] }
+		if db_list.empty? || (override_db.empty? && db_list.include?(default_db))
+			return []
+		end
+
+		db_list.reject { |db| db == override_db }
 	end
 end
 
