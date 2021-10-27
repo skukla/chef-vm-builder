@@ -3,7 +3,6 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 # frozen_string_literal: true
 
-use_mailhog = node[:app_controller][:mailhog][:use]
 use_samba = node[:app_controller][:samba][:use]
 
 mysql 'Restart Mysql' do
@@ -14,10 +13,8 @@ nginx 'Restart Nginx' do
 	action :restart
 end
 
-if use_mailhog
-	mailhog 'Restart Mailhog' do
-		action :restart
-	end
+mailhog 'Restart Mailhog' do
+	action :restart
 end
 
 if use_samba

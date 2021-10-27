@@ -1,8 +1,8 @@
-#
 # Cookbook:: app_controller
 # Recipe:: infrastructure
-#
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
+# frozen_string_literal: true
+
 include_recipe 'php::default'
 include_recipe 'composer::default'
 include_recipe 'ssl::default'

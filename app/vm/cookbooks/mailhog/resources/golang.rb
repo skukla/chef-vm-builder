@@ -1,8 +1,8 @@
-#
 # Cookbook:: mailhog
 # Resource:: golang
-#
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
+# frozen_string_literal: true
+
 resource_name :golang
 provides :golang
 
