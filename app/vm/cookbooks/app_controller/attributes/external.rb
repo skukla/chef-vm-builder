@@ -9,9 +9,6 @@ default[:app_controller][:nginx][:web_root] = node[:nginx][:web_root]
 include_attribute 'search_engine::default'
 default[:app_controller][:search_engine][:type] = node[:search_engine][:type]
 
-include_attribute 'samba::default'
-default[:app_controller][:samba][:use] = node[:samba][:use]
-
 include_attribute 'magento::default'
 default[:app_controller][:magento][:build_action] =
 	node[:magento][:build][:action]

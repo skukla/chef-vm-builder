@@ -26,13 +26,31 @@
    map to guest = bad user
 
 #======================= Share Definitions =======================
-<% @share_list.each do |share_name, share_data| %>
-[<%= share_name.to_s.split("_").map(&:capitalize).join(" ")%>]
-<% share_data.each do |field, value| %>
-      <% if field.to_s.include?("force") %>
-      <%= field.to_s.gsub("_", " ") %> = <%= value %>
-      <% else %>
-      <%= field %> = <%= value %>
-      <% end %>
-   <% end %>
-<% end %>
+[Web Root]
+   path = /var/www/magento
+   public = Yes
+   browseable = Yes
+   writeable = Yes
+   force user = <%= @user %>
+   force group = <%= @group %>
+[Product Media Share]
+   path = <%= @shares[:product_media_share] %>
+   public = Yes
+   browseable = Yes
+   writeable = Yes
+   force user = <%= @user %>
+   force group = <%= @group %>
+[Content Media Share]
+   path = <%= @shares[:content_media_share] %>
+   public = Yes
+   browseable = Yes
+   writeable = Yes
+   force user = <%= @user %>
+   force group = <%= @group %>
+[Backups Share]
+   path = <%= @shares[:backups_share] %>
+   public = Yes
+   browseable = Yes
+   writeable = Yes
+   force user = <%= @user %>
+   force group = <%= @group %>
