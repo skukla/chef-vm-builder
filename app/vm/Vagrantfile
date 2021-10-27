@@ -23,17 +23,17 @@ ValidationHandler.csc_credentials
 Vagrant.configure('2') do |config|
 	config.ssh.insert_key = false
 	config.ssh.forward_agent = true
-	config.vm.box = Config.value('remote_machine/box')
-	config.vm.define Config.value('remote_machine/name') do |machine|
+	config.vm.box = 'bento/ubuntu-18.04'
+	config.vm.define 'Kukla-Machine' do |machine|
 		machine.vm.network 'private_network', ip: Config.value('vm/ip')
 		machine.vm.hostname = DemoStructure.base_url
 	end
 	config.hostsupdater.aliases = DemoStructure.additional_urls
 
 	config.vm.provider 'virtualbox' do |machine|
-		machine.gui = Config.value('hypervisor/gui')
-		machine.linked_clone = Config.value('hypervisor/linked_clones')
-		machine.default_nic_type = Config.value('hypervisor/default_nic_type')
+		machine.gui = false
+		machine.linked_clone = true
+		machine.default_nic_type = '82543GC'
 		machine.customize [
 				'modifyvm',
 				:id,
@@ -44,9 +44,9 @@ Vagrant.configure('2') do |config|
 				'--cpus',
 				Config.value('remote_machine/cpus'),
 				'--vram',
-				Config.value('remote_machine/vram'),
+				'16',
 				'--vrde',
-				Config.value('remote_machine/remote_display'),
+				'off',
 		                  ]
 	end
 
@@ -86,7 +86,7 @@ Vagrant.configure('2') do |config|
 	                    path: 'scripts/install_prebuild_packages.sh'
 
 	config.vm.provision 'chef_zero' do |chef|
-		chef.version = Config.value('provisioner/version').chomp
+		chef.version = '16.13.16'
 		chef.nodes_path = 'nodes'
 		chef.environments_path = 'environments'
 		chef.roles_path = 'roles'
