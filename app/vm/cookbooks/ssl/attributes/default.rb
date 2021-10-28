@@ -3,9 +3,9 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 # frozen_string_literal: true
 
-default[:ssl][:port] = 443
-default[:ssl][:key_size] = 2048
-default[:ssl][:certificate_days] = 3650
+default[:ssl][:ssl_port] = '443'
+default[:ssl][:key_size] = '2048'
+default[:ssl][:certificate_days] = '3650'
 default[:ssl][:directory] = '/etc/ssl'
 default[:ssl][:chainfile_directory] = '/etc/ssl/certs'
 default[:ssl][:ca_private_key_file] = 'private_key.pem'

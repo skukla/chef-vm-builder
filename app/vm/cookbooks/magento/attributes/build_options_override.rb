@@ -1,9 +1,7 @@
 # Cookbook:: magento
 # Attribute:: build_options_override
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-#
-# Supported settings: action, sample_data, modules_to_remove, consumer_list deploy_mode {apply, mode}
-#
+# Supported settings: action, sample_data, modules_to_remove, deploy_mode {apply, mode}
 # frozen_string_literal: true
 
 setting = ConfigHelper.value('application/build')

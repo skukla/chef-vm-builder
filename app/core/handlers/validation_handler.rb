@@ -56,9 +56,7 @@ class ValidationHandler
 	end
 
 	def ValidationHandler.search_engine_type
-		if @search_engine_type.nil?
-			abort(ErrorMsg.show(:search_engine_type_missing))
-		end
+		return if @search_engine_type.nil?
 
 		unless Config.search_engine_type_list.include?(@search_engine_type)
 			abort(ErrorMsg.show(:search_engine_type_incorrect))

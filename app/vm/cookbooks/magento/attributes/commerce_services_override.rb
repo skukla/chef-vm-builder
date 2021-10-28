@@ -1,9 +1,7 @@
 # Cookbook:: magento
 # Attribute:: commerce_services_override
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-#
 # Supported settings: production_api_key, project_id, environment_id (data_space_id)
-#
 # frozen_string_literal: true
 
 setting = ConfigHelper.value('application/authentication/commerce_services')

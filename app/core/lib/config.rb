@@ -74,7 +74,7 @@ class Config
 	end
 
 	def Config.search_engine_type_list
-		@search_engine_type_arr = %i[elastic live]
+		@search_engine_type_arr = %i[elasticsearch live]
 		@search_engine_type_arr.map { |search_engine_type| search_engine_type.to_s }
 	end
 
@@ -84,7 +84,7 @@ class Config
 	end
 
 	def Config.elasticsearch_requested?
-		return true if search_engine_type == 'elastic'
+		return true if search_engine_type == 'elasticsearch'
 		false
 	end
 

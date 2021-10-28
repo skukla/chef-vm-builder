@@ -1,8 +1,8 @@
-#
 # Cookbook:: magento
 # Recipe:: set_urls
-#
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
+# frozen_string_literal: true
+
 use_secure_frontend = node[:magento][:settings][:use_secure_frontend]
 use_secure_admin = node[:magento][:settings][:use_secure_admin]
 additional_entries = DemoStructureHelper.additional_entries

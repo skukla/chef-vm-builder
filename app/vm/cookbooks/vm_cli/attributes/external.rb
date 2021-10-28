@@ -21,5 +21,5 @@ default[:vm_cli][:mysql][:db_name] = node[:mysql][:db_name]
 include_attribute 'magento::default'
 include_attribute 'magento::override'
 default[:vm_cli][:magento][:version] = node[:magento][:options][:version]
-default[:vm_cli][:magento][:use_secure_frontend] = node[:magento][:settings][:use_secure_frontend]
-default[:vm_cli][:magento][:consumer_list] = node[:magento][:build][:consumer_list]
+default[:vm_cli][:magento][:use_secure_frontend] =
+	node[:magento][:settings][:use_secure_frontend]

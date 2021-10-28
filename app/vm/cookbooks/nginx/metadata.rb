@@ -7,10 +7,10 @@ long_description 'Installs/Configures nginx'
 version '0.1.0'
 chef_version '>= 14.0'
 
-depends 'init'      # This brings in OS settings
-depends 'helpers'   # Brings in vhost data
-depends 'php'       # This brings in PHP FPM options
-depends 'magento'   # This brings in Magento settings
+depends 'init' # This brings in OS settings
+depends 'helpers' # Brings in vhost data
+depends 'php' # This brings in PHP FPM options
+depends 'magento' # This brings in Magento settings
 
 # The `issues_url` points to the location where issues for this cookbook are
 # tracked.  A `View Issues` link will be displayed on this cookbook's page when

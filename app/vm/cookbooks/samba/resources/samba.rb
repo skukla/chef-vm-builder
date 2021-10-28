@@ -1,8 +1,8 @@
-#
 # Cookbook:: samba
 # Resource:: samba
-#
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
+# frozen_string_literal: true
+
 resource_name :samba
 provides :samba
 
@@ -14,7 +14,6 @@ property :service_file, String, default: node[:samba][:service_file]
 property :configuration_directory,
          String,
          default: node[:samba][:configuration_directory]
-property :share_fields, Array, default: node[:samba][:share_fields]
 property :share_list, Hash, default: node[:samba][:share_list]
 
 action :install do
@@ -30,45 +29,20 @@ action :install do
 end
 
 action :configure do
-	# Prepare share data - selected_shares here is an Autovivified hash
-	selected_shares = Hash.new { |h, k| h[k] = Hash.new(0) }
-	new_resource.share_list.each do |share_name, share_record|
-		share_data = {}
-		new_resource.share_fields.each do |field|
-			case field
-			when :path
-				if share_record.is_a? String
-					share_data[:path] = share_record
-				else
-					share_data[field] = ValueHelper.process_value(share_record[field])
-				end
-			when :public, :browseable, :writeable
-				share_data[field] = 'Yes' if share_record[field.to_s].nil?
-			when :force_user, :force_group
-				share_data[field] =
-					if share_record[field.to_s].nil?
-						new_resource.user.to_s
-					else
-						ValueHelper.process_value(share_record[field])
-					end
-			else
-				share_data[field] =
-					ValueHelper.process_value(share_record[field]) unless share_record[
-					field.to_s
-				].nil?
-			end
-		end
-		selected_shares[share_name] = share_data
-	end
-
-	# Configure Samba
 	template 'Configure Samba' do
 		source 'smb.conf.erb'
 		path '/etc/samba/smb.conf'
 		owner new_resource.user
 		group new_resource.group
 		mode '644'
-		variables({ hostname: new_resource.hostname, share_list: selected_shares })
+		variables(
+			{
+				hostname: new_resource.hostname,
+				user: new_resource.user,
+				group: new_resource.group,
+				shares: new_resource.share_list,
+			},
+		)
 		only_if { ::Dir.exist?(new_resource.configuration_directory) }
 	end
 end

@@ -1,8 +1,8 @@
-#
 # Cookbook:: init
 # Recipe:: default
-#
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
+# frozen_string_literal: true
+
 update_os = node[:init][:os][:update]
 
 os 'Update OS' do

@@ -1,8 +1,8 @@
-#
-# Cookbook:: cli
-# Resource:: cli
-#
+# Cookbook:: vm_cli
+# Resource:: vm_cli
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
+# frozen_string_literal: true
+
 resource_name :vm_cli
 provides :vm_cli
 

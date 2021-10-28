@@ -7,7 +7,7 @@ long_description 'Installs/Configures mailhog'
 version '0.1.0'
 chef_version '>= 14.0'
 
-depends 'php'   # This brings in the fpm service to be restarted when sendmail is configured
+depends 'php' # This brings in the fpm service to be restarted when sendmail is configured
 
 # The `issues_url` points to the location where issues for this cookbook are
 # tracked.  A `View Issues` link will be displayed on this cookbook's page when
