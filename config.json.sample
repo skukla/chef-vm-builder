@@ -46,7 +46,6 @@
 			}
 		},
 		"options": {
-			"family": "Commerce",
 			"version": "2.4.3-p1"
 		},
 		"build": {

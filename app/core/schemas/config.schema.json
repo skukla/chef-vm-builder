@@ -251,7 +251,6 @@
           "type": "object",
           "description": "Object for application options including: family, version, and minimum stability.",
           "required": [
-            "family",
             "version"
           ],
           "properties": {
