@@ -13,7 +13,7 @@ class CustomModule
 	def CustomModule.data_installer_found?
 		return false if list.nil? || list.empty?
 		https = 'https://github.com/PMET-public/module-data-install.git'
-		ssh = 'github.com:PMET-public/module-data-install.git'
+		ssh = 'git@github.com:PMET-public/module-data-install.git'
 
 		module_found?(https) || module_found?(ssh)
 	end
