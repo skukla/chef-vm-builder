@@ -23,3 +23,7 @@ include_attribute 'magento::override'
 default[:vm_cli][:magento][:version] = node[:magento][:options][:version]
 default[:vm_cli][:magento][:use_secure_frontend] =
 	node[:magento][:settings][:use_secure_frontend]
+
+include_attribute 'magento_restore::default'
+default[:vm_cli][:magento_restore][:backup_holding_area] =
+	node[:magento_restore][:holding_area]

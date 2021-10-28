@@ -442,9 +442,7 @@ export -f backup-db
 
 function backup() {
   enable-backups
-  list-backups
   printf "\n"; ./bin/magento setup:backup --code --media --db; printf "done. \n"
-  list-backups
 }
 export -f backup
 
@@ -480,8 +478,8 @@ function remove-backup() {
 export -f remove-backup
 
 function import-backup() {
-  USER="vagrant"
-  IMPORT_DIR="/${USER}/backups"
+  USER="<%= @user %>"
+  IMPORT_DIR="/${USER}/backup"
   BACKUP_DIR="/var/www/magento/var/backups"
   IMPORTED=false
 
@@ -531,7 +529,7 @@ function restore() {
   DB_USER="<%= @db_user %>"
   DB_PASSWORD="<%= @db_password %>"
   DB_NAME="<%= @db_name %>"
-  BACKUP_HOLDING_AREA="/var/www/backups"
+  BACKUP_HOLDING_AREA="<%= @backup_holding_area %>"
   VAR_DIR="/var/www/magento/var"
   BACKUP_DIR="/var/www/magento/var/backups"
 

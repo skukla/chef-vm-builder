@@ -19,6 +19,9 @@ property :db_host, String, default: node[:vm_cli][:mysql][:db_host]
 property :db_user, String, default: node[:vm_cli][:mysql][:db_user]
 property :db_password, String, default: node[:vm_cli][:mysql][:db_password]
 property :db_name, String, default: node[:vm_cli][:mysql][:db_name]
+property :backup_holding_area,
+         String,
+         default: node[:vm_cli][:magento_restore][:backup_holding_area]
 property :vm_cli_directories, Array, default: node[:vm_cli][:directories]
 property :vm_cli_files, Array, default: node[:vm_cli][:files]
 property :command_list, [String, Array]
@@ -53,6 +56,7 @@ action :install do
 			{
 				user: new_resource.user,
 				urls: DemoStructureHelper.vm_urls,
+				base_url: DemoStructureHelper.base_url,
 				web_root: new_resource.web_root,
 				php_version: new_resource.php_version,
 				magento_version: new_resource.magento_version,
@@ -60,6 +64,7 @@ action :install do
 				db_user: new_resource.db_user,
 				db_password: new_resource.db_password,
 				db_name: new_resource.db_name,
+				backup_holding_area: new_resource.backup_holding_area,
 			},
 		)
 		only_if { ::Dir.exist?("/home/#{new_resource.user}/cli") }
