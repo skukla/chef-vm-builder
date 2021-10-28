@@ -95,6 +95,9 @@ class ValidationHandler
 		end
 		abort(ErrorMsg.show(:data_pack_bad_format)) if DataPack.data_format_error?
 		abort(ErrorMsg.show(:data_pack_folder_missing)) if DataPack.missing_folder?
+		unless DataPack.bad_folder_names.empty?
+			abort(ErrorMsg.show(:data_pack_bad_folder_names))
+		end
 	end
 
 	def ValidationHandler.backups

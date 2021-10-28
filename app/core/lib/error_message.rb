@@ -132,6 +132,14 @@ class ErrorMsg < Message
 		TEXT
 	end
 
+	def ErrorMsg.data_pack_bad_folder_names
+		msg = <<~TEXT
+		#{@@oops}It looks like the following data pack folders have bad names:\n\n#{@@bold}#{@@cyan}#{DataPack.bad_folder_names.join("\n")}\n\n\
+		#{@@reg}Only #{@@bold}#{@@cyan}letters#{@@reg}, #{@@bold}#{@@cyan}numbers#{@@reg}, #{@@bold}#{@@cyan}dashes#{@@reg}, and \
+		#{@@bold}#{@@cyan}underscores#{@@reg} are allowed.		
+		TEXT
+	end
+
 	def ErrorMsg.backup_files_missing
 		msg = <<~TEXT
 		#{@@oops}It looks like you're trying to #{@@bold}#{@@cyan}restore a backup#{@@reg} but you're \

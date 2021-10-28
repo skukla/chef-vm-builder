@@ -1,10 +1,12 @@
 require_relative 'config'
 
+require 'pathname'
+
 class Entry
 	@entries_to_remove = %w[. .. .DS_Store .gitignore .git .vscode]
 
 	def Entry.path(path_str)
-		File.join(Config.app_root, path_str)
+		Pathname(File.join(Config.app_root, path_str))
 	end
 
 	def Entry.files_from(file_path)

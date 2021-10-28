@@ -53,7 +53,17 @@ class DataPack
 	end
 
 	def DataPack.missing_folder?
-		return true if local_list.nil? || local_list.empty?
+		return if local_list.nil? || local_list.empty?
 		(local_list.map { |record| record['source'] } - @folder_list).any?
+	end
+
+	def DataPack.bad_folder_names
+		return if @folder_list.empty?
+
+		@folder_list
+			.map { |path| Entry.path(File.join('project/data-packs', path)) }
+			.select { |path| File.directory?(path) }
+			.reject { |path| path.to_s.match(/^[^\s]*$/) }
+			.map { |path| File.basename(path.to_s) }
 	end
 end
