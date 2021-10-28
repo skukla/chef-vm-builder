@@ -11,6 +11,9 @@ merge_restore = (build_action == 'restore' && restore_mode == 'merge')
 warm_cache = node[:magento][:build][:hooks][:warm_cache]
 maintenance_mode_flag = "#{web_root}/var/.maintenance.flag"
 crontab = "/var/spool/cron/crontabs/#{user}"
+commands = node[:magento][:build][:hooks][:commands]
+magento_cli_commands = MagentoHelper.build_command_list(:magento_cli)
+vm_cli_commands = MagentoHelper.build_command_list(:vm_cli)
 
 if %w[install force_install update_all update_data].include?(build_action) ||
 		merge_restore
@@ -48,10 +51,26 @@ magento_cli 'Disable maintenance mode' do
 	only_if { ::File.exist?(maintenance_mode_flag) }
 end
 
-if !warm_cache.nil? && warm_cache
-	vm_cli 'Running the warm cache hook' do
-		action :run
-		command_list 'warm-cache'
+if %w[install force_install reinstall update_all update_app restore].include?(
+		build_action,
+   )
+	if !commands.nil? && !commands.empty?
+		magento_cli 'Running user Magento CLI hooks' do
+			action :run
+			command_list magento_cli_commands
+		end
+
+		vm_cli 'Running user VM CLI hooks' do
+			action :run
+			command_list vm_cli_commands
+		end
+	end
+
+	if !warm_cache.nil? && warm_cache
+		vm_cli 'Running the warm cache hook' do
+			action :run
+			command_list 'warm-cache'
+		end
 	end
 end
 

@@ -69,6 +69,7 @@ class Config
 			update_all
 			update_app
 			update_data
+			update_urls
 		]
 		@build_action_arr.map { |build_action| build_action.to_s }
 	end

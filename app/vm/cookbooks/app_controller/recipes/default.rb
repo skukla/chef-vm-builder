@@ -32,7 +32,7 @@ if %w[install force_install restore].include?(build_action)
 	include_recipe 'app_controller::base'
 	include_recipe 'app_controller::infrastructure'
 end
-if %w[update_all update_app update_data].include?(build_action)
+if %w[update_all update_app update_data update_urls].include?(build_action)
 	include_recipe 'init::motd'
 	include_recipe 'vm_cli::install'
 	include_recipe 'nginx::default'
