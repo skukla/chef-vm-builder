@@ -34,8 +34,11 @@ property :elasticsearch_host,
          String,
          default: node[:magento][:search_engine][:host]
 property :elasticsearch_port,
-         [String, Integer],
+         String,
          default: node[:magento][:search_engine][:port]
+property :elasticsearch_prefix,
+         String,
+         default: node[:magento][:search_engine][:prefix]
 property :db_host, String, default: node[:magento][:mysql][:db_host]
 property :db_user, String, default: node[:magento][:mysql][:db_user]
 property :db_password, String, default: node[:magento][:mysql][:db_password]
@@ -44,55 +47,20 @@ property :install_settings, Hash
 property :remove_generated, [TrueClass, FalseClass], default: true
 
 action :install do
-	install_string =
-		"--db-host=#{new_resource.db_host} --db-name=#{new_resource.db_name} --db-user=#{new_resource.db_user} --db-password=#{new_resource.db_password} --backend-frontname=#{new_resource.install_settings[:backend_frontname]} --base-url=#{new_resource.install_settings[:unsecure_base_url]} --language=#{new_resource.install_settings[:language]} --timezone=#{new_resource.install_settings[:timezone]} --currency=#{new_resource.install_settings[:currency]} --admin-firstname=#{new_resource.install_settings[:admin_firstname]} --admin-lastname=#{new_resource.install_settings[:admin_lastname]} --admin-email=#{new_resource.install_settings[:admin_email]} --admin-user=#{new_resource.install_settings[:admin_user]} --admin-password=#{new_resource.install_settings[:admin_password]}"
-	elasticsearch_string =
-		"--elasticsearch-host=#{new_resource.install_settings[:elasticsearch_host]} --elasticsearch-port=#{new_resource.install_settings[:elasticsearch_port]} --elasticsearch-index-prefix=#{new_resource.install_settings[:elasticsearch_prefix]}"
-	rewrites_string =
-		"--use-rewrites=#{ValueHelper.process_value(new_resource.install_settings[:use_rewrites])}"
-	use_secure_frontend_string =
-		"--use-secure=#{ValueHelper.process_value(new_resource.install_settings[:use_secure_frontend])}"
-	use_secure_admin_string =
-		"--use-secure-admin=#{ValueHelper.process_value(new_resource.install_settings[:use_secure_admin])}"
-	secure_url_string =
-		"--base-url-secure=#{new_resource.install_settings[:secure_base_url]}"
-	cleanup_database_string = '--cleanup-database'
-	session_save_string =
-		"--session-save=#{new_resource.install_settings[:session_save]}"
-	encryption_key_string =
-		"--key=#{new_resource.install_settings[:encryption_key]}"
-
-	install_string = [install_string, rewrites_string].join(' ') if new_resource
-		.install_settings[
-		:use_rewrites
-	]
-	if new_resource.search_engine_type == 'elasticsearch' &&
-			MagentoHelper.check_version(new_resource.version, '>=', '2.4.0')
-		install_string = [install_string, elasticsearch_string].join(' ')
-	end
-	if new_resource.install_settings[:use_secure_admin]
-		install_string = [install_string, use_secure_admin_string].join(' ')
-	end
-	if new_resource.install_settings[:use_secure_frontend]
-		install_string = [install_string, use_secure_frontend_string].join(' ')
-	end
-	if new_resource.install_settings[:use_secure_frontend] ||
-			new_resource.install_settings[:use_secure_admin]
-		install_string = [install_string, secure_url_string].join(' ')
-	end
-	if new_resource.install_settings[:cleanup_database] == 1 &&
-			new_resource.build_action != 'install'
-		install_string = [install_string, cleanup_database_string]
-	end
-	install_string = [install_string, session_save_string].join(' ')
-	unless new_resource.install_settings[:encryption_key].nil? ||
-			new_resource.install_settings[:encryption_key].empty?
-		install_string = [install_string, encryption_key_string].join(' ')
-	end
-
 	magento_cli 'Install via the Magento CLI' do
 		action :install
-		install_string install_string
+		install_string MagentoHelper.build_install_string(
+				new_resource.build_action,
+				new_resource.version,
+				new_resource.search_engine_type,
+				{
+					db_host: new_resource.db_host,
+					db_user: new_resource.db_user,
+					db_name: new_resource.db_name,
+					db_password: new_resource.db_password,
+				},
+				new_resource.install_settings,
+		               )
 	end
 end
 

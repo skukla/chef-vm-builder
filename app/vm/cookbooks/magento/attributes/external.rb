@@ -35,6 +35,8 @@ default[:magento][:search_engine][:host] =
 	node[:search_engine][:elasticsearch][:host]
 default[:magento][:search_engine][:port] =
 	node[:search_engine][:elasticsearch][:port]
+default[:magento][:search_engine][:prefix] =
+	node[:search_engine][:elasticsearch][:prefix]
 
 include_attribute 'magento_custom_modules::override'
 default[:magento][:custom_modules][:module_list] =

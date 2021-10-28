@@ -38,7 +38,7 @@ if %w[install force_install reinstall restore].include?(build_action)
 				admin_password: node[:magento][:settings][:admin_password],
 				elasticsearch_host: node[:magento][:search_engine][:host],
 				elasticsearch_port: node[:magento][:search_engine][:port],
-				elasticsearch_prefix: DemoStructureHelper.base_url,
+				elasticsearch_prefix: node[:magento][:search_engine][:prefix],
 				use_rewrites: node[:magento][:settings][:use_rewrites],
 				use_secure_frontend: node[:magento][:settings][:use_secure_frontend],
 				use_secure_admin: node[:magento][:settings][:use_secure_admin],

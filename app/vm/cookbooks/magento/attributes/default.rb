@@ -4,7 +4,7 @@
 # frozen_string_literal: true
 
 default[:magento][:options][:family] = 'community'
-default[:magento][:options][:version] = '2.4.2'
+default[:magento][:options][:version] = '2.4.3-p1'
 default[:magento][:options][:minimum_stability] = 'stable'
 
 default[:magento][:csc_options][:key_path] =
