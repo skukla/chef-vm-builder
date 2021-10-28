@@ -1,12 +1,10 @@
 # Cookbook:: init
 # Attribute:: override
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-#
 # Supported settings:
 # vm: ip, name
 # os: update, timezone
 # custom_demo: structure{}
-#
 # frozen_string_literal: true
 
 settings = [
