@@ -1,17 +1,41 @@
 {
 	"vm": {
 		"ip": "192.168.56.12",
-		"name": "Luma Demo"
+		"name": "Luma VM"
 	},
 	"custom_demo": {
 		"structure": {
 			"websites": [
 				{
 					"site_code": "base",
-					"site_url": "luma.demo"
+					"site_url": "luma.demo",
+					"stores": [
+						{
+							"store_views": [
+								{
+									"store_view_code": "default"
+								}
+							]
+						}
+					]
 				}
 			]
-		}
+		},
+		"data_packs": [
+			{
+				"source": "luma-b2c",
+				"data": [
+					{
+						"path": "website"
+					}
+				]
+			}
+		],
+		"custom_modules": [
+			{
+				"source": "git@github.com:PMET-public/module-data-install.git"
+			}
+		]
 	},
 	"application": {
 		"authentication": {
@@ -27,48 +51,19 @@
 		},
 		"build": {
 			"action": "install",
-			"restore": "separate",
 			"sample_data": false,
 			"patches": true,
 			"hooks": {
 				"warm_cache": false,
-				"enable_media_gallery": true,
-				"commands": []
+				"enable_media_gallery": true
 			}
 		},
 		"settings": {
-			"admin_password": "admin123"
+			"admin_password": "admin4tls"
 		}
 	},
-	"infrastructure": {
-		"php": "7.4",
-		"composer": "latest",
-		"search_engine": "elasticsearch",
-		"mailhog": true,
-		"samba": true
-	},
-	"provisioner": {
-		"type": "chef_zero",
-		"version": "16.13.16",
-		"nodes_path": "nodes",
-		"environments_path": "environments",
-		"roles_path": "roles",
-		"cookbooks_path": "cookbooks"
-	},
 	"remote_machine": {
-		"name": "Kukla-Machine",
-		"box": "bento/ubuntu-18.04",
-		"cpus": 2,
-		"memory": 8192,
-		"vram": 16,
-		"remote_display": "off"
-	},
-	"hypervisor": {
-		"gui": false,
-		"linked_clones": false,
-		"default_nic_type": "82543GC"
-	},
-	"vagrant": {
-		"plugins": ["vagrant-hostsupdater"]
+		"cpus": "2",
+		"memory": "8192"
 	}
 }

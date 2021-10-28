@@ -3,13 +3,8 @@
   "title": "VM Configuration",
   "required": [
     "vm",
-    "custom_demo",
     "application",
-    "infrastructure",
-    "provisioner",
-    "remote_machine",
-    "hypervisor",
-    "vagrant"
+    "remote_machine"
   ],
   "type": "object",
   "properties": {
@@ -63,7 +58,8 @@
                 "properties": {
                   "site_code": {
                     "type": "string",
-                    "description": "Site code used in the Magento application."
+                    "description": "Site code used in the Magento application. Only letters and underscores allowed.",
+                    "pattern": "^[A-Za-z0-9_]+$"
                   },
                   "site_url": {
                     "type": "string",
@@ -94,7 +90,8 @@
                               "properties": {
                                 "store_view_code": {
                                   "type": "string",
-                                  "description": "Store view code used by Magento."
+                                  "description": "Store view code used by Magento. Only letters and underscores allowed.",
+                                  "pattern": "^[A-Za-z0-9_]+$"
                                 },
                                 "store_view_url": {
                                   "type": "string",
@@ -253,6 +250,10 @@
         "options": {
           "type": "object",
           "description": "Object for application options including: family, version, and minimum stability.",
+          "required": [
+            "family",
+            "version"
+          ],
           "properties": {
             "family": {
               "type": "string",
@@ -290,8 +291,8 @@
             },
             "restore": {
               "type": [
-                "object",
-                "string"
+                "string",
+                "object"
               ],
               "description": "Restore mode for a backup.\n\nseparate: Restores a backup and ignores config.json settings.\nmerge: Restores a backup and includes everything in config.json.",
               "required": [
@@ -326,7 +327,7 @@
             },
             "sample_data": {
               "type": "boolean",
-              "description": "Include sample data or not?"
+              "description": "Include sample data or not? Either true or false."
             },
             "deploy_mode": {
               "type": [
@@ -344,7 +345,7 @@
               "properties": {
                 "apply": {
                   "type": "boolean",
-                  "description": "Apply deploy mode?"
+                  "description": "Apply deploy mode? Either true or false."
                 },
                 "mode": {
                   "type": "string",
@@ -367,7 +368,7 @@
               "properties": {
                 "apply": {
                   "type": "boolean",
-                  "description": "Apply patches?"
+                  "description": "Apply patches? Either true or false."
                 },
                 "source": {
                   "type": "string",
@@ -398,11 +399,11 @@
               "properties": {
                 "warm_cache": {
                   "type": "boolean",
-                  "description": "Warm the cache?"
+                  "description": "Warm the cache? Either true or false."
                 },
                 "enable_media_gallery": {
                   "type": "boolean",
-                  "description": "Enable the media gallery?"
+                  "description": "Enable the media gallery? Either true or false."
                 },
                 "commands": {
                   "type": "array",
@@ -465,11 +466,11 @@
             },
             "use_secure_frontend": {
               "type": "boolean",
-              "description": "Use https:// for the storefront?"
+              "description": "Use https:// for the storefront? Either true or false."
             },
             "use_secure_admin": {
               "type": "boolean",
-              "description": "Use https:// for the admin panel?"
+              "description": "Use https:// for the admin panel? Either true or false."
             },
             "encryption_key": {
               "type": "string",
@@ -486,11 +487,22 @@
     "infrastructure": {
       "type": "object",
       "description": "Infrastructure settings for PHP, Composer, a Search Engine, and Samba.",
-      "required": [
-        "php",
-        "search_engine"
-      ],
       "properties": {
+        "os": {
+          "type": "object",
+          "description": "Object containing operating system settings.",
+          "properties": {
+            "update": {
+              "type": "boolean",
+              "description": "Update the operating system? Either true or false."
+            },
+            "timezone": {
+              "type": "string",
+              "description": "Preferred timezone for the operating system.",
+              "minLength": 1
+            }
+          }
+        },
         "php": {
           "type": [
             "string",
@@ -504,16 +516,10 @@
           "pattern": "^\\d.\\d$",
           "properties": {
             "version": {
-              "type": [
-                "string"
-              ],
+              "type": "string",
               "description": "PHP version.",
               "minLength": 3,
               "pattern": "^\\d.[0-9]$"
-            },
-            "fpm_port": {
-              "type": "string",
-              "description": "PHP FPM port.  Defaults to 9200."
             },
             "memory_limit": {
               "type": "string",
@@ -548,7 +554,7 @@
             },
             "clear_cache": {
               "type": "boolean",
-              "description": "Clear composer cache?"
+              "description": "Clear composer cache? Either true or false."
             }
           },
           "additionalProperties": false
@@ -566,6 +572,11 @@
               "description": "Database host.",
               "minLength": 1
             },
+            "db_name": {
+              "type": "string",
+              "description": "Database name. Defaults to magento.",
+              "minLength": 1
+            },
             "db_user": {
               "type": "string",
               "description": "Database user. Defaults to magento.",
@@ -575,28 +586,15 @@
               "type": "string",
               "description": "Database password. Defaults to password.",
               "minLength": 1
-            },
-            "db_name": {
-              "type": "string",
-              "description": "Database name. Defaults to magento.",
-              "minLength": 1
             }
           },
           "additionalProperties": false
         },
         "web_server": {
-          "type": [
-            "string",
-            "object"
-          ],
+          "type": "object",
           "description": "Web server port (defaults to 80) or an object containing web server settings.",
           "minLength": 2,
           "properties": {
-            "http_port": {
-              "type": "string",
-              "description": "Web server port.  Defaults to 80.",
-              "minLength": 2
-            },
             "client_max_body_size": {
               "type": "string",
               "description": "Web server client max body size. Defaults to 100M.  (Change this if you need to upload very large images).",
@@ -611,98 +609,6 @@
           "description": "Search engine. Either elasticsearch or live_search.",
           "minLength": 1,
           "pattern": "^elasticsearch$|^live_search$"
-        },
-        "mailbox": {
-          "type": [
-            "boolean",
-            "object"
-          ],
-          "description": "Whether to use Mailhog (either true or false) or an object containing Mailbox settings.",
-          "required": [
-            "use"
-          ],
-          "minLength": 1,
-          "properties": {
-            "use": {
-              "type": "boolean",
-              "description": "Use Mailhog?"
-            },
-            "mh_port": {
-              "type": "string",
-              "description": "Mailhog service port. Defaults to 10000.",
-              "minLength": 1
-            },
-            "smtp_port": {
-              "type": "string",
-              "description": "Mailhog smtp port. Defaults to 1025.",
-              "minLength": 1
-            }
-          },
-          "additionalProperties": false
-        },
-        "file_share": {
-          "type": [
-            "boolean",
-            "object"
-          ],
-          "description": "Whether to use Samba (either true or false) or an object containing file sharing settings.",
-          "required": [
-            "use"
-          ],
-          "minLength": 1,
-          "properties": {
-            "use": {
-              "type": "boolean",
-              "description": "Use Samba?"
-            }
-          },
-          "additionalProperties": false
-        }
-      },
-      "additionalProperties": false
-    },
-    "provisioner": {
-      "type": "object",
-      "description": "Object containing settings for Chef inside the VM.",
-      "required": [
-        "type",
-        "version",
-        "nodes_path",
-        "environments_path",
-        "roles_path",
-        "cookbooks_path"
-      ],
-      "properties": {
-        "type": {
-          "type": "string",
-          "description": "Provisioner type. Defaults to chef_zero.",
-          "minLength": 1
-        },
-        "version": {
-          "type": "string",
-          "description": "Provisioner version. Either 'latest' or a specific version number. Suggested: 16.13.16.",
-          "minLength": 1,
-          "pattern": "(^latest$|^\\d{2}.\\d{2}.\\d{2}$)"
-        },
-        "nodes_path": {
-          "type": "string",
-          "description": "The folder on the VM where chef node data is stored. Suggested: nodes.",
-          "minLength": 1
-        },
-        "environments_path": {
-          "type": "string",
-          "description": "The folder on the VM where chef environment data is stored. Suggested: environments.",
-          "minLength": 1
-        },
-        "roles_path": {
-          "type": "string",
-          "description": "The folder on the VM where chef role data is stored. Suggested: roles.",
-          "minLength": 1
-        },
-        "cookbooks_path": {
-          "type": "string",
-          "description": "The folder on the VM where chef cookbook data is stored. Suggested: cookbooks.",
-          "minLength": 1
         }
       },
       "additionalProperties": false
@@ -711,26 +617,10 @@
       "type": "object",
       "description": "Object containing settings for VM machine.",
       "required": [
-        "name",
-        "box",
         "cpus",
-        "memory",
-        "vram",
-        "remote_display"
+        "memory"
       ],
       "properties": {
-        "name": {
-          "type": "string",
-          "description": "Machine name. Only Uppercase and lowercase letters and spaces are allowed.",
-          "minLength": 1,
-          "pattern": "^[A-Z]|[a-z]$"
-        },
-        "box": {
-          "type": "string",
-          "description": "Base VM OS box image used to create the VM. Suggested: bento/ubuntu-18.04",
-          "minLength": 1,
-          "pattern": "^(.+)/(.+)$"
-        },
         "cpus": {
           "type": "string",
           "description": "The number of host machine cpu cores that a VM can access.  Recommended is 2. Maximum should be half the number of total cpus.",
@@ -742,68 +632,9 @@
           "description": "The amount of host memory the VM can use in megabytes. Suggested: 8192.",
           "minLength": 4,
           "maxLength": 4
-        },
-        "vram": {
-          "type": "string",
-          "description": "The amount of video memory the VM can use in megabytes. Suggested: 16.",
-          "minLength": 2,
-          "maxLength": 2
-        },
-        "remote_display": {
-          "type": "string",
-          "description": " Suggested: off.",
-          "minLength": 1,
-          "pattern": "(^on$|^off$)"
         }
       },
       "additionalProperties": false
-    },
-    "hypervisor": {
-      "type": "object",
-      "description": "An object ",
-      "required": [
-        "gui",
-        "linked_clones",
-        "default_nic_type"
-      ],
-      "properties": {
-        "gui": {
-          "type": "boolean",
-          "description": "Should the VM start with a window showing or not? Suggested: false"
-        },
-        "linked_clones": {
-          "type": "boolean",
-          "description": "Should the VM use linked clones or full machines? Suggested: false"
-        },
-        "default_nic_type": {
-          "type": "string",
-          "description": "VM NIC type. Required: 82543GC",
-          "pattern": "^82543GC$"
-        }
-      },
-      "additionalProperties": false
-    },
-    "vagrant": {
-      "type": "object",
-      "description": "Object containing Vagrant settings.",
-      "required": [
-        "plugins"
-      ],
-      "properties": {
-        "plugins": {
-          "type": "array",
-          "description": "Array of Vagrant plugins. 'vagrant-hostsupdater' is required at minimum.",
-          "minItems": 1,
-          "contains": {
-            "type": "string",
-            "pattern": "^vagrant-hostsupdater$"
-          },
-          "items": {
-            "type": "string",
-            "description": "Vagrant plugin."
-          }
-        }
-      }
     }
   },
   "additionalProperties": false
