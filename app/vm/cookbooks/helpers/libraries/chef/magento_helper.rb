@@ -10,7 +10,7 @@ class MagentoHelper
 
 	def MagentoHelper.check_version(lower_bound, operator, upper_bound)
 		Gem::Version
-			.new(MagentoHelper.get_base_version(lower_bound))
+			.new(get_base_version(lower_bound))
 			.send(operator, Gem::Version.new(upper_bound))
 	end
 
@@ -49,7 +49,7 @@ class MagentoHelper
 			].join(' ')
 
 		if search_engine_type == 'elasticsearch' &&
-				MagentoHelper.check_version(version, '>=', '2.4.0')
+				check_version(version, '>=', '2.4.0')
 			install_str =
 				[
 					install_str,
