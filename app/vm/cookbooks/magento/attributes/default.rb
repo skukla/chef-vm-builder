@@ -3,7 +3,7 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 # frozen_string_literal: true
 
-default[:magento][:options][:family] = 'community'
+default[:magento][:options][:family] = 'enterprise'
 default[:magento][:options][:minimum_stability] = 'stable'
 
 default[:magento][:csc_options][:key_path] =
