@@ -400,58 +400,109 @@ function log() {
 export -f log
 
 # Backup / Rollback
-function enable-backups() {
+function backup-app() {
   printf "\nEnabling backup functionality... \n"
   www
   ./bin/magento config:set system/backup/functionality_enabled 1
-}
-export -f enable-backups
-
-function list-backups() {
-  www
-  printf "\nBackup List: \n"
-  ./bin/magento info:backups:list
-}
-export -f list-backups
-
-function backup-code() {
-  enable-backups
-  printf "\nBacking up the codebase...\n"
-  ./bin/magento setup:backup --code
-  printf "done. \n"
-}
-export -f backup-code
-
-function backup-media() {
-  enable-backups
-  printf "\nBacking up media...\n"
-  www
-  ./bin/magento setup:backup --media
-  printf "done. \n"
-}
-export -f backup-media
-
-function backup-db() {
-  enable-backups
-  printf "\nBacking up the database...\n"
-  www
-  ./bin/magento setup:backup --db
-  printf "done. \n"
-}
-export -f backup-db
-
-function backup() {
-  enable-backups
   printf "\n"; ./bin/magento setup:backup --code --media --db; printf "done. \n"
 }
-export -f backup
+export -f backup-app
+
+function prepare-backup() {
+  DIRS=("<%= @backup_holding_area %>/app" "<%= @backup_holding_area %>/data-packs")
+
+  for DIR in ${DIRS[@]}; do
+    if [ ! -d $DIR ]; then
+      sudo mkdir -p $DIR
+      sudo chown <%= @user %>:<%= @user %> $DIR
+    fi
+  done
+}
+export -f prepare-backup
+
+function collect-data-packs() {
+  BACKUP_HOLDING_AREA="<%= @backup_holding_area %>"
+  DATA_PACK_DIR="<%= @data_packs_dir %>"
+  DATA_PACKS_HOLDING_AREA="${BACKUP_HOLDING_AREA}/data-packs"
+  CONFIG_JSON_FILE="<%= @config_json_dir %>/config.json"
+
+  if [ -d ${DATA_PACK_DIR} ]; then
+    printf "\nCollecting data packs..."
+    sudo cp -R ${DATA_PACK_DIR}/* ${DATA_PACKS_HOLDING_AREA}
+    printf "done.\n"
+  fi
+
+  if [ -f ${CONFIG_JSON_FILE} ]; then
+    printf "\nCollecting config.json..."
+    sudo cp ${CONFIG_JSON_FILE} ${DATA_PACKS_HOLDING_AREA}
+    printf "done.\n"
+  fi
+
+  sudo chown -R <%= @user %>:<%= @user %> ${BACKUP_HOLDING_AREA}/*
+}
+export -f collect-data-packs
+
+function zip-data-packs() {
+  BACKUP_HOLDING_AREA="<%= @backup_holding_area %>"
+  DATA_PACKS_HOLDING_AREA="${BACKUP_HOLDING_AREA}/data-packs"
+  BACKUP_DIR="<%= @web_root%>/<%= @backup_dir %>"
+
+  printf "\nZipping data packs..."
+  cd ${DATA_PACKS_HOLDING_AREA}
+  
+  zip -rq ${BACKUP_DIR}/data-packs.zip *
+  printf "done.\n"
+}
+export -f zip-data-packs
+
+function collect-app() {
+  BACKUP_HOLDING_AREA="<%= @backup_holding_area %>"
+  APP_HOLDING_AREA="${BACKUP_HOLDING_AREA}/app"
+  BACKUP_DIR="<%= @web_root%>/<%= @backup_dir %>"
+
+  if [ -d ${BACKUP_DIR} ] && [ "$(ls -A ${BACKUP_DIR})" ]; then
+    printf "\nCollecting backups..."
+    cp ${BACKUP_DIR}/* ${APP_HOLDING_AREA}
+    printf "done.\n"
+  fi
+  rm -rf ${BACKUP_DIR}/*
+}
+export -f collect-app
+
+function zip-app() {
+  APP_HOLDING_AREA="<%= @backup_holding_area %>/app"
+  BACKUP_DIR="<%= @web_root%>/<%= @backup_dir %>"
+
+  printf "\nZipping app backup..."
+  cd ${APP_HOLDING_AREA}
+  zip -rq ${BACKUP_DIR}/app.zip *
+  printf "done.\n"
+}
+export -f zip-app
+
+function zip-project() {
+  BACKUP_DIR="<%= @web_root%>/<%= @backup_dir %>"
+  
+  printf "\nZipping project..."
+  cd ${BACKUP_DIR}
+  zip -rq ${BACKUP_DIR}/<%= @base_url %>.zip data-packs.zip app.zip
+  printf "done.\n"
+}
+export -f zip-project
+
+function clean-up-backup() {
+  BACKUP_HOLDING_AREA=<%= @backup_holding_area %>
+  BACKUP_DIR="<%= @web_root%>/<%= @backup_dir %>"
+  sudo rm -rf ${BACKUP_HOLDING_AREA}/*
+  sudo rm -rf ${BACKUP_DIR}/data-packs.zip ${BACKUP_DIR}/app.zip
+}
+export -f clean-up-backup
 
 function export-backup() {
   USER=<%= @user %>
   EXPORT_DIR="/${USER}/backup"
-  BACKUP_DIR="/var/www/magento/var/backups"
+  BACKUP_DIR="<%= @web_root%>/<%= @backup_dir %>"
 
-  list-backups
   if [ -d "${BACKUP_DIR}" ]; then
     printf "\nExporting all backups to the VM app/vm/backup directory..."
     if [ ! -d "${EXPORT_DIR}" ]; then
@@ -464,176 +515,33 @@ function export-backup() {
 export -f export-backup
 
 function remove-backup() {
-  BACKUP_DIR="/var/www/magento/var/backups"
+  BACKUP_DIR="<%= @web_root%>/<%= @backup_dir %>"
   
   www
   if [ -d "${BACKUP_DIR}" ]; then
     printf "\nRemoving all backups on the VM (Local backups will not be affected)..."
     sleep 1
-    rm -rf ${BACKUP_DIR}/*
+    sudo rm -rf ${BACKUP_DIR}/*
     printf "done. \n"
   fi
-  list-backups
 }
 export -f remove-backup
 
-function import-backup() {
-  USER="<%= @user %>"
-  IMPORT_DIR="/${USER}/backup"
-  BACKUP_DIR="/var/www/magento/var/backups"
-  IMPORTED=false
-
-  www
-  if [ ! -d "${IMPORT_DIR}" ]; then
-    printf "\nLooks like there isn't a folder called 'backups' inside of your app directory.  Please create it and try again.\n"
-    return
-  fi
-  if [ ! -d "${BACKUP_DIR}" ]; then
-    printf "\nImport failed because there isn't a backups directory in the web root at var/backups.\n"
-    return
-  fi
-  for FILENAME in ${IMPORT_DIR}/*; do
-    if [ "${FILENAME}" = "${IMPORT_DIR}/*" ]; then
-      printf "\nThere are no backup files to import in your app/backups directory. Exiting...\n"
-      sleep 3
-      return
-    else
-      if [ ! -e ${BACKUP_DIR}/$(basename "${FILENAME}") ]; then
-        printf "Importing ${FILENAME}..."
-        cp "${FILENAME}" ${BACKUP_DIR}/$(basename "${FILENAME}")
-        printf "done.\n"
-
-        if [ ${FILENAME##*.} == "zip" ]; then
-          printf "\nUzipping ${FILENAME} in ${BACKUP_DIR}...\n\n"
-          unzip -d ${BACKUP_DIR} ${FILENAME}
-          rm -rf ${BACKUP_DIR}/__MACOSX 
-          rm -rf ${BACKUP_DIR}/*.zip
-        fi
-      else
-        IMPORTED=true
-      fi
-    fi
-  done
-  if [ $IMPORTED = true ]; then
-    printf "\nAll files are ready to import on the VM.\n\n"
-  fi
-  chown ${USER}:${USER} -R ./var/*
-  chmod -R 777 ./var/*
+function backup-project() {
+  prepare-backup
+  collect-data-packs
+  backup-app
+  collect-app
+  zip-data-packs
+  zip-app
+  zip-project
+  clean-up-backup
+  export-backup
+  remove-backup
 }
-export -f import-backup
+export backup-project
 
-function restore() {
-  START=`date +%s`
-  USER="<%= @user %>"
-  GROUP="<%= @user %>"
-  DB_USER="<%= @db_user %>"
-  DB_PASSWORD="<%= @db_password %>"
-  DB_NAME="<%= @db_name %>"
-  BACKUP_HOLDING_AREA="<%= @backup_holding_area %>"
-  VAR_DIR="/var/www/magento/var"
-  BACKUP_DIR="/var/www/magento/var/backups"
-
-  www
-  if [ -z "$(ls -A ./var/backups)" ]; then
-    printf "\nThere are no backup files in the VM. Trying to import them now...\n\n"
-    sleep 3
-    import-backups
-  fi 
-  if [[ $# -eq 0 ]] ; then
-    list-backups
-    printf "\nCodebase File: "
-    read CODEBASE_FILENAME
-    printf "Database File: "
-    read DATABASE_FILENAME
-    printf "Media File: "
-    read MEDIA_FILENAME
-  else
-    CODEBASE_FILENAME=$1
-    DATABASE_FILENAME=$2
-    MEDIA_FILENAME=$3
-  fi
-  if [ -d "${BACKUP_HOLDING_AREA}" ] && [ -d "${BACKUP_DIR}" ]; then 
-    printf "\nCopying backups to ${BACKUP_HOLDING_AREA}..."
-    sudo cp ${BACKUP_DIR}/* ${BACKUP_HOLDING_AREA}
-    sudo cp ./var/.first-run-state.flag ${BACKUP_HOLDING_AREA}
-    sleep 1
-    printf "done. \n"; 
-  fi
-  if [ ! -f ${BACKUP_HOLDING_AREA}/${CODEBASE_FILENAME} ]; then 
-    printf "\nOh snap, the codebase file you specified doesn't exist. Please try again. Exiting..."
-    sleep 5
-    clear
-    return
-  fi
-  if [ ! -f ${BACKUP_HOLDING_AREA}/${DATABASE_FILENAME} ]; then 
-    printf "\nOh snap, the database file you specified doesn't exist. Please try again. Exiting..."
-    sleep 5
-    clear
-    return
-  fi
-  if [ ! -f ${BACKUP_HOLDING_AREA}/${MEDIA_FILENAME} ]; then 
-    printf "\nOh snap, the media file you specified doesn't exist. Please try again. Exiting..."
-    sleep 5
-    clear
-    return
-  fi
-
-  disable-cron
-  clear-web-root
-
-  printf "\nRestoring the codebase..."
-  tar -xf ${BACKUP_HOLDING_AREA}/${CODEBASE_FILENAME}
-  printf "\n"
-  composer install
-  printf "done. \n"
-
-  printf "\nRestoring media..."
-  tar -xf ${BACKUP_HOLDING_AREA}/${MEDIA_FILENAME}
-  printf "done. \n"
-
-  printf "\nRestoring the database (this might take a bit)..."
-  mysql -u ${DB_USER} -p${DB_PASSWORD} ${DB_NAME} < ${BACKUP_HOLDING_AREA}/${DATABASE_FILENAME}
-  printf "done.\n"
-  
-  db-upgrade
-  
-  printf "\nReplacing backups..." 
-  if [ ! -d "${BACKUP_DIR}" ]; then 
-    mkdir -p "${BACKUP_DIR}"
-  fi
-  sudo cp ${BACKUP_HOLDING_AREA}/* ${BACKUP_DIR}
-  if [ -d "${BACKUP_HOLDING_AREA}" ] && [ -d "${VAR_DIR}" ] && [ -f "${BACKUP_HOLDING_AREA}/.first-run-state.flag" ]; then 
-    sudo cp ${BACKUP_HOLDING_AREA}/.first-run-state.flag ./var/
-    rm -rf ${BACKUP_HOLDING_AREA}/*
-    printf "done. \n"
-  else
-    printf "\nOh snap, one of the folders we need doesn't exist. Exiting..."
-    sleep 5
-    clear
-    return
-  fi
-
-  printf "\nUpdating permissions..."
-  sudo chown -R ${USER}:${GROUP} ./*
-  sudo chmod -R 777 var/ pub/ app/etc/ generated/
-  printf "done.\n"
-
-  printf "\nCleaning up generated and cache folders..."
-  sudo rm -rf ./generated/ var/cache/*
-  printf "done. \n"
-
-  prod-mode
-  ./bin/magento indexer:reindex
-  ./bin/magento cache:clean
-  enable-cron
-
-  END=`date +%s`
-  RUNTIME=$((${END}-${START}))
-  MINUTES=$(( (${RUNTIME} % 3600) / 60 )); SECONDS=$(( (${RUNTIME} % 3600) % 60 ))
-  printf "\nBackup restored in ${MINUTES} minutes, ${SECONDS} seconds.\n"
-}
-export -f restore
-
+# Data Packs
 function install-data-pack() {
   www
   ./bin/magento gxd:datainstall --load=$1 $2 -r

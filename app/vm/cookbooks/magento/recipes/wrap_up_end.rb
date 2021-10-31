@@ -70,7 +70,18 @@ if %w[install force_install reinstall update_all update_app restore].include?(
 	if !backup.nil? && backup
 		vm_cli 'Running the backup hook' do
 			action :run
-			command_list %w[backup export-backup remove-backup]
+			command_list %w[
+					prepare-backup
+					collect-data-packs
+					backup-app
+					collect-app
+					zip-data-packs
+					zip-app
+					zip-project
+					clean-up-backup
+					export-backup
+					remove-backup
+			             ]
 		end
 	end
 
