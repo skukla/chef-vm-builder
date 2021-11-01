@@ -3,21 +3,7 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 # frozen_string_literal: true
 
-web_root = node[:magento][:nginx][:web_root]
 build_action = node[:magento][:build][:action]
-
-if %w[restore].include?(build_action)
-	magento_app 'Preparing to install after restoring backup' do
-		action :prepare_restore
-	end
-end
-
-if %w[reinstall restore].include?(build_action)
-	magento_app 'Preparing reinstall' do
-		action :prepare_reinstall
-		only_if { ::File.exist?("#{web_root}/app/etc/env.php") }
-	end
-end
 
 if %w[install force_install reinstall restore].include?(build_action)
 	clean_up_setting = node[:magento][:settings][:cleanup_database]
@@ -56,7 +42,7 @@ if %w[update_all update_app].include?(build_action)
 	end
 end
 
-if %w[install force_install reinstall update_all update_app].include?(
+if %w[install force_install reinstall update_all update_app restore].include?(
 		build_action,
    )
 	magento_app 'Set permissions after installation or database upgrade' do
