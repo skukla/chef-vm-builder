@@ -45,7 +45,7 @@ if (
 		) || merge_restore
    ) && enable_media_gallery
 	media_gallery_commands =
-		"config:set system/media_gallery/enabled #{ValueHelper.process_value(enable_media_gallery)}"
+		"config:set system/media_gallery/enabled #{ValueHelper.bool_to_int(enable_media_gallery)}"
 	media_gallery_commands = [media_gallery_commands, 'media-gallery:sync']
 	magento_cli 'Running the enable_media_gallery hook' do
 		action :run
