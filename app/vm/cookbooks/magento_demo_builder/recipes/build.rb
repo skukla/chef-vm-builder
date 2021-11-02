@@ -5,7 +5,7 @@
 
 data_pack_list = node[:magento_demo_builder][:data_pack_list]
 build_action = node[:magento_demo_builder][:magento][:build][:action]
-restore_mode = node[:magento_demo_builder][:restore][:mode]
+restore_mode = node[:magento_demo_builder][:magento_restore][:mode]
 merge_restore = (build_action == 'restore' && restore_mode == 'merge')
 
 unless data_pack_list.empty?

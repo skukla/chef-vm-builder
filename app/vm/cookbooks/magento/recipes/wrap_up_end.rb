@@ -6,7 +6,7 @@
 user = node[:magento][:init][:user]
 web_root = node[:magento][:nginx][:web_root]
 build_action = node[:magento][:build][:action]
-restore_mode = node[:magento][:restore][:mode]
+restore_mode = node[:magento][:magento_restore][:mode]
 merge_restore = (build_action == 'restore' && restore_mode == 'merge')
 warm_cache = node[:magento][:build][:hooks][:warm_cache]
 maintenance_mode_flag = "#{web_root}/var/.maintenance.flag"

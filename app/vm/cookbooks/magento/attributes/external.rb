@@ -51,4 +51,4 @@ default[:magento][:patches][:apply] = node[:magento_patches][:apply]
 
 include_attribute 'magento_restore::default'
 include_attribute 'magento_restore::override'
-default[:magento][:restore][:mode] = node[:magento_restore][:mode]
+default[:magento][:magento_restore][:mode] = node[:magento_restore][:mode]

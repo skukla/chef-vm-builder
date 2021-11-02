@@ -19,6 +19,7 @@ property :deploy_mode,
          default: node[:magento][:build][:deploy_mode][:mode]
 property :cache_types, Array, default: []
 property :indexers, Array, default: []
+property :indexer_mode, String, default: 'schedule'
 property :admin_username, String
 property :admin_password, String
 property :admin_email, String
@@ -97,7 +98,7 @@ end
 action :set_indexer_mode do
 	indexers = new_resource.indexers.join(' ') unless new_resource.indexers.empty?
 	execute new_resource.name do
-		command "su #{new_resource.user} -c 'bin/magento indexer:set-mode schedule #{indexers}'"
+		command "su #{new_resource.user} -c 'bin/magento indexer:set-mode #{new_resource.indexer_mode} #{indexers}'"
 		cwd new_resource.web_root
 	end
 end

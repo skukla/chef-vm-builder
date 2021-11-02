@@ -53,11 +53,7 @@ class Config
 	end
 
 	def Config.restore_mode
-		if value(@restore_setting).to_s.empty? ||
-				value(@restore_setting).is_a?(Hash) && @restore_setting['mode'].to_s?
-			return nil
-		end
-		value(@restore_setting)
+		setting(@restore_setting, 'mode')
 	end
 
 	def Config.build_action_list

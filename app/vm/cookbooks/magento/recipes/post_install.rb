@@ -5,30 +5,14 @@
 
 web_root = node[:magento][:nginx][:web_root]
 build_action = node[:magento][:build][:action]
-restore_mode = node[:magento_restore][:mode]
-merge_restore = (build_action == 'restore' && restore_mode == 'merge')
 apply_deploy_mode = node[:magento][:build][:deploy_mode][:apply]
 deploy_mode = node[:magento][:build][:deploy_mode][:mode]
 first_run_flag = "#{web_root}/var/.first-run-state.flag"
 
-if %w[update_all update_app].include?(build_action) || restore_mode == 'merge'
-	magento_cli 'Upgrade the Magento database' do
-		action :db_upgrade
-	end
-end
-
 if %w[install force_install reinstall update_all update_app restore].include?(
 		build_action,
    )
-	magento_app 'Set permissions after installation or database upgrade' do
-		action :set_permissions
-	end
-end
-
-if %w[install force_install reinstall update_all update_app restore].include?(
-		build_action,
-   )
-	if apply_deploy_mode && %w[production developer].include?(deploy_mode)
+	if apply_deploy_mode
 		magento_cli "Set application mode to #{deploy_mode}" do
 			action :set_application_mode
 			deploy_mode deploy_mode

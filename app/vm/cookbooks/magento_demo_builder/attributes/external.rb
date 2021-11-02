@@ -30,4 +30,5 @@ default[:magento_demo_builder][:magento_patches][:holding_area] =
 
 include_attribute 'magento_restore::default'
 include_attribute 'magento_restore::override'
-default[:magento_demo_builder][:restore][:mode] = node[:magento_restore][:mode]
+default[:magento_demo_builder][:magento_restore][:mode] =
+	node[:magento_restore][:mode]

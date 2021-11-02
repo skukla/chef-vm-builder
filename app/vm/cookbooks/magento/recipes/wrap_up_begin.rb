@@ -5,7 +5,7 @@
 
 web_root = node[:magento][:nginx][:web_root]
 build_action = node[:magento][:build][:action]
-restore_mode = node[:magento][:restore][:mode]
+restore_mode = node[:magento][:magento_restore][:mode]
 merge_restore = (build_action == 'restore' && restore_mode == 'merge')
 csc_options = node[:magento][:csc_options]
 enable_media_gallery = node[:magento][:build][:hooks][:enable_media_gallery]
