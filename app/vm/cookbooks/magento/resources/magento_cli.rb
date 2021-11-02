@@ -110,15 +110,16 @@ action :enable_cron do
 	end
 end
 
-action :disable_cron do
-	execute new_resource.name do
-		command "crontab -r -u #{new_resource.user}"
-	end
-end
-
 action :run_cron do
 	execute new_resource.name do
 		command "su #{new_resource.user} -c 'bin/magento cron:run'"
+		cwd new_resource.web_root
+	end
+end
+
+action :disable_cron do
+	execute new_resource.name do
+		command "crontab -r -u #{new_resource.user}"
 	end
 end
 

@@ -38,6 +38,9 @@ default[:magento][:search_engine][:port] =
 default[:magento][:search_engine][:prefix] =
 	node[:search_engine][:elasticsearch][:prefix]
 
+include_attribute 'mailhog::default'
+default[:magento][:mailhog][:mh_port] = node[:mailhog][:mh_port]
+
 include_attribute 'magento_custom_modules::override'
 default[:magento][:custom_modules][:module_list] =
 	node[:magento_custom_modules][:module_list]

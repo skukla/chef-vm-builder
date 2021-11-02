@@ -1,11 +1,9 @@
 require_relative '../core/lib/config'
-require_relative '../core/lib/info_message'
 require_relative '../core/lib/demo_structure'
 require_relative '../core/handlers/system_handler'
 require_relative '../core/handlers/validation_handler'
 require_relative '../core/handlers/entry_handler'
 require_relative '../core/handlers/elasticsearch_handler'
-require_relative '../core/handlers/message_handler'
 
 SystemHandler.clear_screen
 ValidationHandler.plugins

@@ -5,6 +5,7 @@
 
 user = node[:magento][:init][:user]
 web_root = node[:magento][:nginx][:web_root]
+mailhog_port = node[:magento][:mailhog][:mh_port]
 build_action = node[:magento][:build][:action]
 restore_mode = node[:magento][:magento_restore][:mode]
 merge_restore = (build_action == 'restore' && restore_mode == 'merge')
@@ -35,7 +36,7 @@ magento_cli 'Enable cron' do
 end
 
 magento_cli 'Reset indexers, run cron, and clean cache' do
-	action %i[reset_indexers cron clean_cache]
+	action %i[reset_indexers run_cron clean_cache]
 end
 
 magento_app 'Set permissions' do
@@ -90,6 +91,6 @@ if %w[install force_install reinstall update_all update_app restore].include?(
 end
 
 ruby_block 'Displaying URLs' do
-	block { MessageHelper.displayUrls }
+	block { MessageHelper.displayUrls(mailhog_port) }
 	sensitive true
 end
