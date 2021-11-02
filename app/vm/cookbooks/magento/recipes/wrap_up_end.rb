@@ -29,17 +29,13 @@ if %w[install force_install reinstall restore].include?(build_action)
 	end
 end
 
-if %w[install force_install reinstall update_all update_app restore].include?(
-		build_action,
-   )
-	magento_cli 'Enable cron' do
-		action :enable_cron
-		not_if { ::File.exist?(crontab) }
-	end
+magento_cli 'Enable cron' do
+	action :enable_cron
+	not_if { ::File.exist?(crontab) }
 end
 
-magento_cli 'Reset indexers, reindex, and clean cache' do
-	action %i[reset_indexers reindex clean_cache]
+magento_cli 'Reset indexers, run cron, and clean cache' do
+	action %i[reset_indexers cron clean_cache]
 end
 
 magento_app 'Set permissions' do

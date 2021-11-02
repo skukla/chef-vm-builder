@@ -116,6 +116,12 @@ action :disable_cron do
 	end
 end
 
+action :run_cron do
+	execute new_resource.name do
+		command "su #{new_resource.user} -c 'bin/magento cron:run'"
+	end
+end
+
 action :config_set do
 	command_string = "su #{new_resource.user} -c 'bin/magento config:set"
 	scope_string = "--scope=\"#{new_resource.config_scope}\""
