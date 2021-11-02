@@ -29,8 +29,6 @@ if build_action == 'restore'
 		not_if { restore_source.empty? || restore_version.empty? }
 	end
 
-	include_recipe 'magento::pre_install'
-
 	magento_restore 'Download the remote backup' do
 		action :download_remote_backup
 		destination_path restore_path
@@ -49,5 +47,6 @@ if build_action == 'restore'
 		destination_path web_root
 	end
 
+	include_recipe 'magento::pre_install'
 	include_recipe 'magento::install'
 end

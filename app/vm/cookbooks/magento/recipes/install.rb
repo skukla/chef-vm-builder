@@ -4,6 +4,7 @@
 # frozen_string_literal: true
 
 build_action = node[:magento][:build][:action]
+restore_mode = node[:magento][:restore][:mode]
 
 if %w[install force_install reinstall restore].include?(build_action)
 	clean_up_setting = node[:magento][:settings][:cleanup_database]
@@ -33,19 +34,5 @@ if %w[install force_install reinstall restore].include?(build_action)
 				encryption_key: node[:magento][:settings][:encryption_key],
 			},
 		)
-	end
-end
-
-if %w[update_all update_app].include?(build_action)
-	magento_cli 'Upgrade the Magento database' do
-		action :db_upgrade
-	end
-end
-
-if %w[install force_install reinstall update_all update_app restore].include?(
-		build_action,
-   )
-	magento_app 'Set permissions after installation or database upgrade' do
-		action :set_permissions
 	end
 end
