@@ -69,6 +69,7 @@ if %w[install force_install reinstall update_all update_app restore].include?(
 			action :run
 			command_list %w[
 					prepare-backup
+					sanitize-config-json
 					collect-data-packs
 					backup-app
 					collect-app

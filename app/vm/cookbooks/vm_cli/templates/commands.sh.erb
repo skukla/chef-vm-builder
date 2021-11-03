@@ -400,6 +400,26 @@ function log() {
 export -f log
 
 # Backup / Rollback
+function sanitize-config-json {
+  CONFIG_JSON_FILE="/var/chef/cache/cookbooks/helpers/libraries/app/config.json"
+  declare -A SETTINGS
+  SETTINGS["Composer Private Key"]=$(sudo jq .application.authentication.composer.private_key $CONFIG_JSON_FILE)
+  SETTINGS["Composer Public Key"]=$(sudo jq  .application.authentication.composer.public_key $CONFIG_JSON_FILE)
+  SETTINGS["Github Token"]=$(sudo jq .application.authentication.composer.github_token $CONFIG_JSON_FILE)
+  SETTINGS["Production API Key"]=$(sudo jq .application.authentication.commerce_services.production_api_key $CONFIG_JSON_FILE)
+  SETTINGS["Project ID"]=$(sudo jq .application.authentication.commerce_services.project_id $CONFIG_JSON_FILE)
+  SETTINGS["Data Space ID"]=$(sudo jq .application.authentication.commerce_services.data_space_id $CONFIG_JSON_FILE)
+
+  for key in "${!SETTINGS[@]}"; do
+    if [ ${SETTINGS[$key]} != 'null' ] && [ "${SETTINGS[$key]}" != '""' ]; then
+      printf "\nSanitizing $key..."
+      sudo sed -i "s/${SETTINGS[$key]}/\"\"/g" ${CONFIG_JSON_FILE}
+      printf "done."
+    fi
+  done
+}
+export -f sanitize-config-json
+
 function backup-app() {
   printf "\nEnabling backup functionality... \n"
   www
@@ -529,6 +549,7 @@ export -f remove-backup
 
 function backup-project() {
   prepare-backup
+  sanitize-config-json
   collect-data-packs
   backup-app
   collect-app
