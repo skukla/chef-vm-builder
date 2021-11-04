@@ -3,7 +3,7 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 # frozen_string_literal: true
 
-default[:magento][:options][:family] = 'enterprise'
+default[:magento][:options][:family] = MagentoHelper.define_family('Commerce')
 default[:magento][:options][:minimum_stability] = 'stable'
 
 default[:magento][:csc_options][:key_path] =
@@ -18,6 +18,34 @@ default[:magento][:build][:modules_to_remove] = %w[
 	magento/module-cardinal-commerce
 	magento/module-two-factor-auth
 	allure-framework/allure-phpunit
+]
+default[:magento][:build][:community_consumer_list] = %w[
+	product_action_attribute.update
+	product_action_attribute.website.update
+	codegeneratorProcessor
+	exportProcessor
+	media.storage.catalog.image.resize
+	inventory.source.items.cleanup
+	inventory.mass.update
+	inventory.reservations.cleanup
+	inventory.reservations.update
+	inventory.reservations.updateSalabilityStatus
+	inventory.indexer.sourceItem
+	inventory.indexer.stock
+	media.content.synchronization
+	media.gallery.synchronization
+	media.gallery.renditions.update
+]
+default[:magento][:build][:enterprise_consumer_list] = %w[
+	negotiableQuotePriceUpdate
+	sharedCatalogUpdatePrice
+	sharedCatalogUpdateCategoryPermissions
+	quoteItemCleaner
+	inventoryQtyCounter
+	purchaseorder.toorder
+	purchaseorder.transactional.email
+	purchaseorder.validation
+	matchCustomerSegmentProcessor
 ]
 default[:magento][:build][:sample_data] = true
 default[:magento][:build][:deploy_mode][:apply] = true

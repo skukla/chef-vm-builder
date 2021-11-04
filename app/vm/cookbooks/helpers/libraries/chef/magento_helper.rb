@@ -14,6 +14,12 @@ class MagentoHelper
 			.send(operator, Gem::Version.new(upper_bound))
 	end
 
+	def MagentoHelper.define_family(family)
+		return 'community' if family == 'Open Source'
+		return 'enterprise' if family == 'Commerce'
+		family
+	end
+
 	def MagentoHelper.build_install_string(
 		build_action,
 		version,
@@ -72,6 +78,18 @@ class MagentoHelper
 			install_str =
 				[install_str, "--key=#{install_settings[:encryption_key]}"].join(' ')
 		end
+	end
+
+	def MagentoHelper.get_consumer_list()
+		family = Chef.node[:magento][:options][:family]
+		community_consumer_list =
+			Chef.node[:magento][:build][:community_consumer_list]
+		enterprise_consumer_list =
+			Chef.node[:magento][:build][:enterprise_consumer_list]
+
+		return community_consumer_list if family == 'community'
+
+		community_consumer_list + enterprise_consumer_list
 	end
 
 	def MagentoHelper.build_command_list(type)

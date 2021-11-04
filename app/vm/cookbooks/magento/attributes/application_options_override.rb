@@ -8,7 +8,7 @@ setting = ConfigHelper.value('application/options')
 
 unless setting.nil?
 	setting.each do |key, value|
-		value = 'enterprise' if key == 'family' && value.downcase == 'commerce'
+		value = MagentoHelper.define_family(value) if key == 'family'
 		override[:magento][:options][key] = value
 	end
 end

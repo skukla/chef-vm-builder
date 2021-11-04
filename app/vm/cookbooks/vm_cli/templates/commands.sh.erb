@@ -213,6 +213,20 @@ function upgrade() {
 }
 export -f upgrade
 
+function start-consumers() {
+  CONSUMERS_LIST=(
+    <% @consumer_list.each do |consumer| %>
+      <%= consumer %>
+    <% end %>
+  )
+  for consumer in "${CONSUMERS_LIST[@]}"
+  do
+    printf "\nStarting consumer: $consumer"
+    bin/magento queue:consumers:start $consumer &
+  done
+} 
+export -f start-consumers
+
 # PHP-FPM
 function start-php() {
   printf "\nRestarting PHP-FPM <%= @php_version %>...\n"
