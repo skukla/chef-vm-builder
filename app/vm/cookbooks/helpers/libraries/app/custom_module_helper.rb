@@ -10,6 +10,6 @@ class CustomModuleHelper
 		list = ConfigHelper.value('custom_demo/custom_modules')
 		return [] if list.nil? || list.empty?
 
-		list.map { |md| ModuleSharedHelper.prepare_data(md, 'cm') }
+		list.map { |md| ModuleSharedHelper.prepare_data(md, :cm) }
 	end
 end

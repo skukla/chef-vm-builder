@@ -11,16 +11,6 @@ function list-cli() {
 }
 export -f list-cli
 
-function reports() {
-  www
-  if [ ! -z "$(ls -A ./var/report > /dev/null 2>&1;)" ]; then
-    cd var/report
-  else
-    printf "\nThere is no report directory.\n\n"
-  fi
-}
-export -f reports
-
 function logs() {
   www
   cd var/log
@@ -185,33 +175,6 @@ function prod-mode() {
   ./bin/magento deploy:mode:set production
 }
 export -f prod-mode
-
-function add-modules() {
-  www
-  apply-patches
-  own
-  db-upgrade
-  di-compile
-  deploy-content
-  deploy-content-de
-  enable-cache
-  clean
-}
-export -f add-modules
-
-function upgrade() {
-  clear
-  printf "Beginning the upgrade process...\n"
-  www
-  own
-  configure-proxy
-  disable-cron
-  update-composer
-  add-modules
-  enable-cron
-  printf "\nUpgrade finished!\n"
-}
-export -f upgrade
 
 function start-consumers() {
   CONSUMERS_LIST=(

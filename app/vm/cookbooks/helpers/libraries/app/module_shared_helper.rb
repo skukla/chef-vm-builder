@@ -48,8 +48,8 @@ class ModuleSharedHelper
 		package_vendor = hash['source'].split('/')[0]
 
 		unless github_url
-			hash['vendor_string'] = default_vendor if data_type == 'dp'
-			hash['vendor_string'] = package_vendor if data_type == 'cm'
+			hash['vendor_string'] = default_vendor if data_type == :dp
+			hash['vendor_string'] = package_vendor if data_type == :cm
 			hash['package_name'] = "#{hash['vendor_string']}/#{hash['source']}"
 			hash['module_string'] = hash['source']
 			hash['vendor_name'] = StringReplaceHelper.to_camel(hash['vendor_string'])

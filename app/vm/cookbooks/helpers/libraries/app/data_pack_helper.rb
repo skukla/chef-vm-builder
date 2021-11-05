@@ -14,7 +14,7 @@ class DataPackHelper
 		list = ConfigHelper.value('custom_demo/data_packs')
 		return [] if list.nil? || list.empty?
 
-		list.map { |md| ModuleSharedHelper.prepare_data(md, 'dp') }
+		list.map { |md| ModuleSharedHelper.prepare_data(md, :dp) }
 	end
 
 	def DataPackHelper.local_list
