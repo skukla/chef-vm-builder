@@ -6,7 +6,8 @@
     "files.exclude": {
         "**/.gitignore": true,
         "**/node_modules": true,
-        "**/package*.json": true
+        "**/package*.json": true,
+        "**/.vscode": true
     },
     "terminal.integrated.automationShell.linux": "",
     "json.schemas": [
