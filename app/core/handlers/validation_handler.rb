@@ -85,18 +85,29 @@ class ValidationHandler
 	end
 
 	def ValidationHandler.data_packs
-		return if @build_action == 'restore'
-		return if DataPack.list.empty?
+		return if @build_action == 'restore' && @restore_mode == 'separate'
+		return if DataPack.list.empty? && @build_action != 'update_data'
+
 		if DataPack.list.empty? && @build_action == 'update_data'
 			abort(ErrorMsg.show(:data_pack_update))
 		end
+
 		unless CustomModule.data_installer_found?
 			abort(ErrorMsg.show(:data_pack_installer_missing))
 		end
+
 		abort(ErrorMsg.show(:data_pack_bad_format)) if DataPack.data_format_error?
-		abort(ErrorMsg.show(:data_pack_folder_missing)) if DataPack.missing_folder?
-		unless DataPack.bad_folder_names.empty?
-			abort(ErrorMsg.show(:data_pack_bad_folder_names))
+
+		unless DataPack.packs_with_spaces_in_names.empty?
+			abort(ErrorMsg.show(:data_pack_spaces_in_names))
+		end
+
+		unless DataPack.packs_missing_source_folders.empty?
+			abort(ErrorMsg.show(:data_pack_source_folders_missing))
+		end
+
+		unless DataPack.packs_missing_path_folders.empty?
+			abort(ErrorMsg.show(:data_pack_path_folders_missing))
 		end
 	end
 

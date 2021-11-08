@@ -125,16 +125,34 @@ class ErrorMsg < Message
 		TEXT
 	end
 
-	def ErrorMsg.data_pack_folder_missing
+	def ErrorMsg.data_pack_source_folders_missing
 		msg = <<~TEXT
-		#{@@oops}It looks like you're missing a #{@@bold}#{@@cyan}folder#{@@reg} for a \
-		#{@@bold}#{@@cyan}data pack #{@@reg}in your #{@@bold}#{@@cyan}projects #{@@reg}directory.
+		#{@@oops}It looks like you're missing the following folders for a \
+		#{@@bold}#{@@cyan}data pack #{@@reg}in your #{@@bold}#{@@cyan}projects #{@@reg}directory:\n\n\
+		#{@@bold}#{@@cyan}#{DataPack.packs_missing_source_folders.join("\n")}
 		TEXT
 	end
 
-	def ErrorMsg.data_pack_bad_folder_names
+	def ErrorMsg.data_pack_path_folders_missing
+		head = "#{@@oops} It looks your data packs have the following errors:\n\n"
+
+		body =
+			DataPack
+				.packs_missing_path_folders
+				.each_with_object([]) do |pack, arr|
+					arr << [
+						"You need to create the following folders in the #{@@bold}#{@@cyan}#{pack['source']} #{@@reg}pack's data folder\
+						\nto match your configuration in config.json:\n\n",
+						"#{@@bold}#{@@cyan}#{pack['paths'].join("\n")}#{@@reg}\n\n",
+					]
+				end
+
+		msg = [head, body].join
+	end
+
+	def ErrorMsg.data_pack_spaces_in_names
 		msg = <<~TEXT
-		#{@@oops}It looks like the following data pack folders have bad names:\n\n#{@@bold}#{@@cyan}#{DataPack.bad_folder_names.join("\n")}\n\n\
+		#{@@oops}It looks like the following data pack path folders have bad names:\n\n#{@@bold}#{@@cyan}'#{DataPack.packs_with_spaces_in_names.join("\n")}'\n\n\
 		#{@@reg}Only #{@@bold}#{@@cyan}letters#{@@reg}, #{@@bold}#{@@cyan}numbers#{@@reg}, #{@@bold}#{@@cyan}dashes#{@@reg}, and \
 		#{@@bold}#{@@cyan}underscores#{@@reg} are allowed.		
 		TEXT

@@ -10,6 +10,8 @@ class Entry
 	end
 
 	def Entry.files_from(file_path)
+		return nil unless File.exist?(path(file_path))
+
 		Dir.entries("#{File.join(Config.app_root, file_path)}") - @entries_to_remove
 	end
 
