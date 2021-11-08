@@ -137,10 +137,10 @@
                   "type": "object",
                   "description": "Data path object that defines the folder names that contain data pack csv files.",
                   "required": [
-                    "path"
+                    "data_path"
                   ],
                   "properties": {
-                    "path": {
+                    "data_path": {
                       "type": "string",
                       "description": "Folder that contains data pack csv files."
                     }

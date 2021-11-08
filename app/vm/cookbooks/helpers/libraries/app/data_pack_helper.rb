@@ -33,9 +33,9 @@ class DataPackHelper
 		return [] if data_pack['data'].nil? || data_pack['data'].empty?
 
 		data_pack['data'].each_with_object([]) do |item, arr|
-			next if item['path'].nil?
+			next if item['data_path'].nil?
 
-			arr << item['path']
+			arr << item['data_path']
 		end
 	end
 

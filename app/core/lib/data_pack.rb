@@ -15,7 +15,9 @@ class DataPack
 		missing_source_values = list.select { |item| item['source'].nil? }
 		missing_data_values = list.select { |item| item.key?('data').nil? }
 		missing_data_path_values =
-			list.flat_map { |item| item['data'] }.reject { |item| item.key?('path') }
+			list
+				.flat_map { |item| item['data'] }
+				.reject { |item| item.key?('data_path') }
 		(
 			missing_source_values.any? || missing_data_values.any? ||
 				missing_data_path_values.any?
@@ -28,7 +30,7 @@ class DataPack
 			pack['source'].include?('github') unless pack['source'].nil?
 		end
 
-		list.each { |hash| hash['data'].sort_by! { |h| h['path'] } }
+		list.each { |hash| hash['data'].sort_by! { |h| h['data_path'] } }
 	end
 
 	def DataPack.source_values
@@ -44,7 +46,7 @@ class DataPack
 			next if item['data'].nil?
 			hash = {}
 			hash['source'] = item['source']
-			hash['paths'] = item['data'].map { |item| item['path'] }
+			hash['paths'] = item['data'].map { |item| item['data_path'] }
 			arr << hash
 		end
 	end
