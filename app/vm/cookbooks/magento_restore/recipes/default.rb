@@ -47,6 +47,5 @@ if build_action == 'restore'
 		destination_path web_root
 	end
 
-	include_recipe 'magento::pre_install'
 	include_recipe 'magento::install'
 end
