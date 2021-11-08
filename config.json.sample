@@ -50,6 +50,7 @@
 		},
 		"build": {
 			"action": "install",
+			"restore": "separate",
 			"sample_data": false,
 			"patches": true,
 			"hooks": {
