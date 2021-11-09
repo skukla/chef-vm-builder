@@ -58,7 +58,7 @@ class DataPack
 			.source_values
 			.each_with_object([]) do |source, arr|
 				entries = Entry.files_from("project/data-packs/#{source}/data")
-				return [] if entries.empty?
+				return [] if entries.to_s.empty?
 
 				hash = {}
 				hash['source'] = source
