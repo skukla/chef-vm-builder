@@ -26,11 +26,11 @@ class DataPack
 
 	def DataPack.local_list
 		return [] if list.empty?
-		list.reject do |pack|
-			pack['source'].include?('github') unless pack['source'].nil?
-		end
-
-		list.each { |hash| hash['data'].sort_by! { |h| h['data_path'] } }
+		list
+			.reject do |pack|
+				pack['source'].include?('github') unless pack['source'].nil?
+			end
+			.each { |hash| hash['data'].sort_by! { |h| h['data_path'] } }
 	end
 
 	def DataPack.source_values
