@@ -153,7 +153,7 @@ action :install do
 		load_dirs.each do |dir|
 			magento_cli "Installing the #{data_pack['module_name']} data pack" do
 				action :run
-				command_list "gxd:datainstall --load=#{dir} #{data_pack_str} -r"
+				command_list "gxd:datainstall --load=#{dir} --host=subdomain #{data_pack_str} -r"
 			end
 		end
 	end
