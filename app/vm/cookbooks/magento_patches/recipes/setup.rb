@@ -5,7 +5,7 @@
 
 web_root = node[:magento_patches][:nginx][:web_root]
 version = node[:magento_patches][:magento][:version]
-use_sample_data = node[:magento_patches][:magento][:sample_data]
+use_sample_data = node[:magento_patches][:magento][:sample_data][:apply]
 patches_source = node[:magento_patches][:source]
 repository_directory = node[:magento_patches][:repository_directory]
 codebase_directory = node[:magento_patches][:codebase_directory]

@@ -9,7 +9,9 @@ setting = ConfigHelper.value('application/build')
 unless setting.nil?
 	setting.each do |key, value|
 		case key
-		when 'action', 'sample_data'
+		when 'sample_data'
+			override[:magento][:build][:sample_data][:apply] = value
+		when 'action'
 			override[:magento][:build][key] = value
 		when 'deploy_mode'
 			if value.is_a?(String)

@@ -9,8 +9,6 @@ restore_mode = node[:magento][:magento_restore][:mode]
 merge_restore = (build_action == 'restore' && restore_mode == 'merge')
 separate_restore = (build_action == 'restore' && restore_mode == 'separate')
 apply_patches = node[:magento][:patches][:apply]
-install_sample_data = node[:magento][:build][:sample_data]
-sample_data_flag = "#{web_root}/var/.sample-data-state.flag"
 
 if apply_patches &&
 		(
@@ -29,15 +27,6 @@ end
 if %w[update_all update_app].include?(build_action) || merge_restore
 	composer 'Updating the codebase' do
 		action :update
-	end
-end
-
-if install_sample_data &&
-		%w[install force_install update_all update_app].include?(build_action) ||
-		merge_restore
-	magento_app 'Add sample data' do
-		action :add_sample_data
-		not_if { ::File.exist?(sample_data_flag) }
 	end
 end
 

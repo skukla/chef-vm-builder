@@ -24,6 +24,9 @@ property :group, String, default: node[:magento][:init][:user]
 property :family, String, default: node[:magento][:options][:family]
 property :version, String, default: node[:magento][:options][:version]
 property :build_action, String, default: node[:magento][:build][:action]
+property :sample_data_module_list,
+         Array,
+         default: node[:magento][:build][:sample_data][:module_list]
 property :modules_to_remove,
          [String, Array],
          default: node[:magento][:build][:modules_to_remove]
@@ -82,35 +85,11 @@ action :set_auth_credentials do
 end
 
 action :add_sample_data do
-	directory 'Create composer_home directory' do
-		path "#{new_resource.web_root}/var/composer_home"
-		owner new_resource.user
-		group new_resource.group
-		mode '0777'
-		not_if { ::Dir.exist?("#{new_resource.web_root}/var/composer_home") }
-	end
-
-	execute 'Copy auth.json into place' do
-		command "cp /home/#{new_resource.user}/.#{new_resource.composer_file}/auth.json #{new_resource.web_root}/var/composer_home/"
-		only_if do
-			::File.exist?(
-				"/home/#{new_resource.user}/.#{new_resource.composer_file}/auth.json",
-			)
-		end
-	end
-
-	file 'Set auth.json permissions' do
-		path "#{new_resource.web_root}/var/composer_home/auth.json"
-		owner new_resource.user
-		group new_resource.group
-		mode '0777'
-		only_if do
-			::File.exist?("#{new_resource.web_root}/var/composer_home/auth.json")
-		end
-	end
-
-	magento_cli 'Download sample data' do
-		action :deploy_sample_data
+	require_str =
+		ComposerHelper.build_require_string(new_resource.sample_data_module_list)
+	composer "Adding sample data modules: #{require_str}" do
+		action :require
+		package_name require_str
 	end
 end
 

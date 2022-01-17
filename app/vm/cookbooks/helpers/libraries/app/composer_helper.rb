@@ -7,16 +7,21 @@ class ComposerHelper
 	def ComposerHelper.build_require_string(module_list)
 		module_list
 			.each_with_object([]) do |m, arr|
-				if StringReplaceHelper.parse_source_url(m['source']).nil? &&
-						m['source'].include?('/')
-					req_str = m['source']
+				if m.is_a?(Hash)
+					if StringReplaceHelper.parse_source_url(m['source']).nil? &&
+							m['source'].include?('/')
+						req_str = m['source']
+					end
+
+					unless StringReplaceHelper.parse_source_url(m['source']).nil?
+						req_str = m['package_name']
+					end
+
+					req_str = [req_str, m['version']].join(':') unless m['version'].nil?
 				end
 
-				unless StringReplaceHelper.parse_source_url(m['source']).nil?
-					req_str = m['package_name']
-				end
+				req_str = [m, '*'].join(':') if m.is_a?(String)
 
-				req_str = [req_str, m['version']].join(':') unless m['version'].nil?
 				arr << req_str
 			end
 			.join(' ')

@@ -15,7 +15,7 @@ property :magento_version,
          default: node[:magento_patches][:magento][:version]
 property :sample_data_flag,
          [TrueClass, FalseClass],
-         default: node[:magento_patches][:magento][:sample_data]
+         default: node[:magento_patches][:magento][:sample_data][:apply]
 property :composer_file,
          String,
          default: node[:magento_patches][:composer][:file]
