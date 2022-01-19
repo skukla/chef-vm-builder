@@ -73,6 +73,8 @@ default[:magento][:build][:sample_data][:module_list] = %w[
 	magento/module-widget-sample-data
 	magento/module-wishlist-sample-data
 ]
+default[:magento][:build][:sample_data][:repository_url] =
+	'https://github.com/magento/magento2-sample-data.git'
 default[:magento][:build][:sample_data][:apply] = true
 default[:magento][:build][:deploy_mode][:apply] = true
 default[:magento][:build][:deploy_mode][:mode] = 'production'

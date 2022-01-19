@@ -27,6 +27,9 @@ property :build_action, String, default: node[:magento][:build][:action]
 property :sample_data_module_list,
          Array,
          default: node[:magento][:build][:sample_data][:module_list]
+property :sample_data_repository_url,
+         String,
+         default: node[:magento][:build][:sample_data][:repository_url]
 property :modules_to_remove,
          [String, Array],
          default: node[:magento][:build][:modules_to_remove]
@@ -90,6 +93,18 @@ action :add_sample_data do
 	composer "Adding sample data modules: #{require_str}" do
 		action :require
 		package_name require_str
+		options %w[no-update]
+	end
+end
+
+action :add_sample_data_media do
+	bash 'Adding sample data media' do
+		code <<-EOH
+		git clone --single-branch --branch #{new_resource.version} #{new_resource.sample_data_repository_url} vendor/magento/sample-data-media
+		cp -R vendor/magento/sample-data-media/pub/media/* pub/media/
+		rm -rf vendor/magento/sample-data-media
+  EOH
+		cwd new_resource.web_root
 	end
 end
 
