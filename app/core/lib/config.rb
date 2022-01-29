@@ -3,10 +3,7 @@ require 'json'
 
 class Config
 	class << self
-		attr_reader :app_root,
-		            :build_action_arr,
-		            :search_engine_type_arr,
-		            :restore_mode_arr
+		attr_reader :app_root
 	end
 	@app_root = "/#{File.join(Pathname.new(__dir__).each_filename.to_a[0...-3])}"
 	@search_path = 'infrastructure/search_engine'
@@ -64,8 +61,13 @@ class Config
 		setting('application/build/restore', 'mode')
 	end
 
+	def Config.hypervisor_list
+		hypervisor_arr = %i[virtualbox vmware_fusion]
+		hypervisor_arr.map { |hypervisor| hypervisor.to_s }
+	end
+
 	def Config.build_action_list
-		@build_action_arr = %i[
+		build_action_arr = %i[
 			install
 			force_install
 			restore
@@ -75,17 +77,17 @@ class Config
 			update_data
 			update_urls
 		]
-		@build_action_arr.map { |build_action| build_action.to_s }
+		build_action_arr.map { |build_action| build_action.to_s }
 	end
 
 	def Config.search_engine_type_list
-		@search_engine_type_arr = %i[elasticsearch live]
-		@search_engine_type_arr.map { |search_engine_type| search_engine_type.to_s }
+		search_engine_type_arr = %i[elasticsearch live]
+		search_engine_type_arr.map { |search_engine_type| search_engine_type.to_s }
 	end
 
 	def Config.restore_mode_list
-		@restore_mode_arr = %i[separate merge]
-		@restore_mode_arr.map { |restore_mode| restore_mode.to_s }
+		restore_mode_arr = %i[separate merge]
+		restore_mode_arr.map { |restore_mode| restore_mode.to_s }
 	end
 
 	def Config.elasticsearch_requested?

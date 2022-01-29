@@ -7,6 +7,7 @@ require_relative '../core/handlers/elasticsearch_handler'
 
 SystemHandler.clear_screen
 ValidationHandler.plugins
+ValidationHandler.hypervisor
 ValidationHandler.config_json_structure
 ValidationHandler.composer_credentials
 ValidationHandler.base_website

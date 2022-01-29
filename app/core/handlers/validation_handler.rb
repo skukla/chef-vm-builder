@@ -18,6 +18,14 @@ class ValidationHandler
 	@search_engine_type = Config.search_engine_type
 	@restore_mode = Config.restore_mode
 
+	def ValidationHandler.hypervisor
+		abort(ErrorMsg.show(:hypervisor_missing)) if Config.hypervisor.nil?
+
+		unless Config.hypervisor_list.include?(Config.hypervisor)
+			abort(ErrorMsg.show(:hypervisor_incorrect))
+		end
+	end
+
 	def ValidationHandler.config_json_structure
 		if DemoStructure.website_structure_missing?
 			abort(ErrorMsg.show(:website_structure_missing))
