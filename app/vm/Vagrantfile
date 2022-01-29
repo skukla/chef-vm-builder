@@ -28,7 +28,7 @@ Vagrant.configure('2') do |config|
 	end
 	config.hostsupdater.aliases = DemoStructure.additional_urls
 
-	config.vm.provider 'virtualbox' do |machine|
+	config.vm.provider Config.hypervisor do |machine|
 		machine.gui = false
 		machine.linked_clone = true
 		machine.default_nic_type = '82543GC'

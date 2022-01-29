@@ -13,7 +13,8 @@
       "description": "VM details, including a unique VM IP and name.",
       "required": [
         "ip",
-        "name"
+        "name",
+        "hypervisor"
       ],
       "properties": {
         "ip": {
@@ -26,6 +27,12 @@
           "type": "string",
           "description": "Unique virtual machine name.",
           "minLength": 1
+        },
+        "hypervisor": {
+          "type": "string",
+          "description": "Hypervisor provider. Either virtualbox or vmware_fusion.",
+          "minLength": 1,
+          "pattern": "(^virtualbox$|^vmware_fusion$)"
         }
       },
       "additionalProperties": false

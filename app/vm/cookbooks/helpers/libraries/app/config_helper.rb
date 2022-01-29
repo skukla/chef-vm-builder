@@ -49,6 +49,10 @@ class ConfigHelper
 		setting if setting.is_a?(String)
 	end
 
+	def ConfigHelper.hypervisor
+		setting('vm/hypervisor')
+	end
+
 	def ConfigHelper.url_protocol
 		usf = value('application/settings/use_secure_frontend')
 		usa = value('application/settings/use_secure_admin')

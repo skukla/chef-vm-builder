@@ -42,6 +42,10 @@ class Config
 		setting if setting.is_a?(String)
 	end
 
+	def Config.hypervisor
+		setting('vm/hypervisor')
+	end
+
 	def Config.build_action
 		setting('application/build/action')
 	end
