@@ -72,16 +72,9 @@ class ValidationHandler
 	end
 
 	def ValidationHandler.plugins
-		vagrant_plugin = VagrantPlugin
+		return if VagrantPlugin.list.empty?
 
-		if vagrant_plugin.list.nil?
-			vagrant_plugin.list = vagrant_plugin.required_plugins
-		end
-
-		return if (vagrant_plugin.list - vagrant_plugin.installed_plugins).empty?
-
-		System.install_vagrant_plugins(vagrant_plugin.list)
-
+		VagrantPlugin.install
 		abort(SuccessMsg.show(:plugins_installed))
 	end
 
