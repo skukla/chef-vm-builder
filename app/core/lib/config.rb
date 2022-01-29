@@ -9,9 +9,7 @@ class Config
 		            :restore_mode_arr
 	end
 	@app_root = "/#{File.join(Pathname.new(__dir__).each_filename.to_a[0...-3])}"
-	@build_action_setting = 'application/build/action'
-	@search_setting = 'infrastructure/search_engine'
-	@restore_setting = 'application/build/restore'
+	@search_path = 'infrastructure/search_engine'
 
 	def Config.remove_blanks(hash_or_array)
 		p =
@@ -45,21 +43,21 @@ class Config
 	end
 
 	def Config.build_action
-		setting(@build_action_setting)
+		setting('application/build/action')
 	end
 
 	def Config.search_engine_type
-		setting(@search_setting, 'type')
+		setting(@search_path, 'type')
 	end
 
 	def Config.wipe_search_engine?
-		setting = setting(@search_setting, 'wipe')
+		setting = setting(@search_path, 'wipe')
 		return false unless setting.is_a?(TrueClass) || setting.is_a?(FalseClass)
 		setting
 	end
 
 	def Config.restore_mode
-		setting(@restore_setting, 'mode')
+		setting('application/build/restore', 'mode')
 	end
 
 	def Config.build_action_list

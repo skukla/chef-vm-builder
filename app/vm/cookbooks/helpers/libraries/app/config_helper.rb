@@ -11,16 +11,7 @@ class ConfigHelper
 		attr_reader :app_root, :build_action_arr
 	end
 	@app_root = '/var/chef/cache/cookbooks'
-	@build_action_arr = %i[
-		install
-		force_install
-		restore
-		reinstall
-		update_all
-		update_app
-		update_data
-	]
-
+	
 	def ConfigHelper.remove_blanks(hash_or_array)
 		p =
 			proc do |*args|
@@ -45,8 +36,17 @@ class ConfigHelper
 		json.dig(*setting_path.split('/'))
 	end
 
-	def ConfigHelper.build_action_list
-		@build_action_arr.map { |build_action| build_action.to_s }
+	def ConfigHelper.setting(path, key = nil)
+		setting = value(path)
+
+		if setting.nil? || setting.empty? ||
+				(setting.is_a?(Hash) && (setting[key].nil? || setting[key].to_s.empty?))
+			return nil
+		end
+
+		return setting[key] if (setting.is_a?(Hash) && !setting[key].to_s.empty?)
+
+		setting if setting.is_a?(String)
 	end
 
 	def ConfigHelper.url_protocol
