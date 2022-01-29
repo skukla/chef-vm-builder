@@ -4,6 +4,7 @@ require_relative '../core/handlers/system_handler'
 require_relative '../core/handlers/validation_handler'
 require_relative '../core/handlers/entry_handler'
 require_relative '../core/handlers/elasticsearch_handler'
+require_relative '../core/handlers/hypervisor_handler'
 
 SystemHandler.clear_screen
 ValidationHandler.plugins
@@ -24,7 +25,7 @@ Vagrant.configure('2') do |config|
 	config.ssh.forward_agent = true
 	config.vm.box = 'bento/ubuntu-18.04'
 	config.vm.define 'Kukla-Machine' do |machine|
-		machine.vm.network 'private_network', ip: Config.value('vm/ip')
+		HypervisorHandler.configure_network(machine)
 		machine.vm.hostname = DemoStructure.base_url
 	end
 	config.hostsupdater.aliases = DemoStructure.additional_urls
@@ -32,21 +33,7 @@ Vagrant.configure('2') do |config|
 	config.vm.provider Config.hypervisor do |machine|
 		machine.gui = false
 		machine.linked_clone = true
-		machine.default_nic_type = '82543GC'
-		machine.customize [
-				'modifyvm',
-				:id,
-				'--name',
-				Config.value('vm/name'),
-				'--memory',
-				Config.value('remote_machine/memory'),
-				'--cpus',
-				Config.value('remote_machine/cpus'),
-				'--vram',
-				'16',
-				'--vrde',
-				'off',
-		                  ]
+		HypervisorHandler.customize_vm(machine)
 	end
 
 	config.trigger.before %i[up reload provision] do |trigger|
