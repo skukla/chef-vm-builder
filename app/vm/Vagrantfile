@@ -67,7 +67,7 @@ Vagrant.configure('2') do |config|
 		end
 	end
 
-	if Config.wipe_elasticsearch?
+	if Config.wipe_search_engine?
 		config.trigger.before %i[up reload provision destroy] do |trigger|
 			trigger.name = 'Wiping Elasticsearch'
 			trigger.ruby { ElasticsearchHandler.wipe }

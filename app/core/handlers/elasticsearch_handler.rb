@@ -36,13 +36,12 @@ class ElasticsearchHandler
 	end
 
 	def ElasticsearchHandler.wipe(index = nil)
-		build_action = Config.value('application/build/action')
 
 		unless Elasticsearch.is_running?
 			abort(ErrorMsg.show(:elasticsearch_unavailable))
 		end
 
-		if index.nil? && %w[install force_install restore].include?(build_action)
+		if index.nil? && %w[install force_install restore].include?(Config.build_action)
 			Elasticsearch.wipe
 		end
 

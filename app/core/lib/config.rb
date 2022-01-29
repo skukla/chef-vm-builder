@@ -35,7 +35,7 @@ class Config
 		setting = value(path)
 
 		if setting.nil? || setting.empty? ||
-				(setting.is_a?(Hash) && setting[key].nil?)
+				(setting.is_a?(Hash) && (setting[key].nil? || setting[key].to_s.empty?))
 			return nil
 		end
 
@@ -50,6 +50,12 @@ class Config
 
 	def Config.search_engine_type
 		setting(@search_setting, 'type')
+	end
+
+	def Config.wipe_search_engine?
+		setting = setting(@search_setting, 'wipe')
+		return false unless setting.is_a?(TrueClass) || setting.is_a?(FalseClass)
+		setting
 	end
 
 	def Config.restore_mode
@@ -83,12 +89,6 @@ class Config
 	def Config.elasticsearch_requested?
 		return true if search_engine_type == 'elasticsearch'
 		false
-	end
-
-	def Config.wipe_elasticsearch?
-		search_setting = value(@search_setting)
-
-		search_setting['wipe'] if elasticsearch_requested? && search_setting['wipe']
 	end
 
 	def Config.url_protocol
