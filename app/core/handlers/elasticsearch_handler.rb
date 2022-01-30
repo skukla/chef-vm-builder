@@ -1,9 +1,4 @@
-require_relative '../lib/config'
-require_relative '../lib/service_dependencies'
-require_relative '../lib/error_message'
-require_relative '../lib/success_message'
 require_relative '../lib/elasticsearch'
-require_relative '../lib/demo_structure'
 
 class ElasticsearchHandler
 	def ElasticsearchHandler.install
@@ -36,12 +31,12 @@ class ElasticsearchHandler
 	end
 
 	def ElasticsearchHandler.wipe(index = nil)
-
 		unless Elasticsearch.is_running?
 			abort(ErrorMsg.show(:elasticsearch_unavailable))
 		end
 
-		if index.nil? && %w[install force_install restore].include?(Config.build_action)
+		if index.nil? &&
+				%w[install force_install restore].include?(Config.build_action)
 			Elasticsearch.wipe
 		end
 

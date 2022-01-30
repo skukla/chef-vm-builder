@@ -1,8 +1,3 @@
-require_relative '../lib/config'
-require_relative '../lib/data_pack'
-require_relative '../lib/custom_module'
-require_relative '../lib/error_message'
-
 require 'fileutils'
 require 'json'
 

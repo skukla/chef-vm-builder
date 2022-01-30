@@ -1,4 +1,3 @@
-require_relative '../lib/system'
 require_relative '../lib/entry'
 require_relative '../lib/config'
 require_relative '../lib/composer'
@@ -11,7 +10,7 @@ require_relative '../lib/custom_module'
 require_relative '../lib/backup'
 require_relative '../lib/commerce_services'
 require_relative '../lib/service_dependencies'
-require_relative '../lib/elasticsearch'
+require_relative '../lib/hypervisor'
 
 class ValidationHandler
 	@build_action = Config.build_action
@@ -19,9 +18,9 @@ class ValidationHandler
 	@restore_mode = Config.restore_mode
 
 	def ValidationHandler.hypervisor
-		abort(ErrorMsg.show(:hypervisor_missing)) if Config.hypervisor.nil?
+		abort(ErrorMsg.show(:hypervisor_missing)) if Hypervisor.value.nil?
 
-		unless Config.hypervisor_list.include?(Config.hypervisor)
+		unless Hypervisor.list.include?(Hypervisor.value)
 			abort(ErrorMsg.show(:hypervisor_incorrect))
 		end
 	end

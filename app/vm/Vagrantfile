@@ -1,10 +1,7 @@
-require_relative '../core/lib/config'
-require_relative '../core/lib/demo_structure'
-require_relative '../core/lib/hypervisor'
 require_relative '../core/handlers/system_handler'
 require_relative '../core/handlers/validation_handler'
+require_relative '../core/handlers/hypervisor_handler'
 require_relative '../core/handlers/entry_handler'
-require_relative '../core/handlers/elasticsearch_handler'
 
 SystemHandler.clear_screen
 ValidationHandler.plugins
@@ -25,15 +22,15 @@ Vagrant.configure('2') do |config|
 	config.ssh.forward_agent = true
 	config.vm.box = 'bento/ubuntu-18.04'
 	config.vm.define 'Kukla-Machine' do |machine|
-		Hypervisor.configure_network(machine)
+		HypervisorHandler.configure_network(machine)
 		machine.vm.hostname = DemoStructure.base_url
 	end
 	config.hostsupdater.aliases = DemoStructure.additional_urls
 
-	config.vm.provider Config.hypervisor do |machine|
+	config.vm.provider Hypervisor.value do |machine|
 		machine.gui = false
 		machine.linked_clone = true
-		Hypervisor.customize_vm(machine)
+		HypervisorHandler.customize_vm(machine)
 	end
 
 	config.trigger.before %i[up reload provision] do |trigger|
@@ -45,27 +42,7 @@ Vagrant.configure('2') do |config|
 		end
 	end
 
-	if Config.elasticsearch_requested?
-		config.trigger.before %i[up reload provision] do |trigger|
-			trigger.name = 'Confirming Elasticsearch is present'
-			trigger.ruby do
-				ElasticsearchHandler.install
-				ElasticsearchHandler.start
-			end
-		end
-	end
-
-	if Config.wipe_search_engine?
-		config.trigger.before %i[up reload provision destroy] do |trigger|
-			trigger.name = 'Wiping Elasticsearch'
-			trigger.ruby { ElasticsearchHandler.wipe }
-		end
-	end
-
-	config.trigger.before :destroy do |trigger|
-		trigger.name = "Wiping Elasticsearch indices for #{DemoStructure.base_url}"
-		trigger.ruby { ElasticsearchHandler.wipe(DemoStructure.base_url) }
-	end
+	HypervisorHandler.configure_search(config)
 
 	config.vm.provision 'shell',
 	                    name: 'Installing pre-build packages',
