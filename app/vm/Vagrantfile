@@ -26,8 +26,6 @@ Vagrant.configure('2') do |config|
 	end
 
 	config.vm.provider Hypervisor.value do |machine|
-		machine.gui = false
-		machine.linked_clone = true
 		HypervisorHandler.customize_vm(machine)
 	end
 

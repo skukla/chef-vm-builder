@@ -13,6 +13,9 @@ class HypervisorHandler
 	end
 
 	def HypervisorHandler.customize_vm(machine)
+		machine.gui = false
+		machine.linked_clone = true
+
 		case @hypervisor
 		when 'virtualbox'
 			machine.default_nic_type = '82543GC'
