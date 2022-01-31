@@ -633,6 +633,18 @@
               "minLength": 1,
               "pattern": "^elasticsearch$|^live_search$"
             },
+            "version": {
+              "type": "string",
+              "description": "Elasticsearch version family. (Ex. 7.x).",
+              "minLength": 3,
+              "pattern": "^\\d+(.x)$"
+            },
+            "memory": {
+              "type": "string",
+              "description": "How much of the VM memory to use for Elasticsearch in gigabytes. (Ex. 2G).",
+              "minLength": 2,
+              "pattern": "^\\d+(G)$"
+            },
             "wipe": {
               "type": "boolean",
               "description": "Wipes the local elasticsearch instance before building the VM."

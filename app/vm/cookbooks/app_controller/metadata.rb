@@ -7,11 +7,12 @@ long_description 'Controls the VM Builder application flow'
 version '0.1.0'
 chef_version '>= 14.0'
 
-depends 'init' # Brings in web root and build action
+depends 'init' # Brings in web root, build action, and hypervisor
 depends 'ssl' # Brings in ssl usage
 depends 'nginx' # Brings in the web root
 depends 'mailhog' # Brings in mailhog usage
 depends 'samba' # Brings in samba usage
+depends 'search_engine' # This brings in search engine usage
 depends 'magento' # Brings in Magento usage
 depends 'magento_demo_builder' # Brings in Magento Demo Builder usage
 depends 'magento_restore' # Brings in the backup holding area

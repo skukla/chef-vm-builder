@@ -3,6 +3,9 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 # frozen_string_literal: true
 
+include_attribute 'init::default'
+default[:app_controller][:init][:hypervisor] = node[:init][:vm][:hypervisor]
+
 include_attribute 'nginx::default'
 default[:app_controller][:nginx][:web_root] = node[:nginx][:web_root]
 

@@ -23,6 +23,13 @@ module StringReplaceHelper
 		file.write_file
 	end
 
+	def StringReplaceHelper.set_java_home(file, java_home)
+		file = Chef::Util::FileEdit.new(file.to_s)
+		file.insert_line_if_no_match(/^JAVA_HOME=/, "JAVA_HOME=#{java_home}")
+		file.search_file_replace_line(/^JAVA_HOME=/, "JAVA_HOME=#{java_home}")
+		file.write_file
+	end
+
 	def StringReplaceHelper.remove_modules(selected_modules, composer_json)
 		modules_to_remove = []
 

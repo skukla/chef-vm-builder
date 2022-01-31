@@ -7,10 +7,14 @@ resource_name :vm_cli
 provides :vm_cli
 
 property :name, String, name_property: true
+property :hypervisor, String, default: node[:vm_cli][:init][:hypervisor]
 property :user, String, default: node[:vm_cli][:init][:user]
 property :group, String, default: node[:vm_cli][:init][:user]
 property :web_root, String, default: node[:vm_cli][:nginx][:web_root]
 property :php_version, String, default: node[:vm_cli][:php][:version]
+property :search_engine_type,
+         String,
+         default: node[:vm_cli][:search_engine][:type]
 property :magento_version, String, default: node[:vm_cli][:magento][:version]
 property :use_secure_frontend,
          [Integer, TrueClass, FalseClass, String],
@@ -59,11 +63,13 @@ action :install do
 		group new_resource.group
 		variables(
 			{
+				hypervisor: new_resource.hypervisor,
 				user: new_resource.user,
 				urls: DemoStructureHelper.vm_urls,
 				base_url: DemoStructureHelper.base_url,
 				web_root: new_resource.web_root,
 				php_version: new_resource.php_version,
+				search_engine_type: new_resource.search_engine_type,
 				magento_version: new_resource.magento_version,
 				db_host: new_resource.db_host,
 				db_user: new_resource.db_user,

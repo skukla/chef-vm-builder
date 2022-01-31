@@ -54,8 +54,7 @@ class MagentoHelper
 				"--session-save=#{install_settings[:session_save]}",
 			].join(' ')
 
-		if search_engine_type == 'elasticsearch' &&
-				check_version(version, '>=', '2.4.0')
+		if search_engine_type == 'elasticsearch'
 			install_str =
 				[
 					install_str,

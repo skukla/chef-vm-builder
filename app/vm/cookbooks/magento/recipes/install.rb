@@ -6,6 +6,8 @@
 build_action = node[:magento][:build][:action]
 restore_mode = node[:magento][:magento_restore][:mode]
 merge_restore = (build_action == 'restore' && restore_mode == 'merge')
+search_engine_type = node[:magento][:search_engine][:type]
+hypervisor = node[:magento][:init][:hypervisor]
 
 if %w[restore].include?(build_action)
 	magento_app 'Preparing to install after restoring backup' do
@@ -22,6 +24,13 @@ if %w[reinstall restore].include?(build_action)
 end
 
 if %w[install force_install reinstall restore].include?(build_action)
+	elasticsearch 'Restarting elasticsearch' do
+		action :restart
+		only_if do
+			search_engine_type == 'elasticsearch' && hypervisor == 'vmware_fusion'
+		end
+	end
+
 	clean_up_setting = node[:magento][:settings][:cleanup_database]
 	magento_app 'Install Magento' do
 		action :install

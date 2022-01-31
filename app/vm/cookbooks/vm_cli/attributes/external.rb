@@ -5,12 +5,16 @@
 
 include_attribute 'init::default'
 default[:vm_cli][:init][:user] = node[:init][:os][:user]
+default[:vm_cli][:init][:hypervisor] = node[:init][:vm][:hypervisor]
 
 include_attribute 'nginx::default'
 default[:vm_cli][:nginx][:web_root] = node[:nginx][:web_root]
 
 include_attribute 'php::default'
 default[:vm_cli][:php][:version] = node[:php][:version]
+
+include_attribute 'search_engine::default'
+default[:vm_cli][:search_engine][:type] = node[:search_engine][:type]
 
 include_attribute 'mysql::default'
 default[:vm_cli][:mysql][:db_host] = node[:mysql][:db_host]
