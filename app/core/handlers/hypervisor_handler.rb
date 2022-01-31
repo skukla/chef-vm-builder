@@ -6,7 +6,7 @@ class HypervisorHandler
 	def HypervisorHandler.configure_network(machine)
 		case @hypervisor
 		when 'virtualbox'
-			machine.vm.network 'private_network', ip: Config.value('vm/ip')
+			machine.vm.network 'private_network', type: 'dhcp'
 		when 'vmware_fusion'
 			machine.vm.network 'private_network'
 		end
@@ -31,6 +31,7 @@ class HypervisorHandler
 					'off',
 			                  ]
 		when 'vmware_fusion'
+			machine.allowlist_verified = true
 			machine.vmx['displayName'] = Config.value('vm/name')
 			machine.vmx['memsize'] = Config.value('remote_machine/memory')
 			machine.vmx['numvcpus'] = Config.value('remote_machine/cpus')
@@ -63,6 +64,30 @@ class HypervisorHandler
 						"Wiping Elasticsearch indices for #{DemoStructure.base_url}"
 					trigger.ruby { ElasticsearchHandler.wipe(DemoStructure.base_url) }
 				end
+			end
+		end
+	end
+
+	def HypervisorHandler.configure_hosts(config)
+		config.vm.hostname = DemoStructure.base_url
+		config.hostmanager.ip_resolver =
+			proc do |vm, resolving_vm|
+				if hostname = (vm.ssh_info && vm.ssh_info[:host])
+					`vagrant ssh -c "hostname -I"`.split[1]
+				end
+			end
+		config.hostmanager.enabled = true
+		config.hostmanager.manage_host = true
+		config.hostmanager.aliases = DemoStructure.additional_urls
+	end
+
+	def HypervisorHandler.copy_items(config)
+		config.trigger.before %i[up reload provision] do |trigger|
+			trigger.name = 'Copying items to VM and creating environment file'
+			trigger.ruby do
+				EntryHandler.copy_entries
+				EntryHandler.clean_up_hidden_files
+				EntryHandler.create_environment_file
 			end
 		end
 	end

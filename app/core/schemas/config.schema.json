@@ -12,7 +12,6 @@
       "type": "object",
       "description": "VM details, including a unique VM IP and name.",
       "required": [
-        "ip",
         "name",
         "hypervisor"
       ],
