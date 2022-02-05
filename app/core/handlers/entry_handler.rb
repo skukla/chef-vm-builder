@@ -87,18 +87,4 @@ class EntryHandler
 			.map { |entry| "#{File.join(Config.app_root, entry[:dest])}" }
 			.each { |path| SystemHandler.remove_ds_store_files(path) }
 	end
-
-	def EntryHandler.create_environment_file
-		environment_file_content = {
-			name: 'vm',
-			description: 'Configuration file for the Kukla Demo VM',
-			default_attributes: {},
-			override_attributes: Config.json,
-			chef_type: 'environment',
-		}
-		File.open(
-			File.join(@app_root, 'app/vm/environments/vm.json'),
-			'w+',
-		) { |file| file.puts(environment_file_content.to_json) }
-	end
 end

@@ -1,4 +1,5 @@
 require_relative 'text_formatter'
+require_relative 'config'
 
 class Message
 	@@format = "\n%s\n"
@@ -11,6 +12,7 @@ class Message
 	@@stop_underline = TextFormatter.value[:exit_underline]
 	@@oops = "#{@@bold}#{@@magenta}[OOPS]: #{@@reg}"
 	@@success = "#{@@bold}#{@@green}[SUCCESS]: #{@@reg}"
+	@@info = "#{@@bold}==> Kukla-Machine: #{@@bold}"
 
 	def Message.show(message_code)
 		sprintf(@@format, self.send(message_code.to_s))

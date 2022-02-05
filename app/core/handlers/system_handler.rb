@@ -2,7 +2,7 @@ require_relative '../lib/system'
 
 class SystemHandler
 	def SystemHandler.clear_screen
-		print System.cmd('clear')
+		System.sys_cmd('clear') if $stdout.isatty
 	end
 
 	def SystemHandler.remove_ds_store_files(path)

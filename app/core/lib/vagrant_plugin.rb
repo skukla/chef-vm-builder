@@ -5,7 +5,7 @@ class VagrantPlugin
 	class << self
 		attr_reader :required_plugins
 	end
-	@required_plugins = %w[vagrant-hostmanager]
+	@required_plugins = %w[]
 
 	def VagrantPlugin.installed_plugins
 		System

@@ -1,4 +1,6 @@
 require_relative 'elasticsearch_handler'
+require_relative 'file_handler'
+require_relative 'hosts_handler'
 
 class HypervisorHandler
 	@hypervisor = Hypervisor.value
@@ -73,15 +75,7 @@ class HypervisorHandler
 
 	def HypervisorHandler.configure_hosts(config)
 		config.vm.hostname = DemoStructure.base_url
-		config.hostmanager.ip_resolver =
-			proc do |vm, resolving_vm|
-				if hostname = (vm.ssh_info && vm.ssh_info[:host])
-					`vagrant ssh -c "hostname -I"`.split[1]
-				end
-			end
-		config.hostmanager.enabled = true
-		config.hostmanager.manage_host = true
-		config.hostmanager.aliases = DemoStructure.additional_urls
+		HostsHandler.manage_hosts(config)
 	end
 
 	def HypervisorHandler.copy_items(config)
@@ -90,7 +84,7 @@ class HypervisorHandler
 			trigger.ruby do
 				EntryHandler.copy_entries
 				EntryHandler.clean_up_hidden_files
-				EntryHandler.create_environment_file
+				FileHandler.create_environment_file
 			end
 		end
 	end
