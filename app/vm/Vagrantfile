@@ -1,7 +1,6 @@
 require_relative '../core/handlers/system_handler'
 require_relative '../core/handlers/validation_handler'
 require_relative '../core/handlers/hypervisor_handler'
-require_relative '../core/handlers/entry_handler'
 
 SystemHandler.clear_screen
 ValidationHandler.validate

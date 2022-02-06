@@ -1,6 +1,7 @@
 require_relative 'elasticsearch_handler'
-require_relative 'file_handler'
 require_relative 'hosts_handler'
+require_relative 'entry_handler'
+require_relative 'file_handler'
 
 class HypervisorHandler
 	@hypervisor = Hypervisor.value
