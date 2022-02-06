@@ -18,15 +18,17 @@ class FileHandler
 	end
 
 	def FileHandler.update_hosts_file(vm, action)
+		ip_address = Remote_Machine.ip_address(vm)
+		vm_id = Remote_Machine.vm_id(vm)
+		vm_urls = DemoStructure.vm_urls.join(' ')
+
 		case action
 		when :add
-			ip_address = Remote_Machine.ip_address(vm)
-			vm_urls = DemoStructure.vm_urls.join(' ')
 			System.sys_cmd(
-				"echo '#{ip_address} #{vm_urls} # vagrant-#{vm.id}' | sudo tee -a /etc/hosts >/dev/null",
+				"echo '#{ip_address} #{vm_urls} # vagrant-#{vm_id}' | sudo tee -a /etc/hosts >/dev/null",
 			)
 		when :remove
-			System.sys_cmd("sudo sed -i '' '/ # vagrant-#{vm.id}$/d' /etc/hosts")
+			System.sys_cmd("sudo sed -i '' '/ # vagrant-#{vm_id}$/d' /etc/hosts")
 		end
 	end
 
