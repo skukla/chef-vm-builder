@@ -4,18 +4,7 @@ require_relative '../core/handlers/hypervisor_handler'
 require_relative '../core/handlers/entry_handler'
 
 SystemHandler.clear_screen
-ValidationHandler.plugins
-ValidationHandler.hypervisor
-ValidationHandler.config_json_structure
-ValidationHandler.composer_credentials
-ValidationHandler.base_website
-ValidationHandler.build_action
-ValidationHandler.service_dependencies
-ValidationHandler.search_engine_type
-ValidationHandler.backups
-ValidationHandler.restore_mode
-ValidationHandler.data_packs
-ValidationHandler.csc_credentials
+ValidationHandler.validate
 
 Vagrant.configure('2') do |config|
 	config.ssh.insert_key = false

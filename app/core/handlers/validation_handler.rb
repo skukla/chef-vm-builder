@@ -17,6 +17,21 @@ class ValidationHandler
 	@search_engine_type = Config.search_engine_type
 	@restore_mode = Config.restore_mode
 
+	def ValidationHandler.validate
+		plugins
+		hypervisor
+		config_json_structure
+		composer_credentials
+		base_website
+		build_action
+		service_dependencies
+		search_engine_type
+		backups
+		restore_mode
+		data_packs
+		csc_credentials
+	end
+
 	def ValidationHandler.hypervisor
 		abort(ErrorMsg.show(:hypervisor_missing)) if Hypervisor.value.nil?
 
