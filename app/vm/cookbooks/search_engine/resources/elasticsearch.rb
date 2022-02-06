@@ -137,6 +137,13 @@ action :enable do
 	end
 end
 
+action :disable do
+	service 'elasticsearch' do
+		action :disable
+		only_if { ::Dir.exist?('/etc/elasticsearch') }
+	end
+end
+
 action :restart do
 	service 'elasticsearch' do
 		action :restart

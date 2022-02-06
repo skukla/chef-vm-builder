@@ -8,7 +8,6 @@ class CommerceServices
 	@required_fields = %w[production_api_key]
 	@required_modules = %w[
 		magento/product-recommendations
-		magento/live-search
 		magento/module-page-builder-product-recommendations
 		magento/module-visual-product-recommendations
 	]

@@ -11,7 +11,7 @@ class ConfigHelper
 		attr_reader :app_root, :build_action_arr
 	end
 	@app_root = '/var/chef/cache/cookbooks'
-	
+
 	def ConfigHelper.remove_blanks(hash_or_array)
 		p =
 			proc do |*args|
@@ -51,6 +51,10 @@ class ConfigHelper
 
 	def ConfigHelper.hypervisor
 		setting('vm/hypervisor')
+	end
+
+	def ConfigHelper.search_engine_type
+		setting('infrastructure/search_engine', 'type')
 	end
 
 	def ConfigHelper.url_protocol

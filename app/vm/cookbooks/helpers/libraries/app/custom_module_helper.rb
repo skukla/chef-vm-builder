@@ -12,4 +12,17 @@ class CustomModuleHelper
 
 		list.map { |md| ModuleSharedHelper.prepare_data(md, :cm) }
 	end
+
+	def CustomModuleHelper.list_with_live_search
+		live_search_module = {
+			source: 'magento/live-search',
+			vendor_string: 'magento',
+			package_name: 'magento/magento/live-search',
+			module_string: 'magento/live-search',
+			vendor_name: 'magento',
+			module_name: 'Magento/liveSearch',
+		}
+
+		list << live_search_module
+	end
 end

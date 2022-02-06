@@ -69,7 +69,6 @@ action :install do
 				base_url: DemoStructureHelper.base_url,
 				web_root: new_resource.web_root,
 				php_version: new_resource.php_version,
-				search_engine_type: new_resource.search_engine_type,
 				magento_version: new_resource.magento_version,
 				db_host: new_resource.db_host,
 				db_user: new_resource.db_user,

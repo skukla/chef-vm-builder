@@ -7,6 +7,47 @@ web_root = node[:magento][:nginx][:web_root]
 build_action = node[:magento][:build][:action]
 apply_deploy_mode = node[:magento][:build][:deploy_mode][:apply]
 deploy_mode = node[:magento][:build][:deploy_mode][:mode]
+restore_mode = node[:magento][:magento_restore][:mode]
+merge_restore = (build_action == 'restore' && restore_mode == 'merge')
+search_engine_type = node[:magento][:search_engine][:type]
+hypervisor = node[:magento][:init][:hypervisor]
+
+if %w[install force_install update_all update_app restore].include?(
+		build_action,
+   ) && search_engine_type == 'live_search'
+	magento_cli 'Disabling elasticsearch modules' do
+		action :disable_modules
+		modules ElasticsearchHelper.module_list
+	end
+end
+
+if %w[update_all update_app restore].include?(build_action) &&
+		search_engine_type == 'elasticsearch'
+	magento_cli 'Enabling elasticsearch modules' do
+		action :enable_modules
+		modules ElasticsearchHelper.module_list
+	end
+end
+
+if %w[update_all update_app].include?(build_action) || restore_mode == 'merge'
+	magento_cli 'Reset indexers and upgrade the database' do
+		action %i[reset_indexers db_upgrade]
+	end
+end
+
+if search_engine_type == 'live_search' && hypervisor == 'vmware_fusion'
+	elasticsearch 'Stopping and disabling elasticsearch' do
+		action %i[stop disable]
+	end
+end
+
+if %w[install force_install reinstall update_all update_app restore].include?(
+		build_action,
+   )
+	magento_app 'Set permissions after installation or database upgrade' do
+		action :set_permissions
+	end
+end
 
 if %w[install force_install reinstall update_all update_app restore].include?(
 		build_action,

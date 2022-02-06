@@ -4,8 +4,6 @@
 # frozen_string_literal: true
 
 build_action = node[:magento][:build][:action]
-restore_mode = node[:magento][:magento_restore][:mode]
-merge_restore = (build_action == 'restore' && restore_mode == 'merge')
 search_engine_type = node[:magento][:search_engine][:type]
 hypervisor = node[:magento][:init][:hypervisor]
 
@@ -23,14 +21,15 @@ if %w[reinstall restore].include?(build_action)
 	end
 end
 
-if %w[install force_install reinstall restore].include?(build_action)
+if %w[install force_install reinstall restore update_all update_app].include?(
+		build_action,
+   ) && hypervisor == 'vmware_fusion'
 	elasticsearch 'Restarting elasticsearch' do
 		action :restart
-		only_if do
-			search_engine_type == 'elasticsearch' && hypervisor == 'vmware_fusion'
-		end
 	end
+end
 
+if %w[install force_install reinstall restore].include?(build_action)
 	clean_up_setting = node[:magento][:settings][:cleanup_database]
 	magento_app 'Install Magento' do
 		action :install
@@ -58,23 +57,5 @@ if %w[install force_install reinstall restore].include?(build_action)
 				encryption_key: node[:magento][:settings][:encryption_key],
 			},
 		)
-	end
-end
-
-if %w[update_all update_app].include?(build_action) || restore_mode == 'merge'
-	magento_cli 'Reset indexers' do
-		action :reset_indexers
-	end
-
-	magento_cli 'Upgrade the Magento database' do
-		action :db_upgrade
-	end
-end
-
-if %w[install force_install reinstall update_all update_app restore].include?(
-		build_action,
-   )
-	magento_app 'Set permissions after installation or database upgrade' do
-		action :set_permissions
 	end
 end

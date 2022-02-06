@@ -17,6 +17,7 @@ property :config_scope_code, String, default: ''
 property :deploy_mode,
          String,
          default: node[:magento][:build][:deploy_mode][:mode]
+property :modules, Array, default: []
 property :cache_types, Array, default: []
 property :indexers, Array, default: []
 property :indexer_mode, String, default: 'schedule'
@@ -63,6 +64,22 @@ end
 action :deploy_sample_data do
 	execute new_resource.name do
 		command "su #{new_resource.user} -c 'bin/magento sampledata:deploy'"
+		cwd new_resource.web_root
+	end
+end
+
+action :enable_modules do
+	modules = new_resource.modules.join(' ') unless new_resource.modules.empty?
+	execute 'Enabling modules' do
+		command "su #{new_resource.user} -c 'bin/magento module:enable #{modules}'"
+		cwd new_resource.web_root
+	end
+end
+
+action :disable_modules do
+	modules = new_resource.modules.join(' ') unless new_resource.modules.empty?
+	execute 'Disabling modules' do
+		command "su #{new_resource.user} -c 'bin/magento module:disable #{modules}'"
 		cwd new_resource.web_root
 	end
 end

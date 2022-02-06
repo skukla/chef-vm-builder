@@ -17,6 +17,7 @@ crontab = "/var/spool/cron/crontabs/#{user}"
 commands = node[:magento][:build][:hooks][:commands]
 magento_cli_commands = MagentoHelper.build_command_list(:magento_cli)
 vm_cli_commands = MagentoHelper.build_command_list(:vm_cli)
+search_engine_type = node[:magento][:search_engine][:type]
 
 if %w[install force_install update_all update_data].include?(build_action) ||
 		merge_restore
@@ -36,8 +37,17 @@ magento_cli 'Enable cron' do
 	not_if { ::File.exist?(crontab) }
 end
 
-magento_cli 'Reset indexers, run cron, and clean cache' do
-	action %i[reset_indexers run_cron clean_cache]
+magento_cli 'Reset indexers and run cron' do
+	action %i[reset_indexers run_cron]
+end
+
+magento_cli 'Reindex' do
+	action :reindex
+	indexers MagentoHelper.indexer_list(search_engine_type)
+end
+
+magento_cli 'Clear cache' do
+	action :clear_cache
 end
 
 if %w[install force_install reinstall update_all update_app restore].include?(

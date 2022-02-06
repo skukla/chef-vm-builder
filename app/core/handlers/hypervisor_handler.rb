@@ -49,15 +49,15 @@ class HypervisorHandler
 		when 'virtualbox'
 			return if Elasticsearch.is_missing? || !Elasticsearch.is_running?
 
-			if Config.elasticsearch_requested? || Config.search_engine_type.nil?
-				config.trigger.before %i[up reload provision] do |trigger|
-					trigger.name = 'Confirming Elasticsearch is present'
-					trigger.ruby do
-						ElasticsearchHandler.install
-						ElasticsearchHandler.start
-					end
+			config.trigger.before %i[up reload provision] do |trigger|
+				trigger.name = 'Confirming Elasticsearch is present'
+				trigger.ruby do
+					ElasticsearchHandler.install
+					ElasticsearchHandler.start
 				end
+			end
 
+			if Config.elasticsearch_requested? || Config.search_engine_type.nil?
 				if Config.wipe_search_engine?
 					config.trigger.before %i[up reload provision] do |trigger|
 						trigger.name = 'Wiping Elasticsearch'

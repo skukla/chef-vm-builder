@@ -53,6 +53,23 @@ property :db_name, String, default: node[:magento][:mysql][:db_name]
 property :install_settings, Hash
 property :remove_generated, [TrueClass, FalseClass], default: true
 
+action :set_auth_credentials do
+	template new_resource.name.to_s do
+		source 'auth.json.erb'
+		path "/home/#{new_resource.user}/.composer/auth.json"
+		owner new_resource.user
+		group new_resource.group
+		mode '664'
+		variables(
+			{
+				public_key: new_resource.composer_public_key,
+				private_key: new_resource.composer_private_key,
+				github_token: new_resource.composer_github_token,
+			},
+		)
+	end
+end
+
 action :install do
 	magento_cli 'Install via the Magento CLI' do
 		action :install
@@ -68,23 +85,6 @@ action :install do
 				},
 				new_resource.install_settings,
 		               )
-	end
-end
-
-action :set_auth_credentials do
-	template new_resource.name.to_s do
-		source 'auth.json.erb'
-		path "/home/#{new_resource.user}/.composer/auth.json"
-		owner new_resource.user
-		group new_resource.group
-		mode '664'
-		variables(
-			{
-				public_key: new_resource.composer_public_key,
-				private_key: new_resource.composer_private_key,
-				github_token: new_resource.composer_github_token,
-			},
-		)
 	end
 end
 

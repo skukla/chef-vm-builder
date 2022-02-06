@@ -43,6 +43,9 @@ class MagentoHelper
 				"--language=#{install_settings[:language]}",
 				"--timezone=#{install_settings[:timezone]}",
 				"--currency=#{install_settings[:currency]}",
+				"--elasticsearch-host=#{install_settings[:elasticsearch_host]}",
+				"--elasticsearch-port=#{install_settings[:elasticsearch_port]}",
+				"--elasticsearch-index-prefix=#{install_settings[:elasticsearch_prefix]}",
 				"--admin-firstname=#{install_settings[:admin_firstname]}",
 				"--admin-lastname=#{install_settings[:admin_lastname]}",
 				"--admin-email=#{install_settings[:admin_email]}",
@@ -53,16 +56,6 @@ class MagentoHelper
 				"--use-secure-admin=#{ValueHelper.process_value(install_settings[:use_secure_admin])}",
 				"--session-save=#{install_settings[:session_save]}",
 			].join(' ')
-
-		if search_engine_type == 'elasticsearch'
-			install_str =
-				[
-					install_str,
-					"--elasticsearch-host=#{install_settings[:elasticsearch_host]}",
-					"--elasticsearch-port=#{install_settings[:elasticsearch_port]}",
-					"--elasticsearch-index-prefix=#{install_settings[:elasticsearch_prefix]}",
-				].join(' ')
-		end
 
 		if install_settings[:use_secure_frontend] ||
 				install_settings[:use_secure_admin]
@@ -100,6 +93,29 @@ class MagentoHelper
 			commands.reject { |command| command.include?(':') }
 		when :magento_cli
 			commands.select { |command| command.include?(':') }
+		end
+	end
+
+	def MagentoHelper.indexer_list(search_engine_type)
+		case search_engine_type
+		when 'elasticsearch'
+			[]
+		when 'live_search'
+			%w[
+				catalogrule_product
+				catalogrule_rule
+				catalog_category_product
+				customer_grid
+				design_config_grid
+				inventory
+				catalog_product_category
+				catalog_product_attribute
+				catalog_product_price
+				targetrule_product_rule
+				salesrule_rule
+				cataloginventory_stock
+				targetrule_rule_product
+			]
 		end
 	end
 end
