@@ -8,7 +8,7 @@ ValidationHandler.validate
 Vagrant.configure('2') do |config|
 	config.ssh.insert_key = false
 	config.ssh.forward_agent = true
-	config.vm.box = 'bento/ubuntu-18.04'
+	config.vm.box = Hypervisor.base_box
 	config.vm.define 'Kukla-Machine' do |machine|
 		HypervisorHandler.configure_network(machine)
 	end

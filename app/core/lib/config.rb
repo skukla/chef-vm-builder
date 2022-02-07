@@ -43,6 +43,10 @@ class Config
 		setting('vm/hypervisor')
 	end
 
+	def Config.base_box
+		setting('remote_machine/base_box')
+	end
+
 	def Config.build_action
 		setting('application/build/action')
 	end
@@ -59,11 +63,6 @@ class Config
 
 	def Config.restore_mode
 		setting('application/build/restore', 'mode')
-	end
-
-	def Config.hypervisor_list
-		hypervisor_arr = %i[virtualbox vmware_fusion]
-		hypervisor_arr.map { |hypervisor| hypervisor.to_s }
 	end
 
 	def Config.build_action_list

@@ -672,6 +672,12 @@
           "description": "The amount of host memory the VM can use in megabytes. Suggested: 8192.",
           "minLength": 4,
           "maxLength": 4
+        },
+        "base_box": {
+          "type": "string",
+          "description": "The box template Vagrant will use to create the VM via the specified provider.\nSupported are:\nbento/ubuntu-18.04 (Virtualbox only)",
+          "minLength": 1,
+          "pattern": "^(bento/ubuntu-18.04)$"
         }
       },
       "additionalProperties": false

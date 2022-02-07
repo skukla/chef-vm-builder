@@ -20,6 +20,7 @@ class ValidationHandler
 	def ValidationHandler.validate
 		plugins
 		hypervisor
+		base_box
 		config_json_structure
 		composer_credentials
 		base_website
@@ -37,6 +38,16 @@ class ValidationHandler
 
 		unless Hypervisor.list.include?(Hypervisor.value)
 			abort(ErrorMsg.show(:hypervisor_incorrect))
+		end
+	end
+
+	def ValidationHandler.base_box
+		hypervisor = Hypervisor.value
+		base_box = Hypervisor.base_box
+		base_boxes = Hypervisor.base_box_list
+
+		unless base_boxes[hypervisor].include?(base_box)
+			abort(ErrorMsg.show(:base_box_incorrect))
 		end
 	end
 
