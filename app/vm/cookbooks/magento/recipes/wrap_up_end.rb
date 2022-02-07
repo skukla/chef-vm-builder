@@ -46,8 +46,8 @@ magento_cli 'Reindex' do
 	indexers MagentoHelper.indexer_list(search_engine_type)
 end
 
-magento_cli 'Clear cache' do
-	action :clear_cache
+magento_cli 'Clean cache' do
+	action :clean_cache
 end
 
 if %w[install force_install reinstall update_all update_app restore].include?(
