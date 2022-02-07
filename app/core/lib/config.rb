@@ -66,7 +66,7 @@ class Config
 	end
 
 	def Config.build_action_list
-		build_action_arr = %i[
+		%w[
 			install
 			force_install
 			restore
@@ -76,17 +76,14 @@ class Config
 			update_data
 			update_urls
 		]
-		build_action_arr.map { |build_action| build_action.to_s }
 	end
 
 	def Config.search_engine_type_list
-		search_engine_type_arr = %i[elasticsearch live_search]
-		search_engine_type_arr.map { |search_engine_type| search_engine_type.to_s }
+		%w[elasticsearch live_search]
 	end
 
 	def Config.restore_mode_list
-		restore_mode_arr = %i[separate merge]
-		restore_mode_arr.map { |restore_mode| restore_mode.to_s }
+		%w[separate merge]
 	end
 
 	def Config.elasticsearch_requested?

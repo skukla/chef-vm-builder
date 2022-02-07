@@ -6,8 +6,7 @@ class Hypervisor
 	end
 
 	def Hypervisor.list
-		hypervisor_arr = %i[virtualbox vmware_fusion]
-		hypervisor_arr.map { |hypervisor| hypervisor.to_s }
+		%w[virtualbox vmware_fusion]
 	end
 
 	def Hypervisor.plugins
