@@ -5,8 +5,6 @@
 
 class MachineHelper
 	def MachineHelper.ip_address
-		SystemHelper.cmd(
-			"ifconfig eth1 | grep \"inet \" | awk '{print $2}' | tr -d '\n'",
-		)
+		SystemHelper.cmd("echo $(hostname -I) | grep -o \"[^ ]*$\"").chomp
 	end
 end
