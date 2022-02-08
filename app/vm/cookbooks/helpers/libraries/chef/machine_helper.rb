@@ -9,10 +9,6 @@ class MachineHelper
 	end
 
 	def MachineHelper.os_codename
-		label = 'UBUNTU_CODENAME='
-		SystemHelper
-			.cmd("cat /etc/os-release | grep #{label}")
-			.chomp
-			.gsub(label, '')
+		SystemHelper.cmd('lsb_release -cs').chomp
 	end
 end
