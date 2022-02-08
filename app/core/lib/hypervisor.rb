@@ -25,8 +25,8 @@ class Hypervisor
 
 	def Hypervisor.base_box_list
 		{
-			'virtualbox' => %w[bento/ubuntu-18.04],
-			'vmware_fusion' => %w[bento/ubuntu-18.04],
+			'virtualbox' => %w[bento/ubuntu-18.04 bento/ubuntu-21.10],
+			'vmware_fusion' => %w[bento/ubuntu-18.04 bento/ubuntu-21.10],
 		}
 	end
 end
