@@ -7,8 +7,6 @@ resource_name :mysql
 provides :mysql
 
 property :name, String, name_property: true
-property :os_codename, String, default: node[:mysql][:os][:codename]
-property :version, String, default: node[:mysql][:version]
 property :db_host, String, default: node[:mysql][:db_host]
 property :db_user, String, default: node[:mysql][:db_user]
 property :db_password, String, default: node[:mysql][:db_password]
@@ -30,23 +28,9 @@ property :max_heap_table_size,
          default: node[:mysql][:max_heap_table_size]
 
 action :install do
-	apt_repository 'MariaDB' do
-		uri "http://mariadb.mirror.liquidtelecom.com/repo/#{new_resource.version}/ubuntu"
-		arch 'amd64'
-		components ['main']
-		distribution new_resource.os_codename
-		keyserver 'keyserver.ubuntu.com'
-		key 'F1656F24C74CD1D8'
-		deb_src true
-		trusted true
+	apt_package 'mysql-server' do
+		action :install
 		not_if { ::Dir.exist?('/etc/mysql') }
-	end
-
-	%w[mariadb-server mariadb-client].each do |package|
-		apt_package package do
-			action :install
-			not_if { ::Dir.exist?('/etc/mysql') }
-		end
 	end
 end
 
@@ -89,13 +73,16 @@ action :enable do
 end
 
 action :create_database do
-	ruby_block "Create the #{new_resource.db_name} database" do
+	ruby_block "Create the #{new_resource.db_name} database and #{new_resource.db_user} user" do
 		block do
 			DatabaseHelper.execute_query(
 				"CREATE DATABASE IF NOT EXISTS #{new_resource.db_name}",
 			)
 			DatabaseHelper.execute_query(
-				"GRANT ALL ON #{new_resource.db_name}.* TO '#{new_resource.db_user}'@'#{new_resource.db_host}' IDENTIFIED BY '#{new_resource.db_password}' WITH GRANT OPTION",
+				"CREATE USER '#{new_resource.db_user}'@'#{new_resource.db_host}' IDENTIFIED BY '#{new_resource.db_password}'",
+			)
+			DatabaseHelper.execute_query(
+				"GRANT ALL PRIVILEGES ON * . * TO '#{new_resource.db_user}'@'#{new_resource.db_host}'",
 			)
 		end
 		action :create

@@ -3,7 +3,6 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 # frozen_string_literal: true
 
-default[:mysql][:version] = '10.4'
 default[:mysql][:socket] = '/var/run/mysqld/mysqld.sock'
 default[:mysql][:port] = 3306
 default[:mysql][:innodb_buffer_pool_size] = '1G'
