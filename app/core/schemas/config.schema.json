@@ -577,6 +577,12 @@
           "description": "Database name (defaults to magento) or an object with database settings.",
           "minLength": 1,
           "properties": {
+            "version": {
+              "type": "string",
+              "description": "MariaDB version (e.g. 10.4)",
+              "minLength": 1,
+              "pattern": "^\\d\\d.\\d$"
+            },
             "db_host": {
               "type": "string",
               "description": "Database host.",

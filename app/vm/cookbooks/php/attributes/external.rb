@@ -7,6 +7,7 @@ include_attribute 'init::default'
 include_attribute 'init::override'
 default[:php][:init][:user] = node[:init][:os][:user]
 default[:php][:init][:timezone] = node[:init][:os][:timezone]
+default[:php][:os][:codename] = node[:init][:os][:codename]
 
 include_attribute 'nginx::default'
 default[:php][:nginx][:web_root] = node[:nginx][:web_root]

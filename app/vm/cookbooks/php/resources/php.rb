@@ -21,17 +21,17 @@ property :zlib_output_compression,
 property :backend, String, default: node[:php][:backend]
 property :extension_list, Array, default: node[:php][:extension_list]
 property :sendmail_path, String, default: node[:php][:sendmail_path]
+property :os_codename, String, default: node[:php][:os][:codename]
 property :timezone, String, default: node[:php][:init][:timezone]
 property :apache_package_list, Array, default: node[:php][:apache_package_list]
 property :web_root, String, default: node[:php][:nginx][:web_root]
 property :command_list, [String, Array]
 
 action :install do
-	# Add PHP repository
 	apt_repository "php-#{new_resource.version}" do
 		uri 'ppa:ondrej/php'
 		components ['main']
-		distribution 'bionic'
+		distribution new_resource.os_codename
 		action :add
 		retries 3
 		not_if do

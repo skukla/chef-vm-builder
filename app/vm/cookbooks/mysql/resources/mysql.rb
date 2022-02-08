@@ -7,6 +7,8 @@ resource_name :mysql
 provides :mysql
 
 property :name, String, name_property: true
+property :os_codename, String, default: node[:mysql][:os][:codename]
+property :version, String, default: node[:mysql][:version]
 property :db_host, String, default: node[:mysql][:db_host]
 property :db_user, String, default: node[:mysql][:db_user]
 property :db_password, String, default: node[:mysql][:db_password]
@@ -26,16 +28,13 @@ property :tmp_table_size,
 property :max_heap_table_size,
          [String, Integer],
          default: node[:mysql][:max_heap_table_size]
-property :app_install_settings,
-         Array,
-         default: node[:mysql][:app_install_settings]
 
 action :install do
 	apt_repository 'MariaDB' do
-		uri 'http://mirror.zol.co.zw/mariadb/repo/10.3/ubuntu'
+		uri "http://mariadb.mirror.liquidtelecom.com/repo/#{new_resource.version}/ubuntu"
 		arch 'amd64'
 		components ['main']
-		distribution 'bionic'
+		distribution new_resource.os_codename
 		keyserver 'keyserver.ubuntu.com'
 		key 'F1656F24C74CD1D8'
 		deb_src true
