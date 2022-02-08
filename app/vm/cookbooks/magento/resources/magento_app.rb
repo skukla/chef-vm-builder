@@ -99,12 +99,8 @@ action :add_sample_data do
 end
 
 action :add_sample_data_media do
-	bash 'Adding sample data media' do
-		code <<-EOH
-		git clone --single-branch --branch #{new_resource.version} #{new_resource.sample_data_repository_url} vendor/magento/sample-data-media
-		cp -R vendor/magento/sample-data-media/pub/media/* pub/media/
-		rm -rf vendor/magento/sample-data-media
-  EOH
+	execute 'Adding sample data media' do
+		command 'cp -R vendor/magento/sample-data-media/* pub/media/'
 		cwd new_resource.web_root
 	end
 end

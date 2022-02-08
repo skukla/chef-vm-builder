@@ -72,6 +72,7 @@ default[:magento][:build][:sample_data][:module_list] = %w[
 	magento/module-theme-sample-data
 	magento/module-widget-sample-data
 	magento/module-wishlist-sample-data
+	magento/sample-data-media
 ]
 default[:magento][:build][:sample_data][:repository_url] =
 	'https://github.com/magento/magento2-sample-data.git'
