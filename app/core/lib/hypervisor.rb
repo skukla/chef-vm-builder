@@ -18,15 +18,9 @@ class Hypervisor
 	end
 
 	def Hypervisor.base_box
-		setting = Config.base_box
-		return base_box_list['virtualbox'].first if setting.nil?
-		setting
-	end
+		return Config.base_box unless Config.base_box.nil?
 
-	def Hypervisor.base_box_list
-		{
-			'virtualbox' => %w[bento/ubuntu-18.04 bento/ubuntu-21.10],
-			'vmware_fusion' => %w[bento/ubuntu-18.04 bento/ubuntu-21.10],
-		}
+		'bento/ubuntu-21.10' unless RUBY_PLATFORM.include?('x86')
+		'bytesguy/ubuntu-server-21.10-arm64' if RUBY_PLATFORM.include?('x86')
 	end
 end

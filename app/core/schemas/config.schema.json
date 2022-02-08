@@ -681,9 +681,8 @@
         },
         "base_box": {
           "type": "string",
-          "description": "The box template Vagrant will use to create the VM via the specified provider.\nSupported are:\nbento/ubuntu-18.04 (Virtualbox only)",
-          "minLength": 1,
-          "pattern": "(^bento/ubuntu-18.04$|^bento/ubuntu-21.10$)"
+          "description": "The box template Vagrant will use to create the VM via the specified provider.",
+          "minLength": 1
         }
       },
       "additionalProperties": false

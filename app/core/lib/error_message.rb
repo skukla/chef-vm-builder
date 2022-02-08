@@ -23,16 +23,6 @@ class ErrorMsg < Message
     TEXT
 	end
 
-	def ErrorMsg.base_box_incorrect
-		base_box = Hypervisor.base_box
-		base_box_list = Hypervisor.base_box_list
-		hypervisor = Hypervisor.value
-		msg = <<~TEXT
-    #{@@oops}It looks like you've got an incorrect base box setting: #{@@bold}#{@@cyan}#{base_box}#{@@reg}.\n\n\
-    Acceptable values for the #{@@bold}#{@@cyan}#{hypervisor}#{@@reg} hypervisor are:\n\n#{base_box_list[hypervisor].join("\n")}\n\nPlease check your config.json file.
-    TEXT
-	end
-
 	def ErrorMsg.composer_credentials_missing
 		msg = <<~TEXT
 		#{@@oops}It looks like you're missing your #{@@bold}#{@@cyan}composer keys #{@@reg}or \
