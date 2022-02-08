@@ -17,7 +17,7 @@ property :smtp_port, String, default: node[:mailhog][:smtp_port]
 action :install do
 	new_resource.repository_list.each do |repository|
 		execute "Use go to clone #{repository[:name]}" do
-			command "go get #{repository[:url]}"
+			command MailhogHelper.install_cmd(repository[:url])
 		end
 		execute "Copy #{repository[:name]} into /usr/local/bin" do
 			command "cp #{new_resource.go_install_path}/bin/#{repository[:name]} #{new_resource.install_path}/#{repository[:name].downcase}"
