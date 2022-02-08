@@ -1,4 +1,5 @@
 require_relative 'config'
+require_relative 'guest_machine'
 
 class Hypervisor
 	def Hypervisor.value
@@ -18,9 +19,16 @@ class Hypervisor
 	end
 
 	def Hypervisor.base_box
+		boxes = {
+			'intel' => 'bento/ubuntu-21.10',
+			'm1' => 'bytesguy/ubuntu-server-21.10-arm64',
+		}
+
 		return Config.base_box unless Config.base_box.nil?
 
-		'bento/ubuntu-21.10' unless RUBY_PLATFORM.include?('x86')
-		'bytesguy/ubuntu-server-21.10-arm64' if RUBY_PLATFORM.include?('x86')
+		base_box = boxes['intel'] if GuestMachine.is_intel?
+		base_box = boxes['m1'] unless GuestMachine.is_intel?
+
+		base_box
 	end
 end
