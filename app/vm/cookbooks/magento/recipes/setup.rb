@@ -12,10 +12,9 @@ php "Switch PHP user to #{user}" do
 	php_user user
 end
 
-if build_action == 'update'
+if %w[update_all update_app].include?(build_action)
 	magento_app 'Clear the cron schedule' do
 		action :clear_cron_schedule
-		only_if { ::File.exist?(crontab) }
 	end
 end
 

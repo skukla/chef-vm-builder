@@ -79,7 +79,7 @@ action :create_database do
 				"CREATE DATABASE IF NOT EXISTS #{new_resource.db_name}",
 			)
 			DatabaseHelper.execute_query(
-				"CREATE USER '#{new_resource.db_user}'@'#{new_resource.db_host}' IDENTIFIED BY '#{new_resource.db_password}'",
+				"CREATE USER IF NOT EXISTS '#{new_resource.db_user}'@'#{new_resource.db_host}' IDENTIFIED BY '#{new_resource.db_password}'",
 			)
 			DatabaseHelper.execute_query(
 				"GRANT ALL PRIVILEGES ON * . * TO '#{new_resource.db_user}'@'#{new_resource.db_host}'",
@@ -119,9 +119,7 @@ end
 
 action :run_query do
 	ruby_block "Executing MySQL query on the #{new_resource.db_name} database" do
-		block do
-			DatabaseHelper.execute_query(new_resource.db_query, new_resource.db_name)
-		end
+		block { DatabaseHelper.execute_query(new_resource.db_query) }
 		only_if { DatabaseHelper.db_exists?(new_resource.db_name) }
 	end
 end

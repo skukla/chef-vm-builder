@@ -232,7 +232,7 @@ function db() {
   DB_USER="<%= @db_user %>"
   DB_PASSWORD="<%= @db_password %>"
   DB_NAME="<%= @db_name %>"
-  mysql ${DB_NAME} -sN -h ${DB_HOST} -u ${DB_USER} -p${DB_PASSWORD}
+  sudo mysql ${DB_NAME} -sN -h ${DB_HOST} -u ${DB_USER} -p${DB_PASSWORD}
 }
 export -f db
 

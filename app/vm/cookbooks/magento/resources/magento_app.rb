@@ -138,11 +138,8 @@ action :remove_modules do
 end
 
 action :clear_cron_schedule do
-	ruby_block 'Clear the cron schedule table' do
-		block do
-			`mysql -uroot -e "USE #{new_resource.db_name};DELETE FROM cron_schedule;"`
-		end
-		action :create
+	mysql 'Clear the cron schedule table' do
+		DatabaseHelper.execute_query('DELETE FROM cron_schedule')
 	end
 end
 
