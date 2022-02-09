@@ -42,12 +42,13 @@ action :configure do
 		mode '644'
 	end
 
-	template 'Configure MariaDB' do
+	template 'Configure MySQL' do
 		source 'my.cnf.erb'
 		path '/etc/mysql/my.cnf'
 		owner 'root'
 		group 'root'
 		mode '644'
+		manage_symlink_source true
 		variables(
 			{
 				socket: new_resource.socket,
