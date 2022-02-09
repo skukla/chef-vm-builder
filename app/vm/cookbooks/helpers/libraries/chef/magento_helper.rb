@@ -95,27 +95,4 @@ class MagentoHelper
 			commands.select { |command| command.include?(':') }
 		end
 	end
-
-	def MagentoHelper.indexer_list(search_engine_type)
-		case search_engine_type
-		when 'elasticsearch'
-			[]
-		when 'live_search'
-			%w[
-				catalogrule_product
-				catalogrule_rule
-				catalog_category_product
-				customer_grid
-				design_config_grid
-				inventory
-				catalog_product_category
-				catalog_product_attribute
-				catalog_product_price
-				targetrule_product_rule
-				salesrule_rule
-				cataloginventory_stock
-				targetrule_rule_product
-			]
-		end
-	end
 end

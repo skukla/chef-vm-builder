@@ -32,22 +32,13 @@ if %w[install force_install reinstall restore].include?(build_action)
 	end
 end
 
+magento_cli 'Reset indexers, run cron, and clean cache' do
+	action %i[reset_indexers clean_cache]
+end
+
 magento_cli 'Enable cron' do
 	action :enable_cron
 	not_if { ::File.exist?(crontab) }
-end
-
-magento_cli 'Reset indexers and run cron' do
-	action %i[reset_indexers run_cron]
-end
-
-magento_cli 'Reindex' do
-	action :reindex
-	indexers MagentoHelper.indexer_list(search_engine_type)
-end
-
-magento_cli 'Clean cache' do
-	action :clean_cache
 end
 
 if %w[install force_install reinstall update_all update_app restore].include?(
