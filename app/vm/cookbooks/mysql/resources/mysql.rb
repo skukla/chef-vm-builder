@@ -119,7 +119,9 @@ end
 
 action :run_query do
 	ruby_block "Executing MySQL query on the #{new_resource.db_name} database" do
-		block { DatabaseHelper.execute_query(new_resource.db_query) }
+		block do
+			DatabaseHelper.execute_query(new_resource.db_query, new_resource.db_name)
+		end
 		only_if { DatabaseHelper.db_exists?(new_resource.db_name) }
 	end
 end

@@ -12,8 +12,9 @@ class DatabaseHelper
 		end
 	end
 
-	def DatabaseHelper.execute_query(query)
-		conn_head = "mysql --user=root --database=#{db_name}"
+	def DatabaseHelper.execute_query(query, db = nil)
+		conn_head = 'mysql --user=root'
+		conn_head = [conn_head, "--database=#{db_name}"].join(' ') unless db.nil?
 		SystemHelper.cmd([conn_head, "\"#{query};\""].join(' -N -s -e '))
 	end
 
@@ -47,9 +48,15 @@ end
 
 def DatabaseHelper.code_exists?(code)
 	website_result =
-		execute_query("SELECT COUNT\(*\) FROM store_website WHERE code = '#{code}'")
+		execute_query(
+			"SELECT COUNT\(*\) FROM store_website WHERE code = '#{code}'",
+			db_name,
+		)
 	store_view_result =
-		execute_query("SELECT COUNT\(*\) FROM store WHERE code = '#{code}'")
+		execute_query(
+			"SELECT COUNT\(*\) FROM store WHERE code = '#{code}'",
+			db_name,
+		)
 	website_result.to_i.positive? || store_view_result.to_i.positive?
 end
 
