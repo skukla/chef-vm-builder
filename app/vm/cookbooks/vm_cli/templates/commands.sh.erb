@@ -447,7 +447,7 @@ function prepare-backup() {
 
   for DIR in ${DIRS[@]}; do
     if [ ! -d $DIR ]; then
-      sudo mkdir -p $DIR
+      sudo mkdir -p $DIR 2>/dev/null
       sudo chown <%= @user %>:<%= @user %> $DIR
     fi
   done
@@ -460,9 +460,13 @@ function collect-data-packs() {
   DATA_PACKS_HOLDING_AREA="${BACKUP_HOLDING_AREA}/data-packs"
   CONFIG_JSON_FILE="<%= @config_json_dir %>/config.json"
 
+  if [ ! -d ${DATA_PACKS_HOLDING_AREA} ] || [ ! -d ${DATA_PACK_DIR} ]; then
+    return
+  fi
+  
   if [ -d ${DATA_PACK_DIR} ]; then
     printf "\nCollecting data packs..."
-    sudo cp -R ${DATA_PACK_DIR}/* ${DATA_PACKS_HOLDING_AREA}
+    sudo cp -R ${DATA_PACK_DIR}/* ${DATA_PACKS_HOLDING_AREA} 2>/dev/null
     printf "done.\n"
   fi
 
@@ -481,6 +485,10 @@ function zip-data-packs() {
   DATA_PACKS_HOLDING_AREA="${BACKUP_HOLDING_AREA}/data-packs"
   BACKUP_DIR="<%= @web_root%>/<%= @backup_dir %>"
 
+  if [ ! -d ${DATA_PACKS_HOLDING_AREA} ]; then
+    return
+  fi
+  
   printf "\nZipping data packs..."
   cd ${DATA_PACKS_HOLDING_AREA}
   
