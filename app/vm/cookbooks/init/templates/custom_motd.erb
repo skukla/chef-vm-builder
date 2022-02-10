@@ -5,11 +5,11 @@ export TERM=xterm-256color
 BOLD=$(tput bold)
 REG=$(tput sgr0)
 CYAN=$(tput setaf 6)
-MAILHOG_PORT=$(netstat -tulpn | grep "LISTEN" | grep "mailhog" | sort -n | awk '{print $4;exit;}' | sed -e 's/.*://')
+MAILHOG_PORT=$(sudo ss -ltnp | grep "mailhog" | sort -n | awk '{print $4;exit;}' | sed -e 's/.*://')
 if [ $MAILHOG_PORT == 1025 ]; then
-    MAILHOG_PORT=$(netstat -tulpn | grep "LISTEN" | grep "mailhog" | sort -r | awk '{print $4;exit;}' | sed -e 's/.*://')
+    MAILHOG_PORT=$(sudo ss -ltnp | grep "mailhog" | sort -r | awk '{print $4;exit;}' | sed -e 's/.*://')
 else
-    MAILHOG_PORT=$(netstat -tulpn | grep "LISTEN" | grep "mailhog" | sort -n | awk '{print $4;exit;}' | sed -e 's/.*://')
+    MAILHOG_PORT=$(sudo ss -ltnp | grep "mailhog" | sort -n | awk '{print $4;exit;}' | sed -e 's/.*://')
 fi
 
 # Print a horizontal rule
