@@ -18,8 +18,8 @@ Vagrant.configure('2') do |config|
 	end
 
 	HypervisorHandler.copy_items(config)
-	HypervisorHandler.configure_hosts(config)
 	HypervisorHandler.configure_search(config)
+	HypervisorHandler.configure_hosts(config)
 
 	config.vm.provision 'shell',
 	                    name: 'Installing pre-build packages',
