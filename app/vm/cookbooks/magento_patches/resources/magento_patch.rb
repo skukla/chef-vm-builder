@@ -86,7 +86,7 @@ end
 
 action :filter_directory do
 	bash 'Pull out patches from repository' do
-		code "git filter-branch --subdirectory-filter #{new_resource.directory_in_repository}"
+		code "git filter-repo --subdirectory-filter #{new_resource.directory_in_repository}"
 		cwd new_resource.patches_holding_area
 		ignore_failure :quiet
 	end
