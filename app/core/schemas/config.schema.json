@@ -638,6 +638,12 @@
               "minLength": 1,
               "pattern": "^elasticsearch$|^live_search$"
             },
+            "host": {
+              "type": "string",
+              "description": "Host IP address. (Local: 10.0.2.2, In-VM: 127.0.0.1) ",
+              "minLength": 1,
+              "pattern": "^10.0.2.2$|^127.0.0.1$"
+            },
             "version": {
               "type": "string",
               "description": "Elasticsearch version family. (Ex. 7.x).",
@@ -654,7 +660,8 @@
               "type": "boolean",
               "description": "Wipes the local elasticsearch instance before building the VM."
             }
-          }
+          },
+          "additionalProperties": false
         }
       },
       "additionalProperties": false

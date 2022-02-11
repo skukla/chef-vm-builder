@@ -12,6 +12,7 @@ override[:search_engine][:type] = setting if setting.is_a?(String)
 if setting.is_a?(Hash)
 	setting.each do |key, value|
 		override[:search_engine][key] = value if key == 'type'
-		override[:search_engine][:elasticsearch][key] = setting[key].downcase
+		override[:search_engine][:elasticsearch][key] =
+			setting[key].downcase unless key == 'type'
 	end
 end
