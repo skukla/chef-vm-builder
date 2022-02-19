@@ -29,8 +29,7 @@ if %w[update_all update_app restore].include?(build_action) &&
 	end
 end
 
-if %w[update_all update_app].include?(build_action) ||
-		(%w[restore].include?(build_action) && restore_mode == 'merge')
+if %w[update_all update_app restore].include?(build_action)
 	magento_cli 'Reset indexers and upgrade the database' do
 		action %i[reset_indexers db_upgrade]
 	end

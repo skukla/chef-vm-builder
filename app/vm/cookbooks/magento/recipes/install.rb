@@ -14,7 +14,7 @@ if %w[restore].include?(build_action)
 	end
 end
 
-if %w[reinstall restore].include?(build_action)
+if %w[reinstall].include?(build_action)
 	magento_app 'Preparing reinstall' do
 		action :prepare_reinstall
 		only_if { ::File.exist?("#{web_root}/app/etc/env.php") }
@@ -29,7 +29,7 @@ if %w[install force_install reinstall restore update_all update_app].include?(
 	end
 end
 
-if %w[install force_install reinstall restore].include?(build_action)
+if %w[install force_install reinstall].include?(build_action)
 	clean_up_setting = node[:magento][:settings][:cleanup_database]
 	magento_app 'Install Magento' do
 		action :install
