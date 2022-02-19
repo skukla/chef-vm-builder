@@ -33,8 +33,10 @@ if %w[update_all update_app].include?(build_action) || merge_restore
 end
 
 if install_sample_data &&
-		%w[install force_install update_all update_app].include?(build_action) ||
-		merge_restore
+		(
+			%w[install force_install update_all update_app].include?(build_action) ||
+				merge_restore
+		)
 	magento_app 'Adding sample data media' do
 		action :add_sample_data_media
 		not_if { ::File.exist?(sample_data_flag) }
