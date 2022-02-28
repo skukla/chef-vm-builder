@@ -10,22 +10,20 @@ unsecure_base_url = node[:magento][:settings][:unsecure_base_url]
 secure_base_url = node[:magento][:settings][:secure_base_url]
 additional_entries = DemoStructureHelper.additional_entries
 
-if build_action == 'update_urls'
-	magento_cli 'Configuring unsecure URL for the base website' do
-		action :config_set
-		config_path 'web/unsecure/base_url'
-		config_value "#{unsecure_base_url}"
-		config_scope 'website'
-		config_scope_code 'base'
-	end
+magento_cli 'Configuring unsecure URL for the base website' do
+	action :config_set
+	config_path 'web/unsecure/base_url'
+	config_value "#{unsecure_base_url}"
+	config_scope 'website'
+	config_scope_code 'base'
+end
 
-	magento_cli 'Configuring secure URL for the base website' do
-		action :config_set
-		config_path 'web/secure/base_url'
-		config_value "#{secure_base_url}"
-		config_scope 'website'
-		config_scope_code 'base'
-	end
+magento_cli 'Configuring secure URL for the base website' do
+	action :config_set
+	config_path 'web/secure/base_url'
+	config_value "#{secure_base_url}"
+	config_scope 'website'
+	config_scope_code 'base'
 end
 
 unless additional_entries.nil?
