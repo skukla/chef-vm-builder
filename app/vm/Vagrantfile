@@ -11,6 +11,7 @@ Vagrant.configure('2') do |config|
 	config.vm.box = Hypervisor.base_box
 	config.vm.define 'Kukla-Machine' do |machine|
 		HypervisorHandler.configure_network(machine)
+		HypervisorHandler.configure_hosts(config, machine)
 	end
 
 	config.vm.provider Hypervisor.value do |machine|
@@ -19,7 +20,6 @@ Vagrant.configure('2') do |config|
 
 	HypervisorHandler.copy_items(config)
 	HypervisorHandler.configure_search(config)
-	HypervisorHandler.configure_hosts(config)
 
 	config.vm.provision 'shell',
 	                    name: 'Installing pre-build packages',
