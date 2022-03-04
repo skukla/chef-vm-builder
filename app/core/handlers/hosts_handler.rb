@@ -6,9 +6,9 @@ class HostsHandler
 	def HostsHandler.manage_hosts(config)
 		config.hostmanager.enabled = true
 		config.hostmanager.manage_host = true
-		config.hostmanager.manage_guest = true
+		config.hostmanager.manage_guest = false
 		config.hostmanager.ignore_private_ip = false
-		config.hostmanager.include_offline = true
+		config.hostmanager.include_offline = false
 		config.hostmanager.aliases = DemoStructure.additional_urls
 		config.hostmanager.ip_resolver =
 			proc do |vm, _resolving_vm|
