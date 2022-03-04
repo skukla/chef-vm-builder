@@ -74,9 +74,9 @@ class HypervisorHandler
 		end
 	end
 
-	def HypervisorHandler.configure_hosts(config, machine)
+	def HypervisorHandler.configure_hosts(config)
 		config.vm.hostname = DemoStructure.base_url
-		HostsHandler.manage_hosts(config, machine)
+		HostsHandler.manage_hosts(config)
 	end
 
 	def HypervisorHandler.copy_items(config)
