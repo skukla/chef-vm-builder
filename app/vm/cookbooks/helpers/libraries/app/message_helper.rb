@@ -4,17 +4,16 @@
 # frozen_string_literal: true
 
 class MessageHelper
-	def MessageHelper.displayUrls(mailhog_port)
+	def MessageHelper.displayUrls(admin_path, mailhog_port)
 		msg = <<~TEXT
 		\n\n\
-		Admin Access and Mailbox\n\
-		------------------------
-		#{DemoStructureHelper.base_url_with_protocol}/admin
-		#{DemoStructureHelper.base_url_with_protocol}:#{mailhog_port}\n\n
 		Storefront Access\n\
 		-----------------
-		#{DemoStructureHelper.vm_urls_with_protocol.join("\n")}
-		\n
+		#{DemoStructureHelper.vm_urls_with_protocol.join("\n")}\n\n
+		Admin Access and Mailbox\n\
+		------------------------
+		#{DemoStructureHelper.base_url_with_protocol}/#{admin_path}
+		#{DemoStructureHelper.base_url_with_protocol}:#{mailhog_port}\n
 		TEXT
 		print msg
 	end

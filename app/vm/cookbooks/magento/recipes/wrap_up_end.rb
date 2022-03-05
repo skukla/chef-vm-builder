@@ -5,6 +5,7 @@
 
 user = node[:magento][:init][:user]
 web_root = node[:magento][:nginx][:web_root]
+admin_path = node[:magento][:settings][:backend_frontname]
 mailhog_port = node[:magento][:mailhog][:mh_port]
 build_action = node[:magento][:build][:action]
 restore_mode = node[:magento][:magento_restore][:mode]
@@ -96,6 +97,6 @@ if %w[install force_install reinstall update_all update_app restore].include?(
 end
 
 ruby_block 'Displaying URLs' do
-	block { MessageHelper.displayUrls(mailhog_port) }
+	block { MessageHelper.displayUrls(admin_path, mailhog_port) }
 	sensitive true
 end
