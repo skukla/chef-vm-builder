@@ -119,20 +119,6 @@ action :add_media_and_data do
 	end
 end
 
-action :clean_up do
-	data_pack = new_resource.data_pack_data
-	module_prefix = 'app/code'
-	github_url = StringReplaceHelper.parse_source_url(data_pack['source'])
-	module_prefix = 'vendor' if github_url
-	module_path =
-		"#{module_prefix}/#{data_pack['vendor_name']}/#{data_pack['module_name']}"
-
-	ruby_block "Remove unwanted hidden files from the #{data_pack['module_name']} data pack" do
-		block { DataPackHelper.clean_up("#{new_resource.web_root}/#{module_path}") }
-		only_if { ::Dir.exist?("#{new_resource.web_root}/#{module_path}") }
-	end
-end
-
 action :install do
 	data_pack = new_resource.data_pack_data
 	load_dirs = DataPackHelper.get_load_dirs(data_pack)

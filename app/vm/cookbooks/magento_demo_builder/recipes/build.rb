@@ -35,11 +35,6 @@ unless data_pack_list.empty?
 					end
 				end
 			end
-
-			magento_demo_builder "Cleaning up the #{data_pack['module_string']} data pack" do
-				action :clean_up
-				data_pack_data data_pack
-			end
 		end
 	end
 

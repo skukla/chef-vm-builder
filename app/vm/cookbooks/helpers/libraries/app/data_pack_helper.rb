@@ -38,11 +38,4 @@ class DataPackHelper
 			arr << item['data_path']
 		end
 	end
-
-	def DataPackHelper.clean_up(path)
-		@files_to_remove.each do |file_type|
-			SystemHelper.cmd("find #{path} -name '#{file_type}' -type f -delete")
-			puts "#{file_type} files removed"
-		end
-	end
 end
