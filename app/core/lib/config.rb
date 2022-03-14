@@ -47,6 +47,10 @@ class Config
 		setting('remote_machine/base_box')
 	end
 
+	def Config.gui
+		value('remote_machine/gui')
+	end
+
 	def Config.build_action
 		setting('application/build/action')
 	end

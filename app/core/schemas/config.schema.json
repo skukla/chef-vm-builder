@@ -686,6 +686,10 @@
           "minLength": 4,
           "maxLength": 4
         },
+        "gui": {
+          "type": "boolean",
+          "description": "Whether to show the VM in the hypervisor.  Defaults to false. Set to true in order for VM to show in the Library in VMWare Fusion."
+        },
         "base_box": {
           "type": "string",
           "description": "The box template Vagrant will use to create the VM via the specified provider.",

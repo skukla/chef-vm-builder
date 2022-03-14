@@ -18,6 +18,12 @@ class Hypervisor
 		end
 	end
 
+	def Hypervisor.gui
+		return Config.gui unless Config.gui.is_a?(FalseClass)
+
+		Config.gui
+	end
+
 	def Hypervisor.base_box
 		boxes = {
 			'intel' => 'bento/ubuntu-21.10',

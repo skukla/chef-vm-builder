@@ -16,7 +16,7 @@ class HypervisorHandler
 	end
 
 	def HypervisorHandler.customize_vm(machine)
-		machine.gui = false
+		machine.gui = Hypervisor.gui
 		machine.linked_clone = true
 
 		case @hypervisor
