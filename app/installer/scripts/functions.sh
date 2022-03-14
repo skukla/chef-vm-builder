@@ -4,15 +4,18 @@ is_mac() {
 }
 
 xcode_tools_installed() {
-    [[ -d /Library/Developer/CommandLineTools ]]
+    xcode-select -p &> /dev/null
+    [ $? -eq 0 ]
 }
 
 homebrew_installed() {
-    [[ -f /usr/local/bin/brew ]]
+    which -s brew
+    [ $? -eq 0 ]
 }
 
 elasticsearch_installed() {
-    [[ -d /usr/local/var/lib/elasticsearch ]]
+    which -s elasticsearch
+    [ $? -eq 0 ]
 }
 
 elasticsearch_is_running() {
@@ -101,3 +104,7 @@ uninstall_elasticsearch() {
     echo "Removing the Elasticsearch repository..."
     HOMEBREW_NO_AUTO_UPDATE=1 brew untap elastic/tap
 }
+
+if xcode_tools_installed; then echo 'XCode installed'; fi
+if homebrew_installed; then echo 'Homebrew installed'; fi
+if elasticsearch_installed; then echo 'Elasticsearch installed'; fi

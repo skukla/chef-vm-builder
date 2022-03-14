@@ -2,10 +2,12 @@ require_relative 'system'
 
 class ServiceDependencies
 	def ServiceDependencies.xcode_missing?
-		!Dir.exist?('/Library/Developer/CommandLineTools')
+		System.cmd('xcode-select -p')
+		!$?.exitstatus.zero?
 	end
 
 	def ServiceDependencies.homebrew_missing?
-		!File.exist?('/usr/local/bin/brew')
+		System.cmd('which -s brew')
+		!$?.exitstatus.zero?
 	end
 end

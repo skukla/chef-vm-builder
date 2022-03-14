@@ -1,10 +1,9 @@
 require_relative 'system'
-require_relative 'service_dependencies'
-require_relative 'entry'
 
 class Elasticsearch
 	def Elasticsearch.is_missing?
-		!Dir.exist?('/usr/local/var/lib/elasticsearch')
+		System.cmd('which -s elasticsearch')
+		!$?.exitstatus.zero?
 	end
 
 	def Elasticsearch.is_running?
