@@ -139,7 +139,10 @@ end
 
 action :clear_cron_schedule do
 	mysql 'Clear the cron schedule table' do
-		DatabaseHelper.execute_query('DELETE FROM cron_schedule')
+		DatabaseHelper.execute_query(
+			'DELETE FROM cron_schedule',
+			new_resource.db_name,
+		)
 	end
 end
 
