@@ -19,7 +19,12 @@ class Hypervisor
 	end
 
 	def Hypervisor.gui
-		return Config.gui unless Config.gui.is_a?(FalseClass)
+		case value
+		when 'virtualbox'
+			return false if Config.gui.nil?
+		when 'vmware_fusion'
+			return true if Config.gui.nil?
+		end
 
 		Config.gui
 	end
