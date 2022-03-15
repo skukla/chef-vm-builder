@@ -683,8 +683,7 @@
         "memory": {
           "type": "string",
           "description": "The amount of host memory the VM can use in megabytes. Suggested: 8192.",
-          "minLength": 4,
-          "maxLength": 4
+          "minLength": 4
         },
         "gui": {
           "type": "boolean",
