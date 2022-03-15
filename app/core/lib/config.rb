@@ -29,6 +29,9 @@ class Config
 	def Config.setting(path, key = nil)
 		setting = value(path)
 
+		return false if setting.is_a?(FalseClass)
+		return true if setting.is_a?(TrueClass)
+
 		if setting.nil? || setting.empty? ||
 				(setting.is_a?(Hash) && (setting[key].nil? || setting[key].to_s.empty?))
 			return nil
@@ -48,7 +51,7 @@ class Config
 	end
 
 	def Config.gui
-		value('remote_machine/gui')
+		setting('remote_machine/gui')
 	end
 
 	def Config.build_action

@@ -39,6 +39,9 @@ class ConfigHelper
 	def ConfigHelper.setting(path, key = nil)
 		setting = value(path)
 
+		return false if setting.is_a?(FalseClass)
+		return true if setting.is_a?(TrueClass)
+
 		if setting.nil? || setting.empty? ||
 				(setting.is_a?(Hash) && (setting[key].nil? || setting[key].to_s.empty?))
 			return nil
