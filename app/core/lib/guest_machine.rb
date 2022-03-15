@@ -1,6 +1,7 @@
+require_relative 'system'
+
 class GuestMachine
 	def GuestMachine.is_intel?
-		return false unless RUBY_PLATFORM.include?('x86')
-		true
+		System.cmd('uname -m').include?('x86_64')
 	end
 end
