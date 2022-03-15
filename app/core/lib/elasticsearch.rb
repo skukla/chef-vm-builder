@@ -1,9 +1,15 @@
 require_relative 'system'
+require_relative 'config'
+require_relative 'hypervisor'
 
 class Elasticsearch
 	def Elasticsearch.is_missing?
 		System.cmd('which -s elasticsearch')
 		!$?.exitstatus.zero?
+	end
+
+	def Elasticsearch.is_requested?
+		Hypervisor.elasticsearch_requested?
 	end
 
 	def Elasticsearch.is_running?

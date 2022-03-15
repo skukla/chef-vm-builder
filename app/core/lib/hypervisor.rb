@@ -19,14 +19,14 @@ class Hypervisor
 	end
 
 	def Hypervisor.gui
+		return Config.gui unless Config.gui.nil?
+
 		case value
 		when 'virtualbox'
-			return false if Config.gui.nil?
+			false
 		when 'vmware_fusion'
-			return true if Config.gui.nil?
+			true
 		end
-
-		Config.gui
 	end
 
 	def Hypervisor.base_box
@@ -41,5 +41,18 @@ class Hypervisor
 		base_box = boxes['m1'] unless GuestMachine.is_intel?
 
 		base_box
+	end
+
+	def Hypervisor.elasticsearch_requested?
+		unless Config.elasticsearch_requested?.nil?
+			return Config.elasticsearch_requested?
+		end
+
+		case value
+		when 'virtualbox'
+			true
+		when 'vmware_fusion'
+			false
+		end
 	end
 end
