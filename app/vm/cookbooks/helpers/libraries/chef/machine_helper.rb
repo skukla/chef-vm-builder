@@ -11,4 +11,9 @@ class MachineHelper
 	def MachineHelper.os_codename
 		SystemHelper.cmd('lsb_release -cs').chomp
 	end
+
+	def MachineHelper.arch
+		return 'arm64' unless SystemHelper.cmd('uname -m').include?('x86_64')
+		'amd64'
+	end
 end

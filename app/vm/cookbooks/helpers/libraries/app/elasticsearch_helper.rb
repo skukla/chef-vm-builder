@@ -4,6 +4,10 @@
 # frozen_string_literal: true
 
 class ElasticsearchHelper
+	def ElasticsearchHelper.host
+		HypervisorHelper.elasticsearch_host
+	end
+
 	def ElasticsearchHelper.module_list
 		%w[
 			Magento_Elasticsearch

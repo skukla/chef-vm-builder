@@ -9,7 +9,7 @@ default[:search_engine][:elasticsearch][:java][:group] = 'root'
 default[:search_engine][:elasticsearch][:user] = 'root'
 default[:search_engine][:elasticsearch][:java][:package] = 'openjdk-11-jdk'
 default[:search_engine][:elasticsearch][:java][:home] =
-	'/usr/lib/jvm/java-11-openjdk-amd64'
+	"/usr/lib/jvm/java-11-openjdk-#{MachineHelper.arch}"
 default[:search_engine][:elasticsearch][:java][:environment_file] =
 	'/etc/environment'
 default[:search_engine][:elasticsearch][:group] = 'elasticsearch'
@@ -26,12 +26,7 @@ default[:search_engine][:elasticsearch][:log_file_path] =
 	'/var/log/elasticsearch'
 default[:search_engine][:elasticsearch][:node_name] = 'elasticsearch'
 default[:search_engine][:elasticsearch][:version] = '7.x'
-case ConfigHelper.hypervisor
-when 'virtualbox'
-	default[:search_engine][:elasticsearch][:host] = '10.0.2.2'
-when 'vmware_fusion'
-	default[:search_engine][:elasticsearch][:host] = '127.0.0.1'
-end
+default[:search_engine][:elasticsearch][:host] = ElasticsearchHelper.host
 default[:search_engine][:elasticsearch][:prefix] = DemoStructureHelper.base_url
 default[:search_engine][:elasticsearch][:memory] = '2g'
 default[:search_engine][:elasticsearch][:port] = '9200'

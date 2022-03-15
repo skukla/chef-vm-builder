@@ -90,7 +90,7 @@ action :configure_jvm_options do
 		user new_resource.user
 		group new_resource.group
 		mode '644'
-		variables({ memory: new_resource.memory })
+		variables({ memory: new_resource.memory, arch: MachineHelper.arch })
 		only_if { ::Dir.exist?('/etc/elasticsearch') }
 	end
 end
