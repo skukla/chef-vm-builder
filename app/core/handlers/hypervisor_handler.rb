@@ -57,7 +57,7 @@ class HypervisorHandler
 
 				unless Elasticsearch.is_running?
 					config.trigger.before %i[up reload provision] do |trigger|
-						trigger.name = 'Confirming Elasticsearch is present'
+						trigger.name = 'Starting Elasticsearch'
 						trigger.ruby { ElasticsearchHandler.start }
 					end
 				end

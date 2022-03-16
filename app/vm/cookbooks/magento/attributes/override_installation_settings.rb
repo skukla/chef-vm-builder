@@ -1,5 +1,5 @@
 # Cookbook:: magento
-# Attribute:: installation_settings_override
+# Attribute:: override_installation_settings
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 # Supported settings: backend_frontname language currency admin_firstname admin_lastname
 # admin_email admin_user admin_password use_secure_frontend use_secure_admin encryption_key

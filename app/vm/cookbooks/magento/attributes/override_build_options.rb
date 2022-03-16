@@ -1,5 +1,5 @@
 # Cookbook:: magento
-# Attribute:: build_options_override
+# Attribute:: override_build_options
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 # Supported settings: action, sample_data, modules_to_remove, deploy_mode {apply, mode}
 # frozen_string_literal: true

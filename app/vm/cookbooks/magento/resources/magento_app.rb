@@ -27,9 +27,6 @@ property :build_action, String, default: node[:magento][:build][:action]
 property :sample_data_module_list,
          Array,
          default: node[:magento][:build][:sample_data][:module_list]
-property :sample_data_repository_url,
-         String,
-         default: node[:magento][:build][:sample_data][:repository_url]
 property :modules_to_remove,
          [String, Array],
          default: node[:magento][:build][:modules_to_remove]

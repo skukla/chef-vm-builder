@@ -1,5 +1,5 @@
 # Cookbook:: magento
-# Attribute:: build_hooks_override
+# Attribute:: override_build_hooks
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 # Supported settings: warm_cache, enable_media_gallery, commands[]
 # frozen_string_literal: true

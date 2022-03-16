@@ -1,5 +1,5 @@
 # Cookbook:: magento
-# Attribute:: application_options_override
+# Attribute:: override_application_options
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 # Supported settings: family, minimum_stability, version
 # frozen_string_literal: true
