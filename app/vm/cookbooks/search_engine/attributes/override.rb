@@ -1,9 +1,7 @@
 # Cookbook:: search_engine
 # Attribute:: override
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
-#
 # Supported settings: type, host, memory
-#
 # frozen_string_literal: true
 
 setting = ConfigHelper.value('infrastructure/search_engine')
