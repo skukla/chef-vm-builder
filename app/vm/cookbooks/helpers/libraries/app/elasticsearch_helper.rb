@@ -7,15 +7,4 @@ class ElasticsearchHelper
 	def ElasticsearchHelper.host
 		HypervisorHelper.elasticsearch_host
 	end
-
-	def ElasticsearchHelper.module_list
-		%w[
-			Magento_Elasticsearch
-			Magento_Elasticsearch6
-			Magento_Elasticsearch7
-			Magento_ElasticsearchCatalogPermissions
-			Magento_AdvancedSearch
-			Magento_InventoryElasticsearch
-		]
-	end
 end

@@ -34,3 +34,10 @@ default[:search_engine][:elasticsearch][:plugin_list] = %w[
 	analysis-phonetic
 	analysis-icu
 ]
+default[:search_engine][:elasticsearch][:module_list] = %w[
+	Magento_Elasticsearch
+	Magento_Elasticsearch6
+	Magento_Elasticsearch7
+	Magento_ElasticsearchCatalogPermissions
+	Magento_InventoryElasticsearch
+]
