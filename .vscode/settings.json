@@ -9,7 +9,6 @@
         "**/package*.json": true,
         "**/.vscode": true
     },
-    "terminal.integrated.automationShell.linux": "",
     "json.schemas": [
         {
             "fileMatch": [
