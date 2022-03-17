@@ -13,7 +13,7 @@
     "json.schemas": [
         {
             "fileMatch": [
-                "/config.json"
+                "/config*.json"
             ],
             "url": "./app/core/schemas/config.schema.json"
         }
