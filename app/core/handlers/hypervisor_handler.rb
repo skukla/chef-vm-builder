@@ -6,6 +6,12 @@ require_relative 'file_handler'
 class HypervisorHandler
 	@hypervisor = Hypervisor.value
 
+	def HypervisorHandler.configure_box_and_ssh(config)
+		config.ssh.insert_key = false
+		config.ssh.forward_agent = true
+		config.vm.box = Hypervisor.base_box
+	end
+
 	def HypervisorHandler.configure_network(machine)
 		case @hypervisor
 		when 'virtualbox'
@@ -41,6 +47,17 @@ class HypervisorHandler
 			machine.vmx['displayName'] = Config.value('vm/name')
 			machine.vmx['memsize'] = Config.value('remote_machine/memory')
 			machine.vmx['numvcpus'] = Config.value('remote_machine/cpus')
+		end
+	end
+
+	def HypervisorHandler.copy_items(config)
+		config.trigger.before %i[up reload provision] do |trigger|
+			trigger.name = 'Copying items to VM and creating environment file'
+			trigger.ruby do
+				EntryHandler.copy_entries
+				EntryHandler.clean_up_hidden_files
+				FileHandler.create_environment_file
+			end
 		end
 	end
 
@@ -83,17 +100,6 @@ class HypervisorHandler
 	def HypervisorHandler.configure_hosts(config)
 		config.vm.hostname = DemoStructure.base_url
 		HostsHandler.manage_hosts(config)
-	end
-
-	def HypervisorHandler.copy_items(config)
-		config.trigger.before %i[up reload provision] do |trigger|
-			trigger.name = 'Copying items to VM and creating environment file'
-			trigger.ruby do
-				EntryHandler.copy_entries
-				EntryHandler.clean_up_hidden_files
-				FileHandler.create_environment_file
-			end
-		end
 	end
 
 	def HypervisorHandler.vm_clean_up(config)
