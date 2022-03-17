@@ -1,6 +1,7 @@
 require_relative '../core/handlers/system_handler'
 require_relative '../core/handlers/validation_handler'
 require_relative '../core/handlers/hypervisor_handler'
+require_relative '../core/handlers/provisioner_handler'
 
 SystemHandler.clear_screen
 ValidationHandler.validate
@@ -20,22 +21,8 @@ Vagrant.configure('2') do |config|
 
 	HypervisorHandler.copy_items(config)
 	HypervisorHandler.configure_search(config)
-
-	config.vm.provision 'shell',
-	                    name: 'Installing pre-build packages',
-	                    path: 'scripts/install_prebuild_packages.sh'
-
-	config.vm.provision 'chef_zero' do |chef|
-		chef.version = '16.13.16'
-		chef.nodes_path = 'nodes'
-		chef.environments_path = 'environments'
-		chef.roles_path = 'roles'
-		chef.cookbooks_path = 'cookbooks'
-		chef.environment = 'vm'
-		chef.add_role 'main'
-		chef.arguments = '--chef-license accept'
-	end
-
+	ProvisionerHandler.install_prebuild_packages(config)
+	ProvisionerHandler.run_chef(config)
 	HypervisorHandler.configure_hosts(config)
 	HypervisorHandler.vm_clean_up(config)
 end
