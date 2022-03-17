@@ -578,9 +578,8 @@
           "properties": {
             "version": {
               "type": "string",
-              "description": "MariaDB version (e.g. 10.4)",
-              "minLength": 1,
-              "pattern": "^\\d\\d.\\d$"
+              "description": "MySQL version (e.g. 8.0.0)",
+              "minLength": 1
             },
             "db_host": {
               "type": "string",
