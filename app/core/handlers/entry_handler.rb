@@ -98,13 +98,12 @@ class EntryHandler
 
 		return unless Dir.exist?(vm_dir)
 
-		if Entry.last_slug(provider_dir) == hypervisor &&
-				Dir.exist?(provider_dir) && Dir.empty?(provider_dir)
-			FileUtils.rm_r(provider_dir)
+		if Entry.last_slug(provider_dir) == hypervisor && Dir.exist?(provider_dir)
+			FileUtils.rm_rf(provider_dir)
 		end
 
 		if Entry.last_slug(vm_dir) == vm_name && Dir.empty?(vm_dir)
-			FileUtils.rm_r(vm_dir)
+			FileUtils.rm_rf(vm_dir)
 		end
 	end
 end
