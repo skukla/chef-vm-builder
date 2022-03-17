@@ -9,6 +9,10 @@ class Entry
 		Pathname(File.join(Config.app_root, path_str))
 	end
 
+	def Entry.last_slug(path_arr)
+		path_arr.split('/').last
+	end
+
 	def Entry.files_from(file_path)
 		return nil unless File.exist?(path(file_path))
 

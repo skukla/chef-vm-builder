@@ -95,4 +95,11 @@ class HypervisorHandler
 			end
 		end
 	end
+
+	def HypervisorHandler.vm_clean_up(config)
+		config.trigger.after :destroy do |trigger|
+			trigger.name = 'Cleaning up VMs'
+			trigger.ruby { EntryHandler.remove_machine_dirs }
+		end
+	end
 end

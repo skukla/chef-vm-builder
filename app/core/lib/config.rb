@@ -42,6 +42,18 @@ class Config
 		setting if setting.is_a?(String)
 	end
 
+	def Config.vm_name
+		vm_name = setting('vm/name')
+
+		return nil if vm_name.nil?
+
+		vm_name
+			.gsub(/[^a-zA-Z0-9]/, ' ')
+			.strip
+			.split(' ')
+			.reduce { |new_string, chars| new_string += "-#{chars}" }
+	end
+
 	def Config.hypervisor
 		setting('vm/hypervisor')
 	end

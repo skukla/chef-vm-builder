@@ -7,6 +7,13 @@ class ErrorMsg < Message
 		super
 	end
 
+	def ErrorMsg.vm_name_missing
+		msg = <<~TEXT
+    #{@@oops}It looks like your #{@@bold}#{@@cyan}VM Name#{@@reg} is missing. \
+    Please check your config.json file.
+    TEXT
+	end
+
 	def ErrorMsg.hypervisor_missing
 		msg = <<~TEXT
 		#{@@oops}It looks like your #{@@bold}#{@@cyan}hypervisor#{@@reg} setting is \

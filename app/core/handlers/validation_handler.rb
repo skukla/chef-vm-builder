@@ -19,6 +19,7 @@ class ValidationHandler
 
 	def ValidationHandler.validate
 		plugins
+		vm_name
 		hypervisor
 		config_json_structure
 		composer_credentials
@@ -30,6 +31,10 @@ class ValidationHandler
 		restore_mode
 		data_packs
 		csc_credentials
+	end
+
+	def ValidationHandler.vm_name
+		abort(ErrorMsg.show(:vm_name_missing)) if Config.vm_name.nil?
 	end
 
 	def ValidationHandler.hypervisor

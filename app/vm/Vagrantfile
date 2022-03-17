@@ -9,7 +9,8 @@ Vagrant.configure('2') do |config|
 	config.ssh.insert_key = false
 	config.ssh.forward_agent = true
 	config.vm.box = Hypervisor.base_box
-	config.vm.define 'Kukla-Machine' do |machine|
+
+	config.vm.define Config.vm_name do |machine|
 		HypervisorHandler.configure_network(machine)
 	end
 
@@ -19,7 +20,6 @@ Vagrant.configure('2') do |config|
 
 	HypervisorHandler.copy_items(config)
 	HypervisorHandler.configure_search(config)
-	HypervisorHandler.configure_hosts(config)
 
 	config.vm.provision 'shell',
 	                    name: 'Installing pre-build packages',
@@ -35,4 +35,7 @@ Vagrant.configure('2') do |config|
 		chef.add_role 'main'
 		chef.arguments = '--chef-license accept'
 	end
+
+	HypervisorHandler.configure_hosts(config)
+	HypervisorHandler.vm_clean_up(config)
 end

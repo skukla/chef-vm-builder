@@ -68,7 +68,7 @@ class EntryHandler
 			unless dest_files.empty?
 				dest_files.each do |file|
 					path = File.join(@app_root, type[:dest], file)
-					FileUtils.rm_r(path) if File.directory?(path)
+					FileUtils.rm_r(path) if Dir.exist?(path)
 					FileUtils.rm(path) if File.file?(path)
 				end
 			end
@@ -86,5 +86,25 @@ class EntryHandler
 		entries
 			.map { |entry| "#{File.join(Config.app_root, entry[:dest])}" }
 			.each { |path| SystemHandler.remove_ds_store_files(path) }
+	end
+
+	def EntryHandler.remove_machine_dirs
+		machines_slug = File.join('app', 'vm', '.vagrant', 'machines')
+		vm_name = Config.vm_name
+		hypervisor = Hypervisor.value
+
+		vm_dir = File.join(@app_root, machines_slug, vm_name)
+		provider_dir = File.join(@app_root, machines_slug, vm_name, hypervisor)
+
+		return unless Dir.exist?(vm_dir)
+
+		if Entry.last_slug(provider_dir) == hypervisor &&
+				Dir.exist?(provider_dir) && Dir.empty?(provider_dir)
+			FileUtils.rm_r(provider_dir)
+		end
+
+		if Entry.last_slug(vm_dir) == vm_name && Dir.empty?(vm_dir)
+			FileUtils.rm_r(vm_dir)
+		end
 	end
 end
