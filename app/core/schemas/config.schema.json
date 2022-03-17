@@ -76,42 +76,40 @@
                     "type": "array",
                     "description": "Array of store objects.",
                     "minItems": 1,
-                    "items": [
-                      {
-                        "type": "object",
-                        "description": "Store object which has an array of store views for the store.",
-                        "required": [
-                          "store_views"
-                        ],
-                        "properties": {
-                          "store_views": {
-                            "type": "array",
-                            "description": "Array of store views",
-                            "minItems": 1,
-                            "items": {
-                              "type": "object",
-                              "description": "Store view object which expects a required store view code and an optional store view url.",
-                              "required": [
-                                "store_view_code"
-                              ],
-                              "properties": {
-                                "store_view_code": {
-                                  "type": "string",
-                                  "description": "Store view code used by Magento. Only letters and underscores allowed.",
-                                  "pattern": "^[A-Za-z0-9_]+$"
-                                },
-                                "store_view_url": {
-                                  "type": "string",
-                                  "description": "URL used to access the store view."
-                                }
+                    "items": {
+                      "type": "object",
+                      "description": "Store object which has an array of store views for the store.",
+                      "required": [
+                        "store_views"
+                      ],
+                      "properties": {
+                        "store_views": {
+                          "type": "array",
+                          "description": "Array of store views",
+                          "minItems": 1,
+                          "items": {
+                            "type": "object",
+                            "description": "Store view object which expects a required store view code and an optional store view url.",
+                            "required": [
+                              "store_view_code"
+                            ],
+                            "properties": {
+                              "store_view_code": {
+                                "type": "string",
+                                "description": "Store view code used by Magento. Only letters and underscores allowed.",
+                                "pattern": "^[A-Za-z0-9_]+$"
                               },
-                              "additionalProperties": false
-                            }
+                              "store_view_url": {
+                                "type": "string",
+                                "description": "URL used to access the store view."
+                              }
+                            },
+                            "additionalProperties": false
                           }
-                        },
-                        "additionalProperties": false
-                      }
-                    ]
+                        }
+                      },
+                      "additionalProperties": false
+                    }
                   }
                 },
                 "additionalProperties": false
