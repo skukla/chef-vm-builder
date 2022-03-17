@@ -1,5 +1,5 @@
 .DS_Store
-config.json
+config*.json
 tools/
 node_modules/
 Gemfile
