@@ -24,7 +24,8 @@
         },
         "name": {
           "type": "string",
-          "description": "Unique virtual machine name.",
+          "description": "Unique virtual machine name. Only letters, spaces, dashes, and/or underscores.",
+          "pattern": "^[a-zA-Z-_\\s]*$",
           "minLength": 1
         },
         "hypervisor": {
