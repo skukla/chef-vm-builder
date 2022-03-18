@@ -94,4 +94,14 @@ module StringReplaceHelper
 		url_segment = url.split('/') unless url.include?('git@github.com')
 		{ org: url_segment[0], module: url_segment[1].sub('.git', '') }
 	end
+
+	def StringReplaceHelper.find_in_file(path, pattern)
+		::File.foreach(path).grep(/#{pattern}/).any?
+	end
+
+	def StringReplaceHelper.replace_in_file(path, pattern, value)
+		file = Chef::Util::FileEdit.new(path)
+		file.search_file_replace_line(/#{pattern}/, value)
+		file.write_file
+	end
 end

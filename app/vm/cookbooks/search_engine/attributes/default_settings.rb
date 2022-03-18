@@ -1,5 +1,5 @@
 # Cookbook:: search_engine
-# Attribute:: elasticsearch_settings_default
+# Attribute:: default_settings
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 # frozen_string_literal: true
 
@@ -15,11 +15,4 @@ default[:search_engine][:elasticsearch][:port] = '9200'
 default[:search_engine][:elasticsearch][:plugin_list] = %w[
 	analysis-phonetic
 	analysis-icu
-]
-default[:search_engine][:elasticsearch][:module_list] = %w[
-	Magento_Elasticsearch
-	Magento_Elasticsearch6
-	Magento_Elasticsearch7
-	Magento_ElasticsearchCatalogPermissions
-	Magento_InventoryElasticsearch
 ]

@@ -40,6 +40,8 @@ default[:magento][:search_engine][:prefix] =
 	node[:search_engine][:elasticsearch][:prefix]
 default[:magento][:search_engine][:elasticsearch][:module_list] =
 	node[:search_engine][:elasticsearch][:module_list]
+default[:magento][:search_engine][:live_search][:module_list] =
+	node[:search_engine][:live_search][:module_list]
 
 include_attribute 'mailhog::default'
 default[:magento][:mailhog][:mh_port] = node[:mailhog][:mh_port]

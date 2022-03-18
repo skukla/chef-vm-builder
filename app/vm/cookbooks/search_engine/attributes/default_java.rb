@@ -1,5 +1,5 @@
 # Cookbook:: search_engine
-# Attribute:: java_default
+# Attribute:: default_java
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 # frozen_string_literal: true
 

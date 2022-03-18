@@ -11,22 +11,16 @@ restore_mode = node[:magento][:magento_restore][:mode]
 merge_restore = (build_action == 'restore' && restore_mode == 'merge')
 search_engine_type = node[:magento][:search_engine][:type]
 es_module_list = node[:magento][:search_engine][:elasticsearch][:module_list]
+ls_module_list = node[:magento][:search_engine][:live_search][:module_list]
 hypervisor = node[:magento][:init][:hypervisor]
 
-if %w[install force_install update_all update_app restore].include?(
-		build_action,
-   ) && search_engine_type == 'live_search'
-	magento_cli 'Disabling elasticsearch modules' do
-		action :disable_modules
-		modules es_module_list
-	end
-end
-
-if %w[update_all update_app restore].include?(build_action) &&
-		search_engine_type == 'elasticsearch'
-	magento_cli 'Enabling elasticsearch modules' do
-		action :enable_modules
-		modules es_module_list
+if (
+		%w[install force_install update_all update_app].include?(build_action) ||
+			merge_restore
+   )
+	ruby_block 'Setting search modules' do
+		block { MagentoHelper.switch_search_modules }
+		only_if { ::File.exist?(MagentoHelper.config_php) }
 	end
 end
 

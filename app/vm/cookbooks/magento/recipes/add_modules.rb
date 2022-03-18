@@ -4,6 +4,7 @@
 # frozen_string_literal: true
 
 web_root = node[:magento][:nginx][:web_root]
+family = node[:magento][:options][:family]
 build_action = node[:magento][:build][:action]
 restore_mode = node[:magento][:magento_restore][:mode]
 merge_restore = (build_action == 'restore' && restore_mode == 'merge')
@@ -12,6 +13,16 @@ data_pack_list = node[:magento][:data_packs][:data_pack_list]
 custom_module_list = node[:magento][:custom_modules][:module_list]
 install_sample_data = node[:magento][:build][:sample_data][:apply]
 sample_data_flag = "#{web_root}/var/.sample-data-state.flag"
+modules_to_add = node[:magento][:build][:modules_to_add]
+
+if !modules_to_add.empty? && family == 'enterprise'
+	composer 'Adding B2B and additional Commerce Services modules' do
+		action :require
+		package_name ComposerHelper.build_require_string(modules_to_add)
+		options %w[no-update]
+		only_if { ::File.exist?(composer_json) }
+	end
+end
 
 if !custom_module_list.empty? &&
 		(

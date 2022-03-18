@@ -1,5 +1,5 @@
 # Cookbook:: search_engine
-# Attribute:: elasticsearch_paths_default
+# Attribute:: default_paths
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 # frozen_string_literal: true
 

@@ -59,17 +59,4 @@ if %w[install force_install update_all update_app].include?(build_action)
 				::File.foreach(composer_json).grep(/replace/).none?
 		end
 	end
-
-	if family == 'enterprise'
-		composer 'Require the B2B modules' do
-			action :require
-			package_name 'magento/extension-b2b'
-			package_version '^1.0'
-			options %w[no-update]
-			only_if do
-				::File.exist?(composer_json) &&
-					::File.foreach(composer_json).grep(%r{magento/extension-b2b}).none?
-			end
-		end
-	end
 end

@@ -4,6 +4,7 @@
 # frozen_string_literal: true
 
 include_attribute 'magento::default_application_options'
+include_attribute 'magento::default_modules'
 include_attribute 'magento::default_commerce_services'
 include_attribute 'magento::default_build_options'
 include_attribute 'magento::default_installation_settings'

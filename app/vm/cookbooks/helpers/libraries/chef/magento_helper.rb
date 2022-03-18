@@ -95,4 +95,72 @@ class MagentoHelper
 			commands.select { |command| command.include?(':') }
 		end
 	end
+
+	def MagentoHelper.config_php
+		File.join(
+			Chef.node[:magento][:nginx][:web_root],
+			'app',
+			'etc',
+			'config.php',
+		)
+	end
+
+	def MagentoHelper.live_search_enabled?
+		StringReplaceHelper.find_in_file(config_php, "'Magento_LiveSearch' => 1")
+	end
+
+	def MagentoHelper.switch_search_modules
+		ls_module_list =
+			Chef.node[:magento][:search_engine][:live_search][:module_list]
+		es_module_list =
+			Chef.node[:magento][:search_engine][:elasticsearch][:module_list]
+		search_engine_type = Chef.node[:magento][:search_engine][:type]
+
+		if (search_engine_type == 'live_search' && live_search_enabled?) ||
+				(search_engine_type == 'elasticsearch' && !live_search_enabled?)
+			p 'No module changes made.'
+
+			return
+		end
+
+		if search_engine_type == 'elasticsearch' && live_search_enabled?
+			ls_module_list.each do |ls_module|
+				StringReplaceHelper.replace_in_file(
+					config_php,
+					"'#{ls_module}' => 1",
+					"'#{ls_module}' => 0,",
+				)
+			end
+
+			es_module_list.each do |es_module|
+				StringReplaceHelper.replace_in_file(
+					config_php,
+					"'#{es_module}' => 0",
+					"'#{es_module}' => 1,",
+				)
+			end
+
+			p 'Switched search to elastcsearch.'
+		end
+
+		if search_engine_type == 'live_search' && !live_search_enabled?
+			ls_module_list.each do |ls_module|
+				StringReplaceHelper.replace_in_file(
+					config_php,
+					"'#{ls_module}' => 0",
+					"'#{ls_module}' => 1,",
+				)
+			end
+
+			es_module_list.each do |es_module|
+				StringReplaceHelper.replace_in_file(
+					config_php,
+					"'#{es_module}' => 1",
+					"'#{es_module}' => 0,",
+				)
+			end
+
+			p 'Switched search to live_search.'
+		end
+	end
 end
