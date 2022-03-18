@@ -140,6 +140,18 @@ action :disable_cron do
 	end
 end
 
+action :enable_media_gallery do
+	execute 'Enable Media Gallery' do
+		command "su #{new_resource.user} -c 'bin/magento config:set system/media_gallery/enabled 1'"
+		cwd new_resource.web_root
+	end
+
+	execute 'Synchronize media assets' do
+		command "su #{new_resource.user} -c 'bin/magento media-gallery:sync'"
+		cwd new_resource.web_root
+	end
+end
+
 action :config_set do
 	command_string = "su #{new_resource.user} -c 'bin/magento config:set"
 	scope_string = "--scope=\"#{new_resource.config_scope}\""

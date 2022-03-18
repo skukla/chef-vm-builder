@@ -8,7 +8,6 @@ build_action = node[:magento][:build][:action]
 restore_mode = node[:magento][:magento_restore][:mode]
 merge_restore = (build_action == 'restore' && restore_mode == 'merge')
 csc_options = node[:magento][:csc_options]
-enable_media_gallery = node[:magento][:build][:hooks][:enable_media_gallery]
 
 if %w[install force_install reinstall update_all update_app].include?(
 		build_action,
@@ -43,12 +42,8 @@ if (
 		%w[install force_install reinstall update_all update_app].include?(
 			build_action,
 		) || merge_restore
-   ) && enable_media_gallery
-	media_gallery_commands =
-		"config:set system/media_gallery/enabled #{ValueHelper.bool_to_int(enable_media_gallery)}"
-	media_gallery_commands = [media_gallery_commands, 'media-gallery:sync']
-	magento_cli 'Running the enable_media_gallery hook' do
-		action :run
-		command_list media_gallery_commands
+   )
+	magento_cli 'Enabling Media Gallery and syncing media' do
+		action :enable_media_gallery
 	end
 end

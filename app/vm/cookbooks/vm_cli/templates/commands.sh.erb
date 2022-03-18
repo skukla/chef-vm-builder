@@ -176,6 +176,16 @@ function prod-mode() {
 }
 export -f prod-mode
 
+function enable-media-gallery() {
+  printf "\nEnabling media gallery...\n"
+  www
+  ./bin/magento config:set system/media_gallery/enabled 1
+
+  printf "\nSynchronizing media assets...\n"
+  ./bin/magento media-gallery:sync
+}
+export -f enable-media-gallery
+
 function start-consumers() {
   CONSUMERS_LIST=(
     <% @consumer_list.each do |consumer| %>

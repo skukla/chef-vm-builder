@@ -405,10 +405,6 @@
                   "type": "boolean",
                   "description": "Warm the cache? Either true or false."
                 },
-                "enable_media_gallery": {
-                  "type": "boolean",
-                  "description": "Enable the media gallery? Either true or false."
-                },
                 "backup": {
                   "type": "boolean",
                   "description": "Take a backup of the build? Either true or false."

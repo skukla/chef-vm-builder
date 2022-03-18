@@ -55,7 +55,6 @@
 			"patches": true,
 			"hooks": {
 				"warm_cache": false,
-				"enable_media_gallery": true,
 				"backup": false
 			}
 		},
