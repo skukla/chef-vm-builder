@@ -19,7 +19,6 @@ Vagrant.configure('2') do |config|
 
 	HypervisorHandler.copy_items(config)
 	HypervisorHandler.configure_search(config)
-	ProvisionerHandler.install_prebuild_packages(config)
 	ProvisionerHandler.run_chef(config)
 	HypervisorHandler.configure_hosts(config)
 	HypervisorHandler.vm_clean_up(config)

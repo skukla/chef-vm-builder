@@ -98,7 +98,13 @@ class EntryHandler
 
 		return unless Dir.exist?(vm_dir)
 
-		if Entry.last_slug(provider_dir) == hypervisor && Dir.exist?(provider_dir)
+		provider_slug = Entry.last_slug(provider_dir)
+
+		if Dir.exist?(provider_dir) &&
+				(
+					Hypervisor.list.include?(provider_slug) ||
+						hypervisor.include?('vmware')
+				)
 			FileUtils.rm_rf(provider_dir)
 		end
 

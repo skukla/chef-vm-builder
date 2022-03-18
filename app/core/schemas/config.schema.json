@@ -30,9 +30,9 @@
         },
         "hypervisor": {
           "type": "string",
-          "description": "Hypervisor provider. Either virtualbox or vmware_fusion.",
+          "description": "Hypervisor provider. Either virtualbox, vmware_fusion, or vmware_desktop.",
           "minLength": 1,
-          "pattern": "(^virtualbox$|^vmware_fusion$)"
+          "pattern": "(^virtualbox$|^vmware_fusion$|^vmware_desktop$)"
         }
       },
       "additionalProperties": false

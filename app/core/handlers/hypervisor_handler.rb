@@ -13,10 +13,10 @@ class HypervisorHandler
 	end
 
 	def HypervisorHandler.configure_network(machine)
-		case @hypervisor
-		when 'virtualbox'
+		case
+		when @hypervisor.include?('virtualbox')
 			machine.vm.network 'private_network', type: 'dhcp'
-		when 'vmware_fusion'
+		when @hypervisor.include?('vmware')
 			machine.vm.network 'private_network'
 		end
 	end
@@ -25,8 +25,8 @@ class HypervisorHandler
 		machine.gui = Hypervisor.gui
 		machine.linked_clone = true
 
-		case @hypervisor
-		when 'virtualbox'
+		case
+		when @hypervisor.include?('virtualbox')
 			machine.default_nic_type = '82543GC'
 			machine.customize [
 					'modifyvm',
@@ -42,7 +42,7 @@ class HypervisorHandler
 					'--vrde',
 					'off',
 			                  ]
-		when 'vmware_fusion'
+		when @hypervisor.include?('vmware')
 			machine.allowlist_verified = true
 			machine.vmx['displayName'] = Config.value('vm/name')
 			machine.vmx['memsize'] = Config.value('remote_machine/memory')

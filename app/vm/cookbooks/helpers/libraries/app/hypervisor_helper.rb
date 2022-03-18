@@ -9,10 +9,10 @@ class HypervisorHelper
 	end
 
 	def HypervisorHelper.elasticsearch_host
-		case value
-		when 'virtualbox'
+		case
+		when value.include?('virtualbox')
 			'10.0.2.2'
-		when 'vmware_fusion'
+		when value.include?('vmware')
 			'127.0.0.1'
 		end
 	end

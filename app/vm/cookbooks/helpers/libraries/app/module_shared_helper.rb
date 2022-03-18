@@ -24,7 +24,7 @@ class ModuleSharedHelper
 				'composer.json',
 			].join('/')
 
-		JSON.parse(SystemHelper.cmd("curl -s #{url_str} | jq .name"))
+		StringReplaceHelper.parse_module_name(url_str)
 	end
 
 	def ModuleSharedHelper.set_dev_master_version(version_str)

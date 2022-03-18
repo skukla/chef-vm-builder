@@ -104,4 +104,11 @@ module StringReplaceHelper
 		file.search_file_replace_line(/#{pattern}/, value)
 		file.write_file
 	end
+
+	def StringReplaceHelper.parse_module_name(url_str)
+		json = JSON.parse(SystemHelper.cmd("curl -s #{url_str}"))
+		return nil if json['name'].nil?
+
+		json['name']
+	end
 end

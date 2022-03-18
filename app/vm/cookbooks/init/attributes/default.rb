@@ -15,4 +15,5 @@ default[:init][:os][:install_package_list] = %w[
 	tree
 	python3-pip
 	git-filter-repo
+	jq
 ]

@@ -12,4 +12,4 @@ include_recipe 'nginx::default'
 include_recipe 'mysql::default'
 include_recipe 'mailhog::default'
 include_recipe 'samba::default'
-include_recipe 'search_engine::elasticsearch' if hypervisor == 'vmware_fusion'
+include_recipe 'search_engine::elasticsearch' if hypervisor.include?('vmware')

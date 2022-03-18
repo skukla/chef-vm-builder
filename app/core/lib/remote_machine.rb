@@ -1,5 +1,5 @@
 require_relative 'system'
-require_relative 'config'
+require_relative 'hypervisor'
 
 class Remote_Machine
 	def Remote_Machine.ip_address(vm)
@@ -9,7 +9,7 @@ class Remote_Machine
 	end
 
 	def Remote_Machine.vm_id(vm)
-		if Config.hypervisor == 'vmware_fusion'
+		if Hypervisor.value.include?('vmware')
 			arr = vm.id.split('/')
 			return arr[arr.length - 2]
 		end

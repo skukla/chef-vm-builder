@@ -30,7 +30,7 @@ if %w[update_all update_app restore].include?(build_action)
 	end
 end
 
-if search_engine_type == 'live_search' && hypervisor == 'vmware_fusion'
+if search_engine_type == 'live_search' && hypervisor.include?('vmware')
 	elasticsearch 'Stopping and disabling elasticsearch' do
 		action %i[stop disable]
 	end

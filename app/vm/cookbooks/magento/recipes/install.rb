@@ -23,7 +23,7 @@ end
 
 if %w[install force_install reinstall restore update_all update_app].include?(
 		build_action,
-   ) && hypervisor == 'vmware_fusion'
+   ) && hypervisor.include?('vmware')
 	elasticsearch 'Restarting elasticsearch' do
 		action :restart
 	end

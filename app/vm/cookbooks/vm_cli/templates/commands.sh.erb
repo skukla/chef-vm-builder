@@ -253,7 +253,7 @@ function status-db() {
 }
 export -f status-db
 
-<% if @hypervisor == 'vmware_fusion' %>
+<% if @hypervisor.include?('vmware') %>
 # Elasticsearch
 function enable-elasticsearch() {
   printf "\nEnabling Elasticsearch...\n"

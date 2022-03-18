@@ -11,9 +11,9 @@ class Hypervisor
 	end
 
 	def Hypervisor.plugins
-		case value
-		when 'virtualbox'
-		when 'vmware_fusion'
+		case
+		when value.include?('virtualbox')
+		when value.include?('vmware')
 			%w[vagrant-vmware-desktop]
 		end
 	end
@@ -21,10 +21,10 @@ class Hypervisor
 	def Hypervisor.gui
 		return Config.gui unless Config.gui.nil?
 
-		case value
-		when 'virtualbox'
+		case
+		when value.include?('virtualbox')
 			false
-		when 'vmware_fusion'
+		when value.include?('vmware')
 			true
 		end
 	end
@@ -48,10 +48,10 @@ class Hypervisor
 			return Config.elasticsearch_requested?
 		end
 
-		case value
-		when 'virtualbox'
+		case
+		when value.include?('virtualbox')
 			true
-		when 'vmware_fusion'
+		when value.include?('vmware')
 			false
 		end
 	end
