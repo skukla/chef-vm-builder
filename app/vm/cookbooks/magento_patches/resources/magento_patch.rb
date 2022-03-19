@@ -62,7 +62,7 @@ action :remove_from_web_root do
 end
 
 action :clone_patches_repository do
-	base_version = MagentoHelper.get_base_version(new_resource.magento_version)
+	base_version = MagentoHelper.base_version(new_resource.magento_version)
 	mc_branch = "pmet-#{base_version}-mc"
 	ref_branch = "pmet-#{base_version}-ref"
 	bash "Cloning patches from the #{new_resource.patches_source} repository" do

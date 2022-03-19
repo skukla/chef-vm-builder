@@ -4,13 +4,13 @@
 # frozen_string_literal: true
 
 class MagentoHelper
-	def MagentoHelper.get_base_version(version)
+	def MagentoHelper.base_version(version)
 		version.include?('-p') ? version.sub(/.{3}$/, '') : version
 	end
 
 	def MagentoHelper.check_version(lower_bound, operator, upper_bound)
 		Gem::Version
-			.new(get_base_version(lower_bound))
+			.new(base_version(lower_bound))
 			.send(operator, Gem::Version.new(upper_bound))
 	end
 
@@ -74,7 +74,7 @@ class MagentoHelper
 		end
 	end
 
-	def MagentoHelper.get_consumer_list()
+	def MagentoHelper.consumer_list()
 		family = Chef.node[:magento][:options][:family]
 		community_consumer_list =
 			Chef.node[:magento][:build][:community_consumer_list]
@@ -86,7 +86,7 @@ class MagentoHelper
 		community_consumer_list + enterprise_consumer_list
 	end
 
-	def MagentoHelper.build_command_list(type)
+	def MagentoHelper.build_hook_command_list(type)
 		return if Chef.node[:magento][:build][:hooks][:commands].nil?
 
 		commands = Chef.node[:magento][:build][:hooks][:commands]

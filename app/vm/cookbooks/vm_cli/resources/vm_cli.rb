@@ -78,7 +78,7 @@ action :install do
 				config_json_dir: new_resource.config_json_dir,
 				backup_dir: new_resource.backup_dir,
 				backup_holding_area: new_resource.backup_holding_area,
-				consumer_list: MagentoHelper.get_consumer_list,
+				consumer_list: MagentoHelper.consumer_list,
 			},
 		)
 		only_if { ::Dir.exist?("/home/#{new_resource.user}/cli") }

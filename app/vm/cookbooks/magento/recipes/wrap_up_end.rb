@@ -16,8 +16,8 @@ maintenance_mode_flag = "#{web_root}/var/.maintenance.flag"
 first_run_flag = "#{web_root}/var/.first-run-state.flag"
 crontab = "/var/spool/cron/crontabs/#{user}"
 commands = node[:magento][:build][:hooks][:commands]
-magento_cli_commands = MagentoHelper.build_command_list(:magento_cli)
-vm_cli_commands = MagentoHelper.build_command_list(:vm_cli)
+magento_cli_commands = MagentoHelper.build_hook_command_list(:magento_cli)
+vm_cli_commands = MagentoHelper.build_hook_command_list(:vm_cli)
 search_engine_type = node[:magento][:search_engine][:type]
 
 if %w[install force_install update_all update_data].include?(build_action) ||
