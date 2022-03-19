@@ -15,7 +15,11 @@ install_sample_data = node[:magento][:build][:sample_data][:apply]
 sample_data_flag = "#{web_root}/var/.sample-data-state.flag"
 modules_to_add = node[:magento][:build][:modules_to_add]
 
-if !modules_to_add.empty? && family == 'enterprise'
+if !modules_to_add.empty? && family == 'enterprise' &&
+		(
+			%w[install force_install update_all update_app].include?(build_action) ||
+				merge_restore
+		)
 	composer 'Adding B2B and additional Commerce Services modules' do
 		action :require
 		package_name ComposerHelper.build_require_string(modules_to_add)
