@@ -129,14 +129,7 @@ end
 
 action :restore_dump do
 	ruby_block "Restoring the #{new_resource.db_name} database from #{new_resource.db_dump}" do
-		block do
-			DatabaseHelper.restore_dump(
-				new_resource.db_user,
-				new_resource.db_password,
-				new_resource.db_name,
-				new_resource.db_dump,
-			)
-		end
+		block { DatabaseHelper.restore_dump(new_resource.db_dump) }
 		only_if { DatabaseHelper.db_exists?(new_resource.db_name) }
 	end
 end
