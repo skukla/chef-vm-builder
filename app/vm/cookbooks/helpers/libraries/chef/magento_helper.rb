@@ -14,10 +14,12 @@ class MagentoHelper
 			.send(operator, Gem::Version.new(upper_bound))
 	end
 
-	def MagentoHelper.define_family(family)
-		return 'community' if family == 'Open Source'
-		return 'enterprise' if family == 'Commerce'
-		family
+	def MagentoHelper.family(value = nil)
+		unless value.nil?
+			return 'community' if value == 'Open Source'
+			return 'enterprise' if value == 'Commerce'
+		end
+		Chef.node[:magento][:options][:family]
 	end
 
 	def MagentoHelper.build_install_string(
