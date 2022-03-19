@@ -68,22 +68,6 @@ action :deploy_sample_data do
 	end
 end
 
-action :enable_modules do
-	modules = new_resource.modules.join(' ') unless new_resource.modules.empty?
-	execute 'Enabling modules' do
-		command "su #{new_resource.user} -c 'bin/magento module:enable #{modules}'"
-		cwd new_resource.web_root
-	end
-end
-
-action :disable_modules do
-	modules = new_resource.modules.join(' ') unless new_resource.modules.empty?
-	execute 'Disabling modules' do
-		command "su #{new_resource.user} -c 'bin/magento module:disable #{modules}'"
-		cwd new_resource.web_root
-	end
-end
-
 action :db_upgrade do
 	execute new_resource.name do
 		command "su #{new_resource.user} -c 'bin/magento setup:upgrade'"
