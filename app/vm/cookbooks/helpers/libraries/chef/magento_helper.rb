@@ -98,6 +98,22 @@ class MagentoHelper
 		end
 	end
 
+	def MagentoHelper.web_root
+		Chef.node[:magento][:nginx][:web_root]
+	end
+
+	def MagentoHelper.tmp_dir
+		Chef.node[:magento][:nginx][:tmp_dir]
+	end
+
+	def MagentoHelper.composer_json
+		File.join(web_root, 'composer.json')
+	end
+
+	def MagentoHelper.tmp_composer_json
+		File.join(tmp_dir, 'composer.json')
+	end
+
 	def MagentoHelper.config_php
 		File.join(
 			Chef.node[:magento][:nginx][:web_root],
@@ -107,62 +123,82 @@ class MagentoHelper
 		)
 	end
 
+	def MagentoHelper.install_dir
+		build_action = Chef.node[:magento][:build][:action]
+
+		tmp_dir if %w[update_all update_app].include?(build_action)
+		web_root
+	end
+
+	def MagentoHelper.sample_data_flag
+		File.join(web_root, 'var', '.sample-data-state.flag')
+	end
+
 	def MagentoHelper.live_search_enabled?
 		StringReplaceHelper.find_in_file(config_php, "'Magento_LiveSearch' => 1")
 	end
 
-	def MagentoHelper.switch_search_modules
-		ls_module_list =
-			Chef.node[:magento][:search_engine][:live_search][:module_list]
-		es_module_list =
-			Chef.node[:magento][:search_engine][:elasticsearch][:module_list]
-		search_engine_type = Chef.node[:magento][:search_engine][:type]
+	def MagentoHelper.live_search_module_list
+		Chef.node[:magento][:search_engine][:live_search][:module_list]
+	end
 
-		if (search_engine_type == 'live_search' && live_search_enabled?) ||
-				(search_engine_type == 'elasticsearch' && !live_search_enabled?)
-			p 'No module changes made.'
+	def MagentoHelper.elasticsearch_module_list
+		Chef.node[:magento][:search_engine][:elasticsearch][:module_list]
+	end
 
-			return
+	def MagentoHelper.search_engine_type
+		Chef.node[:magento][:search_engine][:type]
+	end
+
+	def MagentoHelper.switch_to_elasticsearch
+		live_search_module_list.each do |ls_module|
+			StringReplaceHelper.replace_in_file(
+				config_php,
+				"'#{ls_module}' => 1",
+				"\t'#{ls_module}' => 0,",
+			)
 		end
+
+		elasticsearch_module_list.each do |es_module|
+			StringReplaceHelper.replace_in_file(
+				config_php,
+				"'#{es_module}' => 0",
+				"\t'#{es_module}' => 1,",
+			)
+		end
+
+		p 'Switched search to elastcsearch.'
+	end
+
+	def MagentoHelper.switch_to_live_search
+		live_search_module_list.each do |ls_module|
+			StringReplaceHelper.replace_in_file(
+				config_php,
+				"'#{ls_module}' => 0",
+				"\t'#{ls_module}' => 1,",
+			)
+		end
+
+		elasticsearch_module_list.each do |es_module|
+			StringReplaceHelper.replace_in_file(
+				config_php,
+				"'#{es_module}' => 1",
+				"\t'#{es_module}' => 0,",
+			)
+		end
+
+		p 'Switched search to live search.'
+	end
+
+	def MagentoHelper.switch_search_modules
+		if (search_engine_type == 'elasticsearch' && !live_search_enabled?)
+			p 'No module changes made.'
+		end
+
+		switch_to_live_search if search_engine_type == 'live_search'
 
 		if search_engine_type == 'elasticsearch' && live_search_enabled?
-			ls_module_list.each do |ls_module|
-				StringReplaceHelper.replace_in_file(
-					config_php,
-					"'#{ls_module}' => 1",
-					"'#{ls_module}' => 0,",
-				)
-			end
-
-			es_module_list.each do |es_module|
-				StringReplaceHelper.replace_in_file(
-					config_php,
-					"'#{es_module}' => 0",
-					"'#{es_module}' => 1,",
-				)
-			end
-
-			p 'Switched search to elastcsearch.'
-		end
-
-		if search_engine_type == 'live_search' && !live_search_enabled?
-			ls_module_list.each do |ls_module|
-				StringReplaceHelper.replace_in_file(
-					config_php,
-					"'#{ls_module}' => 0",
-					"'#{ls_module}' => 1,",
-				)
-			end
-
-			es_module_list.each do |es_module|
-				StringReplaceHelper.replace_in_file(
-					config_php,
-					"'#{es_module}' => 1",
-					"'#{es_module}' => 0,",
-				)
-			end
-
-			p 'Switched search to live_search.'
+			switch_to_elasticsearch
 		end
 	end
 end
