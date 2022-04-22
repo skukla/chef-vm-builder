@@ -1,6 +1,4 @@
-require_relative '../lib/remote_machine'
 require_relative '../lib/demo_structure'
-require_relative '../lib/info_message'
 
 class HostsHandler
 	def HostsHandler.manage_hosts(config)
@@ -11,10 +9,14 @@ class HostsHandler
 		config.hostmanager.include_offline = false
 		config.hostmanager.aliases = DemoStructure.additional_urls
 		config.hostmanager.ip_resolver =
-			proc do |vm, _resolving_vm|
-				if hostname = (vm.ssh_info && vm.ssh_info[:host])
-					Remote_Machine.ip_address(vm)
-				end
+			proc do |machine|
+				result = ''
+				machine
+					.communicate
+					.execute('hostname -I') do |type, data|
+						result << data.split(' ')[1] if type == :stdout
+					end
+				result
 			end
 	end
 end
