@@ -12,6 +12,7 @@ default[:magento][:build][:modules_to_remove] = %w[
 
 default[:magento][:build][:modules_to_add] = %w[
 	magento/extension-b2b
+	magento/ece-tools
 	magento/product-recommendations
 	magento/module-page-builder-product-recommendations
 	magento/module-visual-product-recommendations
