@@ -35,6 +35,7 @@ end
 if %w[update_all update_app update_data update_urls].include?(build_action)
 	include_recipe 'init::motd'
 	include_recipe 'vm_cli::install'
+	include_recipe 'php::default'
 	include_recipe 'nginx::default'
 end
 if first_run_install || !after_first_run_install
