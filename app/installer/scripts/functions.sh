@@ -104,3 +104,20 @@ uninstall_elasticsearch() {
     echo "Removing the Elasticsearch repository..."
     HOMEBREW_NO_AUTO_UPDATE=1 brew untap elastic/tap
 }
+
+stash_user_changes() {
+    echo "Saving user changes..."
+    cd ../../../
+    git stash
+}
+
+update_app() {
+    echo "Updating application..."
+    git pull
+}
+
+reapply_user_changes() {
+    echo "Re-applying user changes..."
+    git stash apply
+    git stash drop
+}
