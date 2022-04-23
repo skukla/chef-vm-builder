@@ -104,7 +104,3 @@ uninstall_elasticsearch() {
     echo "Removing the Elasticsearch repository..."
     HOMEBREW_NO_AUTO_UPDATE=1 brew untap elastic/tap
 }
-
-if xcode_tools_installed; then echo 'XCode installed'; fi
-if homebrew_installed; then echo 'Homebrew installed'; fi
-if elasticsearch_installed; then echo 'Elasticsearch installed'; fi
