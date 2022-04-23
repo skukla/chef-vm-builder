@@ -148,11 +148,6 @@ class ValidationHandler
 
 		abort(ErrorMsg.show(:csc_credentials_missing)) if csc_credentials_missing
 
-		if !csc_credentials_missing &&
-				!CustomModule.module_found?(CommerceServices.required_modules)
-			abort(ErrorMsg.show(:csc_extensions_missing))
-		end
-
 		unless Entry
 				.files_from('project/keys')
 				.include?('privateKey-production.pem')
