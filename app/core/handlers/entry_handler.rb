@@ -9,7 +9,7 @@ class EntryHandler
 	@entries = [
 		{
 			src: '',
-			dest: 'app/vm/cookbooks/helpers/libraries/app',
+			dest: 'app/vm/cookbooks/helpers/libraries',
 			file: %w[config.json],
 		},
 		{

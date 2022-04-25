@@ -25,9 +25,7 @@ class ConfigHelper
 	def ConfigHelper.json
 		self.remove_blanks(
 			JSON.parse(
-				File.read(
-					File.join("#{@app_root}/helpers/libraries/app", 'config.json'),
-				),
+				File.read(File.join("#{@app_root}/helpers/libraries", 'config.json')),
 			),
 		)
 	end
