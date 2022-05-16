@@ -20,7 +20,9 @@ class Config
 
 	def Config.json
 		remove_blanks(
-			JSON.parse(File.read(File.join(@app_root, 'config', 'config.json'))),
+			JSON.parse(
+				File.read(File.join(@app_root, 'project', 'config', 'config.json')),
+			),
 		)
 	end
 

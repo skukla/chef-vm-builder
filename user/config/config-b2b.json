@@ -1,0 +1,125 @@
+{
+  "vm": {
+    "name": "Brentmill VM",
+    "hypervisor": "virtualbox"
+  },
+  "custom_demo": {
+    "structure": {
+      "websites": [
+        {
+          "site_code": "base",
+          "site_url": "brentmill.demo",
+          "stores": [
+            {
+              "store_views": [
+                {
+                  "store_view_code": "default"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "custom_modules": [
+      {
+        "source": "git@github.com:PMET-public/module-data-install.git"
+      },
+      {
+        "source": "git@github.com:PMET-public/magento-scripts.git",
+        "version": "2.3.0.x-dev"
+      },
+      {
+        "source": "git@github.com:PMET-public/module-autofill.git"
+      },
+      {
+        "source": "git@github.com:PMET-public/module-autofill-sample-data.git",
+        "version": "dev-b2b"
+      },
+      {
+        "source": "git@github.com:PMET-public/module-b2b-catalog-sample-data.git"
+      },
+      {
+        "source": "git@github.com:PMET-public/module-b2b-media-sample-data.git"
+      },
+      {
+        "source": "git@github.com:PMET-public/module-b2b-legrand-sample-data.git"
+      },
+      {
+        "source": "git@github.com:PMET-public/module-b2b-milwaukee-sample-data.git"
+      },
+      {
+        "source": "git@github.com:PMET-public/module-b2b-philips-sample-data.git"
+      },
+      {
+        "source": "git@github.com:PMET-public/module-b2b-siemens-sample-data.git"
+      },
+      {
+        "source": "git@github.com:PMET-public/module-b2b-misc-sample-data.git"
+      },
+      {
+        "source": "git@github.com:PMET-public/module-b2b-admin-configurations.git"
+      },
+      {
+        "source": "git@github.com:PMET-public/module-b2b-b2c-sample-data.git"
+      },
+      {
+        "source": "git@github.com:PMET-public/module-b2b-cms-sample-data.git"
+      },
+      {
+        "source": "git@github.com:PMET-public/module-b2b-company-sample-data.git"
+      },
+      {
+        "source": "git@github.com:PMET-public/module-sales-sample-data.git"
+      },
+      {
+        "source": "git@github.com:PMET-public/module-b2b-order-sample-data.git"
+      },
+      {
+        "source": "git@github.com:PMET-public/module-b2b-pricing-sample-data.git"
+      },
+      {
+        "source": "git@github.com:PMET-public/module-b2b-shared-catalog-sample-data.git"
+      },
+      {
+        "source": "git@github.com:PMET-public/module-my-account-widget.git"
+      },
+      {
+        "source": "git@github.com:PMET-public/theme-brentmill.git"
+      }
+    ]
+  },
+  "application": {
+    "authentication": {
+      "composer": {
+        "public_key": "9aec72c4ae091290105b1624e46ba2f4",
+        "private_key": "32d399998cc65508e7aa406245a21876",
+        "github_token": "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"
+      }
+    },
+    "options": {
+      "version": "2.4.3-p1"
+    },
+    "build": {
+      "action": "force_install",
+      "restore": "separate",
+      "sample_data": false,
+      "patches": true,
+      "hooks": {
+        "warm_cache": false,
+        "enable_media_gallery": true,
+        "backup": true,
+        "commands": [
+          "vendor/magentoese/magento-scripts/composer-setup.sh b2b"
+        ]
+      }
+    },
+    "settings": {
+      "admin_password": "admin4tls"
+    }
+  },
+  "remote_machine": {
+    "cpus": "2",
+    "memory": "8192"
+  }
+}
