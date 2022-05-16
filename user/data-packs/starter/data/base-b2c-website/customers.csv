@@ -1,0 +1,3 @@
+website,email,firstname,lastname,password,street,city,region,country_id,postcode,telephone,preferred_activity,add_to_autofill
+base,vip@thelumastory.com,Sharon,Reynolds,Password1,4346 Parkway Street,San Diego,California,US,92103,(555) 229-3326,Yoga,Y
+base,runner@thelumastory.com,Mark,Woodward,Password1,500 Buckhannan Avenue,Ithaca,New York,US,14853,(555) 229-3326,Running,Y

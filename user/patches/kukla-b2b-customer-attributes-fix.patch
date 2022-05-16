@@ -1,0 +1,34 @@
+diff --git a/vendor/magento/module-customer-custom-attributes/view/frontend/templates/form/userattributes.phtml b/vendor/magento/module-customer-custom-attributes/view/frontend/templates/form/userattributes.phtml
+index 85a9e5eb9..084924ef3 100644
+--- a/vendor/magento/module-customer-custom-attributes/view/frontend/templates/form/userattributes.phtml
++++ b/vendor/magento/module-customer-custom-attributes/view/frontend/templates/form/userattributes.phtml
+@@ -14,7 +14,7 @@
+ ?>
+ <?php if ($block->hasUserDefinedAttributes()) : ?>
+     <?php if ($block->isShowContainer()) : ?>
+-    <fieldset class="fieldset">
++    <fieldset class=“fieldset”>
+         <?php endif;?>
+         <?php
+         $userAttributes = $block->getUserDefinedAttributes();
+@@ -29,14 +29,15 @@
+         <?php if ($block->isShowContainer()) : ?>
+     </fieldset>
+ <?php endif;?>
+-
+-    <script type="text/x-magento-init">
++<?php if ($block->getViewModel()) : ?>
++    <script type=“text/x-magento-init”>
+         {
+-            "*": {
+-                "Magento_Ui/js/core/app": {
+-                    "components": <?= /* @noEscape */ $block->getViewModel()->getJsComponentsDefinitions($userAttributes, $entity); ?>
++            “*”: {
++                “Magento_Ui/js/core/app”: {
++                    “components”: <?= /* @noEscape */ $block->getViewModel()->getJsComponentsDefinitions($userAttributes, $entity); ?>
+                 }
+             }
+         }
+     </script>
++    <?php endif;?>
+ <?php endif; ?>

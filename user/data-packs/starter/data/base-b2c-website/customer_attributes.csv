@@ -1,0 +1,5 @@
+attribute_code,frontend_label,frontend_input,options
+preferred_activity,Preferred Activity,select,"Running
+Crossfit
+Pilates
+Yoga"

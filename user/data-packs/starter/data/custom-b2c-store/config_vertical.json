@@ -1,0 +1,41 @@
+{
+	"configuration": {
+		"design": {
+			"header": {
+				"logo_src": {
+					"store_view": {
+						"custom_store_view_us_en": "stores/logo.png"
+					}
+				}
+			},
+			"email": {
+				"logo": {
+					"store_view": {
+						"custom_store_view_us_en": "stores/logo.png"
+					}
+				}
+			},
+			"head": {
+				"shortcut_icon": {
+					"store_view": {
+						"custom_store_view_us_en": "stores/favicon.png"
+					}
+				},
+				"includes": {
+					"store_view": {
+						"custom_store_view_us_en": ""
+					}
+				}
+			}
+		},
+		"web": {
+			"default": {
+				"cms_home_page": {
+					"store_view": {
+						"custom_store_view_us_en": "custom-home-us-en"
+					}
+				}
+			}
+		}
+	}
+}
