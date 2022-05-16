@@ -19,7 +19,9 @@ class Config
 	end
 
 	def Config.json
-		remove_blanks(JSON.parse(File.read(File.join(@app_root, 'config.json'))))
+		remove_blanks(
+			JSON.parse(File.read(File.join(@app_root, 'config', 'config.json'))),
+		)
 	end
 
 	def Config.value(setting_path)

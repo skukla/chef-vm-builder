@@ -1,20 +1,18 @@
 {
-    "editor.formatOnPaste": true,
-    "editor.formatOnSave": true,
-    "terminal.integrated.cwd": "./app/vm",
-    "csv-edit.initiallyFixedRowsTop": 1,
-    "files.exclude": {
-        "**/.gitignore": true,
-        "**/node_modules": true,
-        "**/package*.json": true,
-        "**/.vscode": true
-    },
-    "json.schemas": [
-        {
-            "fileMatch": [
-                "/config*.json"
-            ],
-            "url": "./app/core/schemas/config.schema.json"
-        }
-    ]
+	"editor.formatOnPaste": true,
+	"editor.formatOnSave": true,
+	"terminal.integrated.cwd": "./app/vm",
+	"csv-edit.initiallyFixedRowsTop": 1,
+	"files.exclude": {
+		"**/.gitignore": true,
+		"**/.vscode": true,
+		"**/node_modules": true,
+		"**/package*.json": true
+	},
+	"json.schemas": [
+		{
+			"fileMatch": ["config/config*.json"],
+			"url": "./app/core/schemas/config.schema.json"
+		}
+	]
 }

@@ -1,6 +1,7 @@
 .DS_Store
-config*.json
-tools/
+app/vm/cookbooks/helpers/libraries/config.json
+user/
+config/config.json
 node_modules/
 Gemfile
 Gemfile.lock

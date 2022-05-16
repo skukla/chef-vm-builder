@@ -8,7 +8,7 @@ class EntryHandler
 	@app_root = Config.app_root
 	@entries = [
 		{
-			src: '',
+			src: 'config',
 			dest: 'app/vm/cookbooks/helpers/libraries',
 			file: %w[config.json],
 		},
