@@ -46,7 +46,7 @@
 			}
 		},
 		"options": {
-			"version": "2.4.3-p1"
+			"version": "2.4.4"
 		},
 		"build": {
 			"action": "install",
