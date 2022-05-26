@@ -88,7 +88,7 @@ class ErrorMsg < Message
 		search_engine_type_list = Config.search_engine_type_list
 		msg = <<~TEXT
     #{@@oops}It looks like you've got an incorrect search engine setting: #{@@bold}#{@@cyan}#{search_engine_type}#{@@reg}.\n\n\
-    Acceptable values are:\n\n#{search_engine_type_list.join("\n")}\n\nPlease check the #{@@bold}#{@@cyan}search_engine #{@@reg}section in your config.json file.
+    Acceptable values are:\n\n#{search_engine_type_list.join("\n")}\n\nPlease check the #{@@bold}#{@@cyan}infrastructure/search_engine #{@@reg}section in your config.json file.
     TEXT
 	end
 
