@@ -31,8 +31,8 @@ class Hypervisor
 
 	def Hypervisor.base_box
 		boxes = {
-			'intel' => 'bento/ubuntu-21.10',
-			'm1' => 'bytesguy/ubuntu-server-21.10-arm64',
+			'intel' => 'bento/ubuntu-22.04',
+			'm1' => 'bytesguy/ubuntu-server-22.04-arm64',
 		}
 
 		return Config.base_box unless Config.base_box.nil?

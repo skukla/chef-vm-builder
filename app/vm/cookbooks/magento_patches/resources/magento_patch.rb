@@ -48,6 +48,10 @@ action :create_holding_area do
 		mode '755'
 		not_if { ::Dir.exist?(new_resource.patches_holding_area) }
 	end
+
+	bash 'Add holding area as a safe directory' do
+		code "git config --global --add safe.directory #{new_resource.patches_holding_area}"
+	end
 end
 
 action :remove_from_web_root do
