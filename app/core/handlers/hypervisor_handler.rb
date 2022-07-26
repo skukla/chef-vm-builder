@@ -9,8 +9,6 @@ class HypervisorHandler
 	def HypervisorHandler.configure_box_and_ssh(config)
 		config.ssh.insert_key = false
 		config.ssh.forward_agent = true
-		config.ssh.username = 'vagrant'
-		config.ssh.password = 'vagrant'
 		config.vm.box = Hypervisor.base_box
 	end
 
