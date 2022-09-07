@@ -22,7 +22,4 @@ mailhog 'Install, configure, enable, and reload mailhog' do
 	not_if { ::File.exist?(service_file) }
 end
 
-php 'Configure mailhog sendmail path and restart PHP' do
-	action %i[configure_sendmail restart]
-	sendmail_path sendmail_path
-end
+include_recipe 'mailhog::configure_sendmail'

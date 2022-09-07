@@ -37,6 +37,7 @@ if %w[update_all update_app update_data update_urls].include?(build_action)
 	include_recipe 'vm_cli::install'
 	include_recipe 'php::default'
 	include_recipe 'nginx::default'
+	include_recipe 'mailhog::configure_sendmail'
 end
 if first_run_install || !after_first_run_install
 	include_recipe 'app_controller::service_launcher'
