@@ -7,12 +7,21 @@ web_root = node[:magento][:nginx][:web_root]
 build_action = node[:magento][:build][:action]
 apply_deploy_mode = node[:magento][:build][:deploy_mode][:apply]
 deploy_mode = node[:magento][:build][:deploy_mode][:mode]
+backup_holding_area = node[:magento_restore][:holding_area]
 restore_mode = node[:magento][:magento_restore][:mode]
 merge_restore = (build_action == 'restore' && restore_mode == 'merge')
 search_engine_type = node[:magento][:search_engine][:type]
 es_module_list = node[:magento][:search_engine][:elasticsearch][:module_list]
 ls_module_list = node[:magento][:search_engine][:live_search][:module_list]
 hypervisor = node[:magento][:init][:hypervisor]
+
+if build_action == 'restore'
+	magento_restore 'Restore database' do
+		action :restore_database
+		source_path backup_holding_area
+		pattern %w[*_db.sql]
+	end
+end
 
 if (
 		%w[install force_install update_all update_app].include?(build_action) ||
@@ -24,7 +33,7 @@ if (
 	end
 end
 
-if %w[update_all update_app restore].include?(build_action)
+if %w[update_all update_app].include?(build_action)
 	magento_cli 'Reset indexers and upgrade the database' do
 		action %i[reset_indexers db_upgrade]
 	end

@@ -27,6 +27,9 @@ property :extra_content, String
 property :clear_cache,
          [TrueClass, FalseClass],
          default: node[:composer][:clear_cache]
+property :allow_all_plugins,
+         [TrueClass, FalseClass],
+         default: node[:composer][:allow_all_plugins]
 property :timeout, [String, Integer], default: node[:composer][:timeout]
 
 action :install_app do
@@ -147,6 +150,16 @@ action :update do
 	execute new_resource.name do
 		command "su #{new_resource.user} -c '#{new_resource.install_directory}/#{new_resource.file} update #{options_string}'"
 		cwd new_resource.web_root
+	end
+end
+
+action :allow_all_plugins do
+	execute new_resource.name do
+		command "su #{new_resource.user} -c '#{new_resource.install_directory}/#{new_resource.file} config allow-plugins true'"
+		cwd new_resource.web_root
+		only_if do
+			::Dir.exist?(new_resource.web_root.to_s) && new_resource.allow_all_plugins
+		end
 	end
 end
 

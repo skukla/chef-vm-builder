@@ -560,6 +560,10 @@
             "clear_cache": {
               "type": "boolean",
               "description": "Clear composer cache? Either true or false."
+            },
+            "allow_all_plugins": {
+              "type": "boolean",
+              "description": "Allow all plugins for older builds? Either true or false."
             }
           },
           "additionalProperties": false

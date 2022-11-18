@@ -13,6 +13,7 @@ property :web_root, String, default: node[:magento_restore][:nginx][:web_root]
 property :restore_path, String, default: node[:magento_restore][:restore_path]
 property :source_path, [String, Array]
 property :destination_path, String
+property :pattern, Array
 property :version, String, default: node[:magento_restore][:version]
 property :source, String, default: node[:magento_restore][:source]
 property :github_token,
@@ -21,13 +22,13 @@ property :github_token,
 property :db_settings, Hash, default: node[:magento_restore][:mysql]
 
 action :transfer_backup_files do
-	Dir["#{new_resource.source_path}/*"].each do |file|
-		%w[.tgz .sql].any? do |extension|
-			if file.include?(extension)
-				execute new_resource.name do
-					command "cp #{file} #{new_resource.destination_path}"
-				end
-			end
+	files = EntryHelper.pull_files(new_resource.source_path, new_resource.pattern)
+
+	return if files.empty?
+
+	files.each do |file|
+		execute new_resource.name do
+			command "cp #{file} #{new_resource.destination_path}"
 		end
 	end
 end
@@ -62,43 +63,32 @@ action :download_remote_backup do
 end
 
 action :extract_backup_archive do
-	Dir
-		.entries(new_resource.source_path)
-		.each do |file|
-			next unless "#{new_resource.source_path}/#{file}".include?('.zip')
+	files = EntryHelper.pull_files(new_resource.source_path, new_resource.pattern)
 
-			archive_file "Unzipping #{new_resource.source_path}/#{file}" do
-				path "#{new_resource.source_path}/#{file}"
-				destination new_resource.destination_path
-				owner new_resource.user
-				group new_resource.group
-				overwrite :auto
-			end
+	return if files.empty?
+
+	files.each do |file|
+		archive_file "Restoring the archive: #{new_resource.source_path}/#{file}" do
+			path "#{new_resource.source_path}/#{file}"
+			destination new_resource.destination_path
+			owner new_resource.user
+			group new_resource.group
+			overwrite :auto
 		end
+	end
 end
 
-action :restore_backups do
-	Dir
-		.entries(new_resource.source_path)
-		.each do |file|
-			%w[code media].any? do |type|
-				if "#{new_resource.source_path}/#{file}".include?(type)
-					archive_file "Restoring the #{type} backup from #{new_resource.source_path}/#{file}" do
-						path "#{new_resource.source_path}/#{file}"
-						destination new_resource.web_root
-						owner new_resource.user
-						group new_resource.group
-						overwrite :auto
-					end
-				end
-			end
-			next unless file.include?('db')
+action :restore_database do
+	files = EntryHelper.pull_files(new_resource.source_path, %w[*_db.sql])
 
-			mysql "Restoring the database backup from #{new_resource.source_path}/#{file}" do
-				action :restore_dump
-				db_dump "#{new_resource.source_path}/#{file}"
-			end
+	return if files.empty?
+
+	files.each do |file|
+		mysql "Restoring the database backup from #{new_resource.source_path}/#{file}" do
+			action :restore_dump
+			db_dump "#{new_resource.source_path}/#{file}"
 		end
+	end
 end
 
 action :remove_backup_files do
