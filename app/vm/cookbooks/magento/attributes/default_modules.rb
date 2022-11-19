@@ -7,7 +7,6 @@ default[:magento][:build][:modules_to_remove] = %w[
 	magento/module-csp
 	magento/module-cardinal-commerce
 	magento/module-two-factor-auth
-	allure-framework/allure-phpunit
 ]
 
 default[:magento][:build][:modules_to_add] = %w[

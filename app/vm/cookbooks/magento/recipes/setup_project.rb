@@ -29,8 +29,11 @@ if %w[install force_install update_all update_app].include?(build_action) ||
 end
 
 if %w[install force_install].include?(build_action) || merge_restore
-	composer 'Allow all composer plugins' do
-		action :allow_all_plugins
-		only_if { ::File.exist?(composer_json) }
+	composer 'Allow all plugins' do
+		action :config
+		setting 'allow-all-plugins'
+		value true
+		options %w[global]
+		only_if { ::Dir.exist?(web_root) && allow_all_plugins }
 	end
 end

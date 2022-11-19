@@ -18,7 +18,7 @@ class DatabaseHelper
 
 	def DatabaseHelper.execute_query(query, db = nil)
 		conn_head = 'mysql --user=root'
-		conn_head = [conn_head, "--database=#{db_name}"].join(' ') unless db.nil?
+		conn_head = [conn_head, "--database=#{db}"].join(' ') unless db.nil?
 		SystemHelper.cmd([conn_head, "\"#{query};\""].join(' -N -s -e '))
 	end
 
@@ -65,7 +65,5 @@ def DatabaseHelper.code_exists?(code)
 end
 
 def DatabaseHelper.restore_dump(db_dump)
-	SystemHelper.cmd(
-		"mysql -u #{db_user} -p#{db_password} #{db_name} < #{db_dump}",
-	)
+	SystemHelper.cmd("sudo su -; mysql -u root #{db_name} < #{db_dump}")
 end

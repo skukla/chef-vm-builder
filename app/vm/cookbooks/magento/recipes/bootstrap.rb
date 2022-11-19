@@ -55,7 +55,8 @@ end
 
 if %w[update_all update_app].include?(build_action)
 	execute 'Clearing the temporary holding directory' do
-		command "rm -rf #{tmp_dir}/*"
+		command 'rm -rf ..?* .[!.]* *'
+		cwd tmp_dir
 		only_if { ::File.exist?("#{web_root}/composer.json") }
 	end
 end

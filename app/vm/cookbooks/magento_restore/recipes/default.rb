@@ -68,9 +68,4 @@ if build_action == 'restore'
 		only_if { ::Dir.exist?("#{web_root}/vendor") }
 		not_if { ::Dir.empty?("#{web_root}/vendor") }
 	end
-
-	magento_restore 'Clean up backup files' do
-		action :remove_backup_files
-		source_path backup_holding_area
-	end
 end

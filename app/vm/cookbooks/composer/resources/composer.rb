@@ -24,13 +24,8 @@ property :package_version, String
 property :module_name, String
 property :repository_url, String, default: ''
 property :extra_content, String
-property :clear_cache,
-         [TrueClass, FalseClass],
-         default: node[:composer][:clear_cache]
-property :allow_all_plugins,
-         [TrueClass, FalseClass],
-         default: node[:composer][:allow_all_plugins]
-property :timeout, [String, Integer], default: node[:composer][:timeout]
+property :setting, String
+property :value, [String, Integer, TrueClass, FalseClass]
 
 action :install_app do
 	install_string =
@@ -52,41 +47,25 @@ action :install_app do
             fi
             php composer-setup.php --quiet #{install_string}
             RESULT=$?
-            rm composer-setup.php
+						rm composer-setup.php
             exit $RESULT
     CONTENT
 	end
 
-	file 'Composer version flag' do
+	file 'Adding composer version flag' do
 		content new_resource.version
-		path "#{new_resource.install_directory}/.composer-version"
+		path "/home/#{new_resource.user}/.composer-version"
 		action :create
-	end
-end
-
-action :configure_app do
-	directory "#{new_resource.user} .composer directory" do
-		path "/home/#{new_resource.user}/.composer"
 		owner new_resource.user
 		group new_resource.group
-		mode '775'
-		not_if { ::Dir.exist?("/home/#{new_resource.user}/.composer") }
-	end
-
-	template 'Composer configuration' do
-		source 'config.json.erb'
-		path "/home/#{new_resource.user}/.composer/config.json"
-		owner new_resource.user
-		group new_resource.group
-		mode '644'
-		variables({ timeout: new_resource.timeout })
 	end
 end
 
 action :create_project do
 	execute new_resource.name do
-		options_string = "--#{new_resource.options.join(' --')}" unless new_resource
-			.options.nil?
+		options_string =
+			new_resource.options.nil? ? '' : "--#{new_resource.options.join(' --')}"
+
 		command "su #{new_resource.user} -c '#{new_resource.install_directory}/#{new_resource.file} create-project #{options_string} --stability #{new_resource.project_stability} --repository-url=#{new_resource.repository_url} #{new_resource.project_name}:#{new_resource.package_version} #{new_resource.project_directory}'"
 		cwd new_resource.project_directory
 	end
@@ -104,7 +83,7 @@ action :set_project_stability do
 end
 
 action :update_sort_packages do
-	ruby_block new_resource.name.to_s do
+	ruby_block new_resource.name do
 		block do
 			StringReplaceHelper.update_sort_packages(
 				"#{new_resource.web_root}/composer.json",
@@ -121,8 +100,9 @@ action :add_repository do
 end
 
 action :require do
-	options_string = "--#{new_resource.options.join(' --')}" unless new_resource
-		.options.nil?
+	options_string =
+		new_resource.options.nil? ? '' : "--#{new_resource.options.join(' --')}"
+
 	command_string =
 		[
 			"su #{new_resource.user} -c '#{new_resource.install_directory}/#{new_resource.file} require",
@@ -144,8 +124,8 @@ action :install do
 end
 
 action :update do
-	options_string = "--#{new_resource.options.join(' --')}" unless new_resource
-		.options.nil?
+	options_string =
+		new_resource.options.nil? ? '' : "--#{new_resource.options.join(' --')}"
 
 	execute new_resource.name do
 		command "su #{new_resource.user} -c '#{new_resource.install_directory}/#{new_resource.file} update #{options_string}'"
@@ -153,36 +133,31 @@ action :update do
 	end
 end
 
-action :allow_all_plugins do
+action :config do
+	options_string =
+		new_resource.options.nil? ? '' : "--#{new_resource.options.join(' --')}"
+
 	execute new_resource.name do
-		command "su #{new_resource.user} -c '#{new_resource.install_directory}/#{new_resource.file} config allow-plugins true'"
-		cwd new_resource.web_root
-		only_if do
-			::Dir.exist?(new_resource.web_root.to_s) && new_resource.allow_all_plugins
-		end
+		command "su #{new_resource.user} -c '#{new_resource.install_directory}/#{new_resource.file} config #{options_string} #{new_resource.setting} #{new_resource.value}'"
 	end
 end
 
 action :clear_cache do
 	execute new_resource.name do
 		command "su #{new_resource.user} -c '#{new_resource.install_directory}/#{new_resource.file} clearcache'"
-		only_if do
-			::Dir.exist?(new_resource.web_root.to_s) && new_resource.clear_cache
-		end
 	end
 end
 
 action :uninstall do
-	ruby_block 'Remove composer' do
-		block do
-			version =
-				IO.read("#{new_resource.install_directory}/.composer-version").strip
-			unless version.match(/#{new_resource.version}/)
-				FileUtils.remove_file(
-					"#{new_resource.install_directory}/#{new_resource.file}",
-				)
-				FileUtils.remove_dir("/home/#{new_resource.user}/.composer")
-			end
+	file 'Remove Composer file' do
+		path "#{new_resource.install_directory}/#{new_resource.file}"
+		action :delete
+		only_if do
+			::File.exist?("#{new_resource.install_directory}/#{new_resource.file}")
 		end
+	end
+
+	execute 'Remove composer version flag' do
+		command "sudo rm -rf /home/#{new_resource.user}/.composer-version"
 	end
 end

@@ -11,4 +11,5 @@ default[:composer][:nginx][:web_root] = node[:nginx][:web_root]
 
 include_attribute 'magento::default'
 include_attribute 'magento::override'
-default[:composer][:magento][:project_stability] = node[:magento][:options][:minimum_stability]
+default[:composer][:magento][:project_stability] =
+	node[:magento][:options][:minimum_stability]

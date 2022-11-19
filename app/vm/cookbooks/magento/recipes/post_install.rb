@@ -21,6 +21,11 @@ if build_action == 'restore'
 		source_path backup_holding_area
 		pattern %w[*_db.sql]
 	end
+
+	magento_restore 'Clean up backup files' do
+		action :remove_backup_files
+		source_path backup_holding_area
+	end
 end
 
 if (
@@ -33,7 +38,7 @@ if (
 	end
 end
 
-if %w[update_all update_app].include?(build_action)
+if %w[update_all update_app].include?(build_action) || merge_restore
 	magento_cli 'Reset indexers and upgrade the database' do
 		action %i[reset_indexers db_upgrade]
 	end

@@ -74,16 +74,44 @@ action :enable do
 end
 
 action :create_database do
-	ruby_block "Create the #{new_resource.db_name} database and #{new_resource.db_user} user" do
+	ruby_block "Create the #{new_resource.db_name} database" do
 		block do
+			p "Creating the #{new_resource.db_name} database..."
 			DatabaseHelper.execute_query(
 				"CREATE DATABASE IF NOT EXISTS #{new_resource.db_name}",
 			)
+		end
+		action :create
+	end
+end
+
+action :add_database_user do
+	ruby_block "Creating the #{new_resource.db_user} database user" do
+		block do
 			DatabaseHelper.execute_query(
 				"CREATE USER IF NOT EXISTS '#{new_resource.db_user}'@'#{new_resource.db_host}' IDENTIFIED BY '#{new_resource.db_password}'",
 			)
+		end
+		action :create
+	end
+end
+
+action :set_database_user_permissions do
+	ruby_block "Granting privileges to #{new_resource.db_user}" do
+		block do
 			DatabaseHelper.execute_query(
 				"GRANT ALL PRIVILEGES ON * . * TO '#{new_resource.db_user}'@'#{new_resource.db_host}'",
+			)
+		end
+		action :create
+	end
+end
+
+action :set_database_user_authentication do
+	ruby_block "Configuring the #{new_resource.db_user} database user's authentication plugin" do
+		block do
+			DatabaseHelper.execute_query(
+				"ALTER USER '#{new_resource.db_user}'@'#{new_resource.db_host}' IDENTIFIED WITH mysql_native_password BY '#{new_resource.db_password}';",
 			)
 		end
 		action :create

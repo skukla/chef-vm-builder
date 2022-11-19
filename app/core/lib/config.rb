@@ -102,7 +102,7 @@ class Config
 	end
 
 	def Config.search_engine_type_list
-		%w[elasticsearch live_search]
+		%w[elasticsearch live_search mysql]
 	end
 
 	def Config.restore_mode_list

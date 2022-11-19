@@ -30,7 +30,6 @@ if %w[install force_install reinstall restore update_all update_app].include?(
 end
 
 if %w[install force_install reinstall restore].include?(build_action)
-	clean_up_setting = node[:magento][:settings][:cleanup_database]
 	magento_app 'Install Magento' do
 		action :install
 		install_settings(
@@ -52,7 +51,7 @@ if %w[install force_install reinstall restore].include?(build_action)
 				use_rewrites: node[:magento][:settings][:use_rewrites],
 				use_secure_frontend: node[:magento][:settings][:use_secure_frontend],
 				use_secure_admin: node[:magento][:settings][:use_secure_admin],
-				cleanup_database: build_action == 'restore' ? 0 : clean_up_setting,
+				cleanup_database: %w[reinstall restore].include?(build_action) ? 0 : 1,
 				session_save: node[:magento][:settings][:session_save],
 				encryption_key: node[:magento][:settings][:encryption_key],
 			},

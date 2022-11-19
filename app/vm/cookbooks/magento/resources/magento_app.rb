@@ -9,15 +9,9 @@ provides :magento_app
 property :name, String, name_property: true
 property :web_root, String, default: node[:magento][:nginx][:web_root]
 property :composer_file, String, default: node[:magento][:composer][:file]
-property :composer_public_key,
-         String,
-         default: node[:magento][:composer][:public_key]
-property :composer_private_key,
-         String,
-         default: node[:magento][:composer][:private_key]
-property :composer_github_token,
-         String,
-         default: node[:magento][:composer][:github_token]
+property :composer_public_key, String, default: node[:composer][:public_key]
+property :composer_private_key, String, default: node[:composer][:private_key]
+property :composer_github_token, String, default: node[:composer][:github_token]
 property :permission_dirs, Array, default: %w[var/ pub/ app/etc/ generated/]
 property :user, String, default: node[:magento][:init][:user]
 property :group, String, default: node[:magento][:init][:user]
@@ -51,19 +45,18 @@ property :install_settings, Hash
 property :remove_generated, [TrueClass, FalseClass], default: true
 
 action :set_auth_credentials do
-	template new_resource.name.to_s do
-		source 'auth.json.erb'
-		path "/home/#{new_resource.user}/.composer/auth.json"
-		owner new_resource.user
-		group new_resource.group
-		mode '664'
-		variables(
-			{
-				public_key: new_resource.composer_public_key,
-				private_key: new_resource.composer_private_key,
-				github_token: new_resource.composer_github_token,
-			},
-		)
+	composer 'Adding credentials' do
+		action :config
+		setting 'http-basic.repo.magento.com'
+		value "#{new_resource.composer_public_key} \ #{new_resource.composer_private_key}"
+		options %w[global auth]
+	end
+
+	composer 'Adding OAuth token' do
+		action :config
+		setting 'github-oauth.github.com'
+		value new_resource.composer_github_token
+		options %w[global auth]
 	end
 end
 

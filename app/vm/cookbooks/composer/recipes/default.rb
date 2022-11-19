@@ -3,12 +3,22 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 # frozen_string_literal: true
 
+user = node[:composer][:init][:user]
+web_root = node[:composer][:nginx][:web_root]
 composer_file = node[:composer][:file]
+version = node[:composer][:version]
 install_dir = node[:composer][:install_dir]
+clear_cache = node[:composer][:clear_cache]
 
 composer 'Uninstall composer' do
 	action :uninstall
-	only_if { ::File.exist?("#{install_dir}/#{composer_file}") }
+	not_if do
+		::File.exist?("/home/#{user}/.composer-version") &&
+			StringReplaceHelper.find_in_file(
+				"/home/#{user}/.composer-version",
+				version,
+			)
+	end
 end
 
 composer 'Download and install composer application' do
@@ -16,9 +26,13 @@ composer 'Download and install composer application' do
 end
 
 composer 'Set composer timeout' do
-	action :configure_app
+	action :config
+	setting 'process-timeout'
+	value 2000
+	options %w[global]
 end
 
 composer 'Clear composer cache' do
 	action :clear_cache
+	only_if { ::Dir.exist?(web_root) && clear_cache }
 end

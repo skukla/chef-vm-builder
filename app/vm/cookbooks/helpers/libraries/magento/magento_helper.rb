@@ -8,12 +8,6 @@ class MagentoHelper
 		version.include?('-p') ? version.sub(/.{3}$/, '') : version
 	end
 
-	def MagentoHelper.check_version(lower_bound, operator, upper_bound)
-		Gem::Version
-			.new(base_version(lower_bound))
-			.send(operator, Gem::Version.new(upper_bound))
-	end
-
 	def MagentoHelper.family(value = nil)
 		unless value.nil?
 			return 'community' if value == 'Open Source'
@@ -45,9 +39,22 @@ class MagentoHelper
 				"--language=#{install_settings[:language]}",
 				"--timezone=#{install_settings[:timezone]}",
 				"--currency=#{install_settings[:currency]}",
-				# "--elasticsearch-host=#{install_settings[:elasticsearch_host]}",
-				# "--elasticsearch-port=#{install_settings[:elasticsearch_port]}",
-				# "--elasticsearch-index-prefix=#{install_settings[:elasticsearch_prefix]}",
+			].join(' ')
+
+		if MagentoHelper.search_engine_type == 'live_search' ||
+				MagentoHelper.search_engine_type == 'elasticsearch'
+			install_str =
+				[
+					install_str,
+					"--elasticsearch-host=#{install_settings[:elasticsearch_host]}",
+					"--elasticsearch-port=#{install_settings[:elasticsearch_port]}",
+					"--elasticsearch-index-prefix=#{install_settings[:elasticsearch_prefix]}",
+				].join(' ')
+		end
+
+		install_str =
+			[
+				install_str,
 				"--admin-firstname=#{install_settings[:admin_firstname]}",
 				"--admin-lastname=#{install_settings[:admin_lastname]}",
 				"--admin-email=#{install_settings[:admin_email]}",
