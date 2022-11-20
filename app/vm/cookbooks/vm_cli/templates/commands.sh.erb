@@ -423,9 +423,17 @@ function log() {
 }
 export -f log
 
+# Data Packs
+function install-data-pack() {
+  www
+  ./bin/magento gxd:datainstall --load=$1 $2 -r
+}
+export -f install-data-pack
+
 # Backup / Rollback
 function sanitize-config-json {
-  CONFIG_JSON_FILE="/var/chef/cache/cookbooks/helpers/libraries/app/config.json"
+  CONFIG_JSON_FILE="<%= @config_json_dir %>/config.json"
+  
   declare -A SETTINGS
   SETTINGS["Composer Private Key"]=$(sudo jq .application.authentication.composer.private_key $CONFIG_JSON_FILE)
   SETTINGS["Composer Public Key"]=$(sudo jq  .application.authentication.composer.public_key $CONFIG_JSON_FILE)
@@ -433,14 +441,29 @@ function sanitize-config-json {
   SETTINGS["Production API Key"]=$(sudo jq .application.authentication.commerce_services.production_api_key $CONFIG_JSON_FILE)
   SETTINGS["Project ID"]=$(sudo jq .application.authentication.commerce_services.project_id $CONFIG_JSON_FILE)
   SETTINGS["Data Space ID"]=$(sudo jq .application.authentication.commerce_services.data_space_id $CONFIG_JSON_FILE)
+  SETTINGS["Build Action"]=$(sudo jq .application.build.action $CONFIG_JSON_FILE)
+  SETTINGS["Backup Hook"]=$(sudo jq .application.build.hooks.backup $CONFIG_JSON_FILE)
+
+  declare -A COMMANDS
+  COMMANDS["Build Action"]=restore
+  COMMANDS["Backup Hook"]=false
 
   for key in "${!SETTINGS[@]}"; do
-    if [ ${SETTINGS[$key]} != 'null' ] && [ "${SETTINGS[$key]}" != '""' ]; then
-      printf "\nSanitizing $key..."
-      sudo sed -i "s/${SETTINGS[$key]}/\"\"/g" ${CONFIG_JSON_FILE}
-      printf "done."
-    fi
-  done
+    ([ ${SETTINGS[$key]} == 'null' ] || [ "${SETTINGS[$key]}" == '""' ]) && continue
+    
+    case $key in
+      "Build Action" | "Backup Hook")
+        printf "\nResetting $key..."
+        sudo sed -i "s/${SETTINGS[$key]}/\"${COMMANDS[$key]}\"/g" ${CONFIG_JSON_FILE}
+        printf "done."
+        ;;
+      *)
+        printf "\nSanitizing $key..."
+        sudo sed -i "s/${SETTINGS[$key]}/\"\"/g" ${CONFIG_JSON_FILE}
+        printf "done."
+        ;;
+    esac
+  done | sort
 }
 export -f sanitize-config-json
 
@@ -448,75 +471,76 @@ function backup-app() {
   printf "\nEnabling backup functionality... \n"
   www
   ./bin/magento config:set system/backup/functionality_enabled 1
-  printf "\n"; ./bin/magento setup:backup --code --media --db; printf "done. \n"
+  printf "\n"; ./bin/magento setup:backup --code --media --db
 }
 export -f backup-app
 
 function prepare-backup() {
-  DIRS=("<%= @backup_holding_area %>/app" "<%= @backup_holding_area %>/data-packs")
+  DIRS=("<%= @backup_holding_area %>/app" "<%= @backup_holding_area %>/build")
 
+  printf "\nPreparing backup..."
   for DIR in ${DIRS[@]}; do
     if [ ! -d $DIR ]; then
       sudo mkdir -p $DIR 2>/dev/null
       sudo chown <%= @user %>:<%= @user %> $DIR
     fi
   done
+  printf "done."
 }
 export -f prepare-backup
 
-function collect-data-packs() {
+function collect-build() {
   BACKUP_HOLDING_AREA="<%= @backup_holding_area %>"
-  DATA_PACK_DIR="<%= @data_packs_dir %>"
-  DATA_PACKS_HOLDING_AREA="${BACKUP_HOLDING_AREA}/data-packs"
+  BUILD_DIR="<%= @build_dir %>"
+  BUILD_HOLDING_AREA="${BACKUP_HOLDING_AREA}/build"
   CONFIG_JSON_FILE="<%= @config_json_dir %>/config.json"
 
-  if [ ! -d ${DATA_PACKS_HOLDING_AREA} ] || [ ! -d ${DATA_PACK_DIR} ]; then
-    return
-  fi
+  ([ ! -d ${BUILD_HOLDING_AREA} ] || [ ! -d ${BUILD_DIR} ] || [ ! -f ${CONFIG_JSON_FILE} ]) && return
   
-  if [ -d ${DATA_PACK_DIR} ]; then
+  
+  <% unless @data_pack_list.empty? %>
+  if [ ! -z "$(ls -A ${BUILD_DIR})" ] && [ ! "$(ls -A ${BUILD_DIR})" == ".gitignore" ]
+  then
     printf "\nCollecting data packs..."
-    sudo cp -R ${DATA_PACK_DIR}/* ${DATA_PACKS_HOLDING_AREA} 2>/dev/null
-    printf "done.\n"
+    sudo cp -R ${BUILD_DIR}/* ${BUILD_HOLDING_AREA}
+    printf "done."
   fi
 
-  if [ -f ${CONFIG_JSON_FILE} ]; then
-    printf "\nCollecting config.json..."
-    sudo cp ${CONFIG_JSON_FILE} ${DATA_PACKS_HOLDING_AREA}
-    printf "done.\n"
-  fi
+  <% end %>
+  printf "\nCollecting config.json..."
+  sudo cp ${CONFIG_JSON_FILE} ${BUILD_HOLDING_AREA}
+  printf "done."
 
   sudo chown -R <%= @user %>:<%= @user %> ${BACKUP_HOLDING_AREA}/*
 }
-export -f collect-data-packs
+export -f collect-build
 
-function zip-data-packs() {
+function zip-build() {
   BACKUP_HOLDING_AREA="<%= @backup_holding_area %>"
-  DATA_PACKS_HOLDING_AREA="${BACKUP_HOLDING_AREA}/data-packs"
+  BUILD_HOLDING_AREA="${BACKUP_HOLDING_AREA}/build"
   BACKUP_DIR="<%= @web_root%>/<%= @backup_dir %>"
 
-  if [ ! -d ${DATA_PACKS_HOLDING_AREA} ]; then
-    return
-  fi
+  [ ! -d ${BUILD_HOLDING_AREA} ] && return
   
-  printf "\nZipping data packs..."
-  cd ${DATA_PACKS_HOLDING_AREA}
+  printf "\nZipping build..."
+  cd ${BUILD_HOLDING_AREA}
   
-  zip -rq ${BACKUP_DIR}/data-packs.zip *
-  printf "done.\n"
+  zip -rq ${BACKUP_DIR}/build.zip *
+  printf "done."
 }
-export -f zip-data-packs
+export -f zip-build
 
 function collect-app() {
   BACKUP_HOLDING_AREA="<%= @backup_holding_area %>"
   APP_HOLDING_AREA="${BACKUP_HOLDING_AREA}/app"
   BACKUP_DIR="<%= @web_root%>/<%= @backup_dir %>"
 
-  if [ -d ${BACKUP_DIR} ] && [ "$(ls -A ${BACKUP_DIR})" ]; then
-    printf "\nCollecting backups..."
-    cp ${BACKUP_DIR}/* ${APP_HOLDING_AREA}
-    printf "done.\n"
-  fi
+  ([ ! -d ${BACKUP_DIR} ] || [ -z "$(ls -A ${BACKUP_DIR})" ]) && return
+  
+  printf "\nCollecting backups..."
+  cp ${BACKUP_DIR}/* ${APP_HOLDING_AREA}
+  printf "done."
+  
   rm -rf ${BACKUP_DIR}/*
 }
 export -f collect-app
@@ -525,10 +549,10 @@ function zip-app() {
   APP_HOLDING_AREA="<%= @backup_holding_area %>/app"
   BACKUP_DIR="<%= @web_root%>/<%= @backup_dir %>"
 
-  printf "\nZipping app backup..."
+  printf "\nZipping application..."
   cd ${APP_HOLDING_AREA}
   zip -rq ${BACKUP_DIR}/app.zip *
-  printf "done.\n"
+  printf "done."
 }
 export -f zip-app
 
@@ -537,8 +561,8 @@ function zip-project() {
   
   printf "\nZipping project..."
   cd ${BACKUP_DIR}
-  zip -rq ${BACKUP_DIR}/<%= @base_url %>.zip data-packs.zip app.zip
-  printf "done.\n"
+  zip -rq ${BACKUP_DIR}/<%= @base_url %>.zip build.zip app.zip
+  printf "done."
 }
 export -f zip-project
 
@@ -546,7 +570,7 @@ function clean-up-backup() {
   BACKUP_HOLDING_AREA=<%= @backup_holding_area %>
   BACKUP_DIR="<%= @web_root%>/<%= @backup_dir %>"
   sudo rm -rf ${BACKUP_HOLDING_AREA}/*
-  sudo rm -rf ${BACKUP_DIR}/data-packs.zip ${BACKUP_DIR}/app.zip
+  sudo rm -rf ${BACKUP_DIR}/app.zip build.zip
 }
 export -f clean-up-backup
 
@@ -555,48 +579,50 @@ function export-backup() {
   EXPORT_DIR="/${USER}/backup"
   BACKUP_DIR="<%= @web_root%>/<%= @backup_dir %>"
 
-  if [ -d "${BACKUP_DIR}" ]; then
-    printf "\nExporting all backups to the VM app/vm/backup directory..."
-    if [ ! -d "${EXPORT_DIR}" ]; then
-      mkdir -p ${EXPORT_DIR}
-    fi
-    cp -R ${BACKUP_DIR}/* ${EXPORT_DIR}
-    printf "done. \n"
-  fi
+  [ ! -d ${BACKUP_DIR} ] && return
+  [ ! -d "${EXPORT_DIR}" ] && mkdir -p ${EXPORT_DIR}
+  
+  printf "\nExporting all backups to the VM app/vm/backup directory..."
+  cp -R ${BACKUP_DIR}/* ${EXPORT_DIR}
+  printf "done."
 }
 export -f export-backup
 
 function remove-backup() {
   BACKUP_DIR="<%= @web_root%>/<%= @backup_dir %>"
   
+  [ ! -d ${BACKUP_DIR} ] && return
+  
   www
-  if [ -d "${BACKUP_DIR}" ]; then
-    printf "\nRemoving all backups on the VM (Local backups will not be affected)..."
-    sleep 1
-    sudo rm -rf ${BACKUP_DIR}/*
-    printf "done. \n"
-  fi
+  printf "\nRemoving all backups on the VM (Local backups will not be affected)..."
+  sleep 1
+  sudo rm -rf ${BACKUP_DIR}/*
+  printf "done."
+  
 }
 export -f remove-backup
 
 function backup-project() {
   prepare-backup
   sanitize-config-json
-  collect-data-packs
+  
+  printf "\n"
+  collect-build
+  
+  printf "\n"
   backup-app
   collect-app
-  zip-data-packs
+  
+  printf "\n"
+  zip-build
   zip-app
   zip-project
+
+  printf "\n"
   clean-up-backup
   export-backup
   remove-backup
+
+  printf "\n"
 }
 export -f backup-project
-
-# Data Packs
-function install-data-pack() {
-  www
-  ./bin/magento gxd:datainstall --load=$1 $2 -r
-}
-export -f install-data-pack

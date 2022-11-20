@@ -23,12 +23,15 @@ property :db_host, String, default: node[:vm_cli][:mysql][:db_host]
 property :db_user, String, default: node[:vm_cli][:mysql][:db_user]
 property :db_password, String, default: node[:vm_cli][:mysql][:db_password]
 property :db_name, String, default: node[:vm_cli][:mysql][:db_name]
-property :data_packs_dir,
+property :build_dir,
          String,
-         default: node[:vm_cli][:magento_demo_builder][:data_packs_dir]
+         default: node[:vm_cli][:magento_demo_builder][:build_dir]
 property :backup_holding_area,
          String,
          default: node[:vm_cli][:magento_restore][:backup_holding_area]
+property :data_pack_list,
+         Array,
+         default: node[:vm_cli][:magento_demo_builder][:data_pack_list]
 property :config_json_dir, String, default: node[:vm_cli][:config_json_dir]
 property :backup_dir, String, default: node[:vm_cli][:backup_dir]
 property :vm_cli_directories, Array, default: node[:vm_cli][:directories]
@@ -74,7 +77,8 @@ action :install do
 				db_user: new_resource.db_user,
 				db_password: new_resource.db_password,
 				db_name: new_resource.db_name,
-				data_packs_dir: new_resource.data_packs_dir,
+				data_pack_list: new_resource.data_pack_list,
+				build_dir: new_resource.build_dir,
 				config_json_dir: new_resource.config_json_dir,
 				backup_dir: new_resource.backup_dir,
 				backup_holding_area: new_resource.backup_holding_area,

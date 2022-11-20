@@ -29,8 +29,10 @@ default[:vm_cli][:magento][:use_secure_frontend] =
 	node[:magento][:settings][:use_secure_frontend]
 
 include_attribute 'magento_demo_builder::default'
-default[:vm_cli][:magento_demo_builder][:data_packs_dir] =
+default[:vm_cli][:magento_demo_builder][:build_dir] =
 	node[:magento_demo_builder][:chef_files][:path]
+default[:vm_cli][:magento_demo_builder][:data_pack_list] =
+	node[:magento_demo_builder][:data_pack_list]
 
 include_attribute 'magento_restore::default'
 default[:vm_cli][:magento_restore][:backup_holding_area] =
