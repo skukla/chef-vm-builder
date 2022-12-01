@@ -134,6 +134,10 @@
                 "type": "string",
                 "description": "The data pack folder name or github url of the data pack."
               },
+              "version": {
+                "type": "string",
+                "description": "The data pack github branch. Defaults to dev-master"
+              },
               "data": {
                 "type": "array",
                 "description": "Array of data objects which contain data pack details.",
