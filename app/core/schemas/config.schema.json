@@ -538,7 +538,13 @@
             },
             "upload_max_filesize": {
               "type": "string",
-              "description": "PHP maximum upload file size limit.  Increase this to upload larger images via the Adobe Commerce admin panel.",
+              "description": "PHP maximum upload file size limit.  Increase this to upload larger images and files via the Adobe Commerce admin panel.",
+              "minLength": 2,
+              "pattern": "^\\d+(M|G)$"
+            },
+            "post_max_size": {
+              "type": "string",
+              "description": "PHP maximum post size limit.  Increase this to upload larger files via file uploaders via the Adobe Commerce admin panel.",
               "minLength": 2,
               "pattern": "^\\d+(M|G)$"
             }
