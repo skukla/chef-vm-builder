@@ -1,4 +1,3 @@
-# magento_custom_modules
+# magento_modules
 
 TODO: Enter the cookbook description here.
-

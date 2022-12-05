@@ -1,4 +1,4 @@
-name 'magento_custom_modules'
+name 'magento_modules'
 maintainer 'Steve Kukla'
 maintainer_email 'kukla@adobe.com'
 license 'All Rights Reserved'

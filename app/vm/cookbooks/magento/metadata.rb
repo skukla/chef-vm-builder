@@ -16,7 +16,7 @@ depends 'search_engine' # This brings in Elasticsearch configuration options
 depends 'samba' # This brings in Samba configuration options
 depends 'composer' # This brings in Composer configuration options
 depends 'magento_restore' # This brings in the ability to restore a Magento backup
-depends 'magento_custom_modules' # This brings in Custom Module configuration options
+depends 'magento_modules' # This brings in Custom Module configuration options
 depends 'magento_patches' # This brings in Magento Patches configuration options
 depends 'magento_demo_builder' # This brings in the Demo Builder resource
 depends 'vm_cli' # This brings in VM CLI commands

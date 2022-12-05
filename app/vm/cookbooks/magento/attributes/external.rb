@@ -33,26 +33,33 @@ default[:magento][:php][:fpm_port] = node[:php][:fpm_port]
 include_attribute 'search_engine::default'
 default[:magento][:search_engine][:type] = node[:search_engine][:type]
 default[:magento][:search_engine][:host] =
-	node[:search_engine][:elasticsearch][:host]
+  node[:search_engine][:elasticsearch][:host]
 default[:magento][:search_engine][:port] =
-	node[:search_engine][:elasticsearch][:port]
+  node[:search_engine][:elasticsearch][:port]
 default[:magento][:search_engine][:prefix] =
-	node[:search_engine][:elasticsearch][:prefix]
+  node[:search_engine][:elasticsearch][:prefix]
 default[:magento][:search_engine][:elasticsearch][:module_list] =
-	node[:search_engine][:elasticsearch][:module_list]
+  node[:search_engine][:elasticsearch][:module_list]
 default[:magento][:search_engine][:live_search][:module_list] =
-	node[:search_engine][:live_search][:module_list]
+  node[:search_engine][:live_search][:module_list]
 
 include_attribute 'mailhog::default'
 default[:magento][:mailhog][:mh_port] = node[:mailhog][:mh_port]
 
-include_attribute 'magento_custom_modules::override'
-default[:magento][:custom_modules][:module_list] =
-	node[:magento_custom_modules][:module_list]
+include_attribute 'magento_modules::default'
+include_attribute 'magento_modules::override'
+default[:magento][:modules][:required_module_list] =
+  node[:magento_modules][:required_module_list]
+default[:magento][:modules][:sample_data_module_list] =
+  node[:magento_modules][:sample_data_module_list]
+default[:magento][:modules][:modules_to_remove] =
+  node[:magento_modules][:modules_to_remove]
+default[:magento][:modules][:custom_module_list] =
+  node[:magento_modules][:custom_module_list]
 
 include_attribute 'magento_demo_builder::override'
 default[:magento][:data_packs][:data_pack_list] =
-	node[:magento_demo_builder][:data_pack_list]
+  node[:magento_demo_builder][:data_pack_list]
 
 include_attribute 'magento_patches::default'
 default[:magento][:patches][:apply] = node[:magento_patches][:apply]
