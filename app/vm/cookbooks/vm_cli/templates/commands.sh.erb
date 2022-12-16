@@ -498,7 +498,7 @@ function collect-build() {
   ([ ! -d ${BUILD_HOLDING_AREA} ] || [ ! -d ${BUILD_DIR} ] || [ ! -f ${CONFIG_JSON_FILE} ]) && return
   
   
-  <% unless @data_pack_list.empty? %>
+  <% unless @local_data_pack_list.empty? %>
   if [ ! -z "$(ls -A ${BUILD_DIR})" ] && [ ! "$(ls -A ${BUILD_DIR})" == ".gitignore" ]
   then
     printf "\nCollecting data packs..."

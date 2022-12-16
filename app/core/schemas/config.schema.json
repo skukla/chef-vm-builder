@@ -325,12 +325,22 @@
             },
             "modules_to_remove": {
               "type": "array",
-              "description": "Array of module package names to remove from the codebase.",
+              "description": "Array of module objects.",
               "minItems": 1,
               "items": {
-                "type": "string",
-                "description": "Package name of module to remove (vendor/module).",
-                "pattern": "^[a-z0-9]([_.-]?[a-z0-9]+)*/[a-z0-9](([_.]?|-{0,2})[a-z0-9]+)*$"
+                "type": "object",
+                "description": "Custom module object that expects a source.",
+                "required": [
+                  "source"
+                ],
+                "properties": {
+                  "source": {
+                    "type": "string",
+                    "description": "Package name of module to remove (vendor/module).",
+                    "pattern": "^[a-z0-9]([_.-]?[a-z0-9]+)*/[a-z0-9](([_.]?|-{0,2})[a-z0-9]+)*$"
+                  }
+                },
+                "additionalProperties": false
               }
             },
             "sample_data": {

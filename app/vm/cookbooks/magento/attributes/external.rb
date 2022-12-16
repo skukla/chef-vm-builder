@@ -48,18 +48,18 @@ default[:magento][:mailhog][:mh_port] = node[:mailhog][:mh_port]
 
 include_attribute 'magento_modules::default'
 include_attribute 'magento_modules::override'
-default[:magento][:modules][:required_module_list] =
-  node[:magento_modules][:required_module_list]
-default[:magento][:modules][:sample_data_module_list] =
+default[:magento][:magento_modules][:sample_data_module_list] =
   node[:magento_modules][:sample_data_module_list]
-default[:magento][:modules][:modules_to_remove] =
+default[:magento][:magento_modules][:packagist_module_list] =
+  node[:magento_modules][:packagist_module_list]
+default[:magento][:magento_modules][:github_module_list] =
+  node[:magento_modules][:github_module_list]
+default[:magento][:magento_modules][:modules_to_remove] =
   node[:magento_modules][:modules_to_remove]
-default[:magento][:modules][:custom_module_list] =
-  node[:magento_modules][:custom_module_list]
 
 include_attribute 'magento_demo_builder::override'
-default[:magento][:data_packs][:data_pack_list] =
-  node[:magento_demo_builder][:data_pack_list]
+default[:magento][:data_packs][:github_data_pack_list] =
+  node[:magento_demo_builder][:github_data_pack_list]
 
 include_attribute 'magento_patches::default'
 default[:magento][:patches][:apply] = node[:magento_patches][:apply]

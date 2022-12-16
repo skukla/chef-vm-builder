@@ -4,26 +4,7 @@
 # frozen_string_literal: true
 
 class ComposerHelper
-	def ComposerHelper.build_require_string(module_list)
-		module_list
-			.each_with_object([]) do |m, arr|
-				if m.is_a?(Hash)
-					if StringReplaceHelper.parse_source_url(m['source']).nil? &&
-							m['source'].include?('/')
-						req_str = m['source']
-					end
-
-					unless StringReplaceHelper.parse_source_url(m['source']).nil?
-						req_str = m['package_name']
-					end
-
-					req_str = [req_str, m['version']].join(':') unless m['version'].nil?
-				end
-
-				req_str = [m, '*'].join(':') if m.is_a?(String)
-
-				arr << req_str
-			end
-			.join(' ')
-	end
+  def ComposerHelper.require_string(module_list)
+    module_list.map { |md| "#{md.package_name}:#{md.version}" }.join(' ')
+  end
 end

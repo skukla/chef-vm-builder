@@ -20,10 +20,10 @@ property :version, String, default: node[:magento][:options][:version]
 property :build_action, String, default: node[:magento][:build][:action]
 property :sample_data_module_list,
          Array,
-         default: node[:magento][:modules][:sample_data_module_list]
+         default: node[:magento][:magento_modules][:sample_data_module_list]
 property :modules_to_remove,
          [String, Array],
-         default: node[:magento][:modules][:modules_to_remove]
+         default: node[:magento][:magento_modules][:modules_to_remove]
 property :hypervisor, String, default: node[:magento][:init][:hypervisor]
 property :search_engine_type,
          String,
@@ -75,16 +75,6 @@ action :install do
                      },
                      new_resource.install_settings,
                    )
-  end
-end
-
-action :add_sample_data do
-  require_str =
-    ComposerHelper.build_require_string(new_resource.sample_data_module_list)
-  composer "Adding sample data modules: #{require_str}" do
-    action :require
-    package_name require_str
-    options %w[no-update]
   end
 end
 
