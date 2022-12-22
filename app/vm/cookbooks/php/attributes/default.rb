@@ -7,8 +7,8 @@ default[:php][:version] = '8.1'
 default[:php][:user] = 'www-data'
 default[:php][:fpm_port] = '9000'
 default[:php][:memory_limit] = '3G'
-default[:php][:upload_max_filesize] = '100M'
-default[:php][:post_max_size] = '100M'
+default[:php][:upload_max_filesize] = '200M'
+default[:php][:post_max_size] = '200M'
 default[:php][:extension_list] = %w[
   php%<version>s
   php%<version>s-common
