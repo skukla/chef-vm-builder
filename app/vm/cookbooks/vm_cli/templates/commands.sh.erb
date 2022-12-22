@@ -445,7 +445,7 @@ function sanitize-config-json {
   SETTINGS["Backup Hook"]=$(sudo jq .application.build.hooks.backup $CONFIG_JSON_FILE)
 
   declare -A COMMANDS
-  COMMANDS["Build Action"]=restore
+  COMMANDS["Build Action"]=\"restore\"
   COMMANDS["Backup Hook"]=false
 
   for key in "${!SETTINGS[@]}"; do
@@ -454,7 +454,7 @@ function sanitize-config-json {
     case $key in
       "Build Action" | "Backup Hook")
         printf "\nResetting $key..."
-        sudo sed -i "s/${SETTINGS[$key]}/\"${COMMANDS[$key]}\"/g" ${CONFIG_JSON_FILE}
+        sudo sed -i "s/${SETTINGS[$key]}/${COMMANDS[$key]}/g" ${CONFIG_JSON_FILE}
         printf "done."
         ;;
       *)
