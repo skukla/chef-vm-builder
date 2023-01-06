@@ -684,6 +684,22 @@
       },
       "additionalProperties": false
     },
+    "provisioner": {
+      "type": "object",
+      "description": "Provisioner settings, e.g. chef type and chef version.",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Chef provisioner type, either chef_solo or chef_zero. Defaults to chef_zero.",
+          "pattern": "^chef_solo$|^chef_zero$"
+        },
+        "version": {
+          "type": "string",
+          "description": "Chef version number. Currently defaults to 18.1.0"
+        }
+      },
+      "additionalProperties": false
+    },
     "remote_machine": {
       "type": "object",
       "description": "Object containing settings for VM machine.",
