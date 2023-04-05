@@ -121,7 +121,9 @@ class Config
   end
 
   def Config.elasticsearch_requested?
-    return true if search_engine_type == 'elasticsearch'
+    if search_engine_type == 'elasticsearch' || search_engine_type.nil?
+      return true
+    end
     false
   end
 

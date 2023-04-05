@@ -7,19 +7,19 @@ SystemHandler.clear_screen
 ValidationHandler.validate
 
 Vagrant.configure('2') do |config|
-	HypervisorHandler.configure_box_and_ssh(config)
+  HypervisorHandler.configure_box_and_ssh(config)
 
-	config.vm.define Config.vm_name do |machine|
-		HypervisorHandler.configure_network(machine)
-	end
+  config.vm.define Config.vm_name do |machine|
+    HypervisorHandler.configure_network(machine)
+  end
 
-	config.vm.provider Hypervisor.value do |machine|
-		HypervisorHandler.customize_vm(machine)
-	end
+  config.vm.provider Hypervisor.value do |machine|
+    HypervisorHandler.customize_vm(machine)
+  end
 
-	HypervisorHandler.copy_items(config)
-	HypervisorHandler.configure_search(config)
-	ProvisionerHandler.run_chef(config)
-	HypervisorHandler.configure_hosts(config)
-	HypervisorHandler.vm_clean_up(config)
+  HypervisorHandler.copy_items(config)
+  HypervisorHandler.configure_search(config)
+  ProvisionerHandler.run_chef(config)
+  HypervisorHandler.configure_hosts(config)
+  HypervisorHandler.vm_clean_up(config)
 end
