@@ -23,19 +23,15 @@
 		},
 		"data_packs": [
 			{
-				"source": "luma-b2c",
+				"source": "starter",
 				"data": [
 					{
-						"data_path": "website"
+						"data_path": "base-b2c-website"
 					}
 				]
 			}
 		],
-		"custom_modules": [
-			{
-				"source": "git@github.com:PMET-public/module-data-install.git"
-			}
-		]
+		"custom_modules": []
 	},
 	"application": {
 		"authentication": {
@@ -46,7 +42,7 @@
 			}
 		},
 		"options": {
-			"version": "2.4.4"
+			"version": "2.4.5-p1"
 		},
 		"build": {
 			"action": "install",

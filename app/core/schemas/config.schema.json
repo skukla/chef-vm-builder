@@ -121,7 +121,6 @@
         "data_packs": {
           "type": "array",
           "description": "Array of data pack objects.",
-          "minItems": 1,
           "items": {
             "type": "object",
             "description": "Data pack object that expects a source and an array of data paths.",
@@ -164,7 +163,6 @@
         "custom_modules": {
           "type": "array",
           "description": "Array of custom module objects.",
-          "minItems": 1,
           "items": {
             "type": "object",
             "description": "Custom module object that expects a source and an optional version.",
