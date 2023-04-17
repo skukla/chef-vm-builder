@@ -10,7 +10,7 @@ require_relative '../lib/custom_module'
 require_relative '../lib/backup'
 require_relative '../lib/commerce_services'
 require_relative '../lib/service_dependencies'
-require_relative '../lib/hypervisor'
+require_relative '../lib/provider'
 
 class ValidationHandler
   @build_action = Config.build_action
@@ -20,7 +20,7 @@ class ValidationHandler
   def ValidationHandler.validate
     plugins
     vm_name
-    hypervisor
+    provider
     config_json_structure
     composer_credentials
     base_website
@@ -37,11 +37,11 @@ class ValidationHandler
     abort(ErrorMsg.show(:vm_name_missing)) if Config.vm_name.nil?
   end
 
-  def ValidationHandler.hypervisor
-    abort(ErrorMsg.show(:hypervisor_missing)) if Hypervisor.value.nil?
+  def ValidationHandler.provider
+    abort(ErrorMsg.show(:provider_missing)) if Provider.value.nil?
 
-    unless Hypervisor.list.include?(Hypervisor.value)
-      abort(ErrorMsg.show(:hypervisor_incorrect))
+    unless Provider.list.include?(Provider.value)
+      abort(ErrorMsg.show(:provider_incorrect))
     end
   end
 

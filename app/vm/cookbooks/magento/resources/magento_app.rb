@@ -24,7 +24,6 @@ property :sample_data_module_list,
 property :modules_to_remove,
          [String, Array],
          default: node[:magento][:magento_modules][:modules_to_remove]
-property :hypervisor, String, default: node[:magento][:init][:hypervisor]
 property :search_engine_type,
          String,
          default: node[:magento][:search_engine][:type]

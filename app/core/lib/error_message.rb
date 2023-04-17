@@ -14,19 +14,19 @@ class ErrorMsg < Message
     TEXT
   end
 
-  def ErrorMsg.hypervisor_missing
+  def ErrorMsg.provider_missing
     msg = <<~TEXT
-		#{@@oops}It looks like your #{@@bold}#{@@cyan}hypervisor#{@@reg} setting is \
+		#{@@oops}It looks like your #{@@bold}#{@@cyan}provider#{@@reg} setting is \
 		#{@@bold}#{@@cyan}missing #{@@reg}or #{@@bold}#{@@cyan}empty#{@@reg}. Please check your config.json file.
     TEXT
   end
 
-  def ErrorMsg.hypervisor_incorrect
-    hypervisor = Hypervisor.value
-    hypervisor_list = Hypervisor.list
+  def ErrorMsg.provider_incorrect
+    provider = Provider.value
+    provider_list = Provider.list
     msg = <<~TEXT
-    #{@@oops}It looks like you've got an incorrect hypervisor setting: #{@@bold}#{@@cyan}#{hypervisor}#{@@reg}.\n\n\
-    Acceptable values are:\n\n#{hypervisor_list.join("\n")}\n\nPlease check your config.json file.
+    #{@@oops}It looks like you've got an incorrect provider setting: #{@@bold}#{@@cyan}#{provider}#{@@reg}.\n\n\
+    Acceptable values are:\n\n#{provider_list.join("\n")}\n\nPlease check your config.json file.
     TEXT
   end
 

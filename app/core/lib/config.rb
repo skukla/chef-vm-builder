@@ -61,8 +61,8 @@ class Config
       .reduce { |new_string, chars| new_string += "-#{chars}" }
   end
 
-  def Config.hypervisor
-    setting('vm/hypervisor')
+  def Config.provider
+    setting('vm/provider')
   end
 
   def Config.provisioner_type

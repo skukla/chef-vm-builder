@@ -13,7 +13,7 @@
       "description": "VM details, including a unique VM IP and name.",
       "required": [
         "name",
-        "hypervisor"
+        "provider"
       ],
       "properties": {
         "ip": {
@@ -28,9 +28,9 @@
           "pattern": "^[a-z0-9A-Z-_\\s]*$",
           "minLength": 1
         },
-        "hypervisor": {
+        "provider": {
           "type": "string",
-          "description": "Hypervisor provider. Either virtualbox, vmware_fusion, or vmware_desktop.",
+          "description": "Virtualization provider. Either virtualbox, vmware_fusion, or vmware_desktop.",
           "minLength": 1,
           "pattern": "(^virtualbox$|^vmware_fusion$|^vmware_desktop$)"
         }
@@ -719,7 +719,7 @@
         },
         "gui": {
           "type": "boolean",
-          "description": "Whether to show the VM in the hypervisor.  Defaults to false. Set to true in order for VM to show in the Library in VMWare Fusion."
+          "description": "Whether to show the VM when it boots.  Defaults to false. Set to true in order for VM to show in the Library in VMWare Fusion."
         },
         "base_box": {
           "type": "string",

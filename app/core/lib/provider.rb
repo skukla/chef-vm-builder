@@ -1,16 +1,16 @@
 require_relative 'config'
 require_relative 'guest_machine'
 
-class Hypervisor
-  def Hypervisor.value
-    Config.hypervisor
+class Provider
+  def Provider.value
+    Config.provider
   end
 
-  def Hypervisor.list
+  def Provider.list
     %w[virtualbox vmware_fusion]
   end
 
-  def Hypervisor.plugins
+  def Provider.plugins
     case
     when value.include?('virtualbox')
     when value.include?('vmware')
@@ -18,7 +18,7 @@ class Hypervisor
     end
   end
 
-  def Hypervisor.gui
+  def Provider.gui
     return Config.gui unless Config.gui.nil?
 
     case
@@ -29,7 +29,7 @@ class Hypervisor
     end
   end
 
-  def Hypervisor.base_box
+  def Provider.base_box
     boxes = {
       'intel' => 'bento/ubuntu-22.04',
       'm1' => 'hajowieland/ubuntu-jammy-arm',
@@ -43,7 +43,7 @@ class Hypervisor
     base_box
   end
 
-  def Hypervisor.elasticsearch_requested?
+  def Provider.elasticsearch_requested?
     unless Config.elasticsearch_requested?.nil?
       return Config.elasticsearch_requested?
     end

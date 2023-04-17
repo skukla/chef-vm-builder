@@ -7,7 +7,7 @@ resource_name :vm_cli
 provides :vm_cli
 
 property :name, String, name_property: true
-property :hypervisor, String, default: node[:vm_cli][:init][:hypervisor]
+property :vm_provider, String, default: node[:vm_cli][:init][:provider]
 property :user, String, default: node[:vm_cli][:init][:user]
 property :group, String, default: node[:vm_cli][:init][:user]
 property :web_root, String, default: node[:vm_cli][:nginx][:web_root]
@@ -66,7 +66,7 @@ action :install do
     group new_resource.group
     variables(
       {
-        hypervisor: new_resource.hypervisor,
+        provider: new_resource.vm_provider,
         user: new_resource.user,
         urls: DemoStructureHelper.vm_urls,
         base_url: DemoStructureHelper.base_url,

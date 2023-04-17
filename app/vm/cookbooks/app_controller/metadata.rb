@@ -7,7 +7,7 @@ long_description 'Controls the VM Builder application flow'
 version '0.1.0'
 chef_version '>= 14.0'
 
-depends 'init' # Brings in web root, build action, and hypervisor
+depends 'init' # Brings in web root, build action, and provider
 depends 'ssl' # Brings in ssl usage
 depends 'nginx' # Brings in the web root
 depends 'mailhog' # Brings in mailhog usage

@@ -1,7 +1,7 @@
 {
 	"vm": {
 		"name": "Luma VM",
-		"hypervisor": "virtualbox"
+		"provider": "virtualbox"
 	},
 	"custom_demo": {
 		"structure": {

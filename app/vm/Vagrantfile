@@ -1,25 +1,25 @@
 require_relative '../core/handlers/system_handler'
 require_relative '../core/handlers/validation_handler'
-require_relative '../core/handlers/hypervisor_handler'
+require_relative '../core/handlers/provider_handler'
 require_relative '../core/handlers/provisioner_handler'
 
 SystemHandler.clear_screen
 ValidationHandler.validate
 
 Vagrant.configure('2') do |config|
-  HypervisorHandler.configure_box_and_ssh(config)
+  ProviderHandler.configure_box_and_ssh(config)
 
   config.vm.define Config.vm_name do |machine|
-    HypervisorHandler.configure_network(machine)
+    ProviderHandler.configure_network(machine)
   end
 
-  config.vm.provider Hypervisor.value do |machine|
-    HypervisorHandler.customize_vm(machine)
+  config.vm.provider Provider.value do |machine|
+    ProviderHandler.customize_vm(machine)
   end
 
-  HypervisorHandler.copy_items(config)
-  HypervisorHandler.configure_search(config)
+  ProviderHandler.copy_items(config)
+  ProviderHandler.configure_search(config)
   ProvisionerHandler.run_chef(config)
-  HypervisorHandler.configure_hosts(config)
-  HypervisorHandler.vm_clean_up(config)
+  ProviderHandler.configure_hosts(config)
+  ProviderHandler.vm_clean_up(config)
 end

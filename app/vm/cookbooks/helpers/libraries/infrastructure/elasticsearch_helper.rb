@@ -4,7 +4,7 @@
 # frozen_string_literal: true
 
 class ElasticsearchHelper
-	def ElasticsearchHelper.host
-		HypervisorHelper.elasticsearch_host
-	end
+  def ElasticsearchHelper.host
+    ProviderHelper.elasticsearch_host
+  end
 end
