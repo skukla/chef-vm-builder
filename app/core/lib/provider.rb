@@ -7,11 +7,13 @@ class Provider
   end
 
   def Provider.list
-    %w[virtualbox vmware_fusion]
+    %w[virtualbox vmware_fusion vmware_desktop docker]
   end
 
   def Provider.plugins
     case
+    when value.include?('docker')
+      %w[vagrant-communicator-docker]
     when value.include?('virtualbox')
     when value.include?('vmware')
       %w[vagrant-vmware-desktop]

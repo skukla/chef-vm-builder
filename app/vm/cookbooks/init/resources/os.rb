@@ -15,30 +15,34 @@ property :install_package_list,
          default: node[:init][:os][:install_package_list]
 
 action :update do
-	execute 'Update OS packages' do
-		command "sudo apt update -y &&
+  execute 'Update OS packages' do
+    command "sudo apt update -y &&
         sudo DEBIAN_FRONTEND=noninteractive apt-get upgrade -y -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" &&
         sudo unattended-upgrade -d &&
         sudo apt-get autoremove -y"
-	end
+  end
 end
 
 action :configure do
-	execute 'Configure VM timezone' do
-		command "sudo timedatectl set-timezone #{new_resource.timezone}"
-	end
+  # execute 'Configure VM timezone' do
+  # 	command "sudo timedatectl set-timezone #{new_resource.timezone}"
+  # end
 
-	group 'root' do
-		members new_resource.user
-		append true
-		action :modify
-	end
+  execute 'Configure VM timezone' do
+    command "echo \"#{new_resource.timezone}\" | sudo tee /etc/timezone && sudo dpkg-reconfigure --frontend noninteractive tzdata"
+  end
+
+  group 'root' do
+    members new_resource.user
+    append true
+    action :modify
+  end
 end
 
 action :add_os_packages do
-	new_resource.install_package_list.each do |package|
-		apt_package package do
-			action :install
-		end
-	end
+  new_resource.install_package_list.each do |package|
+    apt_package package do
+      action :install
+    end
+  end
 end

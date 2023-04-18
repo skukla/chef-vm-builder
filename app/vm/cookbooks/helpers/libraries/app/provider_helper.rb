@@ -12,7 +12,7 @@ class ProviderHelper
     case
     when value.include?('virtualbox')
       '10.0.2.2'
-    when value.include?('vmware')
+    when %w[vmware docker].include?(value)
       '127.0.0.1'
     end
   end

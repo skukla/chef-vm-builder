@@ -30,9 +30,9 @@
         },
         "provider": {
           "type": "string",
-          "description": "Virtualization provider. Either virtualbox, vmware_fusion, or vmware_desktop.",
+          "description": "Virtualization provider. Either virtualbox, vmware_fusion, vmware_desktop, or docker.",
           "minLength": 1,
-          "pattern": "(^virtualbox$|^vmware_fusion$|^vmware_desktop$)"
+          "pattern": "(^virtualbox$|^vmware_fusion$|^vmware_desktop$|^docker$)"
         }
       },
       "additionalProperties": false

@@ -44,7 +44,7 @@ if %w[update_all update_app].include?(build_action) || merge_restore
   end
 end
 
-if search_engine_type == 'live_search' && provider.include?('vmware')
+if search_engine_type == 'live_search' && %w[vmware docker].include?(provider)
   elasticsearch 'Stopping and disabling elasticsearch' do
     action %i[stop disable]
   end

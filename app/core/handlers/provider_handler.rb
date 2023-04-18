@@ -11,12 +11,12 @@ class ProviderHandler
     config.ssh.password = 'vagrant'
     config.ssh.insert_key = false
     config.ssh.forward_agent = true
-    config.vm.box = Provider.base_box
+    config.vm.box = Provider.base_box if @provider != 'docker'
   end
 
   def ProviderHandler.configure_network(machine)
     case
-    when @provider.include?('virtualbox')
+    when %w[virtualbox docker].include?(@provider)
       machine.vm.network 'private_network', type: 'dhcp'
     when @provider.include?('vmware')
       machine.vm.network 'private_network'
@@ -24,11 +24,16 @@ class ProviderHandler
   end
 
   def ProviderHandler.customize_vm(machine)
-    machine.gui = Provider.gui
-    machine.linked_clone = true
-
     case
+    when @provider.include?('docker')
+      machine.build_dir = './scripts'
+      machine.name = Config.value('vm/name')
+      machine.remains_running = true
+      machine.has_ssh = true
+      # machine.cmd = %w["tail -f /dev/null"]
     when @provider.include?('virtualbox')
+      machine.gui = Provider.gui
+      machine.linked_clone = true
       machine.default_nic_type = '82543GC'
       machine.customize [
                           'modifyvm',
@@ -45,6 +50,8 @@ class ProviderHandler
                           'off',
                         ]
     when @provider.include?('vmware')
+      machine.gui = Provider.gui
+      machine.linked_clone = true
       machine.allowlist_verified = true
       machine.vmx['displayName'] = Config.value('vm/name')
       machine.vmx['memsize'] = Config.value('remote_machine/memory')

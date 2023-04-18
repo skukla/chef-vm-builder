@@ -12,4 +12,6 @@ include_recipe 'nginx::default'
 include_recipe 'mysql::default'
 include_recipe 'mailhog::default'
 include_recipe 'samba::default'
-include_recipe 'search_engine::elasticsearch' if provider.include?('vmware')
+if %w[vmware docker].include?(provider)
+  include_recipe 'search_engine::elasticsearch'
+end

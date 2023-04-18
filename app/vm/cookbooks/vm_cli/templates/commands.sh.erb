@@ -263,7 +263,7 @@ function status-db() {
 }
 export -f status-db
 
-<% if @provider.include?('vmware') %>
+<% if %w[vmware docker].include?(@provider) %>
 # Elasticsearch
 function enable-elasticsearch() {
   printf "\nEnabling Elasticsearch...\n"

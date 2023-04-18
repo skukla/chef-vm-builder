@@ -7,6 +7,7 @@ SystemHandler.clear_screen
 ValidationHandler.validate
 
 Vagrant.configure('2') do |config|
+  ENV['VAGRANT_DEFAULT_PROVIDER'] = Provider.value
   ProviderHandler.configure_box_and_ssh(config)
 
   config.vm.define Config.vm_name do |machine|
