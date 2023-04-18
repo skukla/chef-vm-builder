@@ -1,7 +1,8 @@
 [Unit]
-Description=MailHog service
+Description=MailHog
 
 [Service]
+Type=simple
 ExecStart=/usr/local/bin/mailhog \
   -api-bind-addr 0.0.0.0:<%= @mh_port %> \
   -ui-bind-addr 0.0.0.0:<%= @mh_port %> \
