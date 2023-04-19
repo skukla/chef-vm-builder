@@ -15,7 +15,7 @@ fi
 
 DESC="mailhog"
 DAEMON=/usr/local/bin/mailhog
-DAEMON_ARGS="  -api-bind-addr 0.0.0.0:10000   -ui-bind-addr 0.0.0.0:10000   -smtp-bind-addr 0.0.0.0:1025"
+DAEMON_ARGS="  -api-bind-addr 0.0.0.0:<%= @mh_port %>   -ui-bind-addr 0.0.0.0:<%= @mh_port %>   -smtp-bind-addr 0.0.0.0:<%= @smtp_port %>"
 PIDFILE=/var/run/mailhog/mailhog-sysd2v.pid
 START_ARGS="--background --make-pidfile"
 

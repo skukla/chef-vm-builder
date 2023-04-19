@@ -7,10 +7,14 @@ resource_name :mailhog
 provides :mailhog
 
 property :name, String, name_property: true
+property :user, String, default: node[:mailhog][:init][:user]
+property :group, String, default: node[:mailhog][:init][:user]
+property :vm_provider, String, default: node[:mailhog][:vm][:provider]
 property :repository_list, Array, default: node[:mailhog][:repositories]
 property :go_install_path, String, default: node[:mailhog][:go_install_path]
 property :install_path, String, default: node[:mailhog][:install_path]
-property :service_file, String, default: node[:mailhog][:service_file]
+property :service_file, String
+property :template_path, String
 property :mh_port, String, default: node[:mailhog][:mh_port]
 property :smtp_port, String, default: node[:mailhog][:smtp_port]
 
@@ -19,6 +23,7 @@ action :install do
     execute "Use go to clone #{repository[:name]}" do
       command MailhogHelper.install_cmd(repository[:url])
     end
+
     execute "Copy #{repository[:name]} into /usr/local/bin" do
       command "cp #{new_resource.go_install_path}/bin/#{repository[:name]} #{new_resource.install_path}/#{repository[:name].downcase}"
     end
@@ -26,12 +31,21 @@ action :install do
 end
 
 action :configure do
+  if new_resource.vm_provider == 'docker'
+    directory 'Creating /var/run service directory' do
+      path '/var/run/mailhog'
+      owner new_resource.user
+      group new_resource.group
+      not_if { Dir.exist?('/var/run/mailhog') }
+    end
+  end
+
   template 'Mailhog service' do
-    source 'mailhog.service.erb'
-    path '/etc/systemd/system/mailhog.service'
+    source new_resource.template_path
+    path new_resource.service_file
     owner 'root'
     group 'root'
-    mode '0644'
+    mode '0755'
     variables(
       { mh_port: new_resource.mh_port, smtp_port: new_resource.smtp_port },
     )
@@ -59,23 +73,5 @@ end
 action :stop do
   service 'mailhog' do
     action :stop
-  end
-end
-
-action :uninstall do
-  new_resource.repository_list.each do |repository|
-    execute "Uninstall #{repository[:name]}" do
-      command "rm -rf #{new_resource.install_path}/#{repository[:name].downcase}"
-      only_if do
-        ::Dir.exist?(
-          "#{new_resource.install_path}/#{repository[:name].downcase}",
-        )
-      end
-    end
-
-    execute 'Uninstall mailhog service' do
-      command "rm -rf #{new_resource.service_file}"
-      only_if { ::File.exist?(new_resource.service_file) }
-    end
   end
 end
