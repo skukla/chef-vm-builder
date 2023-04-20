@@ -1,8 +1,8 @@
-#
 # Cookbook:: php
 # Resource:: php
-#
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
+# frozen_string_literal: true
+
 resource_name :php
 provides :php
 
@@ -94,47 +94,21 @@ action :configure do
     end
   end
 
-  # Set up script to run php as VM user
-  template "Run PHP as #{new_resource.vm_user}" do
+  # Add vm user to php user group
+  group new_resource.php_user do
+    members new_resource.vm_user
+    append true
+    action :modify
+  end
+
+  # Set up script to run specific php version as PHP user
+  template "Run PHP as #{new_resource.php_user}" do
     source 'php.sh.erb'
     path '/bin/php.sh'
     owner 'root'
     group 'root'
     mode '644'
-    variables({ user: new_resource.vm_user, version: new_resource.version })
-  end
-end
-
-action :set_user do
-  if new_resource.php_user != 'www-data'
-    link '/usr/bin/php' do
-      to '/etc/alternatives/php'
-      action :delete
-    end
-
-    link '/usr/bin/php' do
-      to '/bin/php.sh'
-      action :create
-    end
-
-    execute 'Make PHP script executable' do
-      command 'chmod +x /bin/php.sh'
-    end
-  else
-    link '/usr/bin/php' do
-      to '/bin/php.sh'
-      action :delete
-    end
-
-    link '/usr/bin/php' do
-      to '/etc/alternatives/php'
-      action :create
-    end
-
-    execute 'Make PHP script non-executable' do
-      command 'chmod -x /bin/php.sh'
-      only_if { ::File.exist?('/bin/php.sh') }
-    end
+    variables({ version: new_resource.version })
   end
 end
 
