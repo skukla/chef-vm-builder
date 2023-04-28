@@ -27,12 +27,6 @@ action :configure do
 	execute 'Configure VM timezone' do
 		command "sudo timedatectl set-timezone #{new_resource.timezone}"
 	end
-
-	group 'root' do
-		members new_resource.user
-		append true
-		action :modify
-	end
 end
 
 action :add_os_packages do
