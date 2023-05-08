@@ -78,11 +78,10 @@ end
 action :create_tmp_dir do
 	directory 'Creating the temporary download directory' do
 		path new_resource.tmp_dir
-		owner user
-		group group
+		owner new_resource.user
+		group new_resource.group
 		mode '0770'
 		recursive true
-		not_if { ::Dir.exist?(new_resource.tmp_dir) }
 	end
 end
 
