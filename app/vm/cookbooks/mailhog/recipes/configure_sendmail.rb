@@ -4,6 +4,5 @@
 # frozen_string_literal: true
 
 php 'Configure mailhog sendmail path and restart PHP' do
-	action %i[configure_sendmail restart]
-	sendmail_path sendmail_path
+  action %i[configure_sendmail restart]
 end
