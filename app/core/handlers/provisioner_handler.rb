@@ -10,6 +10,7 @@ class ProvisionerHandler
   def ProvisionerHandler.run_chef(config)
     config.vm.provision Provisioner.type do |chef|
       chef.version = Provisioner.version
+      chef.install = Provisioner.install?
       chef.nodes_path = 'nodes'
       chef.environments_path = 'environments'
       chef.roles_path = 'roles'

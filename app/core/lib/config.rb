@@ -73,6 +73,10 @@ class Config
     setting('provisioner/version')
   end
 
+  def Config.provisioner_install?
+    setting('provisioner/install')
+  end
+
   def Config.base_box
     setting('remote_machine/base_box')
   end

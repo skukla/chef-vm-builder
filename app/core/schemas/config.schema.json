@@ -694,6 +694,10 @@
         "version": {
           "type": "string",
           "description": "Chef version number. Currently defaults to 18.1.0"
+        },
+        "install": {
+          "type": "boolean",
+          "description": "Whether the provisioner should attempt to check for itself on the guest"
         }
       },
       "additionalProperties": false

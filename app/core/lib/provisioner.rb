@@ -12,4 +12,10 @@ class Provisioner
 
     '18.1.0'
   end
+
+  def Provisioner.install?
+    return Config.provisioner_install? unless Config.provisioner_install?.nil?
+
+    'false'
+  end
 end
