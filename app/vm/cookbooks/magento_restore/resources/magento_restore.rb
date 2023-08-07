@@ -28,7 +28,7 @@ action :transfer_backup_files do
 
   files.each do |file|
     execute new_resource.name do
-      command "cp '#{ValueHelper.prepare_filename(file)}' #{new_resource.destination_path}"
+      command "cp '#{file}' #{new_resource.destination_path}"
     end
   end
 end

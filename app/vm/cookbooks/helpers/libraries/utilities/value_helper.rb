@@ -37,12 +37,4 @@ module ValueHelper
 
     value.split('-').map { |e| e }.join
   end
-
-  def ValueHelper.prepare_filename(value)
-    value = value.downcase
-
-    return value unless value.include?(' ')
-
-    value.split(' ').map { |e| e }.join('-')
-  end
 end
