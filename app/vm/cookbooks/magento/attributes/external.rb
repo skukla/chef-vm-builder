@@ -16,10 +16,13 @@ default[:magento][:mysql][:db_password] = node[:mysql][:db_password]
 default[:magento][:mysql][:db_name] = node[:mysql][:db_name]
 
 include_attribute 'composer::default'
+include_attribute 'composer::override'
 default[:magento][:composer][:file] = node[:composer][:file]
 default[:magento][:composer][:public_key] = node[:composer][:public_key]
 default[:magento][:composer][:private_key] = node[:composer][:private_key]
 default[:magento][:composer][:github_token] = node[:composer][:github_token]
+default[:magento][:composer][:allow_all_plugins] =
+  node[:composer][:allow_all_plugins]
 
 include_attribute 'nginx::default'
 default[:magento][:nginx][:web_root] = node[:nginx][:web_root]

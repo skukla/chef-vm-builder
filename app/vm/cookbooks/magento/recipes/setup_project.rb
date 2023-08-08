@@ -36,12 +36,13 @@ if %w[install force_install update_all update_app].include?(build_action) ||
   end
 end
 
-if %w[install force_install].include?(build_action) || merge_restore
+if (%w[install force_install].include?(build_action) || merge_restore) &&
+     allow_all_plugins
   composer 'Allow all plugins' do
     action :config
-    setting 'allow-all-plugins'
+    setting 'allow-plugins'
     value true
     options %w[global]
-    only_if { ::Dir.exist?(web_root) && allow_all_plugins }
+    only_if { ::Dir.exist?(web_root) }
   end
 end
