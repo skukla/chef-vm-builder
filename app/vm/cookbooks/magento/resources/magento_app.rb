@@ -21,6 +21,9 @@ property :build_action, String, default: node[:magento][:build][:action]
 property :sample_data_module_list,
          Array,
          default: node[:magento][:magento_modules][:sample_data_module_list]
+property :repositories_to_remove,
+         [String, Array],
+         default: node[:magento][:magento_modules][:repositories_to_remove]
 property :modules_to_remove,
          [String, Array],
          default: node[:magento][:magento_modules][:modules_to_remove]
@@ -101,6 +104,15 @@ action :set_permissions do
     execute 'Clear the generated directory' do
       command "rm -rf #{generated_content_string.join(' ')}"
       only_if { ::Dir.exist?(generated_directory) }
+    end
+  end
+end
+
+action :remove_repositories do
+  new_resource.repositories_to_remove.map do |r|
+    composer "Removing repository: #{r['source']}..." do
+      action :remove_repository
+      repository_key r['source']
     end
   end
 end

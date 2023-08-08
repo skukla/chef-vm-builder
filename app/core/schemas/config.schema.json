@@ -321,6 +321,25 @@
               },
               "additionalProperties": false
             },
+            "repositories_to_remove": {
+              "type": "array",
+              "description": "Array of repository objects.",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "description": "Custom module repository object that expects a source.",
+                "required": [
+                  "source"
+                ],
+                "properties": {
+                  "source": {
+                    "type": "string",
+                    "description": "String of a repository key to remove (typically vendor/module, but may also be a number)."
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
             "modules_to_remove": {
               "type": "array",
               "description": "Array of module objects.",

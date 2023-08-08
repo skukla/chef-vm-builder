@@ -33,14 +33,14 @@ module StringReplaceHelper
   def StringReplaceHelper.remove_modules(modules_to_remove, composer_json)
     replace_string_format = '%4s%s:'
     module_format = '%8s"%s": "*"'
-    replace_block_format = "%s{\n%s\n%4s},\n"
+    replace_block_format = "%s {\n%s\n%4s},\n"
 
     content =
       format(
         replace_block_format,
         format(replace_string_format, "\s", '"replace"'),
         modules_to_remove
-          .map { |md| format(module_format, "\s", md.package_name) }
+          .map { |md| format(module_format, "\s", md['source']) }
           .join(",\n"),
         "\s",
       )
@@ -48,6 +48,8 @@ module StringReplaceHelper
     file = Chef::Util::FileEdit.new(composer_json.to_s)
     file.insert_line_after_match('minimum-stability', content)
     file.write_file
+
+    pp "Replacing the following modules: #{modules_to_remove.map { |md| md['source'] }.join(' ')}"
   end
 
   def StringReplaceHelper.set_project_stability(stability_level, composer_json)
