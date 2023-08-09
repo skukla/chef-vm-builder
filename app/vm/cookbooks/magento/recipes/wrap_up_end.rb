@@ -21,82 +21,82 @@ vm_cli_commands = MagentoHelper.build_hook_command_list(:vm_cli)
 search_engine_type = node[:magento][:search_engine][:type]
 
 if %w[install force_install update_all update_data].include?(build_action) ||
-		merge_restore
-	magento_cli 'Deploy static content for data packs' do
-		action :deploy_static_content
-	end
+     merge_restore
+  magento_cli 'Deploy static content for data packs' do
+    action :deploy_static_content
+  end
 end
 
 if %w[install force_install reinstall restore].include?(build_action)
-	magento_cli 'Set indexers to On Schedule mode' do
-		action :set_indexer_mode
-	end
+  magento_cli 'Set indexers to On Schedule mode' do
+    action :set_indexer_mode
+  end
 end
 
 magento_cli 'Reset indexers, reindex, and clean cache' do
-	action %i[reset_indexers reindex clean_cache]
+  action %i[reset_indexers reindex clean_cache]
 end
 
 magento_cli 'Enable cron' do
-	action :enable_cron
-	not_if { ::File.exist?(crontab) }
+  action :enable_cron
+  not_if { ::File.exist?(crontab) }
 end
 
 if %w[install force_install reinstall update_all update_app restore].include?(
-		build_action,
+     build_action,
    )
-	vm_cli 'Starting consumers' do
-		action :run
-		command_list %w[start-consumers]
-	end
+  vm_cli 'Starting consumers' do
+    action :run
+    command_list %w[start-consumers]
+  end
 end
 
 magento_app 'Set permissions' do
-	action :set_permissions
-	remove_generated false
+  action :set_permissions
+  remove_generated false
 end
 
 magento_cli 'Disable maintenance mode' do
-	action :disable_maintenance_mode
-	only_if { ::File.exist?(maintenance_mode_flag) }
+  action :disable_maintenance_mode
+  only_if { ::File.exist?(maintenance_mode_flag) }
 end
 
 magento_app 'Set first run flag' do
-	action :set_first_run
-	not_if { ::File.exist?(first_run_flag) }
+  action :set_first_run
+  not_if { ::File.exist?(first_run_flag) }
 end
 
 if %w[install force_install reinstall update_all update_app restore].include?(
-		build_action,
+     build_action,
    )
-	if !commands.nil? && !commands.empty?
-		magento_cli 'Running user Magento CLI hooks' do
-			action :run
-			command_list magento_cli_commands
-		end
+  if !commands.nil? && !commands.empty?
+    magento_cli 'Running user Magento CLI hooks' do
+      action :run
+      command_list magento_cli_commands
+    end
 
-		vm_cli 'Running user VM CLI hooks' do
-			action :run
-			command_list vm_cli_commands
-		end
-	end
+    vm_cli 'Running user VM CLI hooks' do
+      action :run
+      command_list vm_cli_commands
+    end
+  end
 
-	if !backup.nil? && backup
-		vm_cli 'Running the backup hook' do
-			action :run
-			command_list %w[backup-project]
-		end
-	end
+  if !backup.nil? && backup
+    vm_cli 'Running the backup hook' do
+      action :run
+      command_list 'backup-project'
+    end
+  end
 
-	if !warm_cache.nil? && warm_cache
-		vm_cli 'Running the warm cache hook' do
-			action :run
-			command_list 'warm-cache'
-		end
-	end
+  if !warm_cache.nil? && warm_cache
+    vm_cli 'Running the warm cache hook' do
+      action :run
+      command_list 'warm-cache'
+    end
+  end
 end
 
 ruby_block 'Displaying URLs' do
-	block { MessageHelper.displayUrls(admin_path, mailhog_port) }
-	sensitive true
+  block { MessageHelper.displayUrls(admin_path, mailhog_port) }
+  sensitive true
 end
