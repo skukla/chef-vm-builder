@@ -15,7 +15,7 @@ install_dir =
 tmp_composer_json = "#{tmp_dir}/composer.json"
 composer_json = "#{web_root}/composer.json"
 
-  mysql 'Set up the database' do
+mysql 'Set up the database' do
     action %i[
              create_database
              add_database_user

@@ -23,10 +23,10 @@ property :sample_data_module_list,
          default: node[:magento][:magento_modules][:sample_data_module_list]
 property :repositories_to_remove,
          [String, Array],
-         default: node[:magento][:magento_modules][:repositories_to_remove]
+         default: node[:magento][:magento_modules][:repositories_to_remove_list]
 property :modules_to_remove,
          [String, Array],
-         default: node[:magento][:magento_modules][:modules_to_remove]
+         default: node[:magento][:magento_modules][:modules_to_remove_list]
 property :search_engine_type,
          String,
          default: node[:magento][:search_engine][:type]
@@ -109,10 +109,10 @@ action :set_permissions do
 end
 
 action :remove_repositories do
-  new_resource.repositories_to_remove.map do |r|
-    composer "Removing repository: #{r['source']}..." do
+  new_resource.repositories_to_remove.each do |md|
+    composer 'Removing repositories' do
       action :remove_repository
-      repository_key r['source']
+      repository_key md.source
     end
   end
 end

@@ -40,7 +40,7 @@ module StringReplaceHelper
         replace_block_format,
         format(replace_string_format, "\s", '"replace"'),
         modules_to_remove
-          .map { |md| format(module_format, "\s", md['source']) }
+          .map { |md| format(module_format, "\s", md.package_name) }
           .join(",\n"),
         "\s",
       )
@@ -49,7 +49,7 @@ module StringReplaceHelper
     file.insert_line_after_match('minimum-stability', content)
     file.write_file
 
-    pp "Replacing the following modules: #{modules_to_remove.map { |md| md['source'] }.join(' ')}"
+    pp "Replacing the following modules: #{modules_to_remove.map { |md| md.package_name }.join(' ')}"
   end
 
   def StringReplaceHelper.set_project_stability(stability_level, composer_json)

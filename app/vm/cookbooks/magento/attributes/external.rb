@@ -57,8 +57,10 @@ default[:magento][:magento_modules][:packagist_module_list] =
   node[:magento_modules][:packagist_module_list]
 default[:magento][:magento_modules][:github_module_list] =
   node[:magento_modules][:github_module_list]
-default[:magento][:magento_modules][:modules_to_remove] =
-  node[:magento_modules][:modules_to_remove]
+default[:magento][:magento_modules][:repositories_to_remove_list] =
+  node[:magento_modules][:repositories_to_remove_list]
+default[:magento][:magento_modules][:modules_to_remove_list] =
+  node[:magento_modules][:modules_to_remove_list]
 
 include_attribute 'magento_demo_builder::override'
 default[:magento][:data_packs][:github_data_pack_list] =
