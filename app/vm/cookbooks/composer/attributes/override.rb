@@ -2,7 +2,7 @@
 # Attribute:: override
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 # Supported settings: authentication: public_key, private_key, github_token
-# infrastructure: version, clear_cache, allow_all_plugins
+# infrastructure: version, clear_cache, allowed_plugins
 # frozen_string_literal: true
 
 composer_auth = ConfigHelper.value('application/authentication/composer')
@@ -15,3 +15,7 @@ settings_arr.each do |setting|
     setting.each { |key, value| override[:composer][key] = value }
   end
 end
+
+allowed_plugins = node[:composer][:allowed_plugins]
+override[:composer][:allowed_plugins_list] =
+  ListHelper::ComposerPluginList.new(allowed_plugins).all_modules

@@ -8,4 +8,4 @@ default[:composer][:install_dir] = '/usr/local/bin'
 default[:composer][:version] = 'latest'
 default[:composer][:timeout] = 2000
 default[:composer][:clear_cache] = false
-default[:composer][:allow_all_plugins] = false
+default[:composer][:plugins] = []

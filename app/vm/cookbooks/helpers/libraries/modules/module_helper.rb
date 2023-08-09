@@ -107,4 +107,13 @@ module ModuleHelper
       File.join(module_prefix, vendor_string, module_string)
     end
   end
+
+  class ComposerPlugin < AppModule
+    attr_reader :status
+
+    def initialize(hash)
+      super
+      @status = hash['status']
+    end
+  end
 end

@@ -5,8 +5,8 @@
 
 web_root = node[:magento][:nginx][:web_root]
 build_action = node[:magento][:build][:action]
-allow_all_plugins = node[:magento][:composer][:allow_all_plugins]
 composer_json = "#{web_root}/composer.json"
+allowed_composer_plugins_list = node[:magento][:composer][:allowed_plugins_list]
 restore_mode = node[:magento][:magento_restore][:mode]
 merge_restore = (build_action == 'restore' && restore_mode == 'merge')
 
@@ -36,13 +36,15 @@ if %w[install force_install update_all update_app].include?(build_action) ||
   end
 end
 
-if (%w[install force_install].include?(build_action) || merge_restore) &&
-     allow_all_plugins
-  composer 'Allow all plugins' do
-    action :config
-    setting 'allow-plugins'
-    value true
-    options %w[global]
-    only_if { ::Dir.exist?(web_root) }
+if %w[update_all update_app].include?(build_action) || merge_restore
+  unless allowed_composer_plugins_list.empty?
+    allowed_composer_plugins_list.each do |plugin|
+      composer "Setting composer plugin: #{plugin.source} to #{plugin.status}" do
+        action :config
+        setting "allow-plugins.#{plugin.source} #{plugin.status}"
+        options %w[no-plugins]
+        only_if { ::Dir.exist?(web_root) }
+      end
+    end
   end
 end

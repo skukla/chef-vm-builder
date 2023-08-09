@@ -147,6 +147,7 @@ action :config do
 
   execute new_resource.name do
     command "su #{new_resource.user} -c '#{new_resource.install_directory}/#{new_resource.file} config #{options_string} #{new_resource.setting} #{new_resource.value}'"
+    cwd new_resource.web_root
   end
 end
 

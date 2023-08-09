@@ -45,4 +45,18 @@ module ListHelper
       @module_list.map { |md| ModuleHelper::DataPack.new(md) }
     end
   end
+
+  class ComposerPluginList < ModuleList
+    attr_reader :all_modules
+
+    def initialize(module_list)
+      super
+    end
+
+    def list
+      return [] if @module_list.nil? || @module_list.empty?
+
+      @module_list.map { |md| ModuleHelper::ComposerPlugin.new(md) }
+    end
+  end
 end

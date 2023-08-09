@@ -602,9 +602,29 @@
               "type": "boolean",
               "description": "Clear composer cache? Either true or false."
             },
-            "allow_all_plugins": {
-              "type": "boolean",
-              "description": "Allow all plugins for older builds? Either true or false."
+            "allowed_plugins": {
+              "type": "array",
+              "description": "Array of composer module objects.",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "description": "Composer module object which expects a required source and status.",
+                "required": [
+                  "source",
+                  "status"
+                ],
+                "properties": {
+                  "source": {
+                    "type": "string",
+                    "description": "Module string to allow or deny."
+                  },
+                  "status": {
+                    "type": "boolean",
+                    "description": "True to allow the module, false to deny it."
+                  }
+                },
+                "additionalProperties": false
+              }
             }
           },
           "additionalProperties": false
