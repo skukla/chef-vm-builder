@@ -13,6 +13,7 @@ property :version, String, default: node[:composer][:version]
 property :user, String, default: node[:composer][:init][:user]
 property :group, String, default: node[:composer][:init][:user]
 property :web_root, String, default: node[:composer][:nginx][:web_root]
+property :cwd, String
 property :options, Array
 property :project_name, String
 property :project_directory, String
@@ -147,7 +148,7 @@ action :config do
 
   execute new_resource.name do
     command "su #{new_resource.user} -c '#{new_resource.install_directory}/#{new_resource.file} config #{options_string} #{new_resource.setting} #{new_resource.value}'"
-    cwd new_resource.web_root
+    cwd new_resource.cwd unless new_resource.cwd.nil?
   end
 end
 

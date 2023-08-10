@@ -43,6 +43,7 @@ if %w[update_all update_app].include?(build_action) || merge_restore
         action :config
         setting "allow-plugins.#{plugin.source} #{plugin.status}"
         options %w[no-plugins]
+        cwd web_root
         only_if { ::Dir.exist?(web_root) }
       end
     end
