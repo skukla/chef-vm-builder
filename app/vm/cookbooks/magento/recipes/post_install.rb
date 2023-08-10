@@ -10,10 +10,22 @@ deploy_mode = node[:magento][:build][:deploy_mode][:mode]
 backup_holding_area = node[:magento_restore][:holding_area]
 restore_mode = node[:magento][:magento_restore][:mode]
 merge_restore = (build_action == 'restore' && restore_mode == 'merge')
+provider = node[:magento][:init][:provider]
 search_engine_type = node[:magento][:search_engine][:type]
+es_host = {
+  path: node[:magento][:search_engine][:elasticsearch][:host_config_path],
+  value: node[:magento][:search_engine][:host],
+}
+es_port = {
+  path: node[:magento][:search_engine][:elasticsearch][:port_config_path],
+  value: node[:magento][:search_engine][:port],
+}
+es_prefix = {
+  path: node[:magento][:search_engine][:elasticsearch][:prefix_config_path],
+  value: node[:magento][:search_engine][:prefix],
+}
 es_module_list = node[:magento][:search_engine][:elasticsearch][:module_list]
 ls_module_list = node[:magento][:search_engine][:live_search][:module_list]
-provider = node[:magento][:init][:provider]
 
 if build_action == 'restore'
   magento_restore 'Restore database' do
@@ -35,6 +47,16 @@ if (
   ruby_block 'Setting search modules' do
     block { MagentoHelper.switch_search_modules }
     only_if { ::File.exist?(MagentoHelper.config_php) }
+  end
+
+  if search_engine_type == 'elasticsearch'
+    [es_host, es_port, es_prefix].each do |param|
+      magento_cli 'Configuring elasticsearch' do
+        action :config_set
+        config_path param[:path]
+        config_value param[:value]
+      end
+    end
   end
 end
 

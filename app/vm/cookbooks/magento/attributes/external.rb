@@ -35,10 +35,16 @@ default[:magento][:php][:fpm_port] = node[:php][:fpm_port]
 
 include_attribute 'search_engine::default'
 default[:magento][:search_engine][:type] = node[:search_engine][:type]
+default[:magento][:search_engine][:elasticsearch][:host_config_path] =
+  node[:search_engine][:elasticsearch][:host_config_path]
 default[:magento][:search_engine][:host] =
   node[:search_engine][:elasticsearch][:host]
+default[:magento][:search_engine][:elasticsearch][:port_config_path] =
+  node[:search_engine][:elasticsearch][:port_config_path]
 default[:magento][:search_engine][:port] =
   node[:search_engine][:elasticsearch][:port]
+default[:magento][:search_engine][:elasticsearch][:prefix_config_path] =
+  node[:search_engine][:elasticsearch][:prefix_config_path]
 default[:magento][:search_engine][:prefix] =
   node[:search_engine][:elasticsearch][:prefix]
 default[:magento][:search_engine][:elasticsearch][:module_list] =
