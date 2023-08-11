@@ -54,12 +54,11 @@ if (
 
   if search_engine_type == 'elasticsearch'
     [es_host, es_port, es_prefix].each do |param|
-      if MagentoHelper.is_configured?(param[:path])
-        magento_cli "Configuring elasticsearch #{param[:name]}" do
-          action :config_set
-          config_path param[:path]
-          config_value param[:value]
-        end
+      magento_cli "Configuring elasticsearch #{param[:name]}" do
+        action :config_set
+        config_path param[:path]
+        config_value param[:value]
+        not_if { MagentoHelper.is_configured?(param[:path]) }
       end
     end
   end
