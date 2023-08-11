@@ -13,14 +13,17 @@ merge_restore = (build_action == 'restore' && restore_mode == 'merge')
 provider = node[:magento][:init][:provider]
 search_engine_type = node[:magento][:search_engine][:type]
 es_host = {
+  name: 'host',
   path: node[:magento][:search_engine][:elasticsearch][:host_config_path],
   value: node[:magento][:search_engine][:host],
 }
 es_port = {
+  name: 'port',
   path: node[:magento][:search_engine][:elasticsearch][:port_config_path],
   value: node[:magento][:search_engine][:port],
 }
 es_prefix = {
+  name: 'prefix',
   path: node[:magento][:search_engine][:elasticsearch][:prefix_config_path],
   value: node[:magento][:search_engine][:prefix],
 }
@@ -51,10 +54,12 @@ if (
 
   if search_engine_type == 'elasticsearch'
     [es_host, es_port, es_prefix].each do |param|
-      magento_cli 'Configuring elasticsearch' do
-        action :config_set
-        config_path param[:path]
-        config_value param[:value]
+      if MagentoHelper.is_configured?(param[:path])
+        magento_cli "Configuring elasticsearch #{param[:name]}" do
+          action :config_set
+          config_path param[:path]
+          config_value param[:value]
+        end
       end
     end
   end
