@@ -64,7 +64,9 @@ class ConfigHelper
   def ConfigHelper.url_protocol
     usf = value('application/settings/use_secure_frontend')
     usa = value('application/settings/use_secure_admin')
+
     return 'http://' if usf.nil? || usa.nil?
-    !usf.zero? || usa.zero? ? 'https://' : 'http://'
+
+    (usf || usa) ? 'https://' : 'http://'
   end
 end
