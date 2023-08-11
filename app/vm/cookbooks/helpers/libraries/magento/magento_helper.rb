@@ -157,6 +157,35 @@ class MagentoHelper
     Chef.node[:magento][:search_engine][:elasticsearch][:module_list]
   end
 
+  def MagentoHelper.es_config
+    [
+      {
+        name: 'host',
+        path:
+          Chef.node[:magento][:search_engine][:elasticsearch][
+            :host_config_path
+          ],
+        value: Chef.node[:magento][:search_engine][:host],
+      },
+      {
+        name: 'port',
+        path:
+          Chef.node[:magento][:search_engine][:elasticsearch][
+            :port_config_path
+          ],
+        value: Chef.node[:magento][:search_engine][:port],
+      },
+      {
+        name: 'prefix',
+        path:
+          Chef.node[:magento][:search_engine][:elasticsearch][
+            :prefix_config_path
+          ],
+        value: Chef.node[:magento][:search_engine][:prefix],
+      },
+    ]
+  end
+
   def MagentoHelper.is_configured?(path)
     result =
       DatabaseHelper.execute_query(
@@ -167,6 +196,23 @@ class MagentoHelper
     return false if result.empty?
 
     true
+  end
+
+  def MagentoHelper.configure_elasticsearch
+    es_config.each do |setting|
+      unless is_configured?(setting[:path])
+        DatabaseHelper.execute_query(
+          "INSERT INTO core_config_data (scope, scope_id, path, value) VALUES ('default', 0, '#{setting[:path]}', '#{setting[:value]}')",
+          DatabaseHelper.db_name,
+        )
+
+        unless is_configured?(setting[:path])
+          p "#{setting[:name]} was not configured."
+        end
+
+        pp "Configured elasticsearch #{setting[:name]}"
+      end
+    end
   end
 
   def MagentoHelper.switch_to_elasticsearch
@@ -210,14 +256,12 @@ class MagentoHelper
   end
 
   def MagentoHelper.switch_search_modules
-    if (search_engine_type == 'elasticsearch' && !live_search_enabled?)
-      p 'No module changes made.'
+    if (search_engine_type == 'elasticsearch')
+      p 'No module changes made' if !live_search_enabled?
+      switch_to_elasticsearch if live_search_enabled?
+      configure_elasticsearch
     end
 
     switch_to_live_search if search_engine_type == 'live_search'
-
-    if search_engine_type == 'elasticsearch' && live_search_enabled?
-      switch_to_elasticsearch
-    end
   end
 end
