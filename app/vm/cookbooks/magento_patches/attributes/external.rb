@@ -13,7 +13,5 @@ include_attribute 'nginx::default'
 default[:magento_patches][:nginx][:web_root] = node[:nginx][:web_root]
 
 include_attribute 'magento::default'
-default[:magento_patches][:magento][:version] =
-	node[:magento][:options][:version]
 default[:magento_patches][:magento][:sample_data][:apply] =
-	node[:magento][:build][:sample_data][:apply]
+  node[:magento][:build][:sample_data][:apply]
