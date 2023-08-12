@@ -4,7 +4,11 @@
 # frozen_string_literal: true
 
 class MagentoHelper
-  def MagentoHelper.base_version(version)
+  def MagentoHelper.version
+    Chef.node[:magento][:options][:version]
+  end
+
+  def MagentoHelper.base_version
     version.include?('-p') ? version.sub(/.{3}$/, '') : version
   end
 

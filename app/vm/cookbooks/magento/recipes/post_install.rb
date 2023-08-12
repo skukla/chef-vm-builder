@@ -28,6 +28,26 @@ if build_action == 'restore'
   end
 end
 
+if %w[restore reinstall].include?(build_action)
+  ruby_block 'Removing old cookies from the database' do
+    block do
+      DatabaseHelper.execute_query(
+        "DELETE FROM core_config_data WHERE path LIKE '%web/cookie%'",
+        DatabaseHelper.db_name,
+      )
+      pp 'Deleted cookie records from the database'
+    end
+  end
+
+  if Gem::Version.new(MagentoHelper.base_version) <= Gem::Version.new('2.4.5')
+    magento_cli 'Setting admin session time' do
+      action :config_set
+      config_path 'system/security/max_session_size_admin'
+      config_value '2560000'
+    end
+  end
+end
+
 if (
      %w[install force_install update_all update_app].include?(build_action) ||
        merge_restore
