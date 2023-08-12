@@ -152,6 +152,15 @@ action :prepare_reinstall do
     command 'rm -rf app/etc/env.php'
     cwd new_resource.web_root
   end
+
+  if MagentoHelper.admin_user_exists?
+    result =
+      DatabaseHelper.execute_query(
+        "DELETE FROM admin_user WHERE username = 'admin'",
+        DatabaseHelper.db_name,
+      )
+    pp 'Deleted admin user from the database'
+  end
 end
 
 action :prepare_restore do

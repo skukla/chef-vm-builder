@@ -19,6 +19,16 @@ if %w[reinstall restore].include?(build_action)
     action :prepare_reinstall
     only_if { ::File.exist?("#{web_root}/app/etc/env.php") }
   end
+
+  ruby_block 'Removing old cookies from the database' do
+    block do
+      DatabaseHelper.execute_query(
+        "DELETE FROM core_config_data WHERE path LIKE '%web/cookie%'",
+        DatabaseHelper.db_name,
+      )
+      pp 'Deleted cookie records from the database'
+    end
+  end
 end
 
 if %w[install force_install reinstall restore update_all update_app].include?(

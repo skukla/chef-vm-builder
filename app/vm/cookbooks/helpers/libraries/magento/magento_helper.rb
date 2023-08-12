@@ -137,6 +137,18 @@ class MagentoHelper
     web_root
   end
 
+  def MagentoHelper.admin_user_exists?
+    result =
+      DatabaseHelper.execute_query(
+        "SELECT username FROM admin_user WHERE username = 'admin'",
+        DatabaseHelper.db_name,
+      )
+
+    return false if result.empty?
+
+    true
+  end
+
   def MagentoHelper.sample_data_flag
     File.join(web_root, 'var', '.sample-data-state.flag')
   end
