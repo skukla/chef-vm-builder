@@ -159,7 +159,7 @@ action :prepare_reinstall do
         "DELETE FROM admin_user WHERE username = 'admin'",
         DatabaseHelper.db_name,
       )
-    pp 'Deleted admin user from the database'
+    pp 'Deleted the admin user from the database'
   end
 end
 
