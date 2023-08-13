@@ -17,14 +17,34 @@ class Elasticsearch
     $?.exitstatus == 0
   end
 
-  def Elasticsearch.install
+  def Elasticsearch.add_repository
     puts 'Adding the Elasticsearch repository...'
     System.cmd('HOMEBREW_NO_AUTO_UPDATE=1 brew tap elastic/tap')
+  end
 
+  def Elasticsearch.download
     puts 'Installing the Elasticsearch application...'
     System.cmd(
       'HOMEBREW_NO_AUTO_UPDATE=1 brew install elastic/tap/elasticsearch-full',
     )
+  end
+
+  def Elasticsearch.patch
+    puts 'Patching Elasticsearch...'
+    cmd = [
+      '
+      cd /usr/local/Homebrew/Library/Taps/elastic/homebrew-tap',
+      'git fetch origin pull/144/head:patch-1',
+      'git checkout patch-1',
+    ]
+
+    System.cmd(cmd.join(' && '))
+  end
+
+  def Elasticsearch.install
+    add_repository
+    patch
+    download
   end
 
   def Elasticsearch.start
