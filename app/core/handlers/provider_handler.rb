@@ -101,6 +101,7 @@ class ProviderHandler
 
   def ProviderHandler.configure_hosts(config)
     config.vm.hostname = DemoStructure.base_url
+    config.hostmanager.aliases = DemoStructure.additional_urls
     HostsHandler.manage_hosts(config)
   end
 
