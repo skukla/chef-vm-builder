@@ -1,6 +1,7 @@
 .DS_Store
 project/config/config.json
 app/vm/cookbooks/helpers/libraries/config.json
+app/vm/certificate/*.crt
 user/
 user/backup/.DS_Store
 user/config/.DS_Store
