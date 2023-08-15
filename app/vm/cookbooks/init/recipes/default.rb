@@ -6,10 +6,10 @@
 update_os = node[:init][:os][:update]
 
 os 'Update OS' do
-	action :update
-	only_if { update_os }
+  action :update
+  only_if { update_os }
 end
 
 os 'Configure OS' do
-	action %i[configure add_os_packages]
+  action %i[configure add_os_packages]
 end

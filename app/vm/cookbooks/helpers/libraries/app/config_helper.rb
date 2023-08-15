@@ -61,12 +61,17 @@ class ConfigHelper
     setting('infrastructure/search_engine', 'type')
   end
 
-  def ConfigHelper.url_protocol
+  def ConfigHelper.url_protocol(area = nil)
     usf = value('application/settings/use_secure_frontend')
     usa = value('application/settings/use_secure_admin')
 
-    return 'http://' if usf.nil? || usa.nil?
+    if (
+         area == nil || (usf.nil? && usa.nil?) ||
+           (area == 'storefront' && !usf) || (area == 'admin' && !usa)
+       )
+      return 'http://'
+    end
 
-    (usf || usa) ? 'https://' : 'http://'
+    'https://' if (area == 'storefront' && usf) || (area == 'admin' && usa)
   end
 end
