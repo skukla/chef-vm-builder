@@ -1,0 +1,17 @@
+backup/.DS_Store
+config/.DS_Store
+data-packs/.DS_Store
+data-packs/starter/data/base-b2c-website/.DS_Store
+data-packs/starter/data/custom-b2b-website/.DS_Store
+data-packs/starter/data/custom-b2c-store/.DS_Store
+data-packs/starter/data/custom-store-view-ca-fr/.DS_Store
+data-packs/starter/media/.DS_Store
+data-packs/starter/media/catalog/.DS_Store
+data-packs/starter/media/downloadable_products/.DS_Store
+data-packs/starter/media/email/.DS_Store
+data-packs/starter/media/favicon/.DS_Store
+data-packs/starter/media/logo/.DS_Store
+data-packs/starter/media/template_manager/.DS_Store
+data-packs/starter/media/theme/.DS_Store
+data-packs/starter/media/wysiwyg/.DS_Store
+patches/.DS_Store

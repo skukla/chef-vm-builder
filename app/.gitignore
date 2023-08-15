@@ -1,3 +1,5 @@
 .vagrant/
 environments/
 nodes/
+vm/cookbooks/helpers/libraries/config.json
+vm/certificate/*.crt
