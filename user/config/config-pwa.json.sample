@@ -1,0 +1,60 @@
+{
+	"vm": {
+		"name": "Venia VM",
+		"provider": "virtualbox"
+	},
+	"custom_demo": {
+		"structure": {
+			"websites": [
+				{
+					"site_code": "base",
+					"site_url": "venia.demo",
+					"stores": [
+						{
+							"store_views": [
+								{
+									"store_view_code": "default"
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		"data_packs": [],
+		"custom_modules": [
+			{
+				"source": "magento/pwa"
+			},
+			{
+				"source": "magento/venia-sample-data"
+			}
+		]
+	},
+	"application": {
+		"authentication": {
+			"composer": {
+				"public_key": "",
+				"private_key": "",
+				"github_token": ""
+			}
+		},
+		"options": {
+			"version": "2.4.6"
+		},
+		"build": {
+			"action": "force_install",
+			"sample_data": false,
+			"patches": true
+		},
+		"settings": {
+			"admin_password": "admin4tls",
+			"use_secure_frontend": true,
+			"use_secure_admin": false
+		}
+	},
+	"remote_machine": {
+		"cpus": "2",
+		"memory": "8192"
+	}
+}
