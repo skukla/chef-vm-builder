@@ -1,5 +1,5 @@
 .DS_Store
-project/config/config.json
+project/config/*
 app/vm/cookbooks/helpers/libraries/config.json
 app/vm/certificate/*.crt
 user/
@@ -20,7 +20,6 @@ user/data-packs/starter/media/template_manager/.DS_Store
 user/data-packs/starter/media/theme/.DS_Store
 user/data-packs/starter/media/wysiwyg/.DS_Store
 user/patches/.DS_Store
-config/config.json
 node_modules/
 Gemfile
 Gemfile.lock
