@@ -177,6 +177,10 @@
               "version": {
                 "type": "string",
                 "description": "The version of the module."
+              },
+              "reference": {
+                "type": "string",
+                "description": "An optional commit hash."
               }
             },
             "additionalProperties": false

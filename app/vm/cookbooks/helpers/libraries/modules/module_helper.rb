@@ -5,11 +5,12 @@
 
 module ModuleHelper
   class AppModule
-    attr_reader :source
+    attr_reader :source, :reference
 
     def initialize(hash)
       @hash = hash
       @source = @hash['source']
+      @reference = @hash['reference']
     end
 
     def github_url

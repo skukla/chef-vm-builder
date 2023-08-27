@@ -5,6 +5,13 @@
 
 class ComposerHelper
   def ComposerHelper.require_string(module_list)
-    module_list.map { |md| "#{md.package_name}:#{md.version}" }.join(' ')
+    module_list
+      .map do |md|
+        version_string = "#{md.package_name}:#{md.version}"
+        version_string += "##{md.reference}" if md.reference &&
+          !md.reference.empty?
+        version_string
+      end
+      .join(' ')
   end
 end
