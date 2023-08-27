@@ -176,7 +176,7 @@ class MagentoHelper
   def MagentoHelper.es_config
     [
       {
-        name: 'setting',
+        name: 'search engine',
         path:
           Chef.node[:magento][:search_engine][:elasticsearch][
             :setting_config_path
