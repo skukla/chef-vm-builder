@@ -14,7 +14,7 @@ if %w[restore].include?(build_action)
   end
 end
 
-if %w[reinstall restore].include?(build_action)
+if %w[reinstall].include?(build_action)
   magento_app 'Preparing reinstall' do
     action :prepare_reinstall
     only_if { ::File.exist?("#{web_root}/app/etc/env.php") }
