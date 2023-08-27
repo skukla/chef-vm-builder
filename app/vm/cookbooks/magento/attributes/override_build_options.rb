@@ -11,10 +11,10 @@ unless setting.nil?
     case key
     when 'sample_data'
       override[:magento][:build][:sample_data][:apply] = value
-    when 'action'
+    when 'action', 'add_required_modules'
       override[:magento][:build][key] = value
-    when 'repositories_to_remove', 'modules_to_remove'
-      override[:magento][:magento_modules][key] = value
+    when 'repositories_to_remove', 'modules_to_remove',
+         override[:magento][:magento_modules][key] = value
     when 'deploy_mode'
       if value.is_a?(String)
         override[:magento][:build][key][:apply] = true

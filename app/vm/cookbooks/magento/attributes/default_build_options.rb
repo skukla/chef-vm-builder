@@ -7,6 +7,7 @@ default[:magento][:build][:action] = 'install'
 default[:magento][:build][:sample_data][:apply] = true
 default[:magento][:build][:deploy_mode][:apply] = true
 default[:magento][:build][:deploy_mode][:mode] = 'production'
+default[:magento][:build][:add_required_modules] = true
 
 default[:magento][:build][:hooks][:warm_cache] = false
 default[:magento][:build][:hooks][:backup] = false

@@ -428,6 +428,10 @@
               },
               "additionalProperties": false
             },
+            "add_required_modules": {
+              "type": "boolean",
+              "description": "Automatically add required modules or not? Either true or false."
+            },
             "hooks": {
               "type": "object",
               "description": "Build hooks which run at the end of the build.  Includes: warm_cache, enable_media_gallery, and an array of custom VM or Magento CLI commands.",
