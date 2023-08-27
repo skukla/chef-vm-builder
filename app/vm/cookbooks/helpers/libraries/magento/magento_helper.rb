@@ -210,37 +210,28 @@ class MagentoHelper
     ]
   end
 
-  def MagentoHelper.is_configured?(path)
-    result =
-      DatabaseHelper.execute_query(
-        "SELECT path FROM core_config_data WHERE path = '#{path}'",
-        DatabaseHelper.db_name,
-      )
-
-    return false if result.empty?
-
-    true
-  end
-
   def MagentoHelper.configure_elasticsearch
     es_config.each do |setting|
-      if is_configured?(setting[:path]) &&
-           setting[:path] == 'catalog/search/engine'
-        DatabaseHelper.execute_query(
-          "UPDATE core_config_data SET scope = 'default', scope_id = 0, path = '#{setting[:path]}', value = '#{setting[:value]}' WHERE path = '#{setting[:path]}'",
-          DatabaseHelper.db_name,
-        )
-        pp "Updated elasticsearch #{setting[:name]}"
-      end
+      value = DatabaseHelper.get_config_value(setting[:path]).chomp
+      data_arr = [
+        { column: 'scope', value: 'default' },
+        { column: 'scope_id', value: '0' },
+        { column: 'path', value: setting[:path] },
+        { column: 'value', value: setting[:value] },
+      ]
 
-      unless is_configured?(setting[:path])
-        DatabaseHelper.execute_query(
-          "INSERT INTO core_config_data (scope, scope_id, path, value) VALUES ('default', 0, '#{setting[:path]}', '#{setting[:value]}')",
-          DatabaseHelper.db_name,
-        )
+      if setting[:path] == 'catalog/search/engine'
+        if value == 'mysql'
+          DatabaseHelper.update_config_value(data_arr, setting[:path])
+          pp "Updated elasticsearch #{setting[:name]}"
+        end
+      elsif value.empty?
+        DatabaseHelper.insert_config_value(data_arr)
         pp "Configured elasticsearch #{setting[:name]}"
       end
     end
+
+    pp 'All elasticsearch settings are set properly.'
   end
 
   def MagentoHelper.switch_to_elasticsearch
