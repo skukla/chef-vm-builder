@@ -176,6 +176,14 @@ class MagentoHelper
   def MagentoHelper.es_config
     [
       {
+        name: 'setting',
+        path:
+          Chef.node[:magento][:search_engine][:elasticsearch][
+            :setting_config_path
+          ],
+        value: Chef.node[:magento][:search_engine][:elasticsearch][:setting],
+      },
+      {
         name: 'host',
         path:
           Chef.node[:magento][:search_engine][:elasticsearch][
@@ -216,16 +224,20 @@ class MagentoHelper
 
   def MagentoHelper.configure_elasticsearch
     es_config.each do |setting|
+      if is_configured?(setting[:path]) &&
+           setting[:path] == 'catalog/search/engine'
+        DatabaseHelper.execute_query(
+          "UPDATE core_config_data SET scope = 'default', scope_id = 0, path = '#{setting[:path]}', value = '#{setting[:value]}' WHERE path = '#{setting[:path]}'",
+          DatabaseHelper.db_name,
+        )
+        pp "Updated elasticsearch #{setting[:name]}"
+      end
+
       unless is_configured?(setting[:path])
         DatabaseHelper.execute_query(
           "INSERT INTO core_config_data (scope, scope_id, path, value) VALUES ('default', 0, '#{setting[:path]}', '#{setting[:value]}')",
           DatabaseHelper.db_name,
         )
-
-        unless is_configured?(setting[:path])
-          p "#{setting[:name]} was not configured."
-        end
-
         pp "Configured elasticsearch #{setting[:name]}"
       end
     end

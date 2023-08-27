@@ -9,6 +9,9 @@ default[:search_engine][:elasticsearch][:cluster_name] = 'Magento'
 default[:search_engine][:elasticsearch][:node_name] = 'elasticsearch'
 default[:search_engine][:elasticsearch][:version] = '7.x'
 default[:search_engine][:elasticsearch][:memory] = '2g'
+default[:search_engine][:elasticsearch][:setting_config_path] =
+  'catalog/search/engine'
+default[:search_engine][:elasticsearch][:setting] = 'elasticsearch7'
 default[:search_engine][:elasticsearch][:host_config_path] =
   'catalog/search/elasticsearch7_server_hostname'
 default[:search_engine][:elasticsearch][:host] = ElasticsearchHelper.host
