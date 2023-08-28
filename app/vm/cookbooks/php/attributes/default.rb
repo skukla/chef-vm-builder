@@ -3,7 +3,7 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 # frozen_string_literal: true
 
-default[:php][:version] = '8.1'
+default[:php][:version] = '8.2'
 default[:php][:user] = 'www-data'
 default[:php][:fpm_port] = '9000'
 default[:php][:memory_limit] = '3G'
