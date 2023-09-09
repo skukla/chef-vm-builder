@@ -28,19 +28,28 @@ if build_action == 'install' &&
 end
 
 include_recipe 'init::disable_cron'
+
 if %w[install force_install restore].include?(build_action)
   include_recipe 'app_controller::base'
   include_recipe 'app_controller::infrastructure'
 end
+
+if build_action == 'reinstall'
+  include_recipe 'composer::default'
+  include_recipe 'ssl::default'
+  include_recipe 'nginx::default'
+end
+
 if %w[update_all update_app update_data update_urls].include?(build_action)
   include_recipe 'init::motd'
   include_recipe 'vm_cli::install'
   include_recipe 'php::default'
   include_recipe 'composer::default'
   include_recipe 'nginx::default'
+  include_recipe 'mailhog::enable'
   include_recipe 'mailhog::configure_sendmail'
 end
-include_recipe 'composer::default' if build_action == 'reinstall'
+
 if first_run_install || !after_first_run_install
   include_recipe 'app_controller::service_launcher'
   include_recipe 'app_controller::application'

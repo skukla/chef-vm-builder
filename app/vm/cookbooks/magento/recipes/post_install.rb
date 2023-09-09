@@ -49,8 +49,9 @@ if %w[restore reinstall].include?(build_action)
 end
 
 if (
-     %w[install force_install update_all update_app].include?(build_action) ||
-       merge_restore
+     %w[install force_install reinstall update_all update_app].include?(
+       build_action,
+     ) || merge_restore
    )
   ruby_block 'Setting search modules' do
     block { MagentoHelper.switch_search_modules }
