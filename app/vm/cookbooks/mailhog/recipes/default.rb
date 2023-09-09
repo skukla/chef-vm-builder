@@ -16,9 +16,15 @@ mailhog 'Stop mailhog' do
   only_if { ::File.exist?(service_file) }
 end
 
-mailhog 'Install, configure, enable, and reload mailhog' do
-  action %i[install configure enable reload]
+mailhog 'Install and configure mailhog' do
+  action %i[install configure]
   not_if { ::File.exist?(service_file) }
+end
+
+include_recipe 'mailhog::enable'
+
+mailhog 'Reload mailhog' do
+  action :reload
 end
 
 include_recipe 'mailhog::configure_sendmail'
