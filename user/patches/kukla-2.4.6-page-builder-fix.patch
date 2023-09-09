@@ -1,0 +1,14 @@
+diff --git a/vendor/magento/module-page-builder/view/adminhtml/requirejs-config.js b/vendor/magento/module-page-builder/view/adminhtml/requirejs-config.js
+index f7a5d86..e234b84 100644
+--- a/vendor/magento/module-page-builder/view/adminhtml/requirejs-config.js
++++ b/vendor/magento/module-page-builder/view/adminhtml/requirejs-config.js
+@@ -22,6 +22,9 @@ var config = {
+         },
+         'Magento_PageBuilder/js/resource/jquery/ui/jquery.ui.touch-punch': {
+             deps: ['jquery/ui']
++        },
++        'Magento_PageBuilder/js/form/element/wysiwyg': {
++            deps: ['Magento_Ui/js/form/form']
+         }
+     },
+     config: {
