@@ -147,12 +147,14 @@ action :set_first_run do
   end
 end
 
-action :prepare_reinstall do
+action :remove_env_file do
   execute 'Remove app/etc/env.php' do
     command 'rm -rf app/etc/env.php'
     cwd new_resource.web_root
   end
+end
 
+action :prepare_reinstall do
   if MagentoHelper.admin_user_exists?
     result =
       DatabaseHelper.execute_query(

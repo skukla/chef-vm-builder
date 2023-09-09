@@ -7,17 +7,23 @@ build_action = node[:magento][:build][:action]
 search_engine_type = node[:magento][:search_engine][:type]
 provider = node[:magento][:init][:provider]
 
-if %w[restore].include?(build_action)
-  magento_app 'Preparing to install after restoring backup' do
-    action :prepare_restore
-    only_if { ::Dir.exist?("#{web_root}/pub") }
-  end
-end
-
-if %w[reinstall].include?(build_action)
-  magento_app 'Preparing reinstall' do
-    action :prepare_reinstall
+if %w[restore reinstall].include?(build_action)
+  magento_app 'Removing env file' do
+    action :remove_env_file
     only_if { ::File.exist?("#{web_root}/app/etc/env.php") }
+  end
+
+  if build_action == 'restore'
+    magento_app 'Preparing to install after restoring backup' do
+      action :prepare_restore
+      only_if { ::Dir.exist?("#{web_root}/pub") }
+    end
+  end
+
+  if build_action == 'reinstall'
+    magento_app 'Preparing reinstall' do
+      action :prepare_reinstall
+    end
   end
 end
 
