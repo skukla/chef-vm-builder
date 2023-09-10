@@ -34,7 +34,7 @@ class ProviderHandler
                           'modifyvm',
                           :id,
                           '--name',
-                          Config.value('vm/name'),
+                          Config.vm_name,
                           '--memory',
                           Config.value('remote_machine/memory'),
                           '--cpus',
@@ -46,7 +46,7 @@ class ProviderHandler
                         ]
     when @provider.include?('vmware')
       machine.allowlist_verified = true
-      machine.vmx['displayName'] = Config.value('vm/name')
+      machine.vmx['displayName'] = Config.vm_name
       machine.vmx['memsize'] = Config.value('remote_machine/memory')
       machine.vmx['numvcpus'] = Config.value('remote_machine/cpus')
     end
