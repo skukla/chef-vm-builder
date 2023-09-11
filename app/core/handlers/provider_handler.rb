@@ -34,11 +34,11 @@ class ProviderHandler
                           'modifyvm',
                           :id,
                           '--name',
-                          Config.vm_name,
+                          Config.setting('vm/name'),
                           '--memory',
-                          Config.value('remote_machine/memory'),
+                          Config.setting('remote_machine/memory'),
                           '--cpus',
-                          Config.value('remote_machine/cpus'),
+                          Config.setting('remote_machine/cpus'),
                           '--vram',
                           '16',
                           '--vrde',
@@ -46,9 +46,9 @@ class ProviderHandler
                         ]
     when @provider.include?('vmware')
       machine.allowlist_verified = true
-      machine.vmx['displayName'] = Config.vm_name
-      machine.vmx['memsize'] = Config.value('remote_machine/memory')
-      machine.vmx['numvcpus'] = Config.value('remote_machine/cpus')
+      machine.vmx['displayName'] = Config.setting('vm/name')
+      machine.vmx['memsize'] = Config.setting('remote_machine/memory')
+      machine.vmx['numvcpus'] = Config.setting('remote_machine/cpus')
     end
   end
 
