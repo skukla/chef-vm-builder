@@ -20,6 +20,12 @@ magento_cli_commands = MagentoHelper.build_hook_command_list(:magento_cli)
 vm_cli_commands = MagentoHelper.build_hook_command_list(:vm_cli)
 search_engine_type = node[:magento][:search_engine][:type]
 
+if build_action == 'update_data'
+  magento_cli 'Deploy static content for data packs' do
+    action :deploy_static_content
+  end
+end
+
 if %w[install force_install reinstall restore].include?(build_action)
   magento_cli 'Set indexers to On Schedule mode' do
     action :set_indexer_mode
