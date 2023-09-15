@@ -24,10 +24,18 @@ property :data_pack, Object
 action :clear_data_and_media do
   data_pack = new_resource.data_pack
 
-  if Dir.exist?("#{data_pack.module_path}/#{new_resource.media_type}") &&
-       !Dir.empty?("#{data_pack.module_path}/#{new_resource.media_type}")
-    execute "Clearing #{new_resource.media_type} from #{data_pack.vendor_string}/#{data_pack.module_string}" do
-      command "rm -rf #{new_resource.web_root}/#{data_pack.module_path}/#{new_resource.media_type}/*"
+  execute "Clearing #{new_resource.media_type} from #{data_pack.vendor_string}/#{data_pack.module_string}" do
+    command "rm -rf #{data_pack.module_path}/#{new_resource.media_type}/*"
+    cwd new_resource.web_root
+    only_if do
+      ::Dir.exist?(
+        "#{new_resource.web_root}/#{data_pack.module_path}/#{new_resource.media_type}",
+      )
+    end
+    not_if do
+      ::Dir.empty?(
+        "#{new_resource.web_root}/#{data_pack.module_path}/#{new_resource.media_type}",
+      )
     end
   end
 end

@@ -1,8 +1,8 @@
-#
 # Cookbook:: app_controller
 # Recipe:: default
-#
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
+# frozen_string_literal: true
+
 build_action = node[:app_controller][:magento][:build_action]
 web_root = node[:app_controller][:nginx][:web_root]
 first_run_flag = "#{web_root}/var/.first-run-state.flag"
@@ -40,7 +40,7 @@ if build_action == 'reinstall'
   include_recipe 'nginx::default'
 end
 
-if %w[update_all update_app update_data update_urls].include?(build_action)
+if %w[update_all update_app update_urls].include?(build_action)
   include_recipe 'init::motd'
   include_recipe 'vm_cli::install'
   include_recipe 'php::default'
