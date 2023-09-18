@@ -1,12 +1,16 @@
 require 'pathname'
 require 'json'
 
+require_relative 'app'
+require_relative 'entry'
+
 class Config
   class << self
-    attr_reader :app_root
+    attr_reader :json_file_path, :json_filename
   end
-  @app_root = "/#{File.join(Pathname.new(__dir__).each_filename.to_a[0...-3])}"
   @search_path = 'infrastructure/search_engine'
+  @json_file_path = File.join('project', 'config')
+  @json_filename = 'config.json'
 
   def Config.remove_blanks(hash_or_array)
     p =
@@ -19,11 +23,11 @@ class Config
   end
 
   def Config.json
-    remove_blanks(
-      JSON.parse(
-        File.read(File.join(@app_root, 'project', 'config', 'config.json')),
-      ),
-    )
+    config_json_file = File.join(App.root, @json_file_path, @json_filename)
+
+    return nil if Entry.file_exist?(config_json_file)
+
+    remove_blanks(JSON.parse(File.read(config_json_file)))
   end
 
   def Config.value(setting_path)

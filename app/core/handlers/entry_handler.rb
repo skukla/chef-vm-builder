@@ -1,16 +1,16 @@
 require 'fileutils'
 require 'json'
 
+require_relative '../lib/app'
+require_relative '../lib/config'
+
 class EntryHandler
-  class << self
-    attr_reader :entries
-  end
-  @app_root = Config.app_root
+  @app_root = App.root
   @entries = [
     {
-      src: 'project/config',
+      src: Config.json_file_path,
       dest: 'app/vm/cookbooks/helpers/libraries',
-      file: %w[config.json],
+      file: [Config.json_filename],
     },
     {
       src: 'project/data-packs',
@@ -67,7 +67,7 @@ class EntryHandler
 
       unless dest_files.empty?
         dest_files.each do |file|
-          path = File.join(@app_root, type[:dest], file)
+          path = File.join(Entry.path(type[:dest]), file)
           FileUtils.rm_r(path) if Dir.exist?(path)
           FileUtils.rm(path) if File.file?(path)
         end
@@ -75,26 +75,26 @@ class EntryHandler
 
       src_files.each do |file|
         FileUtils.cp_r(
-          File.join(@app_root, type[:src], file),
-          File.join(@app_root, type[:dest]),
+          File.join(Entry.path(type[:src]), file),
+          Entry.path(type[:dest]),
         )
       end
     end
   end
 
   def EntryHandler.clean_up_hidden_files
-    entries
-      .map { |entry| "#{File.join(Config.app_root, entry[:dest])}" }
+    @entries
+      .map { |entry| "#{Entry.path(entry[:dest])}" }
       .each { |path| SystemHandler.remove_ds_store_files(path) }
   end
 
   def EntryHandler.remove_machine_dirs
-    machines_slug = File.join('app', 'vm', '.vagrant', 'machines')
+    machines_slug = Entry.path('app', 'vm', '.vagrant', 'machines')
     vm_name = Config.vm_name
     provider = Provider.value
 
-    vm_dir = File.join(@app_root, machines_slug, vm_name)
-    provider_dir = File.join(@app_root, machines_slug, vm_name, provider)
+    vm_dir = File.join(machines_slug, vm_name)
+    provider_dir = File.join(machines_slug, vm_name, provider)
 
     return unless Dir.exist?(vm_dir)
 

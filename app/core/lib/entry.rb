@@ -1,29 +1,34 @@
-require_relative 'config'
-
 require 'pathname'
 
+require_relative 'app'
+
 class Entry
-	@entries_to_remove = %w[. .. .DS_Store .gitignore .git .vscode]
+  @entries_to_remove = %w[. .. .DS_Store .gitignore .git .vscode]
+  @app_root = App.root
 
-	def Entry.path(path_str)
-		Pathname(File.join(Config.app_root, path_str))
-	end
+  def Entry.path(path_str)
+    Pathname(File.join(@app_root, path_str))
+  end
 
-	def Entry.last_slug(path_arr)
-		path_arr.split('/').last
-	end
+  def Entry.last_slug(path_arr)
+    path_arr.split('/').last
+  end
 
-	def Entry.files_from(file_path)
-		return nil unless File.exist?(path(file_path))
+  def Entry.file_exist?(file_path)
+    File.exist?(path(file_path))
+  end
 
-		Dir.entries("#{File.join(Config.app_root, file_path)}") - @entries_to_remove
-	end
+  def Entry.files_from(file_path)
+    return nil unless file_exist?(file_path)
 
-	def Entry.contains_zip?(file_arr)
-		file_arr.select { |file| file.include?('.zip') }.any?
-	end
+    Dir.entries("#{File.join(@app_root, file_path)}") - @entries_to_remove
+  end
 
-	def Entry.filename_contains?(file_arr, str_pattern)
-		file_arr.select { |file| file.include?(str_pattern) }.any?
-	end
+  def Entry.contains_zip?(file_arr)
+    file_arr.select { |file| file.include?('.zip') }.any?
+  end
+
+  def Entry.filename_contains?(file_arr, str_pattern)
+    file_arr.select { |file| file.include?(str_pattern) }.any?
+  end
 end
