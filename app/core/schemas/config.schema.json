@@ -125,8 +125,7 @@
             "type": "object",
             "description": "Data pack object that expects a source and an array of data paths.",
             "required": [
-              "source",
-              "data"
+              "source"
             ],
             "properties": {
               "source": {
