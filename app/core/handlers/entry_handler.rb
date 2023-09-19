@@ -89,7 +89,7 @@ class EntryHandler
   end
 
   def EntryHandler.remove_machine_dirs
-    machines_slug = Entry.path('app', 'vm', '.vagrant', 'machines')
+    machines_slug = Entry.path(File.join('app', 'vm', '.vagrant', 'machines'))
     vm_name = Config.vm_name
     provider = Provider.value
 
