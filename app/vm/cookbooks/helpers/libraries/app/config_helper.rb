@@ -8,9 +8,11 @@ require 'json'
 
 class ConfigHelper
   class << self
-    attr_reader :app_root, :build_action_arr
+    attr_reader :build_action_arr
   end
-  @app_root = '/var/chef/cache/cookbooks'
+  @app_root = AppHelper.root
+  @json_file_path = File.join('helpers', 'libraries')
+  @json_filename = 'config.json'
 
   def ConfigHelper.remove_blanks(hash_or_array)
     p =
@@ -23,14 +25,17 @@ class ConfigHelper
   end
 
   def ConfigHelper.json
-    self.remove_blanks(
-      JSON.parse(
-        File.read(File.join("#{@app_root}/helpers/libraries", 'config.json')),
-      ),
-    )
+    config_json_file =
+      EntryHelper.path(File.join(@json_file_path, @json_filename))
+
+    return nil unless EntryHelper.file_exists?(config_json_file)
+
+    self.remove_blanks(JSON.parse(File.read(config_json_file)))
   end
 
   def ConfigHelper.value(setting_path)
+    return nil if json.nil?
+
     json.dig(*setting_path.split('/'))
   end
 

@@ -7,6 +7,13 @@ class ErrorMsg < Message
     super
   end
 
+  def ErrorMsg.config_json_missing
+    msg = <<~TEXT
+    #{@@oops}It looks like you're missing a #{@@bold}#{@@cyan}config.json #{@@reg}file. \
+    Please add one to the #{@@bold}#{@@cyan}projects/config #{@@reg}directory.
+    TEXT
+  end
+
   def ErrorMsg.vm_name_missing
     msg = <<~TEXT
     #{@@oops}It looks like your #{@@bold}#{@@cyan}VM Name#{@@reg} is missing. \
@@ -40,7 +47,7 @@ class ErrorMsg < Message
   def ErrorMsg.website_structure_missing
     msg = <<~TEXT
 		#{@@oops}It looks like you either don't have a #{@@bold}#{@@cyan}custom_demo/structure#{@@reg} section, or \
-		your custom_demo/structure doesn't contain a\n#{@@bold}#{@@cyan}websites array#{@@reg} with properly-defined\
+		your #{@@bold}#{@@cyan}custom_demo/structure #{@@reg}doesn't contain a\n#{@@bold}#{@@cyan}websites array#{@@reg} with properly defined \
 		website, store, and store view information. Please check your config.json file.
     TEXT
   end

@@ -23,14 +23,16 @@ class Config
   end
 
   def Config.json
-    config_json_file = File.join(App.root, @json_file_path, @json_filename)
+    config_json_file = Entry.path(File.join(@json_file_path, @json_filename))
 
-    return nil if Entry.file_exist?(config_json_file)
+    return nil unless Entry.file_exists?(config_json_file)
 
     remove_blanks(JSON.parse(File.read(config_json_file)))
   end
 
   def Config.value(setting_path)
+    return nil if json.nil?
+
     json.dig(*setting_path.split('/'))
   end
 

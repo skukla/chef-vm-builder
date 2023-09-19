@@ -14,12 +14,12 @@ class Entry
     path_arr.split('/').last
   end
 
-  def Entry.file_exist?(file_path)
-    File.exist?(path(file_path))
+  def Entry.file_exists?(file_path)
+    File.exist?(file_path)
   end
 
   def Entry.files_from(file_path)
-    return nil unless file_exist?(file_path)
+    return nil unless file_exists?(path(file_path))
 
     Dir.entries("#{File.join(@app_root, file_path)}") - @entries_to_remove
   end

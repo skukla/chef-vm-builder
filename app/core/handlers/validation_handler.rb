@@ -18,10 +18,10 @@ class ValidationHandler
   @restore_mode = Config.restore_mode
 
   def ValidationHandler.validate
+    config_json
     plugins
     vm_name
     provider
-    config_json_structure
     composer_credentials
     base_website
     build_action
@@ -33,6 +33,14 @@ class ValidationHandler
     csc_credentials
   end
 
+  def ValidationHandler.config_json
+    abort(ErrorMsg.show(:config_json_missing)) if Config.json.nil?
+
+    if DemoStructure.website_structure_missing?
+      abort(ErrorMsg.show(:website_structure_missing))
+    end
+  end
+
   def ValidationHandler.vm_name
     abort(ErrorMsg.show(:vm_name_missing)) if Config.vm_name.nil?
   end
@@ -42,12 +50,6 @@ class ValidationHandler
 
     unless Provider.list.include?(Provider.value)
       abort(ErrorMsg.show(:provider_incorrect))
-    end
-  end
-
-  def ValidationHandler.config_json_structure
-    if DemoStructure.website_structure_missing?
-      abort(ErrorMsg.show(:website_structure_missing))
     end
   end
 

@@ -3,11 +3,17 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 # frozen_string_literal: true
 
+require 'pathname'
+
 class EntryHelper
   @entries_to_remove = %w[. .. .DS_Store .gitignore]
 
   def EntryHelper.path(path_str)
-    File.join(path_str)
+    Pathname(File.join(AppHelper.root, path_str))
+  end
+
+  def EntryHelper.file_exists?(file_path)
+    File.exist?(file_path)
   end
 
   def EntryHelper.files_from(path)
