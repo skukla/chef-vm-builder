@@ -7,7 +7,7 @@ class Provider
   end
 
   def Provider.list
-    %w[virtualbox vmware_fusion]
+    %w[virtualbox vmware_fusion vmware_desktop]
   end
 
   def Provider.plugins
@@ -32,13 +32,13 @@ class Provider
   def Provider.base_box
     boxes = {
       'intel' => 'bento/ubuntu-22.04',
-      'm1' => 'hajowieland/ubuntu-jammy-arm',
+      'arm' => 'bento/ubuntu-22.04-arm64',
     }
 
     return Config.base_box unless Config.base_box.nil?
 
     base_box = boxes['intel'] if GuestMachine.is_intel?
-    base_box = boxes['m1'] unless GuestMachine.is_intel?
+    base_box = boxes['arm'] unless GuestMachine.is_intel?
 
     base_box
   end
