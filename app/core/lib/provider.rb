@@ -7,7 +7,7 @@ class Provider
   end
 
   def Provider.list
-    %w[virtualbox vmware_fusion vmware_desktop]
+    %w[virtualbox vmware_desktop]
   end
 
   def Provider.plugins

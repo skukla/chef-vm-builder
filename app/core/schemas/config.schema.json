@@ -32,7 +32,7 @@
           "type": "string",
           "description": "Virtualization provider. Either virtualbox, vmware_fusion, or vmware_desktop.",
           "minLength": 1,
-          "pattern": "(^virtualbox$|^vmware_fusion$|^vmware_desktop$)"
+          "pattern": "(^virtualbox$|^vmware_desktop$)"
         }
       },
       "additionalProperties": false

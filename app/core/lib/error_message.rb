@@ -17,7 +17,7 @@ class ErrorMsg < Message
 
   def ErrorMsg.wrong_architecture
     msg = <<~TEXT
-    #{@@oops}It looks like you're on an #{@@bold}#{@@cyan}Apple Silicon-based (ARM)#{@@reg} system and trying to use #{@@bold}#{@@cyan}Virtualbox#{@@reg}. \
+    #{@@oops}It looks like you're on an #{@@bold}#{@@cyan}Apple Silicon-based (ARM)#{@@reg} system and trying to use #{@@bold}#{@@cyan}Virtualbox as a provider#{@@reg}. \
     Please use #{@@bold}#{@@cyan}vmware_desktop#{@@reg} instead.
     TEXT
   end
