@@ -1,6 +1,7 @@
 require_relative 'config'
 require_relative 'message'
 require_relative 'data_pack'
+require_relative 'provider'
 
 class ErrorMsg < Message
   def ErrorMsg.show(message_code)
@@ -11,6 +12,13 @@ class ErrorMsg < Message
     msg = <<~TEXT
     #{@@oops}It looks like you're missing a #{@@bold}#{@@cyan}config.json #{@@reg}file. \
     Please add one to the #{@@bold}#{@@cyan}projects/config #{@@reg}directory.
+    TEXT
+  end
+
+  def ErrorMsg.wrong_architecture
+    msg = <<~TEXT
+    #{@@oops}It looks like you're on an #{@@bold}#{@@cyan}Apple Silicon-based (ARM)#{@@reg} system and trying to use #{@@bold}#{@@cyan}Virtualbox#{@@reg}. \
+    Please use #{@@bold}#{@@cyan}vmware_desktop#{@@reg} instead.
     TEXT
   end
 

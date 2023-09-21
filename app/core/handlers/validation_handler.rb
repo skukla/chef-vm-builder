@@ -18,6 +18,7 @@ class ValidationHandler
   @restore_mode = Config.restore_mode
 
   def ValidationHandler.validate
+    architecture
     config_json
     plugins
     vm_name
@@ -31,6 +32,12 @@ class ValidationHandler
     restore_mode
     data_packs
     csc_credentials
+  end
+
+  def ValidationHandler.architecture
+    if Provider.value == 'virtualbox' && !GuestMachine.is_intel?
+      abort(ErrorMsg.show(:wrong_architecture))
+    end
   end
 
   def ValidationHandler.config_json
