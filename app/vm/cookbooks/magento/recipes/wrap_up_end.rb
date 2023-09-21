@@ -19,8 +19,10 @@ commands = node[:magento][:build][:hooks][:commands]
 magento_cli_commands = MagentoHelper.build_hook_command_list(:magento_cli)
 vm_cli_commands = MagentoHelper.build_hook_command_list(:vm_cli)
 search_engine_type = node[:magento][:search_engine][:type]
+github_data_pack_list = node[:magento][:data_packs][:github_data_pack_list]
+local_data_pack_list = node[:magento][:data_packs][:local_data_pack_list]
 
-if build_action == 'update_data'
+unless (github_data_pack_list + local_data_pack_list).empty?
   magento_cli 'Deploy static content for data packs' do
     action :deploy_static_content
   end

@@ -75,6 +75,8 @@ default[:magento][:magento_modules][:modules_to_remove_list] =
 include_attribute 'magento_demo_builder::override'
 default[:magento][:data_packs][:github_data_pack_list] =
   node[:magento_demo_builder][:github_data_pack_list]
+default[:magento][:data_packs][:local_data_pack_list] =
+  node[:magento_demo_builder][:local_data_pack_list]
 
 include_attribute 'magento_patches::default'
 default[:magento][:patches][:apply] = node[:magento_patches][:apply]
