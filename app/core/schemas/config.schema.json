@@ -16,12 +16,6 @@
         "provider"
       ],
       "properties": {
-        "ip": {
-          "type": "string",
-          "description": "The unique IP address of the virtual machine. Format: 192.168.xx.xx.\n\nThe first 'xx' is defined by your Virtualbox network adapter. Find it by opening virtualbox and navigating to: File > Host Network Manager > IPv4 Address/Mask.\n\n",
-          "pattern": "^\\d{3}.\\d{3}.\\d{2}.\\d{2}$",
-          "minLength": 1
-        },
         "name": {
           "type": "string",
           "description": "Unique virtual machine name. Only letters, spaces, dashes, and/or underscores.",
