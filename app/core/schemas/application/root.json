@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "Application Settings",
+  "description": "Settings that define application behavior. Includes: authentication, options, build, and settings.",
+  "type": "object",
+  "required": [
+    "authentication"
+  ],
+  "properties": {
+    "authentication": {
+      "$ref": "./authentication/root.json"
+    },
+    "options": {
+      "$ref": "./options.json"
+    },
+    "build": {
+      "$ref": "./build/root.json"
+    },
+    "settings": {
+      "$ref": "./installation_settings.json"
+    }
+  },
+  "additionalProperties": false
+}

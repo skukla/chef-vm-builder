@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "Provisioner Settings",
+  "description": "Chef settings. Includes: type, version, and install.",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "description": "Chef provisioner type, either chef_solo or chef_zero. Defaults to chef_zero.",
+      "pattern": "^chef_solo$|^chef_zero$"
+    },
+    "version": {
+      "type": "string",
+      "description": "Chef version number. Currently defaults to 18.1.0"
+    },
+    "install": {
+      "type": "boolean",
+      "description": "Whether the provisioner should attempt to check for itself on the guest"
+    }
+  },
+  "additionalProperties": false
+}

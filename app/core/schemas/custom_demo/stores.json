@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "Store Structure Settings",
+  "description": "Settings that define the instance business structure. Includes: stores and store views.",
+  "type": "object",
+  "required": [
+    "store_views"
+  ],
+  "properties": {
+    "store_views": {
+      "type": "array",
+      "description": "Array of store views",
+      "minItems": 1,
+      "items": {
+        "$ref": "./store_views.json"
+      },
+      "additionalItems": false
+    }
+  },
+  "additionalProperties": false
+}

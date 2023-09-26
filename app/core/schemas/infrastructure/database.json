@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "Database Settings",
+  "description": "Database name (defaults to magento) or an object with database settings. Includes: version, db_host, db_name, db_user, and db_password.",
+  "type": [
+    "string",
+    "object"
+  ],
+  "minLength": 1,
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "MySQL version (e.g. 8.0.0)",
+      "minLength": 1
+    },
+    "db_host": {
+      "type": "string",
+      "description": "Database host.",
+      "minLength": 1
+    },
+    "db_name": {
+      "type": "string",
+      "description": "Database name. Defaults to magento.",
+      "minLength": 1
+    },
+    "db_user": {
+      "type": "string",
+      "description": "Database user. Defaults to magento.",
+      "minLength": 1
+    },
+    "db_password": {
+      "type": "string",
+      "description": "Database password. Defaults to password.",
+      "minLength": 1
+    }
+  },
+  "additionalProperties": false
+}

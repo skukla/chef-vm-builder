@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "Build Settings",
+  "description": "Build-specific settings. Includes: action, restore, sample data, patches, and hooks.",
+  "type": "object",
+  "minLength": 1,
+  "required": [
+    "action"
+  ],
+  "properties": {
+    "action": {
+      "type": "string",
+      "description": "Build action for the project.\ninstall: First-time install.\nforce_install: Complete VM re-build.\nreinstall: Reinstall the application.\nupdate_all: Update application and data packs.\nupdate_app: Update the application only.\nupdate_data: Update data packs only.\nupdate_urls: Update urls only.\nrestore: Restore backup.",
+      "pattern": "(^install$|^force_install$|^reinstall$|^update_all$|^update_app$|^update_data$|^update_urls$|^restore$)"
+    },
+    "sample_data": {
+      "type": "boolean",
+      "description": "Include sample data or not? Either true or false."
+    },
+    "add_required_modules": {
+      "type": "boolean",
+      "description": "Automatically add required modules or not? Either true or false."
+    },
+    "restore": {
+      "$ref": "./restore.json"
+    },
+    "repositories_to_remove": {
+      "$ref": "./repositories_to_remove.json"
+    },
+    "modules_to_remove": {
+      "$ref": "./modules_to_remove.json"
+    },
+    "deploy_mode": {
+      "$ref": "./deploy_mode.json"
+    },
+    "patches": {
+      "$ref": "./patches.json"
+    },
+    "hooks": {
+      "$ref": "./hooks.json"
+    }
+  },
+  "additionalProperties": false
+}

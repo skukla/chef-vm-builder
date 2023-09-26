@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "Infrastructure Settings",
+  "description": "Infrastructure settings for PHP, Composer, a Search Engine, and Samba.",
+  "type": "object",
+  "properties": {
+    "os": {
+      "$ref": "./os.json"
+    },
+    "php": {
+      "$ref": "./php.json"
+    },
+    "composer": {
+      "$ref": "./composer/root.json"
+    },
+    "database": {
+      "$ref": "./database.json"
+    },
+    "web_server": {
+      "$ref": "./web_server.json"
+    },
+    "search_engine": {
+      "$ref": "./search_engine.json"
+    }
+  },
+  "additionalProperties": false
+}

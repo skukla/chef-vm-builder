@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "Custom Demo Custom Modules",
+  "description": "Settings that define custom modules. Includes source, version, and reference.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "description": "Custom module object that expects a source and an optional version.",
+    "required": [
+      "source"
+    ],
+    "properties": {
+      "source": {
+        "type": "string",
+        "description": "Github url or package name (vendor/module) of the module."
+      },
+      "version": {
+        "type": "string",
+        "description": "The version of the module."
+      },
+      "reference": {
+        "type": "string",
+        "description": "An optional commit hash."
+      }
+    },
+    "additionalProperties": false
+  },
+  "additionalItems": false
+}

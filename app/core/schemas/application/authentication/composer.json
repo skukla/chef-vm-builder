@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "Composer authentication",
+  "description": "Adobe Commerce composer authentication settings. Includes: Public Key, Private Key, and Github Token.",
+  "type": "object",
+  "required": [
+    "public_key",
+    "private_key",
+    "github_token"
+  ],
+  "properties": {
+    "public_key": {
+      "type": "string",
+      "description": "Composer public key.",
+      "minLength": 1
+    },
+    "private_key": {
+      "type": "string",
+      "description": "Composer private key.",
+      "minLength": 1
+    },
+    "github_token": {
+      "type": "string",
+      "description": "Github OAuth token.",
+      "minLength": 1
+    }
+  },
+  "additionalProperties": false
+}

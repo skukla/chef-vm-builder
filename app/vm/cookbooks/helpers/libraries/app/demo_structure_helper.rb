@@ -12,7 +12,7 @@ class DemoStructureHelper
   @store_view_fields = %w[store_view_code store_view_url scope]
 
   def DemoStructureHelper.json
-    @data = ConfigHelper.value('custom_demo/structure/websites')
+    @data = ConfigHelper.value('custom_demo/websites')
     self
   end
 

@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "Build Hooks",
+  "description": "Build hooks which run at the end of the build.  Includes: warm_cache, enable_media_gallery, and an array of custom VM or Magento CLI commands.",
+  "type": "object",
+  "properties": {
+    "warm_cache": {
+      "type": "boolean",
+      "description": "Warm the cache? Either true or false."
+    },
+    "backup": {
+      "type": "boolean",
+      "description": "Take a backup of the build? Either true or false."
+    },
+    "sync_media_gallery": {
+      "type": "boolean",
+      "description": "Sync the media gallery? (Unnecessary for newer builds, or 2.3.4 or lower). Either true or false."
+    },
+    "commands": {
+      "type": "array",
+      "description": "An array of custom VM or Magento CLI commands.",
+      "minItems": 0
+    }
+  },
+  "additionalProperties": false
+}

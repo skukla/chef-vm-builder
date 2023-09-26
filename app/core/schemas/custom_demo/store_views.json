@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "Store View Structure Settings",
+  "description": "Settings that define the instance business structure. Includes: store view code and store view url.",
+  "type": "object",
+  "required": [
+    "store_view_code"
+  ],
+  "properties": {
+    "store_view_code": {
+      "type": "string",
+      "description": "Store view code used by Magento. Only letters and underscores allowed.",
+      "pattern": "^[A-Za-z0-9_]+$"
+    },
+    "store_view_url": {
+      "type": "string",
+      "description": "URL used to access the store view."
+    }
+  },
+  "additionalProperties": false
+}

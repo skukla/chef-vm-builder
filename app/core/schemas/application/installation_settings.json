@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "Installation Settings",
+  "type": "object",
+  "description": "Object for Adobe Commerce installation setting overrides. Includes: language, currency, admin_user, admin_password, admin_email, admin_firstname, admin_lastname, use_secure_frontend, use_secure_admin, and encryption_key.",
+  "properties": {
+    "backend_frontname": {
+      "type": "string",
+      "description": "Custom admin path for Adobe Commerce admin panel."
+    },
+    "language": {
+      "type": "string",
+      "description": "Default language country code. (Defaults to en_US).",
+      "pattern": "[a-z]{2}_[A-Z]{2}",
+      "minLength": 5,
+      "maxLength": 5
+    },
+    "currency": {
+      "type": "string",
+      "description": "Default currency (USD).",
+      "pattern": "[A-Z]{3}",
+      "minLength": 3,
+      "maxLength": 3
+    },
+    "admin_user": {
+      "type": "string",
+      "description": "Admin username.",
+      "minLength": 1
+    },
+    "admin_password": {
+      "type": "string",
+      "description": "Admin password.",
+      "minLength": 1
+    },
+    "admin_email": {
+      "type": "string",
+      "description": "Admin email.",
+      "minLength": 1,
+      "format": "email"
+    },
+    "admin_firstname": {
+      "type": "string",
+      "description": "Admin user's first name.",
+      "minLength": 1
+    },
+    "admin_lastname": {
+      "type": "string",
+      "description": "Admin user's last name.",
+      "minLength": 1
+    },
+    "use_secure_frontend": {
+      "type": "boolean",
+      "description": "Use https:// for the storefront? Either true or false."
+    },
+    "use_secure_admin": {
+      "type": "boolean",
+      "description": "Use https:// for the admin panel? Either true or false."
+    },
+    "encryption_key": {
+      "type": "string",
+      "description": "32 character AES-256 encryption key.",
+      "minLength": 32,
+      "maxLength": 32
+    }
+  },
+  "additionalProperties": false
+}

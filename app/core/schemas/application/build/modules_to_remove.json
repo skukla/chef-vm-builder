@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Repositories to Remove",
+  "type": "array",
+  "description": "Custom modules to remove from the build.",
+  "minItems": 1,
+  "items": {
+    "type": "object",
+    "description": "Custom module object that expects a source.",
+    "required": [
+      "source"
+    ],
+    "properties": {
+      "source": {
+        "type": "string",
+        "description": "Package name of module to remove (vendor/module).",
+        "pattern": "^[a-z0-9]([_.-]?[a-z0-9]+)*/[a-z0-9](([_.]?|-{0,2})[a-z0-9]+)*$"
+      }
+    },
+    "additionalProperties": false
+  },
+  "additionalItems": false
+}

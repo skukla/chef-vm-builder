@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "PHP Settings",
+  "description": "PHP version or an object containing PHP configuration overrides. Includes: PHP version, memory limit, maximum filesize for uploads, and maximum size for post requests.",
+  "type": [
+    "string",
+    "object"
+  ],
+  "required": [
+    "version"
+  ],
+  "minLength": 3,
+  "pattern": "^\\d.\\d$",
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "PHP version.",
+      "minLength": 3,
+      "pattern": "^\\d.[0-9]$"
+    },
+    "memory_limit": {
+      "type": "string",
+      "description": "PHP memory limit.",
+      "minLength": 2,
+      "pattern": "^\\d+(M|G)$"
+    },
+    "upload_max_filesize": {
+      "type": "string",
+      "description": "PHP maximum upload file size limit.  Increase this to upload larger images and files via the Adobe Commerce admin panel.",
+      "minLength": 2,
+      "pattern": "^\\d+(M|G)$"
+    },
+    "post_max_size": {
+      "type": "string",
+      "description": "PHP maximum post size limit.  Increase this to upload larger files via file uploaders via the Adobe Commerce admin panel.",
+      "minLength": 2,
+      "pattern": "^\\d+(M|G)$"
+    }
+  },
+  "additionalProperties": false
+}

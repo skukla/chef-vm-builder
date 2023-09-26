@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "Custom Demo Settings",
+  "description": "Settings that define demo customization. Includes: Structure, data packs, and custom modules.",
+  "required": [
+    "websites"
+  ],
+  "type": "object",
+  "properties": {
+    "websites": {
+      "$ref": "./websites.json"
+    },
+    "data_packs": {
+      "$ref": "./data_packs.json"
+    },
+    "custom_modules": {
+      "$ref": "./custom_modules.json"
+    }
+  },
+  "additionalProperties": false
+}

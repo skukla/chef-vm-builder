@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "Backup Restoration",
+  "description": "Restore mode for a backup.\n\nseparate: Restores a backup and ignores config.json settings.\nmerge: Restores a backup and includes everything in config.json.",
+  "type": [
+    "string",
+    "object"
+  ],
+  "required": [
+    "mode"
+  ],
+  "minLength": 1,
+  "pattern": "(^merge$|^separate$)",
+  "properties": {
+    "mode": {
+      "type": "string",
+      "description": "Restore mode for a backup.\n\nseparate: Restores a backup and ignores config.json settings.\nmerge: Restores a backup and includes everything in config.json.",
+      "minLength": 1,
+      "pattern": "(^merge$|^separate$)"
+    },
+    "source": {
+      "type": "string",
+      "description": "Github url for a remote backup.",
+      "minLength": 1
+    }
+  },
+  "additionalProperties": false
+}

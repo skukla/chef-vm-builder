@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "Application Options",
+  "description": "Object for application installaiton options. Includes: family, version, and minimum stability.",
+  "type": "object",
+  "required": [
+    "version"
+  ],
+  "properties": {
+    "family": {
+      "type": "string",
+      "description": "The family of Adobe Commerce to install.  Either Commerce or Open Source.",
+      "pattern": "(^Commerce$|^Open Source$)",
+      "minLength": 1
+    },
+    "version": {
+      "type": "string",
+      "description": "The version of Adobe Commerce to install.",
+      "pattern": "^\\d.\\d.\\d(-p\\d+)?$",
+      "minLength": 1
+    },
+    "minimum_stability": {
+      "type": "string",
+      "description": "The minimum stability setting to install. (alpha, beta, or stable)",
+      "pattern": "(^alpha$|^beta$|^stable$)",
+      "minLength": 1
+    }
+  },
+  "additionalProperties": false
+}

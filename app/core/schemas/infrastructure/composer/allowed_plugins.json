@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "Composer Allowed Plugins",
+  "description": "A list of plugins to allow or deny as part of restoring a build. Includes: .",
+  "type": "object",
+  "required": [
+    "source",
+    "status"
+  ],
+  "properties": {
+    "source": {
+      "type": "string",
+      "description": "Module string to allow or deny."
+    },
+    "status": {
+      "type": "boolean",
+      "description": "Set to true to allow the module, false to deny it."
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "Remote Machine Settings",
+  "description": "Settings that define the VM machine. Includes: cpus, memory, gui, and base_box.",
+  "type": "object",
+  "required": [
+    "cpus",
+    "memory"
+  ],
+  "properties": {
+    "cpus": {
+      "type": "string",
+      "description": "The number of host machine cpu cores that a VM can access.  Recommended is 2. Maximum should be half the number of total cpus.",
+      "minLength": 1,
+      "maxLength": 1
+    },
+    "memory": {
+      "type": "string",
+      "description": "The amount of host memory the VM can use in megabytes. Suggested: 8192.",
+      "minLength": 4
+    },
+    "gui": {
+      "type": "boolean",
+      "description": "Whether to show the VM when it boots.  Defaults to false. Set to true in order for VM to show in the Library in VMWare Fusion."
+    },
+    "base_box": {
+      "type": "string",
+      "description": "The box template Vagrant will use to create the VM via the specified provider.",
+      "minLength": 1
+    }
+  },
+  "additionalProperties": false
+}

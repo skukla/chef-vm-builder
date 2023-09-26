@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "Website Structure Settings",
+  "description": "Settings that define the instance business structure. Includes: site code, site_url, and stores.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": [
+      "site_code",
+      "site_url"
+    ],
+    "properties": {
+      "site_code": {
+        "type": "string",
+        "description": "Site code used in the Magento application. Only letters and underscores allowed.",
+        "pattern": "^[A-Za-z0-9_]+$"
+      },
+      "site_url": {
+        "type": "string",
+        "description": "Site url used to access the website."
+      },
+      "stores": {
+        "type": "array",
+        "description": "Array of store objects.",
+        "minItems": 1,
+        "items": {
+          "$ref": "./stores.json"
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

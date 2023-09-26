@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "Web Server Settings",
+  "description": "Web server port (defaults to 80) or an object containing web server settings. Includes: client_max_body_size which controls the max size for a file upload.",
+  "type": [
+    "string",
+    "object"
+  ],
+  "minLength": 2,
+  "properties": {
+    "client_max_body_size": {
+      "type": "string",
+      "description": "Web server client max body size. Defaults to 100M.  (Change this if you need to upload very large images).",
+      "minLength": 2,
+      "pattern": "^\\d+(M)$"
+    }
+  },
+  "additionalProperties": false
+}

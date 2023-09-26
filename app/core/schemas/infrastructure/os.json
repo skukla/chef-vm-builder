@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "Operating System Settings",
+  "description": "VM operating system overrides. Includes: update and timezone.",
+  "type": "object",
+  "properties": {
+    "update": {
+      "type": "boolean",
+      "description": "Update the operating system? Either true or false."
+    },
+    "timezone": {
+      "type": "string",
+      "description": "Preferred timezone for the operating system.",
+      "markdownDescription": "For timezone name options, use a value from the 'TZ database name' column in the following list:\n\n [Timezone Database Names](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List)",
+      "minLength": 1
+    }
+  },
+  "additionalProperties": false
+}

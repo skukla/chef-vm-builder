@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "Build Patches",
+  "description": "Whether to install patches and/or patches settings.  Either true, false, or an object with additional settings. Includes: apply, source, branch, repository directory, and codebase directory.",
+  "type": [
+    "object",
+    "boolean"
+  ],
+  "required": [
+    "apply"
+  ],
+  "properties": {
+    "apply": {
+      "type": "boolean",
+      "description": "Apply patches? Either true or false."
+    },
+    "source": {
+      "type": "string",
+      "description": "URL for a personal patches github repository.",
+      "minLength": 1
+    },
+    "branch": {
+      "type": "string",
+      "description": "Personal patches respository branch.",
+      "minLength": 1
+    },
+    "repository_directory": {
+      "type": "string",
+      "description": "Directory in the personal patches repository that contains patches.",
+      "minLength": 1
+    },
+    "codebase_directory": {
+      "type": "string",
+      "description": "Directory in the codebase where patches will be stored.  Usually m2-hotfixes.",
+      "minLength": 1
+    }
+  },
+  "additionalProperties": false
+}

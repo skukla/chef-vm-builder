@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "Search Engine Settings",
+  "description": "Search engine string (either elasticsearch, live_search, or mysql) or an object containing search engine settings. Includes: type, host, version, memory, and wipe.",
+  "type": [
+    "string",
+    "object"
+  ],
+  "required": [
+    "type"
+  ],
+  "minLength": 1,
+  "pattern": "^elasticsearch$|^live_search$|^mysql$",
+  "properties": {
+    "type": {
+      "type": "string",
+      "description": "Search engine (either elasticsearch or live_search).",
+      "minLength": 1,
+      "pattern": "^elasticsearch$|^live_search$|^mysql"
+    },
+    "host": {
+      "type": "string",
+      "description": "Host IP address. (Local: 10.0.2.2, In-VM: 127.0.0.1) ",
+      "minLength": 1,
+      "pattern": "^10.0.2.2$|^127.0.0.1$"
+    },
+    "version": {
+      "type": "string",
+      "description": "Elasticsearch version family. (Ex. 7.x).",
+      "minLength": 3,
+      "pattern": "^\\d+(.x)$"
+    },
+    "memory": {
+      "type": "string",
+      "description": "How much of the VM memory to use for Elasticsearch in gigabytes. (Ex. 2G).",
+      "minLength": 2,
+      "pattern": "^\\d+(G)$"
+    },
+    "wipe": {
+      "type": "boolean",
+      "description": "Wipes the local elasticsearch instance before building the VM."
+    }
+  },
+  "additionalProperties": false
+}
