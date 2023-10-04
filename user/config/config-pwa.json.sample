@@ -1,26 +1,24 @@
 {
 	"vm": {
 		"name": "Venia VM",
-		"provider": "virtualbox"
+		"provider": ""
 	},
 	"custom_demo": {
-		"structure": {
-			"websites": [
-				{
-					"site_code": "base",
-					"site_url": "venia.demo",
-					"stores": [
-						{
-							"store_views": [
-								{
-									"store_view_code": "default"
-								}
-							]
-						}
-					]
-				}
-			]
-		},
+		"websites": [
+			{
+				"site_code": "base",
+				"site_url": "venia.demo",
+				"stores": [
+					{
+						"store_views": [
+							{
+								"store_view_code": "default"
+							}
+						]
+					}
+				]
+			}
+		],
 		"data_packs": [],
 		"custom_modules": [
 			{
@@ -40,10 +38,10 @@
 			}
 		},
 		"options": {
-			"version": "2.4.6"
+			"version": "2.4.6-p2"
 		},
 		"build": {
-			"action": "force_install",
+			"action": "install",
 			"sample_data": false,
 			"patches": true
 		},
