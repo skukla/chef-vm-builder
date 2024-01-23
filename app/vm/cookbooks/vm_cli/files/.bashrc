@@ -92,3 +92,4 @@ if ! shopt -oq posix; then
 fi
 
 source ~/cli/commands.sh
+www
