@@ -40,8 +40,9 @@ if (
 end
 
 if (
-     %w[install force_install update_all update_data].include?(build_action) ||
-       merge_restore
+     %w[install force_install update_app update_all update_data].include?(
+       build_action,
+     ) || merge_restore
    )
   # Data packs
   if !github_data_pack_list.empty?
