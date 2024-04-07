@@ -14,7 +14,22 @@ include_attribute 'php::default'
 default[:vm_cli][:php][:version] = node[:php][:version]
 
 include_attribute 'search_engine::default'
-default[:vm_cli][:search_engine][:type] = node[:search_engine][:type]
+default[:vm_cli][:search_engine][:setting_config_path] =
+  node[:search_engine][:elasticsearch][:setting_config_path]
+default[:vm_cli][:search_engine][:host_config_path] =
+  node[:search_engine][:elasticsearch][:host_config_path]
+default[:vm_cli][:search_engine][:port_config_path] =
+  node[:search_engine][:elasticsearch][:port_config_path]
+default[:vm_cli][:search_engine][:prefix_config_path] =
+  node[:search_engine][:elasticsearch][:prefix_config_path]
+default[:vm_cli][:search_engine][:setting] =
+  node[:search_engine][:elasticsearch][:setting]
+default[:vm_cli][:search_engine][:host] =
+  node[:search_engine][:elasticsearch][:host]
+default[:vm_cli][:search_engine][:port] =
+  node[:search_engine][:elasticsearch][:port]
+default[:vm_cli][:search_engine][:prefix] =
+  node[:search_engine][:elasticsearch][:prefix]
 
 include_attribute 'mysql::default'
 default[:vm_cli][:mysql][:db_host] = node[:mysql][:db_host]

@@ -12,6 +12,7 @@ depends 'nginx' # Brings in web root
 depends 'ssh' # Brings in SSH settings
 depends 'php' # Brings in PHP settings
 depends 'magento' # Brings in Magento settings
+depends 'search_engine' # Brings in Search Engine settings
 
 # The `issues_url` points to the location where issues for this cookbook are
 # tracked.  A `View Issues` link will be displayed on this cookbook's page when

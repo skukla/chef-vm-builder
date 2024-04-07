@@ -300,6 +300,126 @@ function disable-elasticsearch() {
 export -f disable-elasticsearch
 <% end %>
 
+# Switch Search
+function switch-elasticsearch() {
+  www
+  file_path="app/etc/config.php"
+
+  es_modules=(
+    'Magento_Elasticsearch7'
+    'Magento_Elasticsearch'
+    'Magento_ElasticsearchCatalogPermissions'
+    'Magento_ElasticsearchCatalogPermissionsGraphQl'
+    'Magento_OpenSearch'
+  )
+
+  ls_modules=(
+    'Magento_LiveSearch'
+    'Magento_LiveSearchAdapter'
+    'Magento_LiveSearchMetrics'
+    'Magento_LiveSearchProductListing'
+    'Magento_LiveSearchStorefrontPopover'
+    'Magento_LiveSearchTerms'
+  )
+  
+  printf "\nSwitching from Live Search to Elasticsearch...\n"
+
+  sleep 2
+  disable-cron
+
+  printf "\nTurning on the Elasticsearch modules..."
+
+  for es_module in "${es_modules[@]}"; do
+    sed -i "s/'$es_module' => 0/'$es_module' => 1/g" "$file_path"
+  done
+
+  printf "\nTurning off the Livesearch modules..."
+
+  for ls_module in "${ls_modules[@]}"; do
+    sed -i "s/'$ls_module' => 1/'$ls_module' => 0/g" "$file_path"
+  done
+  
+  sleep 2
+  reindex
+  db-upgrade
+  prod-mode
+  enable-cron
+  
+  printf "\n\nConfiguring search settings...\n"
+
+  ./bin/magento config:set <%= @search_engine_setting_config_path %> <%= @search_engine_setting %>
+  ./bin/magento config:set <%= @search_engine_host_config_path %> <%= @search_engine_host %>
+  ./bin/magento config:set <%= @search_engine_port_config_path %> <%= @search_engine_port %>
+  ./bin/magento config:set <%= @search_engine_prefix_config_path %> <%= @search_engine_prefix %>
+  ./bin/magento config:set catalog/search/elasticsearch7_enable_auth 0
+  ./bin/magento config:set catalog/search/elasticsearch7_server_timeout 15
+
+  printf "\n\nSearch engine now set to Elasticsearch.\n"
+}
+export -f switch_elasticsearch
+
+function switch-livesearch() {
+  www
+  file_path="app/etc/config.php"
+
+  es_modules=(
+    'Magento_Elasticsearch7'
+    'Magento_Elasticsearch'
+    'Magento_ElasticsearchCatalogPermissions'
+    'Magento_ElasticsearchCatalogPermissionsGraphQl'
+    'Magento_OpenSearch'
+  )
+
+  ls_modules=(
+    'Magento_LiveSearch'
+    'Magento_LiveSearchAdapter'
+    'Magento_LiveSearchMetrics'
+    'Magento_LiveSearchProductListing'
+    'Magento_LiveSearchStorefrontPopover'
+    'Magento_LiveSearchTerms'
+  )
+  
+  printf "\nSwitching from Elasticsearch to Live Search...\n"
+
+  sleep 2
+  disable-cron
+
+  printf "\nTurning on the Live Search modules..."
+
+  for ls_module in "${ls_modules[@]}"; do
+    sed -i "s/'$ls_module' => 0/'$ls_module' => 1/g" "$file_path"
+  done
+  
+  printf "\nTurning off the Elasticsearch modules..."
+
+  for es_module in "${es_modules[@]}"; do
+    sed -i "s/'$es_module' => 1/'$es_module' => 0/g" "$file_path"
+  done
+
+  sleep 2
+  reindex
+  db-upgrade
+  prod-mode
+  enable-cron
+
+  printf "\n\nSearch engine now set to Live Search.\n"
+}
+export -f switch_livesearch
+
+function resync_livesearch() {
+  www
+  .bin/magento saas:resync --feed productattributes
+  .bin/magento saas:resync --feed products
+  .bin/magento saas:resync --feed scopesCustomerGroup
+  .bin/magento saas:resync --feed scopesWebsite
+  .bin/magento saas:resync --feed prices
+  .bin/magento saas:resync --feed productoverrides
+  .bin/magento saas:resync --feed variants
+  .bin/magento saas:resync --feed categories
+  .bin/magento saas:resync --feed categoryPermissions
+}
+export -f resync_livesearch
+
 # Samba
 function enable-samba() {
   printf "\nEnabling Samba...\n"
