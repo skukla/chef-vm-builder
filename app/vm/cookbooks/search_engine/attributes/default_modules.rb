@@ -8,6 +8,7 @@ default[:search_engine][:elasticsearch][:module_list] = %w[
   Magento_Elasticsearch6
   Magento_Elasticsearch7
   Magento_ElasticsearchCatalogPermissions
+  Magento_ElasticsearchCatalogPermissionsGraphQl
   Magento_InventoryElasticsearch
   Magento_OpenSearch
 ]
