@@ -32,14 +32,13 @@ property :search_engine_type,
          default: node[:magento][:search_engine][:type]
 property :elasticsearch_host,
          String,
-         default: node[:magento][:search_engine][:elasticsearch][:host][:value]
+         default: node[:magento][:search_engine][:host][:value]
 property :elasticsearch_port,
          String,
-         default: node[:magento][:search_engine][:elasticsearch][:port][:value]
+         default: node[:magento][:search_engine][:port][:value]
 property :elasticsearch_prefix,
          String,
-         default:
-           node[:magento][:search_engine][:elasticsearch][:prefix][:value]
+         default: node[:magento][:search_engine][:prefix][:value]
 property :db_host, String, default: node[:magento][:mysql][:db_host]
 property :db_user, String, default: node[:magento][:mysql][:db_user]
 property :db_password, String, default: node[:magento][:mysql][:db_password]
