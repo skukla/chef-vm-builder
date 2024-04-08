@@ -22,6 +22,10 @@ default[:vm_cli][:search_engine][:port] =
   node[:search_engine][:elasticsearch][:port]
 default[:vm_cli][:search_engine][:prefix] =
   node[:search_engine][:elasticsearch][:prefix]
+default[:vm_cli][:search_engine][:es_module_list] =
+  node[:search_engine][:elasticsearch][:module_list]
+default[:vm_cli][:search_engine][:ls_module_list] =
+  node[:search_engine][:live_search][:module_list]
 
 include_attribute 'mysql::default'
 default[:vm_cli][:mysql][:db_host] = node[:mysql][:db_host]

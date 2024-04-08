@@ -189,7 +189,7 @@ export -f enable-media-gallery
 function start-consumers() {
   CONSUMERS_LIST=(
     <% @consumer_list.each do |consumer| %>
-      <%= consumer %>
+      '<%= consumer %>'
     <% end %>
   )
   for consumer in "${CONSUMERS_LIST[@]}"
@@ -301,52 +301,63 @@ export -f disable-elasticsearch
 <% end %>
 
 # Switch Search
-function switch-elasticsearch() {
-  www
+function switch_search_engine() {
   file_path="app/etc/config.php"
+  engine_to_switch="$1"
 
-  es_modules=(
-    'Magento_Elasticsearch7'
-    'Magento_Elasticsearch'
-    'Magento_ElasticsearchCatalogPermissions'
-    'Magento_ElasticsearchCatalogPermissionsGraphQl'
-    'Magento_OpenSearch'
+  ES_MODULES=(
+    <% @es_modules.each do |es_module| %>
+      '<%= es_module %>'
+    <% end %>
   )
 
-  ls_modules=(
-    'Magento_LiveSearch'
-    'Magento_LiveSearchAdapter'
-    'Magento_LiveSearchMetrics'
-    'Magento_LiveSearchProductListing'
-    'Magento_LiveSearchStorefrontPopover'
-    'Magento_LiveSearchTerms'
+  LS_MODULES=(
+    <% @ls_modules.each do |ls_module| %>
+      '<%= ls_module %>'
+    <% end %>
   )
-  
-  printf "\nSwitching from Live Search to Elasticsearch...\n"
 
-  sleep 2
+  www
   disable-cron
+  sleep 2
 
-  printf "\nTurning on the Elasticsearch modules..."
+  case "$engine_to_switch" in
+    "elasticsearch")
+      for es_module in "${ES_MODULES[@]}"; do
+        sed -i "s/'$es_module' => 0/'$es_module' => 1/g" "$file_path"
+      done
 
-  for es_module in "${es_modules[@]}"; do
-    sed -i "s/'$es_module' => 0/'$es_module' => 1/g" "$file_path"
-  done
+      for ls_module in "${LS_MODULES[@]}"; do
+        sed -i "s/'$ls_module' => 1/'$ls_module' => 0/g" "$file_path"
+      done
+      ;;
+    "live_search")
+      for ls_module in "${LS_MODULES[@]}"; do
+        sed -i "s/'$ls_module' => 0/'$ls_module' => 1/g" "$file_path"
+      done
 
-  printf "\nTurning off the Livesearch modules..."
+      for es_module in "${ES_MODULES[@]}"; do
+        sed -i "s/'$es_module' => 1/'$es_module' => 0/g" "$file_path"
+      done
+      ;;
+    *)
+      printf "\nInvalid argument. Please specify 'elasticsearch' or 'live_search'."
+      ;;
+  esac
 
-  for ls_module in "${ls_modules[@]}"; do
-    sed -i "s/'$ls_module' => 1/'$ls_module' => 0/g" "$file_path"
-  done
-  
   sleep 2
   reindex
   db-upgrade
   prod-mode
   enable-cron
-  
-  printf "\n\nConfiguring search settings...\n"
+}
+export -f switch_search_engine
 
+function switch-elasticsearch() {
+  printf "\nSwitching to Elasticsearch...\n"
+  switch_search_engine elasticsearch  
+    
+  printf "\n\nConfiguring search settings...\n"
   ./bin/magento config:set <%= @search_engine_setting[:config_path] %> <%= @search_engine_setting[:value] %>
   ./bin/magento config:set <%= @search_engine_host[:config_path] %> <%= @search_engine_host[:value] %>
   ./bin/magento config:set <%= @search_engine_port[:config_path] %> <%= @search_engine_port[:value] %>
@@ -354,55 +365,15 @@ function switch-elasticsearch() {
   ./bin/magento config:set catalog/search/elasticsearch7_enable_auth 0
   ./bin/magento config:set catalog/search/elasticsearch7_server_timeout 15
 
-  printf "\n\nSearch engine now set to Elasticsearch.\n"
+  printf "\nSearch engine now set to Elasticsearch.\n\n"
 }
 export -f switch-elasticsearch
 
 function switch-livesearch() {
-  www
-  file_path="app/etc/config.php"
+  printf "\nSwitching to Live Search...\n"
+  switch_search_engine live_search  
 
-  es_modules=(
-    'Magento_Elasticsearch7'
-    'Magento_Elasticsearch'
-    'Magento_ElasticsearchCatalogPermissions'
-    'Magento_ElasticsearchCatalogPermissionsGraphQl'
-    'Magento_OpenSearch'
-  )
-
-  ls_modules=(
-    'Magento_LiveSearch'
-    'Magento_LiveSearchAdapter'
-    'Magento_LiveSearchMetrics'
-    'Magento_LiveSearchProductListing'
-    'Magento_LiveSearchStorefrontPopover'
-    'Magento_LiveSearchTerms'
-  )
-  
-  printf "\nSwitching from Elasticsearch to Live Search...\n"
-
-  sleep 2
-  disable-cron
-
-  printf "\nTurning on the Live Search modules..."
-
-  for ls_module in "${ls_modules[@]}"; do
-    sed -i "s/'$ls_module' => 0/'$ls_module' => 1/g" "$file_path"
-  done
-  
-  printf "\nTurning off the Elasticsearch modules..."
-
-  for es_module in "${es_modules[@]}"; do
-    sed -i "s/'$es_module' => 1/'$es_module' => 0/g" "$file_path"
-  done
-
-  sleep 2
-  reindex
-  db-upgrade
-  prod-mode
-  enable-cron
-
-  printf "\n\nSearch engine now set to Live Search.\n"
+  printf "\nSearch engine now set to Live Search.\n\n"
 }
 export -f switch-livesearch
 
@@ -507,8 +478,8 @@ function clear-cron-schedule() {
   DB_USER="<%= @db_user %>"
   DB_PASSWORD="<%= @db_password %>"
   DB_NAME="<%= @db_name %>"
-  printf "\nClearing the cron schedule database table..."
-  mysql --user=${DB_USER} --password=${DB_PASSWORD} --database=${DB_NAME} -e "DELETE FROM cron_schedule;"
+  printf "\nClearing the cron schedule database table...\n"
+  sudo mysql --user=${DB_USER} --password=${DB_PASSWORD} --database=${DB_NAME} -e "DELETE FROM cron_schedule;"
   sleep 1
   printf "done.\n"
 }

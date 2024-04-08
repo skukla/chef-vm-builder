@@ -24,6 +24,12 @@ property :search_engine_port,
 property :search_engine_prefix,
          Hash,
          default: node[:vm_cli][:search_engine][:prefix]
+property :es_module_list,
+         Array,
+         default: node[:magento][:search_engine][:elasticsearch][:module_list]
+property :ls_module_list,
+         Array,
+         default: node[:magento][:search_engine][:live_search][:module_list]
 property :magento_version, String, default: node[:vm_cli][:magento][:version]
 property :use_secure_frontend,
          [Integer, TrueClass, FalseClass, String],
@@ -86,6 +92,8 @@ action :install do
         db_user: new_resource.db_user,
         db_password: new_resource.db_password,
         db_name: new_resource.db_name,
+        es_modules: new_resource.es_module_list,
+        ls_modules: new_resource.ls_module_list,
         search_engine_setting: new_resource.search_engine_setting,
         search_engine_host: new_resource.search_engine_host,
         search_engine_port: new_resource.search_engine_port,
