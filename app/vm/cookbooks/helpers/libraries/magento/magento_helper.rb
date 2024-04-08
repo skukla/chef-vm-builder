@@ -178,34 +178,38 @@ class MagentoHelper
       {
         name: 'search engine',
         path:
-          Chef.node[:magento][:search_engine][:elasticsearch][
-            :setting_config_path
+          Chef.node[:magento][:search_engine][:elasticsearch][:setting][
+            :config_path
           ],
-        value: Chef.node[:magento][:search_engine][:elasticsearch][:setting],
+        value:
+          Chef.node[:magento][:search_engine][:elasticsearch][:setting][:value],
       },
       {
         name: 'host',
         path:
-          Chef.node[:magento][:search_engine][:elasticsearch][
-            :host_config_path
+          Chef.node[:magento][:search_engine][:elasticsearch][:host][
+            :config_path
           ],
-        value: Chef.node[:magento][:search_engine][:host],
+        value:
+          Chef.node[:magento][:search_engine][:elasticsearch][:host][:value],
       },
       {
         name: 'port',
         path:
-          Chef.node[:magento][:search_engine][:elasticsearch][
-            :port_config_path
+          Chef.node[:magento][:search_engine][:elasticsearch][:port][
+            :config_path
           ],
-        value: Chef.node[:magento][:search_engine][:port],
+        value:
+          Chef.node[:magento][:search_engine][:elasticsearch][:port][:value],
       },
       {
         name: 'prefix',
         path:
-          Chef.node[:magento][:search_engine][:elasticsearch][
-            :prefix_config_path
+          Chef.node[:magento][:search_engine][:elasticsearch][:prefix][
+            :config_path
           ],
-        value: Chef.node[:magento][:search_engine][:prefix],
+        value:
+          Chef.node[:magento][:search_engine][:elasticsearch][:prefix][:value],
       },
     ]
   end

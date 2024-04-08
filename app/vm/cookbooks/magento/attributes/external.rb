@@ -35,22 +35,27 @@ default[:magento][:php][:fpm_port] = node[:php][:fpm_port]
 
 include_attribute 'search_engine::default'
 default[:magento][:search_engine][:type] = node[:search_engine][:type]
-default[:magento][:search_engine][:elasticsearch][:setting_config_path] =
-  node[:search_engine][:elasticsearch][:setting_config_path]
-default[:magento][:search_engine][:elasticsearch][:setting] =
-  node[:search_engine][:elasticsearch][:setting]
-default[:magento][:search_engine][:elasticsearch][:host_config_path] =
-  node[:search_engine][:elasticsearch][:host_config_path]
-default[:magento][:search_engine][:host] =
-  node[:search_engine][:elasticsearch][:host]
-default[:magento][:search_engine][:elasticsearch][:port_config_path] =
-  node[:search_engine][:elasticsearch][:port_config_path]
-default[:magento][:search_engine][:port] =
-  node[:search_engine][:elasticsearch][:port]
-default[:magento][:search_engine][:elasticsearch][:prefix_config_path] =
-  node[:search_engine][:elasticsearch][:prefix_config_path]
-default[:magento][:search_engine][:prefix] =
-  node[:search_engine][:elasticsearch][:prefix]
+
+default[:magento][:search_engine][:elasticsearch][:setting][:config_path] =
+  node[:search_engine][:elasticsearch][:setting][:config_path]
+default[:magento][:search_engine][:elasticsearch][:setting][:value] =
+  node[:search_engine][:elasticsearch][:setting][:value]
+
+default[:magento][:search_engine][:elasticsearch][:host][:config_path] =
+  node[:search_engine][:elasticsearch][:host][:config_path]
+default[:magento][:search_engine][:elasticsearch][:host][:value] =
+  node[:search_engine][:elasticsearch][:host][:value]
+
+default[:magento][:search_engine][:elasticsearch][:port][:config_path] =
+  node[:search_engine][:elasticsearch][:port][:config_path]
+default[:magento][:search_engine][:elasticsearch][:port][:value] =
+  node[:search_engine][:elasticsearch][:port][:value]
+
+default[:magento][:search_engine][:elasticsearch][:prefix][:config_path] =
+  node[:search_engine][:elasticsearch][:prefix][:config_path]
+default[:magento][:search_engine][:elasticsearch][:prefix][:value] =
+  node[:search_engine][:elasticsearch][:prefix][:value]
+
 default[:magento][:search_engine][:elasticsearch][:module_list] =
   node[:search_engine][:elasticsearch][:module_list]
 default[:magento][:search_engine][:live_search][:module_list] =

@@ -12,29 +12,17 @@ property :user, String, default: node[:vm_cli][:init][:user]
 property :group, String, default: node[:vm_cli][:init][:user]
 property :web_root, String, default: node[:vm_cli][:nginx][:web_root]
 property :php_version, String, default: node[:vm_cli][:php][:version]
-property :search_engine_setting_config_path,
-         String,
-         default: node[:vm_cli][:search_engine][:setting_config_path]
-property :search_engine_host_config_path,
-         String,
-         default: node[:vm_cli][:search_engine][:host_config_path]
-property :search_engine_port_config_path,
-         String,
-         default: node[:vm_cli][:search_engine][:port_config_path]
-property :search_engine_prefix_config_path,
-         String,
-         default: node[:vm_cli][:search_engine][:prefix_config_path]
 property :search_engine_setting,
-         String,
-         default: node[:vm_cli][:search_engine][:setting]
+         Hash,
+         default: node[:search_engine][:elasticsearch][:setting]
 property :search_engine_host,
-         String,
+         Hash,
          default: node[:vm_cli][:search_engine][:host]
 property :search_engine_port,
-         String,
+         Hash,
          default: node[:vm_cli][:search_engine][:port]
 property :search_engine_prefix,
-         String,
+         Hash,
          default: node[:vm_cli][:search_engine][:prefix]
 property :magento_version, String, default: node[:vm_cli][:magento][:version]
 property :use_secure_frontend,
@@ -98,14 +86,6 @@ action :install do
         db_user: new_resource.db_user,
         db_password: new_resource.db_password,
         db_name: new_resource.db_name,
-        search_engine_setting_config_path:
-          new_resource.search_engine_setting_config_path,
-        search_engine_host_config_path:
-          new_resource.search_engine_host_config_path,
-        search_engine_port_config_path:
-          new_resource.search_engine_port_config_path,
-        search_engine_prefix_config_path:
-          new_resource.search_engine_prefix_config_path,
         search_engine_setting: new_resource.search_engine_setting,
         search_engine_host: new_resource.search_engine_host,
         search_engine_port: new_resource.search_engine_port,
