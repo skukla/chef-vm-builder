@@ -39,12 +39,6 @@ if !local_data_pack_list.empty? &&
   end
 end
 
-if !github_data_pack_list.empty? && build_action == 'update_data'
-  magento_cli 'Compiling dependencies after data pack creation' do
-    action :di_compile
-  end
-end
-
 if %w[install force_install update_all update_data].include?(build_action) ||
      merge_restore
   magento_app 'Set permissions on directories and files' do

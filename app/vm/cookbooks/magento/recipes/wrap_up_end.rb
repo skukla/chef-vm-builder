@@ -22,7 +22,17 @@ search_engine_type = node[:magento][:search_engine][:type]
 github_data_pack_list = node[:magento][:data_packs][:github_data_pack_list]
 local_data_pack_list = node[:magento][:data_packs][:local_data_pack_list]
 
-unless (github_data_pack_list + local_data_pack_list).empty?
+if (
+     (
+       %w[install force_install update_all update_data].include?(
+         build_action,
+       ) || merge_restore
+     ) && !(github_data_pack_list + local_data_pack_list).empty?
+   )
+  magento_cli 'Syncing media gallery assets and content' do
+    action :synchronize_media
+  end
+
   magento_cli 'Deploy static content for data packs' do
     action :deploy_static_content
   end

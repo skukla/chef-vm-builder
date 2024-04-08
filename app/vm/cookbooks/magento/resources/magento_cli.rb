@@ -129,9 +129,16 @@ action :enable_media_gallery do
     command "su #{new_resource.user} -c 'bin/magento config:set system/media_gallery/enabled 1'"
     cwd new_resource.web_root
   end
+end
 
+action :synchronize_media do
   execute 'Synchronize media assets' do
     command "su #{new_resource.user} -c 'bin/magento media-gallery:sync'"
+    cwd new_resource.web_root
+  end
+
+  execute 'Synchronize media content' do
+    command "su #{new_resource.user} -c 'bin/magento media-content:sync'"
     cwd new_resource.web_root
   end
 end
