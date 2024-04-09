@@ -16,8 +16,6 @@ default[:magento_modules][:required_module_list] = [
 ]
 
 default[:magento_modules][:modules_to_remove] = [
-  { source: 'magento/module-csp' },
-  { source: 'magento/module-cardinal-commerce' },
   { source: 'magento/module-two-factor-auth' },
 ]
 
