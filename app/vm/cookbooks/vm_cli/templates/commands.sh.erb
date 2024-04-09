@@ -379,15 +379,15 @@ export -f switch-livesearch
 
 function resync-livesearch() {
   www
-  .bin/magento saas:resync --feed productattributes
-  .bin/magento saas:resync --feed products
-  .bin/magento saas:resync --feed scopesCustomerGroup
-  .bin/magento saas:resync --feed scopesWebsite
-  .bin/magento saas:resync --feed prices
-  .bin/magento saas:resync --feed productoverrides
-  .bin/magento saas:resync --feed variants
-  .bin/magento saas:resync --feed categories
-  .bin/magento saas:resync --feed categoryPermissions
+  ./bin/magento saas:resync --feed productattributes
+  ./bin/magento saas:resync --feed products
+  ./bin/magento saas:resync --feed scopesCustomerGroup
+  ./bin/magento saas:resync --feed scopesWebsite
+  ./bin/magento saas:resync --feed prices
+  ./bin/magento saas:resync --feed productoverrides
+  ./bin/magento saas:resync --feed variants
+  ./bin/magento saas:resync --feed categories
+  ./bin/magento saas:resync --feed categoryPermissions
 }
 export -f resync-livesearch
 
