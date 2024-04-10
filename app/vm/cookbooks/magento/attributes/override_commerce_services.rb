@@ -7,12 +7,13 @@
 setting = ConfigHelper.value('application/authentication/commerce_services')
 
 unless setting.nil?
-	setting.each do |key, value|
-		if key == 'data_space_id'
-			override[:magento][:csc_options][:environment_id] = value
-		end
-		override[:magento][:csc_options][key] = value unless key == 'data_space_id'
-	end
+  setting.each do |key, value|
+    key = key.sub('data_space', 'environment') if key.include?('data_space')
+    override[:magento][:csc_options][key][:value] = value
+  end
 end
-override[:magento][:csc_options][:production_private_key] =
-	ServicesHelper.read_production_key
+
+override[:magento][:csc_options][:sandbox_private_key][:value] =
+  ServicesHelper.read_private_key('privateKey-sandbox.pem')
+override[:magento][:csc_options][:production_private_key][:value] =
+  ServicesHelper.read_private_key('privateKey-production.pem')

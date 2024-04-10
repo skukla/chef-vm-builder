@@ -220,11 +220,31 @@ class ErrorMsg < Message
 		TEXT
   end
 
-  def ErrorMsg.csc_key_missing
+  def ErrorMsg.csc_keys_missing
+    msg = <<~TEXT
+    It looks like you're trying to configure commerce services but you're missing both your \
+    #{@@bold}#{@@cyan}commerce services sandbox key file#{@@reg} and your \ 
+    #{@@bold}#{@@cyan}commerce services production key file#{@@reg}. \n\nPlease make sure a file consisting of your \
+    sandbox private key called #{@@bold}#{@@cyan}privateKey-sandbox.pem#{@@reg} and a file consisting of your\n\
+    production private key called #{@@bold}#{@@cyan}privateKey-production.pem#{@@reg} are both present inside of \
+    your #{@@bold}#{@@cyan}project/keys directory#{@@reg}.
+		TEXT
+  end
+
+  def ErrorMsg.csc_sandbox_key_missing
+    msg = <<~TEXT
+		It looks like you're trying to configure commerce services but you're missing your \
+		#{@@bold}#{@@cyan}commerce services sandbox key file#{@@reg}.\nPlease make sure a file consisting of your \
+		sandbox private key called #{@@bold}#{@@cyan}privateKey-sandbox.pem #{@@reg}is present inside of \
+		your\n#{@@bold}#{@@cyan}project/keys directory#{@@reg}.
+		TEXT
+  end
+
+  def ErrorMsg.csc_production_key_missing
     msg = <<~TEXT
 		It looks like you're trying to configure commerce services but you're missing your \
 		#{@@bold}#{@@cyan}commerce services production key file#{@@reg}.\nPlease make sure a file consisting of your \
-		production key called #{@@bold}#{@@cyan}privateKey-production.pem #{@@reg}is present inside of \
+		production private key called #{@@bold}#{@@cyan}privateKey-production.pem #{@@reg}is present inside of \
 		your\n#{@@bold}#{@@cyan}project/keys directory#{@@reg}.
 		TEXT
   end

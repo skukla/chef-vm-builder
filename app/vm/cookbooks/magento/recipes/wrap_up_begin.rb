@@ -12,26 +12,26 @@ csc_options = node[:magento][:csc_options]
 if %w[install force_install reinstall update_all update_app].include?(
      build_action,
    ) || merge_restore
-  csc_options.each do |key, value|
-    next if value.empty? || %w[key_path production_private_key].include?(key)
+  csc_options =
+    csc_options.select do |key, hash|
+      hash.is_a?(Hash) && !hash[:value].nil? && !hash[:value].empty?
+    end
+  cli_inserts = csc_options.select { |key, hash| hash[:insert_method] == 'cli' }
+  queries = csc_options.select { |key, hash| hash[:insert_method] == 'query' }
 
-    path =
-      key.include?('api') ? 'services_connector_integration' : 'services_id'
+  cli_inserts.each do |key, hash|
     magento_cli "Configuring Commerce Services Connector setting : #{key}" do
       action :config_set
-      config_path "services_connector/#{path}/#{key}"
-      config_value value
+      config_path hash[:config_path]
+      config_value hash[:value]
       ignore_failure true
     end
   end
 
-  if !csc_options[:production_private_key].nil? &&
-       !csc_options[:production_api_key].empty?
-    path =
-      'services_connector/services_connector_integration/production_private_key'
+  queries.each do |key, hash|
     query =
-      "INSERT INTO core_config_data (path, value) VALUES('#{path}', '#{csc_options[:production_private_key]}') ON DUPLICATE KEY UPDATE path='#{path}', value='#{csc_options[:production_private_key]}'"
-    mysql 'Insert commerce services production key' do
+      "INSERT INTO core_config_data (path, value) VALUES('#{hash[:config_path]}', '#{hash[:value]}') ON DUPLICATE KEY UPDATE path='#{hash[:config_path]}', value='#{hash[:value]}'"
+    mysql "Inserting Commerce Services data : #{key}" do
       action :run_query
       db_query query
     end

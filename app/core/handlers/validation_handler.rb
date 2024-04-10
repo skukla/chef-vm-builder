@@ -153,10 +153,20 @@ class ValidationHandler
 
     abort(ErrorMsg.show(:csc_credentials_missing)) if csc_credentials_missing
 
-    unless Entry
-             .files_from('project/keys')
-             .include?('privateKey-production.pem')
-      abort(ErrorMsg.show(:csc_key_missing))
+    keys = Entry.files_from('project/keys')
+    sandbox_key_file = 'privateKey-sandbox.pem'
+    production_key_file = 'privateKey-production.pem'
+
+    if !keys.include?(sandbox_key_file) && !keys.include?(production_key_file)
+      abort(ErrorMsg.show(:csc_keys_missing))
+    end
+
+    unless keys.include?(sandbox_key_file)
+      abort(ErrorMsg.show(:csc_sandbox_key_missing))
+    end
+
+    unless keys.include?(production_key_file)
+      abort(ErrorMsg.show(:csc_production_key_missing))
     end
   end
 end

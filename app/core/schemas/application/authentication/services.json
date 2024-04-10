@@ -3,13 +3,21 @@
   "title": "Commerce services authentication",
   "description": "Adobe Commerce commerce services authentication settings. Includes: Production API Key, Project ID, and Data Space ID.",
   "type": "object",
-  "required": [
-    "production_api_key"
-  ],
+  "required": ["sandbox_api_key", "production_api_key", "data_space_id"],
   "properties": {
+    "sandbox_api_key": {
+      "type": "string",
+      "description": "Commerce services sandbox api key.",
+      "minLength": 1
+    },
     "production_api_key": {
       "type": "string",
       "description": "Commerce services production api key.",
+      "minLength": 1
+    },
+    "project_name": {
+      "type": "string",
+      "description": "Commerce services project name.",
       "minLength": 1
     },
     "project_id": {
@@ -17,9 +25,19 @@
       "description": "Commerce services project ID.",
       "minLength": 1
     },
+    "data_space_name": {
+      "type": "string",
+      "description": "Commerce services data space name.",
+      "minLength": 1
+    },
     "data_space_id": {
       "type": "string",
       "description": "Commerce services data space ID.",
+      "minLength": 1
+    },
+    "data_space_type": {
+      "type": "string",
+      "description": "Commerce services data space type (shown in brackets in the backoffice).",
       "minLength": 1
     }
   },
