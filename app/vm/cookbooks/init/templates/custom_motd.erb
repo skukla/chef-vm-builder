@@ -28,14 +28,16 @@ figlet BOOM.
 printf "\n${BOLD}Welcome to the Kukla VM!${REG}\n\n"
 
 # Hosts Entry and Mailhog
-rulem "[ ${CYAN}Hosts Entry and Mailhog${REG} ]"
-printf '\n%23s : %s %s %s\n' "${BOLD}Host Entry" "${REG}<%= @ip %>" "<%= "#{@urls.join(" ")}" %>"
+rulem "[ ${CYAN}Hosts Entry, Mailbox, and URLs${REG} ]"
+printf '\n%23s : %s %s %s\n' "${BOLD}Host Entry" "${REG}<%= @ip %>" "<%= "#{@hosts.join(" ")}" %>"
 
 if [ $MAILHOG_PORT != "" ]; then 
-    printf '%23s : %s  \n' "${BOLD}Mailhog Inbox" "${REG}http://<%= @urls[0] %>:$MAILHOG_PORT"
+    printf '%23s : %s  ' "${BOLD}Mailhog Inbox" "${REG}<%= @storefront_urls[0] %>:$MAILHOG_PORT"
 fi
 
-printf "\n"
+printf '\n%23s : %s %s %s' "${BOLD}Storefront URLs:" "${REG}<%= "#{@storefront_urls.join(" | ")}" %>"
+printf '\n%23s : %s %s %s' "${BOLD}Admin URL:" "${REG}<%= "#{@admin_url}" %>"
+printf "\n\n"
 
 # Useful Commands
 rulem "[ ${CYAN}Useful Commands${REG} ]"

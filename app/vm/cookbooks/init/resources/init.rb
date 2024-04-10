@@ -13,32 +13,35 @@ property :ip, String, default: node[:init][:vm][:ip]
 property :hostname, String, default: node[:hostname]
 
 action :install_motd do
-	execute 'Remove MotDs' do
-		command 'chmod -x /etc/update-motd.d/*'
-	end
+  execute 'Remove MotDs' do
+    command 'chmod -x /etc/update-motd.d/*'
+  end
 
-	template 'Custom MoTD' do
-		source 'custom_motd.erb'
-		path '/etc/update-motd.d/01-custom'
-		mode '755'
-		owner 'root'
-		group 'root'
-		variables(
-			{
-				ip: new_resource.ip,
-				hostname: new_resource.hostname,
-				urls: DemoStructureHelper.vm_urls,
-			},
-		)
-	end
+  template 'Custom MoTD' do
+    source 'custom_motd.erb'
+    path '/etc/update-motd.d/01-custom'
+    mode '755'
+    owner 'root'
+    group 'root'
+    variables(
+      {
+        ip: new_resource.ip,
+        hostname: new_resource.hostname,
+        hosts: DemoStructureHelper.vm_urls,
+        storefront_urls:
+          DemoStructureHelper.vm_urls_with_protocol('storefront'),
+        admin_url: DemoStructureHelper.base_url_with_protocol('admin'),
+      },
+    )
+  end
 end
 
 action :update_hosts do
-	template 'Hosts File' do
-		source 'hosts.erb'
-		path '/etc/hosts'
-		variables(
-			{ hostname: new_resource.hostname, urls: DemoStructureHelper.vm_urls },
-		)
-	end
+  template 'Hosts File' do
+    source 'hosts.erb'
+    path '/etc/hosts'
+    variables(
+      { hostname: new_resource.hostname, urls: DemoStructureHelper.vm_urls },
+    )
+  end
 end
