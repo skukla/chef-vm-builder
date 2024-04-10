@@ -30,7 +30,8 @@ action :install_motd do
         hosts: DemoStructureHelper.vm_urls,
         storefront_urls:
           DemoStructureHelper.vm_urls_with_protocol('storefront'),
-        admin_url: DemoStructureHelper.base_url_with_protocol('admin'),
+        admin_url:
+          "#{DemoStructureHelper.base_url_with_protocol('admin')}/admin",
       },
     )
   end

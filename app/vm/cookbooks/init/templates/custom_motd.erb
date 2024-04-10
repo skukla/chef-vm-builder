@@ -11,6 +11,8 @@ if [ $MAILHOG_PORT == 1025 ]; then
 else
     MAILHOG_PORT=$(sudo ss -ltnp | grep "mailhog" | sort -n | awk '{print $4;exit;}' | sed -e 's/.*://')
 fi
+STOREFRONT_URLS=(<%= @storefront_urls.join(' ') %>)
+
 
 # Print a horizontal rule
 rule () {
@@ -24,20 +26,32 @@ rulem ()  {
 }
 
 # Intro
+clear
 figlet BOOM.
 printf "\n${BOLD}Welcome to the Kukla VM!${REG}\n\n"
 
-# Hosts Entry and Mailhog
 rulem "[ ${CYAN}Hosts Entry, Mailbox, and URLs${REG} ]"
-printf '\n%23s : %s %s %s\n' "${BOLD}Host Entry" "${REG}<%= @ip %>" "<%= "#{@hosts.join(" ")}" %>"
+printf '\n'
 
+# Hosts Entry
+printf '%23s : %s %s %s\n' "${BOLD}Host Entry" "${REG}<%= @ip %>" "<%= "#{@hosts.join(" ")}" %>"
+
+# Mailhog
 if [ $MAILHOG_PORT != "" ]; then 
     printf '%23s : %s  ' "${BOLD}Mailhog Inbox" "${REG}<%= @storefront_urls[0] %>:$MAILHOG_PORT"
 fi
 
-printf '\n%23s : %s %s %s' "${BOLD}Storefront URLs:" "${REG}<%= "#{@storefront_urls.join(" | ")}" %>"
-printf '\n%23s : %s %s %s' "${BOLD}Admin URL:" "${REG}<%= "#{@admin_url}" %>"
-printf "\n\n"
+# Admin URL
+printf '\n%23s : %s %s ' "${BOLD}Admin URL" "${REG}<%= "#{@admin_url}" %>"
+printf '\n'
+
+# Storefront URLs
+printf '%23s : %s\n' "${BOLD}Storefront URLs" "${REG}${STOREFRONT_URLS[0]}"
+for ((i = 1; i < ${#STOREFRONT_URLS[@]}; i++)); do
+    printf '%45s %s' "${REG}${STOREFRONT_URLS[i]}"
+done
+printf '\n'
+printf '\n'
 
 # Useful Commands
 rulem "[ ${CYAN}Useful Commands${REG} ]"
@@ -48,14 +62,7 @@ printf '\n%23s : %s' "${BOLD}reindex" "${REG}Reindexes all indexes."
 printf '\n%23s : %s' "${BOLD}dev-mode" "${REG}Puts application into developer mode."
 printf '\n%23s : %s' "${BOLD}prod-mode" "${REG}Puts application into production mode."
 printf '\n%23s : %s' "${BOLD}process-catalogs" "${REG}Processes B2B Shared Catalogs (Runs \"clean\" and a single cron trigger)."
-printf '\n%23s : %s' "${BOLD}backup" "${REG}Take a backup of your build. Stores backup in <webroot>/var/backups."
-printf '\n%23s : %s' "${BOLD}restore" "${REG}Restore a backup. Files must be present in <webroot>/var/backups."
-printf '\n%23s : %s' "${BOLD}import-backup" "${REG}Imports backup files from your local system in <project>/app/backups to the VM."
-printf '\n%23s : %s' "${BOLD}export-backup" "${REG}Exports backup files to your local system in <project>/app/backups."
-printf '\n%23s : %s' "${BOLD}remove-backup" "${REG}Removes all backup files from the VM but does not affect local backups."
-printf '\n%23s : %s' "${BOLD}list-reports" "${REG}Lists all error reports available in <webroot>/var/report"
-printf '\n%23s : %s' "${BOLD}list-logs" "${REG}Lists all error logs available in <webroot>/var/log"
-printf '\n%23s : %s' "${BOLD}report <id>" "${REG}Views the specified report"
-printf '\n%23s : %s' "${BOLD}log <filename>" "${REG}Views the specified log"
+printf '\n%23s : %s' "${BOLD}resync-services" "${REG}Resynchronizes commerce services (Live Search, Product Recs, Catalog, etc)."
+printf '\n%23s : %s' "${BOLD}backup-project" "${REG}Take a backup of your build. Exports backup to your local machine in the vm/backup directory."
 printf "\n\n"
 rule

@@ -377,7 +377,7 @@ function switch-livesearch() {
 }
 export -f switch-livesearch
 
-function resync-livesearch() {
+function resync-services() {
   www
   ./bin/magento saas:resync --feed productattributes
   ./bin/magento saas:resync --feed products
@@ -389,7 +389,7 @@ function resync-livesearch() {
   ./bin/magento saas:resync --feed categories
   ./bin/magento saas:resync --feed categoryPermissions
 }
-export -f resync-livesearch
+export -f resync-services
 
 # Samba
 function enable-samba() {
