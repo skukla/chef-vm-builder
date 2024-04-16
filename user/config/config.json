@@ -46,7 +46,9 @@
       "admin_password": "admin4tls"
     }
   },
-  "infrastructure": {},
+  "infrastructure": {
+    "search_engine": "elasticsearch"
+  },
   "remote_machine": {
     "cpus": "2",
     "memory": "8192"
