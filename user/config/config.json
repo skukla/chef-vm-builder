@@ -1,62 +1,53 @@
 {
-	"vm": {
-		"name": "Luma VM",
-		"provider": ""
-	},
-	"custom_demo": {
-		"websites": [
-			{
-				"site_code": "base",
-				"site_url": "luma.demo",
-				"stores": [
-					{
-						"store_views": [
-							{
-								"store_view_code": "default"
-							}
-						]
-					}
-				]
-			}
-		],
-		"data_packs": [
-			{
-				"source": "starter",
-				"data": [
-					{
-						"data_path": "base-b2c-website"
-					}
-				]
-			}
-		],
-		"custom_modules": []
-	},
-	"application": {
-		"authentication": {
-			"composer": {
-				"public_key": "",
-				"private_key": "",
-				"github_token": ""
-			}
-		},
-		"options": {
-			"version": "2.4.6-p2"
-		},
-		"build": {
-			"action": "install",
-			"sample_data": false,
-			"patches": true,
-			"hooks": {
-				"warm_cache": false,
-				"backup": false
-			}
-		},
-		"settings": {
-			"admin_password": "admin4tls"
-		}
-	},
-	"remote_machine": {
-		"cpus": "2",
-		"memory": "8192"
-	}
+  "vm": {
+    "name": "Demo VM",
+    "provider": ""
+  },
+  "custom_demo": {
+    "websites": [
+      {
+        "site_code": "base",
+        "site_url": "commerce.demo",
+        "stores": [
+          {
+            "store_views": [
+              {
+                "store_view_code": "default"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "data_packs": [],
+    "custom_modules": []
+  },
+  "application": {
+    "authentication": {
+      "composer": {
+        "public_key": "",
+        "private_key": "",
+        "github_token": ""
+      }
+    },
+    "options": {
+      "version": "2.4.6-p2"
+    },
+    "build": {
+      "action": "install",
+      "sample_data": false,
+      "patches": true,
+      "hooks": {
+        "warm_cache": false,
+        "backup": false
+      }
+    },
+    "settings": {
+      "admin_password": "admin4tls"
+    }
+  },
+  "remote_machine": {
+    "cpus": "2",
+    "memory": "8192"
+  }
 }
