@@ -4,13 +4,11 @@
   "description": "Build-specific settings. Includes: action, restore, sample data, patches, and hooks.",
   "type": "object",
   "minLength": 1,
-  "required": [
-    "action"
-  ],
+  "required": ["action"],
   "properties": {
     "action": {
       "type": "string",
-      "description": "Build action for the project.\ninstall: First-time install.\nforce_install: Complete VM re-build.\nreinstall: Reinstall the application.\nupdate_all: Update application and data packs.\nupdate_app: Update the application only.\nupdate_data: Update data packs only.\nupdate_urls: Update urls only.\nrestore: Restore backup.",
+      "description": "Build action for the project.\ninstall: First-time build.\nforce_install: Complete VM re-build.\nreinstall: Reinstall the application.\nupdate_all: Update application and data packs.\nupdate_app: Update the application only.\nupdate_data: Update data packs only.\nupdate_urls: Update urls only.\nrestore: Restore backup.",
       "pattern": "(^install$|^force_install$|^reinstall$|^update_all$|^update_app$|^update_data$|^update_urls$|^restore$)"
     },
     "sample_data": {
