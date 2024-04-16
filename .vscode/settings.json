@@ -1,6 +1,7 @@
 {
   "editor.formatOnPaste": true,
   "editor.formatOnSave": true,
+  "editor.tabSize": 2,
   "explorer.compactFolders": false,
   "terminal.integrated.cwd": "./app/vm",
   "csv-edit.initiallyFixedRowsTop": 1,
