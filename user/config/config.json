@@ -46,6 +46,8 @@
       "admin_password": "admin4tls"
     }
   },
+  "infrastructure": {},
+  "provisioner": {},
   "remote_machine": {
     "cpus": "2",
     "memory": "8192"
