@@ -13,6 +13,7 @@ default[:magento_modules][:required_module_list] = [
   { source: 'git@github.com:PMET-public/module-data-install.git' },
   { source: 'git@github.com:PMET-public/module-data-install-graphql.git' },
   { source: 'git@github.com:PMET-public/module-saas-data-management.git' },
+  { source: 'git@github.com:PMET-public/module-admin-configurations.git' },
 ]
 
 default[:magento_modules][:modules_to_remove] = [
