@@ -514,9 +514,17 @@ function log() {
 }
 export -f log
 
-function watch-data() {
+function watch-log() {
+  LOG_FILE=$1
+  
   logs
-  tail -f data_installer.log
+  printf "\nWatching the ${LOG_FILE} file...\nUse Ctrl+C to stop.\n\n"
+  tail -f ${LOG_FILE}
+}
+export -f watch-log
+
+function watch-data() {
+  watch-log "data_installer.log"
 }
 export -f watch-data
 
