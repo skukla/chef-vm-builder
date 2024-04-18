@@ -514,6 +514,12 @@ function log() {
 }
 export -f log
 
+function watch-data() {
+  logs
+  tail -f data_installer.log
+}
+export -f watch-data
+
 # Data Packs
 function install-data-pack() {
   www
