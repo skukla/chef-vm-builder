@@ -9,7 +9,6 @@ GREEN=$(tput setaf 2)
 RED=$(tput setaf 1)
 
 # Define functions
-
 rule () {
     printf -v _hr "%*s" $(tput cols) && echo ${_hr// /${1--}}
 }
@@ -31,6 +30,10 @@ print_section_header() {
     printf '\n'
 }
 
+print_restart_msg() {
+    printf "Use ${BOLD}$1${REG} to restart"
+}
+
 print_commands() {
     local commands=("$@")
     local i
@@ -46,10 +49,12 @@ get_mailhog_port() {
 }
 
 check_service() {
-    if systemctl is-active --quiet $1; then
+    local service="$1"
+    local message="$2"
+    if systemctl is-active --quiet "$service"; then
         echo "${GREEN}[ RUNNING ]${REG}"
     else
-        echo "${RED}[ NOT RUNNING ]${REG}"
+        echo "${RED}[ NOT RUNNING ]${REG} $message"
     fi
 }
 
@@ -70,7 +75,7 @@ display_service_status() {
     local service_cmd=$2
     local restart_msg=$3
     local dots=$(calculate_dots "$service_name")
-    echo "$service_name $(print_dots "$dots") $(check_service $service_cmd)"
+    echo "$service_name $(print_dots "$dots") $(check_service $service_cmd $restart_msg)"
 }
 
 # ERB Variables
@@ -108,12 +113,14 @@ printf "\n\n"
 
 # Service Status
 print_section_header "Service Status"
-<% if @provider.include?('vmware') %>display_service_status "Elasticsearch" "elasticsearch"<% end %>
-display_service_status "PHP" "php${php_version}-fpm"
-display_service_status "Webserver" "nginx"
-display_service_status "Database" "mysql"
-display_service_status "File Share" "smbd"
-display_service_status "Mailbox" "mailhog"
+<% if @provider.include?('vmware') %>
+display_service_status "Elasticsearch" "elasticsearch" "start-elasticsearch"
+<% end %>
+display_service_status "PHP" "php${php_version}-fpm" "start-php"
+display_service_status "Webserver" "nginx" "start-web"
+display_service_status "Database" "mysql" "start-db"
+display_service_status "File Share" "smbd" "start-samba"
+display_service_status "Mailbox" "mailhog" "start-mailhog"
 printf "\n\n"
 
 # Useful Commands
