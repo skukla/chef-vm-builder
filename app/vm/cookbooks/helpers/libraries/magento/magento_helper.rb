@@ -169,6 +169,10 @@ class MagentoHelper
     Chef.node[:magento][:search_engine][:live_search][:module_list]
   end
 
+  def MagentoHelper.open_search_module_list
+    Chef.node[:magento][:search_engine][:open_search][:module_list]
+  end
+
   def MagentoHelper.elasticsearch_module_list
     Chef.node[:magento][:search_engine][:elasticsearch][:module_list]
   end
@@ -223,7 +227,9 @@ class MagentoHelper
   end
 
   def MagentoHelper.switch_to_elasticsearch
-    live_search_module_list.each do |ls_module|
+    modules_to_disable = live_search_module_list + open_search_module_list
+
+    modules_to_disable.each do |ls_module|
       StringReplaceHelper.replace_in_file(
         config_php,
         "'#{ls_module}' => 1",

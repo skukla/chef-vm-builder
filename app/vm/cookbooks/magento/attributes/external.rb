@@ -59,6 +59,9 @@ default[:magento][:search_engine][:prefix][:value] =
 default[:magento][:search_engine][:elasticsearch][:module_list] =
   node[:search_engine][:elasticsearch][:module_list]
 
+default[:magento][:search_engine][:open_search][:module_list] =
+  node[:search_engine][:open_search][:module_list]
+
 default[:magento][:search_engine][:live_search][:module_list] =
   node[:search_engine][:live_search][:module_list]
 

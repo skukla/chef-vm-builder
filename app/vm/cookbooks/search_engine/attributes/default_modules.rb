@@ -10,8 +10,9 @@ default[:search_engine][:elasticsearch][:module_list] = %w[
   Magento_ElasticsearchCatalogPermissions
   Magento_ElasticsearchCatalogPermissionsGraphQl
   Magento_InventoryElasticsearch
-  Magento_OpenSearch
 ]
+default[:search_engine][:open_search][:module_list] = %w[Magento_OpenSearch]
+
 default[:search_engine][:live_search][:module_list] = %w[
   Magento_LiveSearch
   Magento_LiveSearchAdapter
