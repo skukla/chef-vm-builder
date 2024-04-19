@@ -1,72 +1,133 @@
 #!/bin/bash
 
-# Variables
+# Set terminal color variables
 export TERM=xterm-256color
 BOLD=$(tput bold)
 REG=$(tput sgr0)
 CYAN=$(tput setaf 6)
+GREEN=$(tput setaf 2)
+RED=$(tput setaf 1)
 
-# Print a horizontal rule
+# Define functions
+
 rule () {
     printf -v _hr "%*s" $(tput cols) && echo ${_hr// /${1--}}
 }
 
-# Print horizontal ruler with message
 rulem ()  {
-    # Fill line with ruler character ($2, default "-"), reset cursor, move 2 cols right, print message
     printf -v _hr "%*s" $(tput cols) && echo -en ${_hr// /${2--}} && echo -e "\r\033[2C$1"
 }
+
+print_kv_pair() {
+    printf '%-23s : %s\n' "${BOLD}$1" "${REG}$2"
+}
+
+print_subtitle() {
+    printf "\n${BOLD}$1${REG}\n\n"
+}
+
+print_section_header() {
+    rulem "[ ${CYAN}$1${REG} ]"
+    printf '\n'
+}
+
+print_commands() {
+    local commands=("$@")
+    local i
+    for ((i = 0; i < ${#commands[@]}; i+=2)); do
+        printf '%-23s : %s\n' "${BOLD}${commands[i]}" "${REG}${commands[i+1]}"
+    done
+}
+
+get_mailhog_port() {
+    local port
+    port=$(sudo ss -ltnp | awk '/mailhog/ {sub(/.*:/,"",$4); print $4}' | sort -n | tail -1)
+    echo "$port"
+}
+
+check_service() {
+    if systemctl is-active --quiet $1; then
+        echo "${GREEN}[ RUNNING ]${REG}"
+    else
+        echo "${RED}[ NOT RUNNING ]${REG}"
+    fi
+}
+
+calculate_dots() {
+    local service_length=${#1}
+    local dots_length=$((30 - service_length))
+    dots=$(printf "%-${dots_length}s" "." | tr ' ' '.')
+    echo "$dots"
+}
+
+print_dots() {
+    local dots=$1
+    echo "$dots"
+}
+
+display_service_status() {
+    local service_name=$1
+    local service_cmd=$2
+    local restart_msg=$3
+    local dots=$(calculate_dots "$service_name")
+    echo "$service_name $(print_dots "$dots") $(check_service $service_cmd)"
+}
+
+# ERB Variables
+ip=<%= @ip %>
+hosts=<%= "#{@hosts.join(" ")}" %>
+base_url=<%= @storefront_urls[0] %>
+admin_url=<%= "#{@admin_url}" %>
+storefront_urls=<%= @storefront_urls.join(' ') %>
+php_version=<%= @php_version %>
+
+# Main script
 
 # Intro
 clear
 figlet BOOM.
-printf "\n${BOLD}Welcome to the Kukla VM!${REG}\n\n"
+print_subtitle "Welcome to the Kukla VM!"
 
-rulem "[ ${CYAN}Hosts Entry, Mailbox, and URLs${REG} ]"
-printf '\n'
+# VM Details
+print_section_header "VM Details"
+print_kv_pair "Host Entry" "$ip" "$hosts"
 
-# Hosts Entry
-printf '%23s : %s %s %s\n' "${BOLD}Host Entry" "${REG}<%= @ip %>" "<%= "#{@hosts.join(" ")}" %>"
-
-# Mailhog
-MAILHOG_PORT=$(sudo ss -ltnp | grep "mailhog" | sort -n | awk '{print $4;exit;}' | sed -e 's/.*://')
-
-if [ $MAILHOG_PORT == 1025 ]; then
-    MAILHOG_PORT=$(sudo ss -ltnp | grep "mailhog" | sort -r | awk '{print $4;exit;}' | sed -e 's/.*://')
-else
-    MAILHOG_PORT=$(sudo ss -ltnp | grep "mailhog" | sort -n | awk '{print $4;exit;}' | sed -e 's/.*://')
+mailhog_port=$(get_mailhog_port)
+if [ -n "$mailhog_port" ]; then
+    print_kv_pair "Mailhog Inbox" "$base_url:$mailhog_port"
 fi
 
-if [ $MAILHOG_PORT != "" ]; then 
-    printf '%23s : %s  ' "${BOLD}Mailhog Inbox" "${REG}<%= @storefront_urls[0] %>:$MAILHOG_PORT"
-fi
-
-# Admin URL
-printf '\n%23s : %s %s ' "${BOLD}Admin URL" "${REG}<%= "#{@admin_url}" %>"
+print_kv_pair "Admin URL" "$admin_url"
 printf '\n'
 
-# Storefront URLs
-STOREFRONT_URLS=(<%= @storefront_urls.join(' ') %>)
-
-printf '%23s : %s\n' "${BOLD}Storefront URLs" "${REG}${STOREFRONT_URLS[0]}"
-for ((i = 1; i < ${#STOREFRONT_URLS[@]}; i++)); do
-    printf '%21s %s\n' "" "${REG}${STOREFRONT_URLS[i]}"
+print_kv_pair "Storefront URLs" "${storefront_urls[0]}"
+for ((i = 1; i < ${#storefront_urls[@]}; i++)); do
+    printf '%21s %s\n' "" "${REG}${storefront_urls[i]}"
 done
+printf "\n\n"
 
-printf '\n'
-printf '\n'
+# Service Status
+print_section_header "Service Status"
+<% if @provider.include?('vmware') %>display_service_status "Elasticsearch" "elasticsearch"<% end %>
+display_service_status "PHP" "php${php_version}-fpm"
+display_service_status "Webserver" "nginx"
+display_service_status "Database" "mysql"
+display_service_status "File Share" "smbd"
+display_service_status "Mailbox" "mailhog"
+printf "\n\n"
 
 # Useful Commands
-rulem "[ ${CYAN}Useful Commands${REG} ]"
-printf '\n%23s : %s' "${BOLD}www" "${REG}Moves into the web root."
-printf '\n%23s : %s' "${BOLD}clean" "${REG}Re-indexes and clears cache."
-printf '\n%23s : %s' "${BOLD}cache" "${REG}Clears cache."
-printf '\n%23s : %s' "${BOLD}reindex" "${REG}Reindexes all indexes."
-printf '\n%23s : %s' "${BOLD}dev-mode" "${REG}Puts application into developer mode."
-printf '\n%23s : %s' "${BOLD}prod-mode" "${REG}Puts application into production mode."
-printf '\n%23s : %s' "${BOLD}process-catalogs" "${REG}Processes B2B Shared Catalogs (Runs \"clean\" and a single cron trigger)."
-printf '\n%23s : %s' "${BOLD}process-data" "${REG}Runs a cron job and watches the data installer log for data pack processing."
-printf '\n%23s : %s' "${BOLD}resync-services" "${REG}Resynchronizes commerce services (Live Search, Product Recs, Catalog, etc)."
-printf '\n%23s : %s' "${BOLD}backup-project" "${REG}Take a backup of your build. Exports backup to your local machine in the vm/backup directory."
+print_section_header "Useful Commands"
+print_commands "www" "Moves into the web root." \
+              "clean" "Re-indexes and clears cache." \
+              "cache" "Clears cache." \
+              "reindex" "Reindexes all indexes." \
+              "dev-mode" "Puts application into developer mode." \
+              "prod-mode" "Puts application into production mode." \
+              "process-catalogs" "Processes B2B Shared Catalogs (Runs \"clean\" and a single cron trigger)." \
+              "process-data" "Runs a cron job and watches the data installer log for data pack processing." \
+              "resync-services" "Resynchronizes commerce services (Live Search, Product Recs, Catalog, etc)." \
+              "backup-project" "Take a backup of your build. Exports backup to your local machine in the vm/backup directory."
 printf "\n\n"
 rule
+

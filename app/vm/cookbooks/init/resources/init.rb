@@ -11,6 +11,8 @@ property :user, String, default: node[:init][:os][:user]
 property :group, String, default: node[:init][:os][:user]
 property :ip, String, default: node[:init][:vm][:ip]
 property :hostname, String, default: node[:hostname]
+property :vm_provider, String, default: node[:init][:vm][:provider]
+property :php_version, String, default: node[:init][:php][:version]
 
 action :install_motd do
   execute 'Remove MotDs' do
@@ -28,6 +30,8 @@ action :install_motd do
         ip: new_resource.ip,
         hostname: new_resource.hostname,
         hosts: DemoStructureHelper.vm_urls,
+        provider: new_resource.vm_provider,
+        php_version: new_resource.php_version,
         storefront_urls:
           DemoStructureHelper.vm_urls_with_protocol('storefront'),
         admin_url:
