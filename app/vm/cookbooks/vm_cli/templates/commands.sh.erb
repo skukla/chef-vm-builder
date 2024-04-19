@@ -518,8 +518,14 @@ function watch-log() {
   LOG_FILE=$1
   
   logs
-  printf "\nWatching the ${LOG_FILE} file...\nUse Ctrl+C to stop.\n\n"
-  tail -f ${LOG_FILE}
+  
+  if [ -f "${LOG_FILE}" ]; then
+    printf "\nWatching the ${LOG_FILE} file...\nUse Ctrl+C to stop.\n\n"
+    tail -f ${LOG_FILE}
+  else
+    echo "The ${LOG_FILE} does not exist."
+  fi
+  
 }
 export -f watch-log
 
