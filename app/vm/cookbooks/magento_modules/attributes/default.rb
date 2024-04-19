@@ -9,7 +9,6 @@ default[:magento_modules][:required_module_list] = [
   { source: 'magento/product-recommendations' },
   { source: 'magento/module-visual-product-recommendations' },
   { source: 'magento/live-search' },
-  { source: 'git@github.com:PMET-public/FireGento_FastSimpleImport2.git' },
   { source: 'git@github.com:PMET-public/module-data-install.git' },
   { source: 'git@github.com:PMET-public/module-data-install-graphql.git' },
   { source: 'git@github.com:PMET-public/module-saas-data-management.git' },
