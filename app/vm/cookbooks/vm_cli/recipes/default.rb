@@ -4,7 +4,5 @@
 # frozen_string_literal: true
 
 vm_cli 'Creating VM CLI Directories' do
-	action :create_directories
+  action :create_directory
 end
-
-include_recipe 'vm_cli::install'

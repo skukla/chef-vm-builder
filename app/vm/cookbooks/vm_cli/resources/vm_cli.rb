@@ -7,6 +7,8 @@ resource_name :vm_cli
 provides :vm_cli
 
 property :name, String, name_property: true
+property :vm_cli_directory, Hash, default: node[:vm_cli][:directory]
+property :vm_cli_bashrc_file, Hash, default: node[:vm_cli][:bashrc_file]
 property :vm_provider, String, default: node[:vm_cli][:init][:provider]
 property :user, String, default: node[:vm_cli][:init][:user]
 property :group, String, default: node[:vm_cli][:init][:user]
@@ -49,33 +51,32 @@ property :local_data_pack_list,
          default: node[:vm_cli][:magento_demo_builder][:local_data_pack_list]
 property :config_json_dir, String, default: node[:vm_cli][:config_json_dir]
 property :backup_dir, String, default: node[:vm_cli][:backup_dir]
-property :vm_cli_directories, Array, default: node[:vm_cli][:directories]
-property :vm_cli_files, Array, default: node[:vm_cli][:files]
 property :command_list, [String, Array]
 
-action :create_directories do
+action :create_directory do
+  cli_dir = "/home/#{new_resource.user}/#{new_resource.vm_cli_directory[:path]}"
+
   directory 'VM cli path check' do
-    path "/home/#{new_resource.user}/cli"
+    path cli_dir
     recursive true
     action :delete
   end
 
-  new_resource.vm_cli_directories.each do |directory_data|
-    directory "Creating /home/#{new_resource.user}/#{directory_data[:path]}" do
-      path "/home/#{new_resource.user}/#{directory_data[:path]}"
-      owner new_resource.user.to_s
-      group new_resource.group.to_s
-      mode (directory_data[:mode]).to_s
-      not_if { ::Dir.exist?((directory_data[:path]).to_s) }
-    end
+  directory 'Creating VM CLI directory' do
+    path cli_dir
+    owner new_resource.user
+    group new_resource.group
+    mode (new_resource.vm_cli_directory[:mode])
+    not_if { ::Dir.exist?(cli_dir) }
   end
 end
 
-action :install do
-  protocol = 'http'
+action :install_commands do
+  cli_dir = "/home/#{new_resource.user}/#{new_resource.vm_cli_directory[:path]}"
+
   template 'VM CLI' do
     source 'commands.sh.erb'
-    path "/home/#{new_resource.user}/cli/commands.sh"
+    path "#{cli_dir}/commands.sh"
     mode '755'
     owner new_resource.user
     group new_resource.group
@@ -106,18 +107,22 @@ action :install do
         consumer_list: MagentoHelper.consumer_list,
       },
     )
-    only_if { ::Dir.exist?("/home/#{new_resource.user}/cli") }
+    only_if { ::Dir.exist?(cli_dir) }
   end
+end
 
-  new_resource.vm_cli_files.each do |cli_file_data|
-    cookbook_file "Copying file : /home/#{new_resource.user}/#{cli_file_data[:source]}" do
-      source cli_file_data[:source]
-      path "/home/#{new_resource.user}/#{cli_file_data[:path]}/#{cli_file_data[:source]}"
-      owner new_resource.user
-      group new_resource.group
-      mode cli_file_data[:mode]
-      action :create
-    end
+action :install_bashrc do
+  rc_file_path = "/home/#{new_resource.user}"
+  rc_file = new_resource.vm_cli_bashrc_file[:source]
+  rc_file_mode = new_resource.vm_cli_bashrc_file[:mode]
+
+  cookbook_file 'Copying the bashrc file' do
+    source rc_file
+    path "#{rc_file_path}/#{rc_file}"
+    owner new_resource.user
+    group new_resource.group
+    mode rc_file_mode
+    action :create
   end
 end
 

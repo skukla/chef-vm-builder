@@ -4,5 +4,5 @@
 # frozen_string_literal: true
 
 vm_cli 'Installing VM CLI' do
-	action :install
+  action %i[install_commands install_bashrc]
 end
