@@ -8,6 +8,19 @@ CYAN=$(tput setaf 6)
 GREEN=$(tput setaf 2)
 RED=$(tput setaf 1)
 
+# ERB Variables
+provider="<%= @provider %>"
+ip="<%= @ip %>"
+hosts=<%= "#{@hosts.join(" ")}" %>
+base_url="<%= @storefront_urls[0] %>"
+admin_url=<%= "#{@admin_url}" %>
+storefront_urls=<%= @storefront_urls.join(' ') %>
+php_version="<%= @php_version %>"
+<% if @search_engine_type == "elasticsearch" %>
+es_host="<%= @search_engine_host[:value] %>"
+es_port="<%= @search_engine_port[:value] %>"
+<% end %>
+
 # Define functions
 rule () {
     printf -v _hr "%*s" $(tput cols) && echo ${_hr// /${1--}}
@@ -31,7 +44,14 @@ print_section_header() {
 }
 
 print_restart_msg() {
-    printf "Use ${BOLD}$1${REG} to restart"
+    local text="$1"
+    local service="$2"
+
+    if [ "$provider" = "virtualbox" ] && [ "$service" = "elasticsearch" ]; then
+        printf '%s %s to restart' "Exit the VM and use" "${BOLD}${text}${REG}"
+    else
+        printf '%s %s to restart' "Use" "${BOLD}${text}${REG}"
+    fi
 }
 
 print_commands() {
@@ -51,10 +71,21 @@ get_mailhog_port() {
 check_service() {
     local service="$1"
     local message="$2"
-    if systemctl is-active --quiet "$service"; then
-        echo "${GREEN}[ RUNNING ]${REG}"
+    
+    if [ "$provider" = "virtualbox" ] && [ "$service" = "elasticsearch" ]; then
+        # Check Elasticsearch status via curl
+        if curl -sSf "http://${es_host}:${es_port}" >/dev/null; then
+            echo "${GREEN}[ RUNNING ]${REG}"
+        else
+            echo "${RED}[ NOT RUNNING ]${REG} $message"
+        fi
     else
-        echo "${RED}[ NOT RUNNING ]${REG} $message"
+        # Check other services using systemctl
+        if systemctl is-active --quiet "$service"; then
+            echo "${GREEN}[ RUNNING ]${REG}"
+        else
+            echo "${RED}[ NOT RUNNING ]${REG} $message"
+        fi
     fi
 }
 
@@ -71,20 +102,44 @@ print_dots() {
 }
 
 display_service_status() {
-    local service_name=$1
-    local service_cmd=$2
-    local restart_msg=$3
-    local dots=$(calculate_dots "$service_name")
-    echo "$service_name $(print_dots "$dots") $(check_service $service_cmd $restart_msg)"
-}
+    local service_name="$1"
+    local service_cmd="$2"
+    local dots="$(calculate_dots "$service_name")"
+    local restart_msg
 
-# ERB Variables
-ip=<%= @ip %>
-hosts=<%= "#{@hosts.join(" ")}" %>
-base_url=<%= @storefront_urls[0] %>
-admin_url=<%= "#{@admin_url}" %>
-storefront_urls=<%= @storefront_urls.join(' ') %>
-php_version=<%= @php_version %>
+    # Determine restart message based on service name and command
+    case "$service_name-$service_cmd" in
+        <% if @provider == "virtualbox" %>
+        "Elasticsearch-elasticsearch")
+            restart_msg="$(print_restart_msg "brew services start elasticsearch-full" "elasticsearch")"
+            ;;
+        <% else %>
+        "Elasticsearch-elasticsearch")
+            restart_msg="$(print_restart_msg "start-elasticsearch" "elasticsearch")"
+            ;;
+        <% end %>
+        "PHP-php"*"-fpm")
+            restart_msg="$(print_restart_msg "start-php" "")"
+            ;;
+        "Webserver-nginx")
+            restart_msg="$(print_restart_msg "start-web" "")"
+            ;;
+        "Database-mysql")
+            restart_msg="$(print_restart_msg "start-db" "")"
+            ;;
+        "File Share-smbd")
+            restart_msg="$(print_restart_msg "start-samba" "")"
+            ;;
+        "Mailbox-mailhog")
+            restart_msg="$(print_restart_msg "start-mailhog" "")"
+            ;;
+        *)  # Default restart message if no match found
+            restart_msg="Use ${BOLD}${service_cmd}${REG} to restart"
+            ;;
+    esac
+
+    echo "$service_name $(print_dots "$dots") $(check_service "$service_cmd" "$restart_msg")"
+}
 
 # Main script
 
@@ -113,14 +168,14 @@ printf "\n\n"
 
 # Service Status
 print_section_header "Service Status"
-<% if @provider.include?('vmware') %>
-display_service_status "Elasticsearch" "elasticsearch" "start-elasticsearch"
+<% if @search_engine_type == "elasticsearch" %>
+display_service_status "Elasticsearch" "elasticsearch"
 <% end %>
-display_service_status "PHP" "php${php_version}-fpm" "start-php"
-display_service_status "Webserver" "nginx" "start-web"
-display_service_status "Database" "mysql" "start-db"
-display_service_status "File Share" "smbd" "start-samba"
-display_service_status "Mailbox" "mailhog" "start-mailhog"
+display_service_status "PHP" "php${php_version}-fpm"
+display_service_status "Webserver" "nginx"
+display_service_status "Database" "mysql"
+display_service_status "File Share" "smbd"
+display_service_status "Mailbox" "mailhog"
 printf "\n\n"
 
 # Useful Commands

@@ -14,7 +14,7 @@ property :web_root, String, default: node[:vm_cli][:nginx][:web_root]
 property :php_version, String, default: node[:vm_cli][:php][:version]
 property :search_engine_setting,
          Hash,
-         default: node[:search_engine][:elasticsearch][:setting]
+         default: node[:vm_cli][:search_engine][:setting]
 property :search_engine_host,
          Hash,
          default: node[:vm_cli][:search_engine][:host]
