@@ -72,7 +72,8 @@ action :create_directory do
 end
 
 action :install_commands do
-  cli_dir = "/home/#{new_resource.user}/#{new_resource.vm_cli_directory[:path]}"
+  home_dir = "/home/#{new_resource.user}"
+  cli_dir = "#{home_dir}/#{new_resource.vm_cli_directory[:path]}"
 
   template 'VM CLI' do
     source 'commands.sh.erb'
@@ -114,12 +115,12 @@ action :install_commands do
 end
 
 action :install_files do
-  cli_dir = "/home/#{new_resource.user}/#{new_resource.vm_cli_directory[:path]}"
+  home_dir = "/home/#{new_resource.user}"
 
   new_resource.vm_cli_files.each do |cli_file|
     cookbook_file "Copying the #{cli_file[:source]} file" do
       source cli_file[:source]
-      path "#{cli_dir}/#{cli_file[:source]}"
+      path "#{home_dir}/#{cli_file[:path]}/#{cli_file[:source]}"
       owner new_resource.user
       group new_resource.group
       mode cli_file[:mode]

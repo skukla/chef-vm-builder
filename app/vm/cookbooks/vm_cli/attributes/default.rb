@@ -5,8 +5,8 @@
 
 default[:vm_cli][:directory] = { path: 'cli', mode: '770' }
 default[:vm_cli][:files] = [
-  { source: '.bashrc', mode: '644' },
-  { source: 'help.sh', mode: '755' },
+  { path: '', source: '.bashrc', mode: '644' },
+  { path: 'cli', source: 'help.sh', mode: '755' },
 ]
 default[:vm_cli][:backup_dir] = 'var/backups'
 default[:vm_cli][:config_json_dir] =
