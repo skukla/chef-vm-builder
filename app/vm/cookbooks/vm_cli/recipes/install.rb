@@ -4,5 +4,5 @@
 # frozen_string_literal: true
 
 vm_cli 'Installing VM CLI' do
-  action %i[install_commands install_bashrc]
+  action %i[install_commands install_files]
 end

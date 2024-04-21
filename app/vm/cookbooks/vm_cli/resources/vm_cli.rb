@@ -8,7 +8,7 @@ provides :vm_cli
 
 property :name, String, name_property: true
 property :vm_cli_directory, Hash, default: node[:vm_cli][:directory]
-property :vm_cli_bashrc_file, Hash, default: node[:vm_cli][:bashrc_file]
+property :vm_cli_files, Array, default: node[:vm_cli][:files]
 property :vm_provider, String, default: node[:vm_cli][:init][:provider]
 property :user, String, default: node[:vm_cli][:init][:user]
 property :group, String, default: node[:vm_cli][:init][:user]
@@ -86,6 +86,8 @@ action :install_commands do
         user: new_resource.user,
         urls: DemoStructureHelper.vm_urls,
         base_url: DemoStructureHelper.base_url,
+        cli_directory: cli_dir,
+        cli_files: new_resource.vm_cli_files,
         web_root: new_resource.web_root,
         php_version: new_resource.php_version,
         magento_version: new_resource.magento_version,
@@ -111,18 +113,18 @@ action :install_commands do
   end
 end
 
-action :install_bashrc do
-  rc_file_path = "/home/#{new_resource.user}"
-  rc_file = new_resource.vm_cli_bashrc_file[:source]
-  rc_file_mode = new_resource.vm_cli_bashrc_file[:mode]
+action :install_files do
+  cli_dir = "/home/#{new_resource.user}/#{new_resource.vm_cli_directory[:path]}"
 
-  cookbook_file 'Copying the bashrc file' do
-    source rc_file
-    path "#{rc_file_path}/#{rc_file}"
-    owner new_resource.user
-    group new_resource.group
-    mode rc_file_mode
-    action :create
+  new_resource.vm_cli_files.each do |cli_file|
+    cookbook_file "Copying the #{cli_file[:source]} file" do
+      source cli_file[:source]
+      path "#{cli_dir}/#{cli_file[:source]}"
+      owner new_resource.user
+      group new_resource.group
+      mode cli_file[:mode]
+      action :create
+    end
   end
 end
 

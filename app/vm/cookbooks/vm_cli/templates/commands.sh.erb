@@ -18,6 +18,10 @@ function logs() {
 export -f logs
 
 # CLI
+function cli() {
+  <%= "#{@cli_directory}/#{@cli_files[1][:source]}" %>
+}
+
 function own() {
   USER="<%= @user %>"
   GROUP="<%= @user %>"

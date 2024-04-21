@@ -7,10 +7,12 @@ resource_name :init
 provides :init
 
 property :name, String, name_property: true
+property :hostname, String, default: node[:hostname]
+property :directory, Hash, default: node[:init][:directory]
+property :functions_file, Hash, default: node[:init][:functions_file]
 property :user, String, default: node[:init][:os][:user]
 property :group, String, default: node[:init][:os][:user]
 property :ip, String, default: node[:init][:vm][:ip]
-property :hostname, String, default: node[:hostname]
 property :vm_provider, String, default: node[:init][:vm][:provider]
 property :php_version, String, default: node[:init][:php][:version]
 property :search_engine_type,
@@ -20,11 +22,11 @@ property :search_engine_host, Hash, default: node[:init][:search_engine][:host]
 property :search_engine_port, Hash, default: node[:init][:search_engine][:port]
 
 action :install_motd do
-  execute 'Remove MotDs' do
-    command 'chmod -x /etc/update-motd.d/*'
+  execute 'Make MotDs non executable' do
+    command 'sudo chmod -x /etc/update-motd.d/*'
   end
 
-  template 'Custom MoTD' do
+  template 'Creating custom MoTD' do
     source 'custom_motd.erb'
     path '/etc/update-motd.d/01-custom'
     mode '755'

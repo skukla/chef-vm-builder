@@ -4,5 +4,5 @@
 # frozen_string_literal: true
 
 init 'Install MOTD and update hosts file' do
-	action %i[install_motd update_hosts]
+  action %i[install_motd update_hosts]
 end
