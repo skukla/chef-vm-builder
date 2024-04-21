@@ -3,13 +3,13 @@ require_relative '../lib/config'
 require_relative '../lib/composer'
 require_relative '../lib/error_message'
 require_relative '../lib/success_message'
-require_relative '../lib/demo_structure'
 require_relative '../lib/vagrant_plugin'
+require_relative '../lib/demo_structure'
+require_relative '../lib/elasticsearch_depends'
 require_relative '../lib/data_pack'
 require_relative '../lib/custom_module'
 require_relative '../lib/backup'
 require_relative '../lib/commerce_services'
-require_relative '../lib/service_dependencies'
 require_relative '../lib/provider'
 
 class ValidationHandler
@@ -20,17 +20,16 @@ class ValidationHandler
   def ValidationHandler.validate
     architecture
     config_json
+    provider
     plugins
     vm_name
-    provider
     composer_credentials
-    base_website
     build_action
-    service_dependencies
-    search_engine_type
-    backups
+    site_structure
+    local_elasticsearch
     restore_mode
     data_packs
+    backups
     csc_credentials
   end
 
@@ -42,14 +41,6 @@ class ValidationHandler
 
   def ValidationHandler.config_json
     abort(ErrorMsg.show(:config_json_missing)) if Config.json.nil?
-
-    if DemoStructure.website_structure_missing?
-      abort(ErrorMsg.show(:website_structure_missing))
-    end
-  end
-
-  def ValidationHandler.vm_name
-    abort(ErrorMsg.show(:vm_name_missing)) if Config.vm_name.nil?
   end
 
   def ValidationHandler.provider
@@ -60,15 +51,20 @@ class ValidationHandler
     end
   end
 
+  def ValidationHandler.plugins
+    return if VagrantPlugin.list.empty?
+
+    VagrantPlugin.install
+    abort(SuccessMsg.show(:plugins_installed))
+  end
+
+  def ValidationHandler.vm_name
+    abort(ErrorMsg.show(:vm_name_missing)) if Config.vm_name.nil?
+  end
+
   def ValidationHandler.composer_credentials
     if Composer.credentials_missing?
       abort(ErrorMsg.show(:composer_credentials_missing))
-    end
-  end
-
-  def ValidationHandler.base_website
-    if DemoStructure.base_website_missing?
-      abort(ErrorMsg.show(:base_website_missing))
     end
   end
 
@@ -80,14 +76,13 @@ class ValidationHandler
     end
   end
 
-  def ValidationHandler.restore_mode
-    if @build_action != 'restore' ||
-         (@build_action == 'restore' && @restore_mode.nil?)
-      return
+  def ValidationHandler.site_structure
+    if DemoStructure.website_structure_missing?
+      abort(ErrorMsg.show(:website_structure_missing))
     end
 
-    unless Config.restore_mode_list.include?(@restore_mode)
-      abort(ErrorMsg.show(:restore_mode_incorrect))
+    if DemoStructure.base_website_missing?
+      abort(ErrorMsg.show(:base_website_missing))
     end
   end
 
@@ -99,17 +94,23 @@ class ValidationHandler
     end
   end
 
-  def ValidationHandler.plugins
-    return if VagrantPlugin.list.empty?
-
-    VagrantPlugin.install
-    abort(SuccessMsg.show(:plugins_installed))
+  def ValidationHandler.local_elasticsearch
+    if ElasticsearchDependencies.xcode_missing?
+      abort(ErrorMsg.show(:xcode_missing))
+    end
+    if ElasticsearchDependencies.homebrew_missing?
+      abort(ErrorMsg.show(:homebrew_missing))
+    end
   end
 
-  def ValidationHandler.service_dependencies
-    abort(ErrorMsg.show(:xcode_missing)) if ServiceDependencies.xcode_missing?
-    if ServiceDependencies.homebrew_missing?
-      abort(ErrorMsg.show(:homebrew_missing))
+  def ValidationHandler.restore_mode
+    if @build_action != 'restore' ||
+         (@build_action == 'restore' && @restore_mode.nil?)
+      return
+    end
+
+    unless Config.restore_mode_list.include?(@restore_mode)
+      abort(ErrorMsg.show(:restore_mode_incorrect))
     end
   end
 
