@@ -5,7 +5,6 @@
 
 web_root = node[:magento_patches][:nginx][:web_root]
 patches_source = node[:magento_patches][:source]
-repository_directory = node[:magento_patches][:repository_directory]
 codebase_directory = node[:magento_patches][:codebase_directory]
 
 magento_patch 'Prepare for Magento patches' do
