@@ -9,7 +9,7 @@ class MagentoHelper
   end
 
   def MagentoHelper.base_version
-    version.include?('-p') ? version.sub(/.{3}$/, '') : version
+    version.include?('-') ? version.sub(/-.+$/, '') : version
   end
 
   def MagentoHelper.family(value = nil)

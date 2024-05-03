@@ -3,9 +3,7 @@
   "title": "Application Options",
   "description": "Object for application installaiton options. Includes: family, version, and minimum stability.",
   "type": "object",
-  "required": [
-    "version"
-  ],
+  "required": ["version"],
   "properties": {
     "family": {
       "type": "string",
@@ -16,7 +14,7 @@
     "version": {
       "type": "string",
       "description": "The version of Adobe Commerce to install.",
-      "pattern": "^\\d.\\d.\\d(-p\\d+)?$",
+      "pattern": "^\\d+.\\d+.\\d+(-[a-zA-Z0-9]+)?$",
       "minLength": 1
     },
     "minimum_stability": {

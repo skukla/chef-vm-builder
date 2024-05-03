@@ -39,7 +39,7 @@ if %w[restore reinstall].include?(build_action)
     end
   end
 
-  if Gem::Version.new(MagentoHelper.base_version) >= Gem::Version.new('2.4.5')
+  if VersionHelper.is_requested_newer?('2.4.5', MagentoHelper.base_version)
     magento_cli 'Setting admin session time' do
       action :config_set
       config_path 'system/security/max_session_size_admin'
