@@ -4,8 +4,6 @@
 # frozen_string_literal: true
 
 build_action = node[:magento][:build][:action]
-use_secure_frontend = node[:magento][:settings][:use_secure_frontend]
-use_secure_admin = node[:magento][:settings][:use_secure_admin]
 unsecure_base_url = node[:magento][:settings][:unsecure_base_url]
 secure_base_url = node[:magento][:settings][:secure_base_url]
 additional_entries = DemoStructureHelper.additional_entries

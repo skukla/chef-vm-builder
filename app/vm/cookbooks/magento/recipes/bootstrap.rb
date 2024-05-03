@@ -3,11 +3,9 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 # frozen_string_literal: true
 
-user = node[:magento][:init][:user]
 build_action = node[:magento][:build][:action]
 tmp_dir = node[:magento][:nginx][:tmp_dir]
 web_root = node[:magento][:nginx][:web_root]
-crontab = "/var/spool/cron/crontabs/#{user}"
 sample_data_flag = "#{web_root}/var/.sample-data-state.flag"
 
 if %w[update_all update_app].include?(build_action)

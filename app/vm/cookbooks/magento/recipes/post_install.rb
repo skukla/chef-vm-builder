@@ -3,7 +3,6 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 # frozen_string_literal: true
 
-web_root = node[:magento][:nginx][:web_root]
 build_action = node[:magento][:build][:action]
 apply_deploy_mode = node[:magento][:build][:deploy_mode][:apply]
 deploy_mode = node[:magento][:build][:deploy_mode][:mode]
@@ -12,8 +11,6 @@ restore_mode = node[:magento][:magento_restore][:mode]
 merge_restore = (build_action == 'restore' && restore_mode == 'merge')
 provider = node[:magento][:init][:provider]
 search_engine_type = node[:magento][:search_engine][:type]
-es_module_list = node[:magento][:search_engine][:elasticsearch][:module_list]
-ls_module_list = node[:magento][:search_engine][:live_search][:module_list]
 
 if build_action == 'restore'
   magento_restore 'Restore database' do

@@ -4,7 +4,6 @@
 # frozen_string_literal: true
 
 build_action = node[:magento][:build][:action]
-search_engine_type = node[:magento][:search_engine][:type]
 provider = node[:magento][:init][:provider]
 
 if %w[restore reinstall].include?(build_action)

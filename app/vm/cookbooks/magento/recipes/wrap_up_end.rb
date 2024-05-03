@@ -18,7 +18,6 @@ crontab = "/var/spool/cron/crontabs/#{user}"
 commands = node[:magento][:build][:hooks][:commands]
 magento_cli_commands = MagentoHelper.build_hook_command_list(:magento_cli)
 vm_cli_commands = MagentoHelper.build_hook_command_list(:vm_cli)
-search_engine_type = node[:magento][:search_engine][:type]
 github_data_pack_list = node[:magento][:data_packs][:github_data_pack_list]
 local_data_pack_list = node[:magento][:data_packs][:local_data_pack_list]
 

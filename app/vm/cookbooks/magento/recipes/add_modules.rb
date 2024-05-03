@@ -4,7 +4,6 @@
 # frozen_string_literal: true
 
 web_root = node[:magento][:nginx][:web_root]
-family = node[:magento][:options][:family]
 build_action = node[:magento][:build][:action]
 restore_mode = node[:magento][:magento_restore][:mode]
 merge_restore = (build_action == 'restore' && restore_mode == 'merge')
