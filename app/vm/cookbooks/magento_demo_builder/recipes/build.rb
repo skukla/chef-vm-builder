@@ -4,7 +4,6 @@
 # frozen_string_literal: true
 
 local_data_pack_list = node[:magento_demo_builder][:local_data_pack_list]
-github_data_pack_list = node[:magento_demo_builder][:github_data_pack_list]
 build_action = node[:magento_demo_builder][:magento][:build][:action]
 restore_mode = node[:magento_demo_builder][:magento_restore][:mode]
 merge_restore = (build_action == 'restore' && restore_mode == 'merge')
