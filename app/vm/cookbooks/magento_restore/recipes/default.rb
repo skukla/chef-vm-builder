@@ -6,7 +6,6 @@
 user = node[:magento_restore][:init][:user]
 group = node[:magento_restore][:init][:user]
 build_action = node[:magento_restore][:magento][:build][:action]
-restore_mode = node[:magento_restore][:mode]
 restore_source = node[:magento_restore][:source]
 restore_version = node[:magento_restore][:version]
 web_root = node[:magento_restore][:nginx][:web_root]
