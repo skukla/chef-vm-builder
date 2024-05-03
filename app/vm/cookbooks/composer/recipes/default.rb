@@ -5,11 +5,8 @@
 
 user = node[:composer][:init][:user]
 web_root = node[:composer][:nginx][:web_root]
-composer_file = node[:composer][:file]
 version = node[:composer][:version]
-install_dir = node[:composer][:install_dir]
 clear_cache = node[:composer][:clear_cache]
-allowed_plugins_list = node[:composer][:allowed_plugins_list]
 
 composer 'Uninstall composer' do
   action :uninstall
