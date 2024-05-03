@@ -39,10 +39,10 @@ print_section_header "VM Command Reference"
 
 print_commands "www" "Moves into the web root." \
               "clean" "Re-indexes and clears cache." \
-              "cache" "Clears cache." \
-              "reindex" "Reindexes all indexes." \
+              "cache" "Clears cache only." \
               "dev-mode" "Puts application into developer mode." \
               "prod-mode" "Puts application into production mode." \
+              "cron" "Runs a single cron job" \
               "process-catalogs" "Processes B2B Shared Catalogs (Runs \"clean\" and a single cron trigger)." \
               "process-data" "Runs a cron job and watches the data installer log for data pack processing." \
               "resync-services" "Resynchronizes commerce services (Live Search, Product Recs, Catalog, etc)." \
