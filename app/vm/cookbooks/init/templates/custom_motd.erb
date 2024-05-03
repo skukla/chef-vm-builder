@@ -15,7 +15,7 @@ ip="<%= @ip %>"
 hosts=<%= "#{@hosts.join(" ")}" %>
 base_url="<%= @storefront_urls[0] %>"
 admin_url=<%= "#{@admin_url}" %>
-storefront_urls=<%= @storefront_urls.join(' ') %>
+storefront_urls=(<%= @storefront_urls.join(' ') %>)
 php_version="<%= @php_version %>"
 <% if @search_engine_type == "elasticsearch" %>
 es_host="<%= @search_engine_host[:value] %>"
@@ -150,7 +150,7 @@ printf '\n'
 
 print_kv_pair "Storefront URLs" "${storefront_urls[0]}"
 for ((i = 1; i < ${#storefront_urls[@]}; i++)); do
-    printf '%21s %s\n' "" "${REG}${storefront_urls[i]}"
+    printf '%25s %s\n' ":" "${REG}${storefront_urls[i]}"
 done
 printf "\n\n"
 
