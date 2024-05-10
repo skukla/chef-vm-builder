@@ -112,19 +112,30 @@ end
 
 action :install do
   data_pack = new_resource.data_pack
+  cmd = [
+    'gxd:datainstall',
+    data_pack.module_path,
+    '--host=subdomain',
+    '--reload',
+  ]
+
+  if !data_pack.load_files.empty?
+    cmd << "--files=\"#{data_pack.load_files.join(', ')}\""
+  end
 
   if data_pack.load_dirs.empty?
     magento_cli "Installing the #{data_pack.module_string} data pack" do
       action :run
-      command_list "gxd:datainstall #{data_pack.module_path} -r"
+      command_list cmd.join(' ')
     end
   end
 
   unless data_pack.load_dirs.empty?
     data_pack.load_dirs.each do |dir|
+      cmd << "--load=#{dir}"
       magento_cli "Installing the #{data_pack.module_string} data pack" do
         action :run
-        command_list "gxd:datainstall --load=#{dir} --host=subdomain #{data_pack.module_path} -r"
+        command_list cmd.join(' ')
       end
     end
   end

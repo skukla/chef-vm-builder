@@ -56,8 +56,6 @@ module ModuleHelper
           'composer.json',
         ].join('/')
 
-      composer_url
-
       package_name =
         JSON.parse(SystemHelper.cmd("curl -s #{composer_url}"))['name']
 
@@ -95,7 +93,13 @@ module ModuleHelper
     def load_dirs
       return [] if @hash['data'].nil? || @hash['data'].empty?
 
-      @hash['data'].map { |dir| dir['data_path'] }.reject { |dir| dir.nil? }
+      @hash['data'].map { |dir| dir['path'] }.reject { |dir| dir.nil? }
+    end
+
+    def load_files
+      return [] if @hash['data'].nil? || @hash['data'].empty?
+
+      @hash['data'].map { |dir| dir['files'] }.reject { |dir| dir.nil? }
     end
 
     def module_prefix

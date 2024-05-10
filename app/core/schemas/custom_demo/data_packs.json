@@ -6,9 +6,7 @@
   "items": {
     "type": "object",
     "description": "Data pack object that expects a source and an array of data paths.",
-    "required": [
-      "source"
-    ],
+    "required": ["source"],
     "properties": {
       "source": {
         "type": "string",
@@ -25,13 +23,14 @@
         "items": {
           "type": "object",
           "description": "Data path object that defines the folder names that contain data pack csv files.",
-          "required": [
-            "data_path"
-          ],
           "properties": {
-            "data_path": {
+            "path": {
               "type": "string",
-              "description": "Folder that contains data pack csv files."
+              "description": "Optional sub-folder within the data pack folder that contains specific data pack csv files."
+            },
+            "files": {
+              "type": "array",
+              "description": "Array of data pack files to process."
             }
           },
           "additionalProperties": false

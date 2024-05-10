@@ -16,9 +16,7 @@ class DataPack
     missing_data_values = list.select { |item| item.key?('data').nil? }
 
     missing_data_path_values =
-      list
-        .flat_map { |item| item['data'] }
-        .reject { |item| item.key?('data_path') }
+      list.flat_map { |item| item['data'] }.reject { |item| item.key?('path') }
     (
       missing_source_values.any? || missing_data_values.any? ||
         missing_data_path_values.any?
@@ -46,12 +44,13 @@ class DataPack
     Entry.files_from('project/data-packs')
   end
 
-  def DataPack.configured_data_paths
+  def DataPack.configured_data
     local_list.each_with_object([]) do |item, arr|
       next if item['data'].nil?
       hash = {}
       hash['source'] = item['source']
-      hash['paths'] = item['data'].map { |item| item['data_path'] }
+      hash['paths'] = item['data'].map { |item| item['path'] }
+      hash['files'] = item['data'].map { |item| item['files'] }
       arr << hash
     end
   end
@@ -85,7 +84,7 @@ class DataPack
   def DataPack.packs_missing_path_folders
     return [] if local_list.empty?
 
-    configured_data_paths.each_with_object([]) do |record, arr|
+    configured_data.each_with_object([]) do |record, arr|
       dpf_paths =
         data_path_folders
           .select { |dpf| dpf['source'] == record['source'] }
