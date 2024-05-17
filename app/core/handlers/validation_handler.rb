@@ -122,7 +122,7 @@ class ValidationHandler
       abort(ErrorMsg.show(:data_pack_update))
     end
 
-    # abort(ErrorMsg.show(:data_pack_bad_format)) if DataPack.data_format_error?
+    abort(ErrorMsg.show(:data_pack_bad_format)) if DataPack.data_format_error?
 
     unless DataPack.packs_with_spaces_in_names.empty?
       abort(ErrorMsg.show(:data_pack_spaces_in_names))
@@ -132,9 +132,9 @@ class ValidationHandler
       abort(ErrorMsg.show(:data_pack_source_folders_missing))
     end
 
-    # unless DataPack.packs_missing_path_folders.empty?
-    #   abort(ErrorMsg.show(:data_pack_path_folders_missing))
-    # end
+    unless DataPack.packs_missing_path_folders.empty?
+      abort(ErrorMsg.show(:data_pack_path_folders_missing))
+    end
   end
 
   def ValidationHandler.backups

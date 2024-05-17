@@ -24,6 +24,10 @@ class Entry
     Dir.entries("#{File.join(@app_root, file_path)}") - @entries_to_remove
   end
 
+  def Entry.files_from_paths(file_path)
+    path(file_path).each_child.to_a
+  end
+
   def Entry.contains_zip?(file_arr)
     file_arr.select { |file| file.include?('.zip') }.any?
   end

@@ -14,13 +14,7 @@ class DataPack
 
     missing_source_values = list.select { |item| item['source'].nil? }
     missing_data_values = list.select { |item| item.key?('data').nil? }
-
-    missing_data_path_values =
-      list.flat_map { |item| item['data'] }.reject { |item| item.key?('path') }
-    (
-      missing_source_values.any? || missing_data_values.any? ||
-        missing_data_path_values.any?
-    )
+    (missing_source_values.any? || missing_data_values.any?)
   end
 
   def DataPack.local_list
@@ -47,22 +41,34 @@ class DataPack
   def DataPack.configured_data
     local_list.each_with_object([]) do |item, arr|
       next if item['data'].nil?
+
+      paths = item['data'].map { |item| item['path'] }
+      files = item['data'].map { |item| item['files'] }
+
       hash = {}
       hash['source'] = item['source']
-      hash['paths'] = item['data'].map { |item| item['path'] }
-      hash['files'] = item['data'].map { |item| item['files'] }
+      hash['paths'] = paths unless paths.empty?
+      hash['files'] = files unless files.empty?
       arr << hash
     end
   end
 
   def DataPack.data_path_folders
+    packs_path = File.join('project', 'data-packs')
+
     return [] if local_list.empty? || source_folders.nil?
 
     DataPack
       .source_values
       .each_with_object([]) do |source, arr|
-        entries = Entry.files_from("project/data-packs/#{source}/data")
-        return [] if entries.to_s.empty?
+        entries =
+          Entry
+            .files_from_paths(File.join(packs_path, source, 'data'))
+            .reject { |entry| entry.to_s.include?('.DS_Store') }
+            .reject { |entry| File.file?(entry) }
+            .map { |entry| File.basename(entry).to_s }
+
+        return [] if entries.empty?
 
         hash = {}
         hash['source'] = source
@@ -81,21 +87,29 @@ class DataPack
     )
   end
 
+  def DataPack.folders_missing_packs
+    return [] if local_list.empty?
+  end
+
   def DataPack.packs_missing_path_folders
     return [] if local_list.empty?
 
     configured_data.each_with_object([]) do |record, arr|
+      return [] if record['paths'].nil?
+
       dpf_paths =
         data_path_folders
           .select { |dpf| dpf['source'] == record['source'] }
           .flat_map { |v| v['paths'] }
 
-      return [] if dpf_paths.empty?
+      missing_folders = (record['paths'] - dpf_paths)
+
+      return [] if missing_folders.first.nil?
 
       hash = {}
       hash['source'] = record['source']
-      hash['paths'] = (record['paths'] - dpf_paths)
-      arr << hash unless hash['paths'].empty?
+      hash['paths'] = missing_folders unless missing_folders.empty?
+      arr << hash
     end
   end
 
