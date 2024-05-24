@@ -3,12 +3,10 @@
   "title": "Website Structure Settings",
   "description": "Settings that define the instance business structure. Includes: site code, site_url, and stores.",
   "type": "array",
+  "minItems": 1,
   "items": {
     "type": "object",
-    "required": [
-      "site_code",
-      "site_url"
-    ],
+    "required": ["site_code", "site_url"],
     "properties": {
       "site_code": {
         "type": "string",

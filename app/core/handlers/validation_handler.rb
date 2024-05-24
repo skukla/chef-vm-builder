@@ -80,10 +80,6 @@ class ValidationHandler
     if DemoStructure.website_structure_missing?
       abort(ErrorMsg.show(:website_structure_missing))
     end
-
-    if DemoStructure.base_website_missing?
-      abort(ErrorMsg.show(:base_website_missing))
-    end
   end
 
   def ValidationHandler.search_engine_type

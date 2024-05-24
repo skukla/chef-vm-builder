@@ -100,10 +100,6 @@ class DemoStructure
     "#{protocol}#{base_url}"
   end
 
-  def DemoStructure.base_website_missing?
-    base_url.to_s.empty?
-  end
-
   def DemoStructure.additional_entries
     vhost_entries.reject { |entry| %w[base default].include?(entry['code']) }
   end

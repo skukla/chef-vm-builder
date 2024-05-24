@@ -94,11 +94,16 @@ class DemoStructureHelper
   end
 
   def DemoStructureHelper.base_url
-    vhost_data
-      .output
-      .select { |record| record['code'] == 'base' }
-      .map { |value| value['url'] }
-      .first
+    result =
+      vhost_data
+        .output
+        .select { |record| record['code'] == 'base' }
+        .map { |value| value['url'] }
+        .first
+
+    return result unless result.nil?
+
+    vm_urls[0]
   end
 
   def DemoStructureHelper.base_url_with_protocol(area = nil)

@@ -9,12 +9,12 @@ setting = ConfigHelper.value('application/settings')
 base_url = DemoStructureHelper.base_url
 
 unless setting.nil?
-	setting.each do |key, value|
-		override[:magento][:settings][key] = ValueHelper.bool_to_int(value)
-	end
+  setting.each do |key, value|
+    override[:magento][:settings][key] = ValueHelper.bool_to_int(value)
+  end
 end
-unless base_url.empty?
-	override[:magento][:settings][:admin_email] = "admin@#{base_url}"
-	override[:magento][:settings][:unsecure_base_url] = "http://#{base_url}/"
-	override[:magento][:settings][:secure_base_url] = "https://#{base_url}/"
+unless base_url.nil?
+  override[:magento][:settings][:admin_email] = "admin@#{base_url}"
+  override[:magento][:settings][:unsecure_base_url] = "http://#{base_url}/"
+  override[:magento][:settings][:secure_base_url] = "https://#{base_url}/"
 end
