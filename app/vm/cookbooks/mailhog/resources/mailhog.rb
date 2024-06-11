@@ -8,19 +8,25 @@ provides :mailhog
 
 property :name, String, name_property: true
 property :repository_list, Array, default: node[:mailhog][:repositories]
-property :go_install_path, String, default: node[:mailhog][:go_install_path]
+property :go_path, String, default: node[:mailhog][:go_path]
+property :go_env_path, String, default: node[:mailhog][:go_env_path]
 property :install_path, String, default: node[:mailhog][:install_path]
 property :service_file, String, default: node[:mailhog][:service_file]
 property :mh_port, String, default: node[:mailhog][:mh_port]
 property :smtp_port, String, default: node[:mailhog][:smtp_port]
 
 action :install do
+  ruby_block 'Adding go to PATH' do
+    block { ENV['PATH'] = "#{ENV['PATH']}:#{new_resource.go_env_path}" }
+  end
+
   new_resource.repository_list.each do |repository|
     execute "Use go to clone #{repository[:name]}" do
       command MailhogHelper.install_cmd(repository[:url])
     end
-    execute "Copy #{repository[:name]} into /usr/local/bin" do
-      command "cp #{new_resource.go_install_path}/bin/#{repository[:name]} #{new_resource.install_path}/#{repository[:name].downcase}"
+
+    execute "Copy #{repository[:name]} into #{new_resource.install_path}" do
+      command "cp #{new_resource.go_path}/bin/#{repository[:name]} #{new_resource.install_path}/#{repository[:name].downcase}"
     end
   end
 end
