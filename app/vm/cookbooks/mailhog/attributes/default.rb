@@ -14,3 +14,4 @@ default[:mailhog][:repositories] = [
   { url: 'github.com/mailhog/MailHog', name: 'MailHog' },
   { url: 'github.com/mailhog/mhsendmail', name: 'mhsendmail' },
 ]
+default[:mailhog][:go_file] = "go1.22.4.linux-#{MachineHelper.arch}.tar.gz"

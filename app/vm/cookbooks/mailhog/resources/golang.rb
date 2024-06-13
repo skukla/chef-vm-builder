@@ -8,7 +8,7 @@ provides :golang
 
 property :name, String, name_property: true
 property :user, String, default: node[:mailhog][:init][:user]
-property :tar_file, String, default: 'go1.22.4.linux-amd64.tar.gz'
+property :tar_file, String, default: node[:mailhog][:go_file]
 
 action :install do
   home_dir_path = ::File.join('/home', new_resource.user)
