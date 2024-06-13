@@ -3,12 +3,12 @@
 # Copyright:: 2020, Steve Kukla, All Rights Reserved.
 # frozen_string_literal: true
 
-go_path = node[:mailhog][:go_path]
+go_env_path = node[:mailhog][:go_env_path]
 service_file = node[:mailhog][:service_file]
 
 golang 'Install golang' do
   action :install
-  not_if { ::Dir.exist?(go_path) }
+  not_if { ::Dir.exist?(go_env_path) }
 end
 
 mailhog 'Stop mailhog' do
