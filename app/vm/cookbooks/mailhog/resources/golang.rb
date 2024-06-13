@@ -7,19 +7,33 @@ resource_name :golang
 provides :golang
 
 property :name, String, name_property: true
+property :user, String, default: node[:mailhog][:init][:user]
 property :tar_file, String, default: 'go1.22.4.linux-amd64.tar.gz'
 
 action :install do
-  execute 'Downloading go 1.21' do
-    command "wget -cP /home/vagrant/ https://go.dev/dl/#{new_resource.tar_file}"
+  home_dir_path = ::File.join('/home', new_resource.user)
+  tar_file_path = ::File.join(home_dir_path, new_resource.tar_file)
+
+  remote_file 'Downloading go 1.21' do
+    source "https://go.dev/dl/#{new_resource.tar_file}"
+    path tar_file_path
+    owner new_resource.user
+    group new_resource.user
+    mode '0755'
+    action :create
   end
 
-  execute 'Installing go 1.21' do
-    command "tar -C /usr/local -xzf home/vagrant/#{new_resource.tar_file}"
+  archive_file 'Installing go 1.21' do
+    path tar_file_path
+    destination '/usr/local'
+    owner 'root'
+    group 'root'
+    overwrite true
   end
 
-  execute 'Deleting go tar file' do
-    command "rm -rf /home/vagrant/#{new_resource.tar_file}"
-    only_if { ::File.exist?("/home/vagrant/#{new_resource.tar_file}") }
+  file 'Deleting go tar file' do
+    path tar_file_path
+    action :delete
+    only_if { ::File.exist?(tar_file_path) }
   end
 end
