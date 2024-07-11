@@ -11,12 +11,21 @@ restore_mode = node[:magento][:magento_restore][:mode]
 merge_restore = (build_action == 'restore' && restore_mode == 'merge')
 provider = node[:magento][:init][:provider]
 search_engine_type = node[:magento][:search_engine][:type]
+elasticsearch_host = node[:magento][:search_engine][:host][:value]
 
 if build_action == 'restore'
   magento_restore 'Restore database' do
     action :restore_database
     source_path backup_holding_area
     pattern %w[*_db.sql]
+  end
+
+  if search_engine_type == 'elasticsearch'
+    magento_cli 'Resetting elasticsearch host' do
+      action :config_set
+      config_path 'catalog/search/elasticsearch7_server_hostname'
+      config_value elasticsearch_host
+    end
   end
 
   magento_restore 'Clean up backup files' do
