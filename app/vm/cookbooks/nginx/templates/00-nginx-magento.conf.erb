@@ -87,6 +87,11 @@ location / {
 }
 
 location /pub/ {
+    # Add CORS headers for static content
+    add_header 'Access-Control-Allow-Origin' '*';
+    add_header 'Access-Control-Allow-Methods' 'GET, OPTIONS';
+    add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
+    
     location ~ ^/pub/media/(downloadable|customer|import|theme_customization/.*\.xml) {
         deny all;
     }
@@ -96,7 +101,12 @@ location /pub/ {
 
 location /static/ {
     # Uncomment the following line in production mode
-    # expires max;
+    expires max;
+
+    # Add CORS headers for static content
+    add_header 'Access-Control-Allow-Origin' '*';
+    add_header 'Access-Control-Allow-Methods' 'GET, OPTIONS';
+    add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
 
     # Remove signature of the static files that is used to overcome the browser cache
     location ~ ^/static/version {
@@ -106,6 +116,7 @@ location /static/ {
     location ~* \.(ico|jpg|jpeg|png|gif|svg|js|css|swf|eot|ttf|otf|woff|woff2)$ {
         add_header Cache-Control "public";
         add_header X-Frame-Options "SAMEORIGIN";
+        add_header 'Access-Control-Allow-Origin' '*';
         expires +1y;
 
         if (!-f $request_filename) {
@@ -115,6 +126,7 @@ location /static/ {
     location ~* \.(zip|gz|gzip|bz2|csv|xml)$ {
         add_header Cache-Control "no-store";
         add_header X-Frame-Options "SAMEORIGIN";
+        add_header 'Access-Control-Allow-Origin' '*';
         expires    off;
 
         if (!-f $request_filename) {
@@ -130,6 +142,11 @@ location /static/ {
 location /media/ {
     try_files $uri $uri/ /get.php$is_args$args;
 
+    # Add CORS headers for static content
+    add_header 'Access-Control-Allow-Origin' '*';
+    add_header 'Access-Control-Allow-Methods' 'GET, OPTIONS';
+    add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
+    
     location ~ ^/media/theme_customization/.*\.xml {
         deny all;
     }
@@ -137,12 +154,14 @@ location /media/ {
     location ~* \.(ico|jpg|jpeg|png|gif|svg|js|css|swf|eot|ttf|otf|woff|woff2)$ {
         add_header Cache-Control "public";
         add_header X-Frame-Options "SAMEORIGIN";
+        add_header 'Access-Control-Allow-Origin' '*';
         expires +1y;
         try_files $uri $uri/ /get.php$is_args$args;
     }
     location ~* \.(zip|gz|gzip|bz2|csv|xml)$ {
         add_header Cache-Control "no-store";
         add_header X-Frame-Options "SAMEORIGIN";
+        add_header 'Access-Control-Allow-Origin' '*';
         expires    off;
         try_files $uri $uri/ /get.php$is_args$args;
     }
